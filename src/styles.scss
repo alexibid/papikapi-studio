@@ -1,0 +1,14 @@
+@use 'libs/ibid-ui/src/themes/kirigami';
+
+:root {
+  --header-nav-offset: 56px;
+}
+
+body.kirigami-studio.kirigami {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-base, system-ui, sans-serif);
+  color: var(--color-ink, #2d261e);
+  background-color: var(--color-paper, #fdfbf7);
+  min-height: 100vh;
+}

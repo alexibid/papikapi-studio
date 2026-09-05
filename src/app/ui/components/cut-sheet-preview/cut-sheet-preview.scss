@@ -1,0 +1,123 @@
+:host {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.c-sheet-preview {
+  width: 100%;
+  height: 100%;
+  min-height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-background, #f1f5f9);
+  padding: 16px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  border: 1px solid var(--color-border, #e2e8f0);
+
+  &__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 420px;
+    aspect-ratio: 210 / 297;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    background: #ffffff;
+  }
+
+  &__paper {
+    fill: #fdfbf7;
+  }
+
+  &__margin {
+    fill: none;
+    stroke: #e2e8f0;
+    stroke-width: 0.5;
+    stroke-dasharray: 2 2;
+  }
+
+  &__title {
+    font-size: 6px;
+    font-weight: bold;
+    fill: #2d261e;
+    font-family: var(--font-family-base, sans-serif);
+  }
+
+  &__legend {
+    font-size: 3.5px;
+    fill: #64748b;
+    font-family: var(--font-family-base, sans-serif);
+  }
+
+  &__net-body {
+    stroke: #1e293b;
+    stroke-width: 0.6;
+    stroke-linejoin: round;
+  }
+
+  &__tab {
+    stroke: #64748b;
+    stroke-width: 0.4;
+    stroke-dasharray: 1 1;
+  }
+
+  &__tab-label {
+    font-size: 2.8px;
+    font-weight: 600;
+    fill: #475569;
+    font-family: monospace;
+  }
+
+  &__fold-line {
+    stroke: #475569;
+    stroke-width: 0.4;
+    stroke-dasharray: 1.5 1.5;
+  }
+
+  &__part-name {
+    font-size: 3.2px;
+    font-weight: bold;
+    fill: #334155;
+    font-family: monospace;
+  }
+
+  &__decor {
+    pointer-events: none;
+  }
+
+  &__patch {
+    fill: #f2f0e4;
+    stroke: #2f3324;
+    stroke-width: 0.3;
+  }
+
+  &__eye {
+    fill: #ffffff;
+    stroke: #2f3324;
+    stroke-width: 0.4;
+  }
+
+  &__pupil {
+    fill: #23261c;
+  }
+
+  &__nostril {
+    fill: #23261c;
+  }
+
+  &__teeth {
+    fill: #ffffff;
+    stroke: #2f3324;
+    stroke-width: 0.4;
+    stroke-linejoin: round;
+  }
+
+  &--outline {
+    .c-sheet-preview__net-body {
+      fill: #ffffff !important;
+    }
+  }
+}

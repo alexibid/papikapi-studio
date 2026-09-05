@@ -1,0 +1,122 @@
+<div class="c-sheet-preview" [class.c-sheet-preview--outline]="isOutline()">
+  <svg
+    class="c-sheet-preview__svg"
+    [attr.viewBox]="'0 0 ' + sheet().width + ' ' + sheet().height"
+    [attr.width]="sheet().width"
+    [attr.height]="sheet().height"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <pattern id="glue-hatch" width="4" height="4" patternUnits="userSpaceOnUse">
+        <path d="M0 0 L4 4 M4 0 L0 4" stroke="#888" stroke-width="0.5" />
+      </pattern>
+    </defs>
+
+    <rect class="c-sheet-preview__paper" x="0" y="0" [attr.width]="sheet().width" [attr.height]="sheet().height" />
+    <rect class="c-sheet-preview__margin" x="8" y="8" [attr.width]="sheet().width - 16" [attr.height]="sheet().height - 16" />
+
+    <g class="c-sheet-preview__header">
+      <text class="c-sheet-preview__title" x="14" y="18">{{ modelName() }}</text>
+      <text class="c-sheet-preview__legend" x="14" y="24">Solid: Cut | Dashed: Fold | Hatched: Glue Tab</text>
+    </g>
+
+    @for (part of sheet().parts; track part.id) {
+      <g class="c-sheet-preview__part">
+        <path
+          class="c-sheet-preview__net-body"
+          [attr.d]="part.boundaryPath"
+          [style.fill]="isOutline() ? '#ffffff' : part.hue"
+        />
+
+        @for (tab of part.tabs; track tab.id) {
+          <polygon
+            class="c-sheet-preview__tab"
+            [attr.points]="pointsToString(tab.points)"
+            fill="url(#glue-hatch)"
+          />
+          @if (tab.points[0]) {
+            <text
+              class="c-sheet-preview__tab-label"
+              [attr.x]="tab.points[0][0] + 1"
+              [attr.y]="tab.points[0][1] + 3"
+            >
+              {{ tab.label }}
+            </text>
+          }
+        }
+
+        @for (fold of part.folds; track $index) {
+          <line
+            class="c-sheet-preview__fold-line"
+            [attr.x1]="fold.x1"
+            [attr.y1]="fold.y1"
+            [attr.x2]="fold.x2"
+            [attr.y2]="fold.y2"
+          />
+        }
+
+        @if (part.frontFace && part.decor === 'face') {
+          <g class="c-sheet-preview__decor">
+            <rect
+              class="c-sheet-preview__patch"
+              [attr.x]="part.frontFace.x + part.frontFace.width * 0.12"
+              [attr.y]="part.frontFace.y + part.frontFace.height * 0.22"
+              [attr.width]="part.frontFace.width * 0.76"
+              [attr.height]="part.frontFace.height * 0.38"
+              rx="2"
+            />
+            <circle
+              class="c-sheet-preview__eye"
+              [attr.cx]="part.frontFace.x + part.frontFace.width * 0.33"
+              [attr.cy]="part.frontFace.y + part.frontFace.height * 0.42"
+              [attr.r]="part.frontFace.width * 0.11"
+            />
+            <circle
+              class="c-sheet-preview__eye"
+              [attr.cx]="part.frontFace.x + part.frontFace.width * 0.67"
+              [attr.cy]="part.frontFace.y + part.frontFace.height * 0.42"
+              [attr.r]="part.frontFace.width * 0.11"
+            />
+            <circle
+              class="c-sheet-preview__pupil"
+              [attr.cx]="part.frontFace.x + part.frontFace.width * 0.35"
+              [attr.cy]="part.frontFace.y + part.frontFace.height * 0.44"
+              [attr.r]="part.frontFace.width * 0.05"
+            />
+            <circle
+              class="c-sheet-preview__pupil"
+              [attr.cx]="part.frontFace.x + part.frontFace.width * 0.69"
+              [attr.cy]="part.frontFace.y + part.frontFace.height * 0.44"
+              [attr.r]="part.frontFace.width * 0.05"
+            />
+            <circle
+              class="c-sheet-preview__nostril"
+              [attr.cx]="part.frontFace.x + part.frontFace.width * 0.38"
+              [attr.cy]="part.frontFace.y + part.frontFace.height * 0.8"
+              [attr.r]="part.frontFace.width * 0.035"
+            />
+            <circle
+              class="c-sheet-preview__nostril"
+              [attr.cx]="part.frontFace.x + part.frontFace.width * 0.62"
+              [attr.cy]="part.frontFace.y + part.frontFace.height * 0.8"
+              [attr.r]="part.frontFace.width * 0.035"
+            />
+          </g>
+        }
+
+        @if (part.frontFace && part.decor === 'grin') {
+          <g class="c-sheet-preview__decor">
+            <path
+              class="c-sheet-preview__teeth"
+              [attr.d]="generateTeethPath(part.frontFace.x, part.frontFace.y + 2, part.frontFace.width, part.frontFace.height - 4)"
+            />
+          </g>
+        }
+
+        <text class="c-sheet-preview__part-name" [attr.x]="part.x + 4" [attr.y]="part.y + 12">
+          {{ part.label }}
+        </text>
+      </g>
+    }
+  </svg>
+</div>

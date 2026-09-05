@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": [],
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.stories.ts", "src/**/*.test.ts"],
+  "references": [
+    {
+      "path": "../../libs/services/tsconfig.lib.json"
+    }
+  ]
+}

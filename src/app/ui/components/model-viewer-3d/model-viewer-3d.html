@@ -1,0 +1,108 @@
+<div class="c-viewer-3d" #container>
+  <div class="c-viewer-3d__top-controls">
+    <button class="c-viewer-3d__tool-btn" type="button" (click)="zoom(0.2)" aria-label="Zoom in">+</button>
+    <button class="c-viewer-3d__tool-btn" type="button" (click)="zoom(-0.2)" aria-label="Zoom out">−</button>
+    <button class="c-viewer-3d__tool-btn" type="button" (click)="resetCamera()" aria-label="Reset camera">↺</button>
+  </div>
+
+  <canvas
+    #webglCanvas
+    class="c-viewer-3d__canvas"
+    (pointerdown)="onPointerDown($event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerUp()"
+    (pointercancel)="onPointerUp()"
+    (wheel)="onWheel($event)"
+  ></canvas>
+
+  <div class="c-viewer-3d__timeline">
+    <div class="c-viewer-3d__step-card">
+      <div class="c-viewer-3d__step-header">
+        @if (currentStep() === 0) {
+          <span class="c-viewer-3d__step-badge">📄 Molde Plano</span>
+          <span class="c-viewer-3d__step-index">0 / {{ totalSteps() }}</span>
+        } @else if (currentStep() === totalSteps()) {
+          <span class="c-viewer-3d__step-badge c-viewer-3d__step-badge--success">✨ Boneco Montado</span>
+          <span class="c-viewer-3d__step-index">{{ totalSteps() }} / {{ totalSteps() }}</span>
+        } @else {
+          <span class="c-viewer-3d__step-badge">Dobra {{ currentStep() }} de {{ totalSteps() }}</span>
+          <span class="c-viewer-3d__step-title">{{ currentStepInfo()?.title }}</span>
+        }
+      </div>
+
+      @if (currentStep() > 0 && currentStep() < totalSteps()) {
+        <p class="c-viewer-3d__step-desc">{{ currentStepInfo()?.description }}</p>
+      }
+    </div>
+
+    <div class="c-viewer-3d__timeline-row">
+      <button
+        class="c-viewer-3d__nav-btn"
+        type="button"
+        (click)="setStep(0)"
+        [disabled]="currentStep() === 0"
+        aria-label="Início"
+      >
+        ⏮
+      </button>
+
+      <button
+        class="c-viewer-3d__nav-btn c-viewer-3d__nav-btn--primary"
+        type="button"
+        (click)="previousStep()"
+        [disabled]="currentStep() === 0"
+        aria-label="Dobra anterior"
+      >
+        ◀ Dobra Anterior
+      </button>
+
+      <button
+        class="c-viewer-3d__play-btn"
+        type="button"
+        (click)="togglePlay()"
+        [attr.aria-label]="isPlaying() ? 'Pausar' : 'Reproduzir dobra a dobra'"
+      >
+        {{ isPlaying() ? '⏸' : '▶' }}
+      </button>
+
+      <button
+        class="c-viewer-3d__nav-btn c-viewer-3d__nav-btn--primary"
+        type="button"
+        (click)="nextStep()"
+        [disabled]="currentStep() === totalSteps()"
+        aria-label="Dobra seguinte"
+      >
+        Dobra Seguinte ▶
+      </button>
+
+      <button
+        class="c-viewer-3d__nav-btn"
+        type="button"
+        (click)="setStep(totalSteps())"
+        [disabled]="currentStep() === totalSteps()"
+        aria-label="Fim"
+      >
+        ⏭
+      </button>
+    </div>
+
+    <div class="c-viewer-3d__slider-wrapper">
+      <input
+        type="range"
+        class="c-viewer-3d__slider"
+        min="0"
+        [max]="totalSteps()"
+        step="1"
+        [value]="currentStep()"
+        (input)="onStepSliderChange($event)"
+        aria-label="Passo de dobra"
+      />
+    </div>
+  </div>
+
+  <div class="c-viewer-3d__hidden-markers" aria-hidden="true">
+    @for (box of boxes(); track box.id) {
+      <div class="c-viewer-3d__box" [attr.data-box-id]="box.id"></div>
+    }
+  </div>
+</div>
