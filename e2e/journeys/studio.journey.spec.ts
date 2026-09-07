@@ -100,15 +100,15 @@ test.describe('Kirigami Studio Journey', () => {
     await page.getByRole('button', { name: 'Colorido' }).click();
     await expect(page.locator('.c-sheet-preview')).not.toHaveClass(/c-sheet-preview--outline/);
 
-    const viewer3dTabBtn = page.getByRole('button', { name: /Visualizador 3D/ });
-    await viewer3dTabBtn.click();
-    await expect(canvas).toBeVisible();
-    await expect(sheetSvg).not.toBeVisible();
-
     await expect(page.getByRole('button', { name: 'Exportar PDF A4' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Exportar SVG' })).toBeVisible();
 
     await page.getByRole('button', { name: 'Exportar TypeScript' }).click();
     await expect(page.locator('.p-studio__toast')).toBeVisible();
+
+    const viewer3dTabBtn = page.getByRole('button', { name: /Visualizador 3D/ });
+    await viewer3dTabBtn.click();
+    await expect(canvas).toBeVisible();
+    await expect(sheetSvg).not.toBeVisible();
   });
 });

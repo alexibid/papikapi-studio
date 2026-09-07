@@ -4,7 +4,9 @@
   "projectType": "application",
   "prefix": "kirigami",
   "sourceRoot": "apps/kirigami-studio/src",
-  "tags": [],
+  "tags": [
+    "skip-platform:android"
+  ],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
@@ -12,6 +14,25 @@
       "options": {
         "styles": [
           "apps/kirigami-studio/src/styles.scss"
+        ],
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/kirigami-studio/public"
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/kirigami-studio/src/assets",
+            "ignore": [
+              "**/env.local.json"
+            ],
+            "output": "/assets"
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/kirigami-studio/uploads",
+            "output": "/uploads"
+          }
         ]
       },
       "configurations": {
@@ -31,18 +52,22 @@
         }
       }
     },
+    "desktop": {},
+    "desktop-build": {},
     "serve": {
       "executor": "@angular/build:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "port": 4500
+        "port": 4500,
+        "proxyConfig": "apps/kirigami-studio/proxy.conf.js"
       }
     },
     "serve-e2e": {
       "executor": "@angular/build:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "port": 4501
+        "port": 4501,
+        "proxyConfig": "apps/kirigami-studio/proxy.conf.js"
       }
     },
     "lint": {
@@ -65,6 +90,14 @@
       "options": {
         "command": "playwright test",
         "cwd": "apps/kirigami-studio"
+      }
+    },
+    "lab": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "cwd": "apps/kirigami-studio",
+        "command": "../../node_modules/.bin/tsx tools/figure-lab.ts"
       }
     }
   }

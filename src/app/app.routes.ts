@@ -7,4 +7,8 @@ export const appRoutes: Route[] = [
     loadComponent: () =>
       import('./ui/pages/studio/studio.page').then((m) => m.StudioPage),
   },
+  {
+    path: 'lab',
+    loadComponent: () => import('./ui/pages/lab/lab.page').then((m) => m.LabPage),
+  },
 ];

@@ -1,6 +1,10 @@
-import { Injectable, signal } from '@angular/core';
-import { PaperModel } from '../../domain/models/kirigami-model';
-import { SAMPLE_DINO, SAMPLE_DRAGON, SAMPLE_PENGUIN, SAMPLE_FOX, SAMPLE_HOUSE } from '../../domain/data/sample-models';
+import { Injectable, inject, signal } from '@angular/core';
+import { I18nService } from '@ibid/services';
+import { AgeTierId } from '../../domain/models/age-tier';
+import { PaperFigure } from '../../domain/models/paper-figure';
+import { parseWireFigure, WireFigure } from '../../domain/services/figure-wire';
+import { buildFigureSystemPrompt } from './figure-prompt';
+import { FIGURE_RESPONSE_SCHEMA } from './figure-response-schema';
 
 export interface GenerationAuditRecord {
   readonly id: string;
@@ -11,15 +15,40 @@ export interface GenerationAuditRecord {
   readonly error?: string;
 }
 
+export type GeminiTier = 'flash' | 'pro';
+
 const STORAGE_KEY = 'kirigami_studio_gemini_key';
+
+const MODEL_CANDIDATES: Readonly<Record<GeminiTier, readonly string[]>> = {
+  flash: ['gemini-3.1-flash-lite', 'gemini-3.5-flash', 'gemini-3.6-flash'],
+  pro: ['gemini-3.6-flash', 'gemini-3.7-flash', 'gemini-3.1-flash-lite'],
+};
+
+function isWireFigure(value: unknown): value is WireFigure {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+  const candidate = value as Record<string, unknown>;
+  return Array.isArray(candidate['plates']) && Array.isArray(candidate['hinges']);
+}
+
+function stripCodeFence(raw: string): string {
+  return raw.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeminiService {
+  private readonly i18n = inject(I18nService);
+
   readonly apiKey = signal<string>(this.readStoredKey());
   readonly history = signal<readonly GenerationAuditRecord[]>([]);
   readonly isGenerating = signal<boolean>(false);
+
+  constructor() {
+    void this.initKeyFromEnv();
+  }
 
   setApiKey(key: string): void {
     this.apiKey.set(key);
@@ -28,124 +57,130 @@ export class GeminiService {
     }
   }
 
-  async generateModel(prompt: string, modelType: 'flash' | 'pro' = 'flash'): Promise<PaperModel> {
-    const key = this.apiKey();
+  async generateFigure(
+    prompt: string,
+    modelTier: GeminiTier = 'flash',
+    tierId: AgeTierId = 'tier-7-10'
+  ): Promise<PaperFigure> {
     this.isGenerating.set(true);
 
     try {
-      if (!key) {
-        const fallback = this.resolveFallbackModel(prompt);
-        this.recordAudit(prompt, modelType, true);
-        return fallback;
-      }
-
-      const modelName = modelType === 'pro' ? 'gemini-1.5-pro' : 'gemini-2.0-flash';
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
-
-      const systemInstruction = `You are a professional kirigami and 3D papercraft toy designer.
-Generate a valid Kirigami 3D model composed of cuboid boxes and triangular dorsal spines following the provided JSON schema.
-Constraints:
-- Models must be cute, expressive, stylized papercraft toys.
-- Each box has id, x, y, z relative coordinates, width, height, depth (between 10 and 65mm), hue (hex color code), and decor ('face' | 'grin' | 'none').
-- The model must have between 3 and 12 boxes.
-- For animals, dragons, or dinosaurs:
-  - Include head (decor 'face'), jaw (decor 'grin' with saw-tooth teeth), limbs, and tail.
-  - For dragons/reptiles, add spikes array with dorsal crests along spine/head/tail.
-- Output ONLY pure JSON matching the schema.`;
-
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          systemInstruction: { parts: [{ text: systemInstruction }] },
-          generationConfig: {
-            responseMimeType: 'application/json',
-            responseSchema: {
-              type: 'OBJECT',
-              properties: {
-                id: { type: 'STRING' },
-                nameKey: { type: 'STRING' },
-                span: { type: 'NUMBER' },
-                boxes: {
-                  type: 'ARRAY',
-                  items: {
-                    type: 'OBJECT',
-                    properties: {
-                      id: { type: 'STRING' },
-                      x: { type: 'NUMBER' },
-                      y: { type: 'NUMBER' },
-                      z: { type: 'NUMBER' },
-                      width: { type: 'NUMBER' },
-                      height: { type: 'NUMBER' },
-                      depth: { type: 'NUMBER' },
-                      hue: { type: 'STRING' },
-                      decor: { type: 'STRING', enum: ['face', 'grin', 'none'] },
-                    },
-                    required: ['id', 'x', 'y', 'z', 'width', 'height', 'depth', 'hue', 'decor'],
-                  },
-                },
-                spikes: {
-                  type: 'ARRAY',
-                  items: {
-                    type: 'OBJECT',
-                    properties: {
-                      id: { type: 'STRING' },
-                      x: { type: 'NUMBER' },
-                      y: { type: 'NUMBER' },
-                      z: { type: 'NUMBER' },
-                      size: { type: 'NUMBER' },
-                      hue: { type: 'STRING' },
-                    },
-                    required: ['id', 'x', 'y', 'z', 'size', 'hue'],
-                  },
-                },
-              },
-              required: ['id', 'nameKey', 'span', 'boxes'],
-            },
-          },
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      const rawJson = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!rawJson) {
-        throw new Error('Empty response received from Gemini.');
-      }
-
-      const cleanJson = rawJson.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
-      const parsed = JSON.parse(cleanJson);
-      const result: PaperModel = {
-        id: parsed.id || `kirigami-${Date.now()}`,
-        nameKey: parsed.nameKey || 'customModel',
-        span: parsed.span || 120,
-        boxes: parsed.boxes || [],
-        prisms: [],
-        spikes: parsed.spikes || [],
-      };
-
-      this.recordAudit(prompt, modelType, true);
-      return result;
+      const wire = await this.requestWireFigure(prompt, modelTier, tierId);
+      return parseWireFigure(wire, tierId);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      this.recordAudit(prompt, modelType, false, message);
+      this.recordAudit(prompt, modelTier, false, message);
       throw err;
     } finally {
       this.isGenerating.set(false);
     }
   }
 
-  private resolveFallbackModel(prompt: string): PaperModel {
-    const lower = prompt.toLowerCase();
-    if (lower.includes('drag') || lower.includes('dragon')) return SAMPLE_DRAGON;
-    if (lower.includes('dino') || lower.includes('dinossauro')) return SAMPLE_DINO;
-    if (lower.includes('fox') || lower.includes('raposa')) return SAMPLE_FOX;
-    if (lower.includes('house') || lower.includes('casa')) return SAMPLE_HOUSE;
-    return SAMPLE_PENGUIN;
+  private async requestWireFigure(
+    prompt: string,
+    modelTier: GeminiTier,
+    tierId: AgeTierId
+  ): Promise<WireFigure> {
+    const key = this.apiKey();
+    if (!key) {
+      throw new Error(this.i18n.translate('errorMissingApiKey'));
+    }
+
+    const body = JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      systemInstruction: { parts: [{ text: buildFigureSystemPrompt(tierId) }] },
+      generationConfig: {
+        responseMimeType: 'application/json',
+        responseSchema: FIGURE_RESPONSE_SCHEMA,
+      },
+    });
+
+    let lastError = 'Generation failed';
+    for (const modelName of MODEL_CANDIDATES[modelTier]) {
+      const payload = await this.callModel(modelName, key, body);
+      if (typeof payload === 'string') {
+        lastError = payload;
+        continue;
+      }
+
+      this.recordAudit(prompt, modelName, true);
+      return payload;
+    }
+
+    throw new Error(lastError);
+  }
+
+  private async callModel(
+    modelName: string,
+    key: string,
+    body: string
+  ): Promise<WireFigure | string> {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    });
+
+    if (!response.ok) {
+      return `Gemini API (${modelName}) error: ${response.status} ${response.statusText}`;
+    }
+
+    const data: unknown = await response.json();
+    const rawJson = this.extractText(data);
+    if (!rawJson) {
+      return `Empty response received from ${modelName}.`;
+    }
+
+    const parsed: unknown = JSON.parse(stripCodeFence(rawJson));
+    if (!isWireFigure(parsed)) {
+      return `${modelName} returned a payload without plates or hinges.`;
+    }
+
+    return parsed;
+  }
+
+  private extractText(data: unknown): string {
+    if (typeof data !== 'object' || data === null) {
+      return '';
+    }
+    const candidates = (data as Record<string, unknown>)['candidates'];
+    if (!Array.isArray(candidates) || candidates.length === 0) {
+      return '';
+    }
+    const content = (candidates[0] as Record<string, unknown>)['content'];
+    if (typeof content !== 'object' || content === null) {
+      return '';
+    }
+    const parts = (content as Record<string, unknown>)['parts'];
+    if (!Array.isArray(parts) || parts.length === 0) {
+      return '';
+    }
+    const text = (parts[0] as Record<string, unknown>)['text'];
+    return typeof text === 'string' ? text : '';
+  }
+
+  private async initKeyFromEnv(): Promise<void> {
+    for (const url of ['/api/env', '/assets/env.local.json']) {
+      const key = await this.readKeyFrom(url);
+      if (key && key !== this.apiKey()) {
+        this.setApiKey(key);
+        return;
+      }
+    }
+  }
+
+  private async readKeyFrom(url: string): Promise<string> {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        return '';
+      }
+      const data = (await res.json()) as { geminiKey?: string };
+      return data?.geminiKey ?? '';
+    } catch {
+      return '';
+    }
   }
 
   private recordAudit(prompt: string, modelName: string, success: boolean, error?: string): void {
@@ -161,15 +196,19 @@ Constraints:
   }
 
   private readStoredKey(): string {
-    if (typeof window === 'undefined') return '';
+    if (typeof window === 'undefined') {
+      return '';
+    }
     try {
       const urlParams = new URLSearchParams(window.location.search);
-      const queryKey = urlParams.get('geminiKey') || urlParams.get('apiKey');
+      const queryKey = urlParams.get('geminiKey') ?? urlParams.get('apiKey');
       if (queryKey) {
         localStorage.setItem(STORAGE_KEY, queryKey);
         return queryKey;
       }
-    } catch {}
-    return localStorage.getItem(STORAGE_KEY) || '';
+      return localStorage.getItem(STORAGE_KEY) ?? '';
+    } catch {
+      return '';
+    }
   }
 }

@@ -8,7 +8,169 @@ body.kirigami-studio.kirigami {
   margin: 0;
   padding: 0;
   font-family: var(--font-family-base, system-ui, sans-serif);
-  color: var(--color-ink, #2d261e);
-  background-color: var(--color-paper, #fdfbf7);
+  color: var(--color-ink, #38332c);
+  background-color: var(--color-bg, #fff8ef);
   min-height: 100vh;
+
+  --hand-drawn-intensity: 1;
+  --kirigami-snip: var(--kirigami-cut-1);
+  --kirigami-cut: var(--kirigami-cut-1);
+  --kirigami-paper-shadow: rgba(56, 51, 44, 0.08);
+
+  .m-card::after {
+    display: none !important;
+  }
+
+  ibid-button {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  .a-button,
+  ibid-button button {
+    clip-path: none !important;
+    -webkit-clip-path: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border-radius: 4px;
+    letter-spacing: 0.01em;
+
+    &::before,
+    &::after {
+      display: none !important;
+      content: none !important;
+    }
+  }
+
+  .p-studio__main-tab {
+    button.a-button--outlined,
+    button.a-button--secondary {
+      background-color: var(--kirigami-blue-bg, #dbeafe) !important;
+      color: var(--kirigami-blue-text, #1e3a8a) !important;
+      border: none !important;
+
+      &:hover {
+        background-color: #bfdbfe !important;
+      }
+    }
+
+    button.a-button--primary {
+      background-color: var(--kirigami-blue-solid, #2563eb) !important;
+      color: #ffffff !important;
+      border: none !important;
+    }
+  }
+
+  .p-studio__model-btn {
+    &--flash button.a-button--secondary {
+      background-color: var(--kirigami-green-solid, #059669) !important;
+      color: #ffffff !important;
+      border: none !important;
+    }
+
+    &--flash button.a-button--outlined {
+      background-color: var(--kirigami-green-bg, #d1fae5) !important;
+      color: var(--kirigami-green-text, #064e3b) !important;
+      border: none !important;
+
+      &:hover {
+        background-color: #a7f3d0 !important;
+      }
+    }
+
+    &--pro button.a-button--secondary {
+      background-color: var(--kirigami-purple-solid, #7c3aed) !important;
+      color: #ffffff !important;
+      border: none !important;
+    }
+
+    &--pro button.a-button--outlined {
+      background-color: var(--kirigami-purple-bg, #ede9fe) !important;
+      color: var(--kirigami-purple-text, #5b21b6) !important;
+      border: none !important;
+
+      &:hover {
+        background-color: #ddd6fe !important;
+      }
+    }
+  }
+
+  .p-studio__sample-btn button {
+    background-color: var(--kirigami-yellow-bg, #fef3c7) !important;
+    color: var(--kirigami-yellow-text, #78350f) !important;
+    border: none !important;
+
+    &:hover {
+      background-color: #fde68a !important;
+    }
+  }
+
+  .p-studio__preset-btn button {
+    background-color: var(--kirigami-yellow-bg, #fef3c7) !important;
+    color: var(--kirigami-yellow-text, #78350f) !important;
+    border: none !important;
+
+    &:hover {
+      background-color: #fde68a !important;
+    }
+  }
+
+  .p-studio__tier-btn {
+    button.a-button--secondary {
+      background-color: var(--kirigami-green-bg, #d1fae5) !important;
+      color: var(--kirigami-green-text, #064e3b) !important;
+      border: none !important;
+
+      &:hover {
+        background-color: #a7f3d0 !important;
+      }
+    }
+
+    button.a-button--primary {
+      background-color: var(--kirigami-blue-solid, #2563eb) !important;
+      color: #ffffff !important;
+      border: none !important;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3) !important;
+    }
+  }
+
+  .p-studio__sheet-toggle {
+    button.a-button--secondary {
+      background-color: var(--kirigami-green-solid, #059669) !important;
+      color: #ffffff !important;
+      border: none !important;
+    }
+
+    button.a-button--outlined {
+      background-color: var(--kirigami-green-bg, #d1fae5) !important;
+      color: var(--kirigami-green-text, #064e3b) !important;
+      border: none !important;
+
+      &:hover {
+        background-color: #a7f3d0 !important;
+      }
+    }
+  }
+
+  .p-studio__export-actions {
+    ibid-button button.a-button--outlined {
+      background-color: var(--kirigami-yellow-bg, #fef3c7) !important;
+      color: var(--kirigami-yellow-text, #78350f) !important;
+      border: none !important;
+
+      &:hover {
+        background-color: #fde68a !important;
+      }
+    }
+
+    ibid-button button.a-button--primary {
+      background-color: var(--kirigami-blue-solid, #2563eb) !important;
+      color: #ffffff !important;
+      border: none !important;
+    }
+  }
 }

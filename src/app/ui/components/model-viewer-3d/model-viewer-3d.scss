@@ -46,20 +46,21 @@
   &__tool-btn {
     width: 32px;
     height: 32px;
-    border-radius: 6px;
-    border: 1px solid var(--color-border, #cbd5e1);
-    background: #ffffff;
+    border-radius: 4px;
+    border: none;
+    background: var(--kirigami-yellow-bg, #fef3c7);
+    color: var(--kirigami-yellow-text, #78350f);
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: none;
     transition: background 150ms ease;
 
     &:hover {
-      background: #f8fafc;
+      background: #fde68a;
     }
   }
 
@@ -163,32 +164,40 @@
   }
 
   &__nav-btn {
-    border: 1px solid #cbd5e1;
-    background: #ffffff;
-    color: #334155;
+    border: none;
+    background: var(--kirigami-blue-bg, #dbeafe);
+    color: var(--kirigami-blue-text, #1e3a8a);
     font-size: 12px;
     font-weight: 600;
     padding: 6px 12px;
-    border-radius: 6px;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 150ms ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: none;
 
     &:hover:not(:disabled) {
-      background: #f1f5f9;
-      border-color: #94a3b8;
+      background: #bfdbfe;
     }
 
     &:disabled {
       opacity: 0.45;
       cursor: not-allowed;
+      background: var(--color-bg, #fff8ef);
+      color: var(--color-text-muted, #6b6154);
     }
 
     &--primary {
-      background: #f8fafc;
+      background: var(--kirigami-blue-solid, #2563eb);
+      color: #ffffff;
       font-weight: 700;
+
+      &:hover:not(:disabled) {
+        background: var(--color-primary-hover, #1d4ed8);
+        color: #ffffff;
+      }
     }
   }
 

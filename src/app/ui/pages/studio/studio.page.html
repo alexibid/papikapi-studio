@@ -2,189 +2,108 @@
   <header class="p-studio__header">
     <div class="p-studio__brand">
       <h1 class="p-studio__title">{{ i18n.translate('appName') }}</h1>
-      <span class="p-studio__subtitle">{{ currentModel().nameKey }}</span>
+      <span class="p-studio__subtitle">{{ currentFigure().name }}</span>
+    </div>
+
+    <div class="p-studio__center-tabs">
+      <ibid-button
+        [variant]="selectedTab() === '3d' ? 'primary' : 'outlined'"
+        class="p-studio__main-tab"
+        (clicked)="selectedTab.set('3d')"
+      >
+        🧊 {{ i18n.translate('preview3D') }}
+      </ibid-button>
+      <ibid-button
+        [variant]="selectedTab() === 'sheet' ? 'primary' : 'outlined'"
+        class="p-studio__main-tab"
+        (clicked)="selectedTab.set('sheet')"
+      >
+        📄 {{ i18n.translate('previewSheet') }}
+      </ibid-button>
     </div>
 
     <div class="p-studio__actions">
-      <button class="p-studio__btn p-studio__btn--subtle" (click)="loadSample(sampleDino)">Dinossauro</button>
-      <button class="p-studio__btn p-studio__btn--subtle" (click)="loadSample(sampleDragon)">Dragão</button>
-      <button class="p-studio__btn p-studio__btn--subtle" (click)="loadSample(samplePenguin)">Pinguim</button>
-      <button class="p-studio__btn p-studio__btn--subtle" (click)="loadSample(sampleFox)">Raposa</button>
-      <button class="p-studio__btn p-studio__btn--subtle" (click)="loadSample(sampleHouse)">Casinha</button>
-
-      <div class="p-studio__divider"></div>
-
-      <select
-        class="p-studio__select"
-        [ngModel]="modelType()"
-        (ngModelChange)="modelType.set($event)"
-      >
-        <option value="flash">⚡ {{ i18n.translate('geminiFlash') }}</option>
-        <option value="pro">🧠 {{ i18n.translate('geminiPro') }}</option>
-      </select>
-
-      <button
-        class="p-studio__btn p-studio__btn--outline"
-        (click)="showKeyInput.set(!showKeyInput())"
-      >
-        🔑 {{ gemini.apiKey() ? 'API Key ✓' : 'Config Key' }}
-      </button>
+      <a class="p-studio__lab-link" routerLink="/lab" [title]="i18n.translate('labLink')">
+        🧪 Lab
+      </a>
     </div>
   </header>
 
-  @if (showKeyInput()) {
-    <div class="p-studio__key-panel">
-      <label class="p-studio__label">{{ i18n.translate('apiKeyLabel') }}</label>
-      <div class="p-studio__key-group">
-        <input
-          type="password"
-          class="p-studio__input"
-          [placeholder]="i18n.translate('apiKeyPlaceholder')"
-          [ngModel]="apiKeyInput()"
-          (ngModelChange)="apiKeyInput.set($event)"
-        />
-        <button class="p-studio__btn p-studio__btn--primary" (click)="saveApiKey()">
-          {{ i18n.translate('saveKey') }}
-        </button>
-      </div>
-    </div>
-  }
-
   <main class="p-studio__main">
     <section class="p-studio__editor-col">
-      <div class="p-studio__card">
-        <h2 class="p-studio__card-title">Prompt Gemini</h2>
-        <textarea
-          class="p-studio__textarea"
-          rows="3"
-          [placeholder]="i18n.translate('promptPlaceholder')"
-          [ngModel]="promptText()"
-          (ngModelChange)="promptText.set($event)"
-        ></textarea>
-        <button
-          class="p-studio__btn p-studio__btn--primary p-studio__btn--block"
-          [disabled]="gemini.isGenerating() || !promptText().trim()"
-          (click)="generate()"
-        >
-          {{ gemini.isGenerating() ? 'A gerar com Gemini...' : i18n.translate('generateWithGemini') }}
-        </button>
-      </div>
-
-      <div class="p-studio__card p-studio__card--fill">
+      <ibid-card customClass="p-studio__card">
         <div class="p-studio__card-header">
-          <h2 class="p-studio__card-title">{{ i18n.translate('modelGeometryCode') }}</h2>
-          @if (jsonError()) {
-            <span class="p-studio__badge p-studio__badge--error">{{ jsonError() }}</span>
-          }
+          <h2 class="p-studio__card-title">{{ currentFigure().name }}</h2>
+          <span class="p-studio__badge p-studio__badge--neutral">{{ currentFigure().tierId }}</span>
         </div>
-        <textarea
-          class="p-studio__codearea"
-          [ngModel]="rawJson()"
-          (ngModelChange)="onCodeInput($event)"
-          spellcheck="false"
-        ></textarea>
-      </div>
 
-      <div class="p-studio__card p-studio__card--report">
+        <ul class="p-studio__report-list">
+          <li>{{ plateCount() }} {{ i18n.translate('plates') }}</li>
+          <li>{{ hingeCount() }} {{ i18n.translate('hinges') }}</li>
+          <li>{{ sheetSize() }}</li>
+        </ul>
+      </ibid-card>
+
+      <ibid-card customClass="p-studio__card p-studio__card--report">
         <div class="p-studio__card-header">
           <h3 class="p-studio__card-title">{{ i18n.translate('qualityReport') }}</h3>
-          @if (validationReport().isValid) {
-            <span class="p-studio__badge p-studio__badge--success">{{ i18n.translate('qualityPass') }}</span>
+          @if (sheet().errors.length === 0) {
+            <span class="p-studio__badge p-studio__badge--success">
+              {{ i18n.translate('qualityPass') }}
+            </span>
           } @else {
-            <span class="p-studio__badge p-studio__badge--error">{{ validationReport().errors.length }} Erros</span>
+            <span class="p-studio__badge p-studio__badge--error">
+              {{ sheet().errors.length }} {{ i18n.translate('errorsCount') }}
+            </span>
           }
         </div>
 
-        @if (validationReport().errors.length > 0) {
+        @if (sheet().errors.length > 0) {
           <ul class="p-studio__report-list p-studio__report-list--errors">
-            @for (err of validationReport().errors; track err) {
+            @for (err of sheet().errors; track err) {
               <li>⚠️ {{ err }}</li>
             }
           </ul>
         }
+      </ibid-card>
 
-        @if (validationReport().warnings.length > 0) {
-          <ul class="p-studio__report-list p-studio__report-list--warnings">
-            @for (warn of validationReport().warnings; track warn) {
-              <li>ℹ️ {{ warn }}</li>
-            }
-          </ul>
-        }
-      </div>
-    </section>
-
-    <section class="p-studio__preview-col">
-      <div class="p-studio__toolbar">
-        <div class="p-studio__tab-group">
-          <button
-            class="p-studio__tab"
-            [class.p-studio__tab--active]="selectedTab() === '3d'"
-            (click)="selectedTab.set('3d')"
-          >
-            🧊 {{ i18n.translate('preview3D') }}
-          </button>
-          <button
-            class="p-studio__tab"
-            [class.p-studio__tab--active]="selectedTab() === 'pdf'"
-            (click)="selectedTab.set('pdf')"
-          >
-            📄 {{ i18n.translate('previewSheet') }}
-          </button>
-        </div>
-
-        <div class="p-studio__tab-group">
-          <button
-            class="p-studio__tab"
-            [class.p-studio__tab--active]="sheetMode() === 'coloured'"
-            (click)="sheetMode.set('coloured')"
-          >
-            {{ i18n.translate('coloured') }}
-          </button>
-          <button
-            class="p-studio__tab"
-            [class.p-studio__tab--active]="sheetMode() === 'outline'"
-            (click)="sheetMode.set('outline')"
-          >
-            {{ i18n.translate('outline') }}
-          </button>
+      <ibid-card customClass="p-studio__card">
+        <div class="p-studio__card-header">
+          <h3 class="p-studio__card-title">{{ i18n.translate('exportSection') }}</h3>
         </div>
 
         <div class="p-studio__export-actions">
-          <button class="p-studio__btn p-studio__btn--outline" (click)="downloadSvg()">
+          <ibid-button variant="outlined" (clicked)="downloadSvg()">
             {{ i18n.translate('exportSvg') }}
-          </button>
-          <button class="p-studio__btn p-studio__btn--outline" (click)="copyTypeScript()">
+          </ibid-button>
+          <ibid-button variant="outlined" (clicked)="copyTypeScript()">
             {{ i18n.translate('exportCode') }}
-          </button>
-          <button class="p-studio__btn p-studio__btn--primary" (click)="printPdf()">
+          </ibid-button>
+          <ibid-button variant="primary" (clicked)="printPdf()">
             {{ i18n.translate('exportPdf') }}
-          </button>
+          </ibid-button>
         </div>
-      </div>
 
-      @if (copiedToast()) {
-        <div class="p-studio__toast">
-          {{ i18n.translate('copiedToClipboard') }}
+        @if (copiedToast()) {
+          <div class="p-studio__toast">{{ i18n.translate('copiedToClipboard') }}</div>
+        }
+
+        @if (exportError()) {
+          <div class="p-studio__error-banner">⚠️ {{ exportError() }}</div>
+        }
+      </ibid-card>
+    </section>
+
+    <section class="p-studio__preview-col">
+      @if (selectedTab() === '3d') {
+        <div class="p-studio__pane p-studio__pane--fill">
+          <kirigami-model-viewer-3d />
+        </div>
+      } @else {
+        <div class="p-studio__pane p-studio__pane--scroll">
+          <kirigami-figure-sheet [figure]="currentFigure()" />
         </div>
       }
-
-      <div class="p-studio__view-grid">
-        @if (selectedTab() === '3d') {
-          <div class="p-studio__pane">
-            <kirigami-model-viewer-3d [model]="currentModel()"></kirigami-model-viewer-3d>
-          </div>
-        }
-
-        @if (selectedTab() === 'pdf') {
-          <div class="p-studio__pane">
-            <kirigami-cut-sheet-preview
-              [sheet]="unfoldedSheet()"
-              [mode]="sheetMode()"
-              [modelName]="currentModel().nameKey"
-            ></kirigami-cut-sheet-preview>
-          </div>
-        }
-      </div>
     </section>
   </main>
 </div>

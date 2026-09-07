@@ -1,0 +1,58 @@
+<svg
+  class="c-figure-sheet"
+  [attr.viewBox]="viewBox()"
+  preserveAspectRatio="xMidYMid meet"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    @for (plate of sheet().plates; track plate.id) {
+      <clipPath [attr.id]="clipId(plate)">
+        <path [attr.d]="platePath(plate)" />
+      </clipPath>
+    }
+  </defs>
+
+  @for (plate of sheet().plates; track plate.id) {
+    <path class="c-figure-sheet__plate" [attr.d]="platePath(plate)" [attr.fill]="plate.hue" />
+  }
+
+  @for (plate of sheet().plates; track plate.id) {
+    @if (plate.overlays.length > 0) {
+      <g [attr.clip-path]="clipRef(plate)">
+        @for (overlay of plate.overlays; track overlay.id) {
+          <path [attr.d]="overlayPath(overlay)" [attr.fill]="overlay.hue" />
+        }
+      </g>
+    }
+  }
+
+  @for (plate of sheet().plates; track plate.id) {
+    @for (decor of plate.decor; track $index) {
+      <ellipse
+        [attr.cx]="decor.cx"
+        [attr.cy]="decor.cy"
+        [attr.rx]="decor.rx"
+        [attr.ry]="decor.ry"
+        [attr.fill]="decor.hue"
+        [attr.transform]="rotationOf(decor)"
+      />
+    }
+  }
+
+  @for (plate of sheet().plates; track plate.id) {
+    @for (edge of plate.cutEdges; track $index) {
+      <path class="c-figure-sheet__cut" [attr.d]="cutPath(edge)" />
+    }
+  }
+
+  @for (fold of sheet().folds; track fold.id) {
+    <line
+      class="c-figure-sheet__fold"
+      [class.c-figure-sheet__fold--valley]="fold.kind === 'valley'"
+      [attr.x1]="fold.from[0]"
+      [attr.y1]="fold.from[1]"
+      [attr.x2]="fold.to[0]"
+      [attr.y2]="fold.to[1]"
+    />
+  }
+</svg>

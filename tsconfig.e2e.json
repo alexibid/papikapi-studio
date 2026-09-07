@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "noEmit": true
+  },
+  "include": [
+    "e2e/**/*.ts"
+  ],
+  "references": [
+    {
+      "path": "../../libs/testing/tsconfig.lib.json"
+    }
+  ]
+}
