@@ -11,6 +11,13 @@
     "build": {
       "executor": "@angular/build:application",
       "defaultConfiguration": "production",
+      "inputs": [
+        "production",
+        "^production",
+        {
+          "runtime": "shasum apps/kirigami-studio/uploads/gallery.json 2>/dev/null || echo no-gallery"
+        }
+      ],
       "options": {
         "styles": [
           "apps/kirigami-studio/src/styles.scss"
@@ -22,10 +29,12 @@
           },
           {
             "glob": "**/*",
+            "input": "libs/ibid-ui/assets",
+            "output": "."
+          },
+          {
+            "glob": "**/*",
             "input": "apps/kirigami-studio/src/assets",
-            "ignore": [
-              "**/env.local.json"
-            ],
             "output": "/assets"
           },
           {
@@ -58,16 +67,14 @@
       "executor": "@angular/build:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "port": 4500,
-        "proxyConfig": "apps/kirigami-studio/proxy.conf.js"
+        "port": 4500
       }
     },
     "serve-e2e": {
       "executor": "@angular/build:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "port": 4501,
-        "proxyConfig": "apps/kirigami-studio/proxy.conf.js"
+        "port": 4501
       }
     },
     "lint": {
@@ -90,14 +97,6 @@
       "options": {
         "command": "playwright test",
         "cwd": "apps/kirigami-studio"
-      }
-    },
-    "lab": {
-      "executor": "nx:run-commands",
-      "cache": false,
-      "options": {
-        "cwd": "apps/kirigami-studio",
-        "command": "../../node_modules/.bin/tsx tools/figure-lab.ts"
       }
     }
   }
