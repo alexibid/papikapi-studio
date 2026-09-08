@@ -1,43 +1,31 @@
+import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
+  effect,
   inject,
   input,
   signal,
   viewChild,
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
 import { I18nService } from '@ibid/services';
-import * as THREE from 'three';
-import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js';
+import {
+  AmbientLight,
+  Box3,
+  DirectionalLight,
+  Group,
+  HemisphereLight,
+  Mesh,
+  Material,
+  Scene,
+  WebGLRenderer,
+} from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OrbitCamera } from './orbit-camera';
 
-const DEFAULT_SHEET = '/assets/pieces/tyrannosaurus-sheet.svg';
-const FIT_MARGIN = 1.06;
-const CURVE_SEGMENTS = 14;
-const LAYER_GAP = 0.01;
-const FACE_ON = { theta: 0, phi: Math.PI / 2 };
-const ZOOM_LIMITS = { min: 0.35, max: 6 };
-
-interface FillStyle {
-  readonly fill?: string;
-  readonly opacity: number;
-}
-
-function fillStyleOf(userData: Record<string, unknown> | undefined): FillStyle {
-  const style = userData?.['style'];
-  if (typeof style !== 'object' || style === null) {
-    return { opacity: 1 };
-  }
-  const entries = style as Record<string, unknown>;
-  const fill = entries['fill'];
-  const opacity = entries['fillOpacity'];
-  return {
-    fill: typeof fill === 'string' ? fill : undefined,
-    opacity: typeof opacity === 'number' ? opacity : 1,
-  };
-}
+const MAX_PIXEL_RATIO = 2;
 
 @Component({
   selector: 'kirigami-model-viewer-3d',
@@ -46,37 +34,39 @@ function fillStyleOf(userData: Record<string, unknown> | undefined): FillStyle {
   styleUrl: './model-viewer-3d.scss',
 })
 export class ModelViewer3DComponent implements AfterViewInit, OnDestroy {
-  readonly sheet = input<string>(DEFAULT_SHEET);
+  readonly source = input.required<string>();
 
-  protected readonly meshCount = signal<number>(0);
+  protected readonly partCount = signal<number>(0);
   protected readonly triangleCount = signal<number>(0);
-  protected readonly problem = signal<string | null>(null);
+  protected readonly problem = signal<string>('');
+  protected readonly i18n = inject(I18nService);
 
   private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('webglCanvas');
   private readonly containerRef = viewChild.required<ElementRef<HTMLElement>>('container');
-  protected readonly i18n = inject(I18nService);
   private readonly document = inject(DOCUMENT);
 
-  private renderer?: THREE.WebGLRenderer;
-  private scene?: THREE.Scene;
-  private camera?: THREE.OrthographicCamera;
-  private root?: THREE.Group;
+  private readonly scene = new Scene();
+  private readonly rig = new OrbitCamera();
+  private readonly stage = new Group();
+  private renderer?: WebGLRenderer;
   private resizeObserver?: ResizeObserver;
   private frameId?: number;
-
-  private readonly target = new THREE.Vector3();
-  private radius = 1000;
-  private theta = FACE_ON.theta;
-  private phi = FACE_ON.phi;
-  private zoomLevel = 1;
   private dragging = false;
-  private lastX = 0;
-  private lastY = 0;
+  private lastPointer = { x: 0, y: 0 };
+
+  constructor() {
+    effect(() => {
+      const url = this.source();
+      if (this.renderer) {
+        this.loadModel(url);
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
-    this.initThree();
-    this.loadSheet();
+    this.buildScene();
     this.observeResize();
+    this.loadModel(this.source());
   }
 
   ngOnDestroy(): void {
@@ -84,92 +74,23 @@ export class ModelViewer3DComponent implements AfterViewInit, OnDestroy {
       cancelAnimationFrame(this.frameId);
     }
     this.resizeObserver?.disconnect();
-    this.root?.traverse((node) => {
-      if (node instanceof THREE.Mesh) {
-        node.geometry.dispose();
-        (node.material as THREE.Material).dispose();
-      }
-    });
+    this.clearStage();
     this.renderer?.dispose();
   }
 
-  private initThree(): void {
-    const renderer = new THREE.WebGLRenderer({
-      canvas: this.canvasRef().nativeElement,
-      antialias: true,
-      alpha: true,
-    });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    this.renderer = renderer;
-
-    this.scene = new THREE.Scene();
-    this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 4000);
-
-    this.root = new THREE.Group();
-    this.root.scale.y = -1;
-    this.scene.add(this.root);
-  }
-
-  private loadSheet(): void {
-    new SVGLoader().load(
-      this.sheet(),
-      (data) => {
-        let depth = 0;
-        let meshes = 0;
-        let triangles = 0;
-
-        for (const path of data.paths) {
-          const style = fillStyleOf(path.userData);
-          depth += LAYER_GAP;
-          if (!style.fill || style.fill === 'none') {
-            continue;
-          }
-          const material = new THREE.MeshBasicMaterial({
-            color: new THREE.Color().setStyle(style.fill),
-            side: THREE.DoubleSide,
-            transparent: true,
-            opacity: style.opacity,
-            depthWrite: false,
-          });
-
-          for (const shape of SVGLoader.createShapes(path)) {
-            const geometry = new THREE.ShapeGeometry(shape, CURVE_SEGMENTS);
-            const mesh = new THREE.Mesh(geometry, material);
-            mesh.position.z = depth;
-            mesh.renderOrder = meshes;
-            this.root?.add(mesh);
-            meshes += 1;
-            triangles += (geometry.index?.count ?? geometry.attributes['position'].count) / 3;
-          }
-        }
-
-        this.meshCount.set(meshes);
-        this.triangleCount.set(Math.round(triangles));
-        this.fitCamera();
-        this.renderFrame();
-      },
-      undefined,
-      () => this.problem.set(this.i18n.translate('sheetLoadFailed'))
-    );
-  }
-
-  protected zoom(delta: number): void {
-    const next = this.zoomLevel * (1 + delta);
-    this.zoomLevel = Math.min(ZOOM_LIMITS.max, Math.max(ZOOM_LIMITS.min, next));
-    this.applyCamera();
+  protected zoom(factor: number): void {
+    this.rig.scale(factor);
+    this.draw();
   }
 
   protected resetView(): void {
-    this.theta = FACE_ON.theta;
-    this.phi = FACE_ON.phi;
-    this.zoomLevel = 1;
-    this.applyCamera();
+    this.rig.home();
+    this.draw();
   }
 
   protected onPointerDown(event: PointerEvent): void {
     this.dragging = true;
-    this.lastX = event.clientX;
-    this.lastY = event.clientY;
+    this.lastPointer = { x: event.clientX, y: event.clientY };
     (event.target as HTMLElement).setPointerCapture?.(event.pointerId);
   }
 
@@ -177,11 +98,9 @@ export class ModelViewer3DComponent implements AfterViewInit, OnDestroy {
     if (!this.dragging) {
       return;
     }
-    this.theta -= (event.clientX - this.lastX) * 0.008;
-    this.phi = Math.max(0.08, Math.min(Math.PI - 0.08, this.phi - (event.clientY - this.lastY) * 0.008));
-    this.lastX = event.clientX;
-    this.lastY = event.clientY;
-    this.applyCamera();
+    this.rig.orbit(event.clientX - this.lastPointer.x, event.clientY - this.lastPointer.y);
+    this.lastPointer = { x: event.clientX, y: event.clientY };
+    this.draw();
   }
 
   protected onPointerUp(): void {
@@ -190,48 +109,83 @@ export class ModelViewer3DComponent implements AfterViewInit, OnDestroy {
 
   protected onWheel(event: WheelEvent): void {
     event.preventDefault();
-    this.zoom(event.deltaY > 0 ? -0.12 : 0.12);
+    this.zoom(event.deltaY > 0 ? 0.9 : 1.1);
   }
 
-  private applyCamera(): void {
-    if (!this.camera) {
+  private buildScene(): void {
+    const renderer = new WebGLRenderer({
+      canvas: this.canvasRef().nativeElement,
+      antialias: true,
+      alpha: true,
+      preserveDrawingBuffer: true,
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO));
+    this.renderer = renderer;
+
+    this.scene.add(new HemisphereLight(0xfff6e5, 0x8f8f8f, 2.1));
+    this.scene.add(new AmbientLight(0xffffff, 0.5));
+    const key = new DirectionalLight(0xffffff, 1.9);
+    key.position.set(3, 6, 4);
+    this.scene.add(key);
+    const rim = new DirectionalLight(0xdfe7f5, 0.9);
+    rim.position.set(-4, 2, -5);
+    this.scene.add(rim);
+    this.scene.add(this.stage);
+  }
+
+  private loadModel(url: string): void {
+    this.clearStage();
+    this.problem.set('');
+    if (!url) {
+      this.partCount.set(0);
+      this.triangleCount.set(0);
       return;
     }
-    this.camera.zoom = this.zoomLevel;
-    this.camera.position.set(
-      this.target.x + this.radius * Math.sin(this.phi) * Math.sin(this.theta),
-      this.target.y + this.radius * Math.cos(this.phi),
-      this.target.z + this.radius * Math.sin(this.phi) * Math.cos(this.theta)
+    new GLTFLoader().load(
+      url,
+      (gltf) => this.adopt(gltf.scene),
+      undefined,
+      () => this.problem.set(this.i18n.translate('modelLoadFailed'))
     );
-    this.camera.up.set(0, 1, 0);
-    this.camera.lookAt(this.target);
-    this.camera.updateProjectionMatrix();
-    this.renderFrame();
   }
 
-  private fitCamera(): void {
+  private adopt(model: Group): void {
+    this.stage.add(model);
+    let parts = 0;
+    let triangles = 0;
+    model.traverse((node) => {
+      if (!(node instanceof Mesh)) {
+        return;
+      }
+      parts += 1;
+      const position = node.geometry.getAttribute('position');
+      triangles += (node.geometry.index?.count ?? position.count) / 3;
+    });
+    this.partCount.set(parts);
+    this.triangleCount.set(Math.round(triangles));
+    this.rig.frame(new Box3().setFromObject(this.stage));
+    this.fitViewport();
+  }
+
+  private clearStage(): void {
+    for (const child of [...this.stage.children]) {
+      child.traverse((node) => {
+        if (node instanceof Mesh) {
+          node.geometry.dispose();
+          materialsOf(node).forEach((material) => material.dispose());
+        }
+      });
+      this.stage.remove(child);
+    }
+  }
+
+  private fitViewport(): void {
     const container = this.containerRef().nativeElement;
     const width = container.clientWidth || 1;
     const height = container.clientHeight || 1;
     this.renderer?.setSize(width, height, false);
-
-    if (!this.camera || !this.root || this.root.children.length === 0) {
-      return;
-    }
-
-    const box = new THREE.Box3().setFromObject(this.root);
-    const size = box.getSize(new THREE.Vector3());
-    const centre = box.getCenter(new THREE.Vector3());
-    const aspect = width / height;
-    const halfHeight = (size.x / size.y > aspect ? size.x / aspect : size.y) * 0.5 * FIT_MARGIN;
-
-    this.camera.left = -halfHeight * aspect;
-    this.camera.right = halfHeight * aspect;
-    this.camera.top = halfHeight;
-    this.camera.bottom = -halfHeight;
-    this.target.copy(centre);
-    this.radius = Math.max(size.x, size.y) * 2;
-    this.applyCamera();
+    this.rig.resize(width / height);
+    this.draw();
   }
 
   private observeResize(): void {
@@ -239,21 +193,20 @@ export class ModelViewer3DComponent implements AfterViewInit, OnDestroy {
     if (!view?.ResizeObserver) {
       return;
     }
-    this.resizeObserver = new view.ResizeObserver(() => {
-      this.fitCamera();
-      this.renderFrame();
-    });
+    this.resizeObserver = new view.ResizeObserver(() => this.fitViewport());
     this.resizeObserver.observe(this.containerRef().nativeElement);
   }
 
-  private renderFrame(): void {
+  private draw(): void {
     if (this.frameId !== undefined) {
       cancelAnimationFrame(this.frameId);
     }
     this.frameId = requestAnimationFrame(() => {
-      if (this.renderer && this.scene && this.camera) {
-        this.renderer.render(this.scene, this.camera);
-      }
+      this.renderer?.render(this.scene, this.rig.camera);
     });
   }
+}
+
+function materialsOf(mesh: Mesh): readonly Material[] {
+  return Array.isArray(mesh.material) ? mesh.material : [mesh.material];
 }

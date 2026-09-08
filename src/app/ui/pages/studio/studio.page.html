@@ -2,108 +2,131 @@
   <header class="p-studio__header">
     <div class="p-studio__brand">
       <h1 class="p-studio__title">{{ i18n.translate('appName') }}</h1>
-      <span class="p-studio__subtitle">{{ currentFigure().name }}</span>
+      <span class="p-studio__subtitle">{{ i18n.translate('tagline') }}</span>
     </div>
 
-    <div class="p-studio__center-tabs">
-      <ibid-button
-        [variant]="selectedTab() === '3d' ? 'primary' : 'outlined'"
-        class="p-studio__main-tab"
-        (clicked)="selectedTab.set('3d')"
-      >
-        🧊 {{ i18n.translate('preview3D') }}
-      </ibid-button>
-      <ibid-button
-        [variant]="selectedTab() === 'sheet' ? 'primary' : 'outlined'"
-        class="p-studio__main-tab"
-        (clicked)="selectedTab.set('sheet')"
-      >
-        📄 {{ i18n.translate('previewSheet') }}
-      </ibid-button>
-    </div>
-
-    <div class="p-studio__actions">
-      <a class="p-studio__lab-link" routerLink="/lab" [title]="i18n.translate('labLink')">
-        🧪 Lab
-      </a>
-    </div>
+    <ibid-button variant="outlined" (clicked)="refresh()">
+      ↻ {{ i18n.translate('refreshCatalogue') }}
+    </ibid-button>
   </header>
 
   <main class="p-studio__main">
-    <section class="p-studio__editor-col">
+    <section class="p-studio__catalogue-col">
       <ibid-card customClass="p-studio__card">
         <div class="p-studio__card-header">
-          <h2 class="p-studio__card-title">{{ currentFigure().name }}</h2>
-          <span class="p-studio__badge p-studio__badge--neutral">{{ currentFigure().tierId }}</span>
+          <h2 class="p-studio__card-title">{{ i18n.translate('catalogue') }}</h2>
+          <ibid-badge [label]="catalogue.all().length + ''" />
         </div>
 
-        <ul class="p-studio__report-list">
-          <li>{{ plateCount() }} {{ i18n.translate('plates') }}</li>
-          <li>{{ hingeCount() }} {{ i18n.translate('hinges') }}</li>
-          <li>{{ sheetSize() }}</li>
-        </ul>
-      </ibid-card>
-
-      <ibid-card customClass="p-studio__card p-studio__card--report">
-        <div class="p-studio__card-header">
-          <h3 class="p-studio__card-title">{{ i18n.translate('qualityReport') }}</h3>
-          @if (sheet().errors.length === 0) {
-            <span class="p-studio__badge p-studio__badge--success">
-              {{ i18n.translate('qualityPass') }}
-            </span>
-          } @else {
-            <span class="p-studio__badge p-studio__badge--error">
-              {{ sheet().errors.length }} {{ i18n.translate('errorsCount') }}
-            </span>
+        <div class="p-studio__shelves" role="tablist">
+          @for (shelf of shelves; track shelf) {
+            <button
+              type="button"
+              role="tab"
+              class="p-studio__shelf"
+              [class.p-studio__shelf--live]="isShelf(shelf)"
+              [attr.aria-selected]="isShelf(shelf)"
+              (click)="show(shelf)"
+            >
+              {{ i18n.translate(shelf) }} · {{ countOf(shelf) }}
+            </button>
           }
         </div>
 
-        @if (sheet().errors.length > 0) {
-          <ul class="p-studio__report-list p-studio__report-list--errors">
-            @for (err of sheet().errors; track err) {
-              <li>⚠️ {{ err }}</li>
+        @if (catalogue.all().length === 0) {
+          <ibid-empty-state [message]="i18n.translate('catalogueEmpty')" />
+        } @else {
+          <ul class="p-studio__model-list">
+            @for (model of catalogue.all(); track model.id) {
+              <li>
+                <button
+                  type="button"
+                  class="p-studio__model"
+                  [class.p-studio__model--chosen]="isChosen(model)"
+                  (click)="choose(model)"
+                >
+                  <span class="p-studio__model-name">{{ model.title }}</span>
+                  <span class="p-studio__model-meta">
+                    {{ model.tier.style }} · {{ model.tier.ages }}
+                  </span>
+                  <span
+                    class="p-studio__dot"
+                    [class.p-studio__dot--clean]="model.clean"
+                  ></span>
+                </button>
+              </li>
             }
           </ul>
         }
       </ibid-card>
 
-      <ibid-card customClass="p-studio__card">
-        <div class="p-studio__card-header">
-          <h3 class="p-studio__card-title">{{ i18n.translate('exportSection') }}</h3>
-        </div>
+      @if (selected(); as model) {
+        <ibid-card customClass="p-studio__card">
+          <div class="p-studio__card-header">
+            <h3 class="p-studio__card-title">{{ i18n.translate('meshReport') }}</h3>
+            @if (model.clean) {
+              <span class="p-studio__badge p-studio__badge--success">
+                {{ i18n.translate('zeroOffenders') }}
+              </span>
+            } @else {
+              <span class="p-studio__badge p-studio__badge--error">
+                {{ i18n.translate('offendersFound') }}
+              </span>
+            }
+          </div>
 
-        <div class="p-studio__export-actions">
-          <ibid-button variant="outlined" (clicked)="downloadSvg()">
-            {{ i18n.translate('exportSvg') }}
-          </ibid-button>
-          <ibid-button variant="outlined" (clicked)="copyTypeScript()">
-            {{ i18n.translate('exportCode') }}
-          </ibid-button>
-          <ibid-button variant="primary" (clicked)="printPdf()">
-            {{ i18n.translate('exportPdf') }}
-          </ibid-button>
-        </div>
+          <ul class="p-studio__facts">
+            <li>{{ model.parts.length }} {{ i18n.translate('parts') }}</li>
+            <li>{{ faceTally() }} {{ i18n.translate('faces') }}</li>
+            <li>{{ pageTally() }} {{ i18n.translate('printedPages') }}</li>
+            <li>{{ cardCount() }} {{ i18n.translate('printedColours') }}</li>
+          </ul>
 
-        @if (copiedToast()) {
-          <div class="p-studio__toast">{{ i18n.translate('copiedToClipboard') }}</div>
-        }
+          <ul class="p-studio__swatches">
+            @for (colour of colours(); track colour) {
+              <li class="p-studio__swatch">
+                <span class="p-studio__chip" [style.background]="colour.hex"></span>
+                {{ colour.role }}
+              </li>
+            }
+          </ul>
+        </ibid-card>
 
-        @if (exportError()) {
-          <div class="p-studio__error-banner">⚠️ {{ exportError() }}</div>
-        }
-      </ibid-card>
+        <ibid-card customClass="p-studio__card">
+          <div class="p-studio__card-header">
+            <h3 class="p-studio__card-title">{{ i18n.translate('printableNets') }}</h3>
+          </div>
+
+          @if (model.scriptPath) {
+            <a class="p-studio__script" [href]="model.scriptPath" target="_blank" rel="noopener">
+              {{ i18n.translate('openScript') }}
+            </a>
+          }
+
+          <ul class="p-studio__net-list">
+            @for (part of model.parts; track part.name) {
+              <li class="p-studio__net">
+                <span class="p-studio__net-name">{{ part.name }}</span>
+                <span class="p-studio__net-meta">
+                  {{ part.faces }} {{ i18n.translate('faces') }} ·
+                  {{ part.pages }} {{ i18n.translate('printedPages') }} ·
+                  {{ part.colours.length }} {{ i18n.translate('printedColours') }}
+                </span>
+                <span class="p-studio__net-links">
+                  <a [href]="part.netPath" target="_blank" rel="noopener">PDF</a>
+                  @for (vector of part.vectorPaths; track vector; let index = $index) {
+                    <a [href]="vector" target="_blank" rel="noopener">SVG {{ index + 1 }}</a>
+                  }
+                </span>
+              </li>
+            }
+          </ul>
+        </ibid-card>
+      }
     </section>
 
     <section class="p-studio__preview-col">
-      @if (selectedTab() === '3d') {
-        <div class="p-studio__pane p-studio__pane--fill">
-          <kirigami-model-viewer-3d />
-        </div>
-      } @else {
-        <div class="p-studio__pane p-studio__pane--scroll">
-          <kirigami-figure-sheet [figure]="currentFigure()" />
-        </div>
-      }
+      <kirigami-model-viewer-3d [source]="preview()" />
     </section>
   </main>
 </div>

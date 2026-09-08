@@ -1,8 +1,11 @@
 <div class="c-viewer-3d" #container>
-  <div class="c-viewer-3d__top-controls">
-    <button class="c-viewer-3d__tool-btn" type="button" (click)="zoom(0.2)" [attr.aria-label]="i18n.translate('zoomIn')">+</button>
-    <button class="c-viewer-3d__tool-btn" type="button" (click)="zoom(-0.2)" [attr.aria-label]="i18n.translate('zoomOut')">−</button>
-    <button class="c-viewer-3d__tool-btn" type="button" (click)="resetView()" [attr.aria-label]="i18n.translate('resetView')">↺</button>
+  <div class="c-viewer-3d__tools">
+    <button class="c-viewer-3d__tool" type="button" (click)="zoom(1.2)"
+            [attr.aria-label]="i18n.translate('zoomIn')">+</button>
+    <button class="c-viewer-3d__tool" type="button" (click)="zoom(0.8)"
+            [attr.aria-label]="i18n.translate('zoomOut')">−</button>
+    <button class="c-viewer-3d__tool" type="button" (click)="resetView()"
+            [attr.aria-label]="i18n.translate('resetView')">↺</button>
   </div>
 
   <canvas
@@ -15,17 +18,15 @@
     (wheel)="onWheel($event)"
   ></canvas>
 
-  <div class="c-viewer-3d__step-card">
-    <div class="c-viewer-3d__step-header">
-      <span class="c-viewer-3d__step-badge">📄 {{ i18n.translate('flatSheet') }}</span>
-      <span class="c-viewer-3d__step-index">
-        {{ meshCount() }} {{ i18n.translate('meshes') }} · {{ triangleCount() }}
-        {{ i18n.translate('triangles') }}
-      </span>
-    </div>
+  <div class="c-viewer-3d__readout">
+    <span class="c-viewer-3d__badge">🧊 {{ i18n.translate('assembledModel') }}</span>
+    <span class="c-viewer-3d__counts">
+      {{ partCount() }} {{ i18n.translate('parts') }} · {{ triangleCount() }}
+      {{ i18n.translate('triangles') }}
+    </span>
   </div>
 
   @if (problem()) {
-    <p class="c-viewer-3d__step-desc">⚠️ {{ problem() }}</p>
+    <p class="c-viewer-3d__problem">⚠️ {{ problem() }}</p>
   }
 </div>

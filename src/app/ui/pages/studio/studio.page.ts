@@ -1,70 +1,76 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit, computed, inject } from '@angular/core';
 import { I18nService } from '@ibid/services';
-import { ButtonComponent, CardComponent } from 'ibid-ui';
-import { TYRANNOSAURUS } from '../../../domain/data/figures/tyrannosaurus';
-import { PaperFigure } from '../../../domain/models/paper-figure';
-import { unfoldFigure } from '../../../domain/services/figure-unfolder';
-import { PdfExportService } from '../../../application/services/pdf-export.service';
-import { FigureSheetComponent } from '../../components/figure-sheet/figure-sheet';
+import { BadgeComponent, ButtonComponent, CardComponent, EmptyStateComponent } from 'ibid-ui';
+import { ModelCatalogueService } from '../../../application/services/model-catalogue.service';
+import {
+  MODEL_STAGES,
+  ModelStage,
+  PaperModel,
+  printedColours,
+  totalFaces,
+  totalPages,
+} from '../../../domain/models/paper-model';
 import { ModelViewer3DComponent } from '../../components/model-viewer-3d/model-viewer-3d';
-
-type StudioTab = '3d' | 'sheet';
 
 @Component({
   selector: 'kirigami-studio-page',
   standalone: true,
   imports: [
+    BadgeComponent,
     ButtonComponent,
     CardComponent,
+    EmptyStateComponent,
     ModelViewer3DComponent,
-    FigureSheetComponent,
-    RouterLink,
   ],
   templateUrl: './studio.page.html',
   styleUrl: './studio.page.scss',
 })
-export class StudioPage {
+export class StudioPage implements OnInit {
   protected readonly i18n = inject(I18nService);
-  private readonly pdf = inject(PdfExportService);
+  protected readonly catalogue = inject(ModelCatalogueService);
 
-  protected readonly currentFigure = signal<PaperFigure>(TYRANNOSAURUS);
-  protected readonly selectedTab = signal<StudioTab>('3d');
-  protected readonly copiedToast = signal<boolean>(false);
-  protected readonly exportError = signal<string | null>(null);
-
-  protected readonly sheet = computed(() => unfoldFigure(this.currentFigure()));
-  protected readonly plateCount = computed(() => this.currentFigure().plates.length);
-  protected readonly hingeCount = computed(() => this.currentFigure().hinges.length);
-  protected readonly sheetSize = computed(() => {
-    const { sheetWidth, sheetHeight } = this.sheet();
-    return `${Math.round(sheetWidth)} × ${Math.round(sheetHeight)} mm`;
+  protected readonly selected = this.catalogue.selected;
+  protected readonly preview = computed(() => this.selected()?.previewPath ?? '');
+  protected readonly pageTally = computed(() => this.tally(totalPages));
+  protected readonly faceTally = computed(() => this.tally(totalFaces));
+  protected readonly cardCount = computed(() => this.colours().length);
+  protected readonly colours = computed(() => {
+    const model = this.selected();
+    return model ? printedColours(model) : [];
   });
 
-  protected copyTypeScript(): void {
-    const code = this.pdf.generateTypeScriptCode(this.currentFigure());
-    this.copiedToast.set(true);
-    setTimeout(() => this.copiedToast.set(false), 2400);
-
-    if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(code).catch(() => undefined);
-    }
+  ngOnInit(): void {
+    void this.catalogue.load();
   }
 
-  protected printPdf(): void {
-    this.runExport(() => this.pdf.printSheet(this.currentFigure().name));
+  protected readonly shelves = MODEL_STAGES;
+
+  protected show(stage: ModelStage): void {
+    this.catalogue.show(stage);
   }
 
-  protected downloadSvg(): void {
-    this.runExport(() => this.pdf.downloadSvg(this.currentFigure().name));
+  protected isShelf(stage: ModelStage): boolean {
+    return this.catalogue.shelf() === stage;
   }
 
-  private runExport(action: () => void): void {
-    try {
-      action();
-      this.exportError.set(null);
-    } catch (err) {
-      this.exportError.set(err instanceof Error ? err.message : 'Export failed');
-    }
+  protected countOf(stage: ModelStage): number {
+    return this.catalogue.countOf(stage);
+  }
+
+  protected choose(model: PaperModel): void {
+    this.catalogue.select(model.id);
+  }
+
+  protected isChosen(model: PaperModel): boolean {
+    return this.selected()?.id === model.id;
+  }
+
+  protected refresh(): void {
+    void this.catalogue.load();
+  }
+
+  private tally(measure: (model: PaperModel) => number): number {
+    const model = this.selected();
+    return model ? measure(model) : 0;
   }
 }
