@@ -75,12 +75,55 @@
             }
           </div>
 
+          @if (grids().length > 1) {
+            <label class="p-studio__difficulty">
+              <span class="p-studio__difficulty-label">{{ i18n.translate('difficulty') }}</span>
+              <select
+                class="p-studio__difficulty-select"
+                (change)="pick($any($event.target).value)"
+              >
+                @for (option of grids(); track option.intensity) {
+                  <option [value]="option.intensity" [selected]="option.intensity === intensity()">
+                    {{ i18n.translate('intensity') }} {{ option.intensity }} ·
+                    {{ option.faces }} {{ i18n.translate('faces') }}
+                  </option>
+                }
+              </select>
+            </label>
+          }
+
           <ul class="p-studio__facts">
             <li>{{ model.parts.length }} {{ i18n.translate('parts') }}</li>
             <li>{{ faceTally() }} {{ i18n.translate('faces') }}</li>
             <li>{{ pageTally() }} {{ i18n.translate('printedPages') }}</li>
             <li>{{ cardCount() }} {{ i18n.translate('printedColours') }}</li>
           </ul>
+
+          @if (provenance(); as made) {
+            <details class="p-studio__made">
+              <summary class="p-studio__made-summary">{{ i18n.translate('howItWasMade') }}</summary>
+              <dl class="p-studio__made-list">
+                <dt>{{ i18n.translate('buildVersion') }}</dt>
+                <dd>{{ made.version }} · {{ made.producedAt }}</dd>
+                <dt>{{ i18n.translate('producedOn') }}</dt>
+                <dd>{{ made.machine }}</dd>
+                <dt>{{ i18n.translate('producedWith') }}</dt>
+                <dd>{{ made.software }}</dd>
+                <dt>{{ i18n.translate('timePerStage') }}</dt>
+                <dd>
+                  <ul class="p-studio__made-stages">
+                    @for (step of made.stages; track step.stage) {
+                      <li>{{ step.stage }} · {{ step.seconds }}s</li>
+                    }
+                  </ul>
+                </dd>
+                <dt>{{ i18n.translate('totalTime') }}</dt>
+                <dd>{{ made.secondsTotal }}s</dd>
+                <dt>{{ i18n.translate('agentTokens') }}</dt>
+                <dd>{{ made.agentTokens }}</dd>
+              </dl>
+            </details>
+          }
 
           <ul class="p-studio__swatches">
             @for (colour of colours(); track colour) {
@@ -96,12 +139,6 @@
           <div class="p-studio__card-header">
             <h3 class="p-studio__card-title">{{ i18n.translate('printableNets') }}</h3>
           </div>
-
-          @if (model.scriptPath) {
-            <a class="p-studio__script" [href]="model.scriptPath" target="_blank" rel="noopener">
-              {{ i18n.translate('openScript') }}
-            </a>
-          }
 
           <ul class="p-studio__net-list">
             @for (part of model.parts; track part.name) {

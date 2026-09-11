@@ -19,7 +19,10 @@ export const NET_LINK = '.p-studio__net-links a';
 export const SHELF = '.p-studio__shelf';
 export const SHELF_LIVE = '.p-studio__shelf--live';
 export const SWATCH = '.p-studio__swatch';
-export const SCRIPT = '.p-studio__script';
+export const DIFFICULTY = '.p-studio__difficulty-select';
+export const MADE = '.p-studio__made';
+export const MADE_SUMMARY = '.p-studio__made-summary';
+export const MADE_LIST = '.p-studio__made-list';
 export const FACTS = '.p-studio__facts li';
 export const CANVAS = '.c-viewer-3d__canvas';
 export const COUNTS = '.c-viewer-3d__counts';
@@ -37,10 +40,10 @@ export async function openSeeded(page: Page, path = '/'): Promise<void> {
     })
   );
   await page.route('**/uploads/**/model.glb', (route) =>
-    route.fulfill({ contentType: 'model/gltf-binary', body: readFileSync(join(FIXTURES, 'rocket.glb')) })
+    route.fulfill({ contentType: 'model/gltf-binary', body: readFileSync(join(FIXTURES, 'model.glb')) })
   );
   await page.route('**/uploads/**/nets/*.pdf', (route) =>
-    route.fulfill({ contentType: 'application/pdf', body: readFileSync(join(FIXTURES, 'rocket.pdf')) })
+    route.fulfill({ contentType: 'application/pdf', body: readFileSync(join(FIXTURES, 'net.pdf')) })
   );
   await page.goto(path);
 }

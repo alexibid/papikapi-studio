@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { MODEL_STAGES, PaperModel, printedColours, totalFaces, totalPages } from './paper-model';
+import {
+  MODEL_STAGES,
+  PaperModel,
+  defaultIntensity,
+  gridAt,
+  printedColours,
+  totalFaces,
+  totalPages,
+} from './paper-model';
 
 describe('paper-model', () => {
   const model: PaperModel = {
@@ -9,8 +17,12 @@ describe('paper-model', () => {
     tier: { id: 'tier-4', ages: '13+', style: 'High-density 3D puzzle', palette: 'monochrome' },
     createdAt: '2026-09-07T21:00:29+00:00',
     clean: true,
-    previewPath: '/uploads/draft/fox/model.glb',
-    scriptPath: '/uploads/draft/fox/model.py',
+    previewPath: '/uploads/models/fox/grid-3.glb',
+    grids: [
+      { intensity: 1, grid: 15, spacingMm: 15.075, faces: 338, previewPath: '/uploads/models/fox/grid-1.glb' },
+      { intensity: 2, grid: 18, spacingMm: 12.563, faces: 491, previewPath: '/uploads/models/fox/grid-2.glb' },
+      { intensity: 3, grid: 20, spacingMm: 11.307, faces: 591, previewPath: '/uploads/models/fox/grid-3.glb' },
+    ],
     parts: [
       {
         name: 'body',
@@ -34,7 +46,16 @@ describe('paper-model', () => {
   };
 
   it('orders the shelves so the page opens on the approved one first', () => {
-    expect(MODEL_STAGES).toEqual(['ready', 'draft', 'backup']);
+    expect(MODEL_STAGES).toEqual(['ready', 'draft']);
+  });
+
+  it('finds the grid for an intensity and nothing for one it does not carry', () => {
+    expect(gridAt(model, 2)?.faces).toBe(491);
+    expect(gridAt(model, 9)).toBeUndefined();
+  });
+
+  it('opens on the middle intensity', () => {
+    expect(defaultIntensity(model)).toBe(2);
   });
 
   it('adds up the printed pages of every part', () => {

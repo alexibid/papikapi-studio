@@ -1,179 +1,70 @@
 [
   {
-    "id": "rocket-pad",
-    "state": "ready",
-    "title": "Rocket launch pad",
+    "id": "baby-broncosaurus",
+    "state": "draft",
+    "title": "Baby Broncosaurus",
     "tier": {
-      "id": "tier-2",
-      "ages": "7-9",
-      "style": "Wedges and simple pyramids",
-      "palette": "playful"
+      "id": "tier-4",
+      "ages": "13+",
+      "style": "High-density 3D puzzle",
+      "palette": "monochrome"
     },
-    "createdAt": "2026-01-15T09:00:00+00:00",
+    "createdAt": "2026-09-09T00:00:00+00:00",
     "clean": true,
-    "scriptPath": "/uploads/ready/rocket-pad/model.py",
-    "previewPath": "/uploads/ready/rocket-pad/model.glb",
-    "parts": [
+    "previewPath": "/uploads/models/baby-broncosaurus/grid-3.glb",
+    "grids": [
       {
-        "name": "ground",
-        "role": "neutral",
-        "faces": 6,
-        "pages": 1,
-        "colours": [
-          {
-            "role": "neutral",
-            "hex": "#FBF3E4"
-          }
-        ],
-        "netPath": "/uploads/ready/rocket-pad/nets/ground.pdf",
-        "vectorPaths": [
-          "/uploads/ready/rocket-pad/nets/ground.svg"
-        ]
+        "intensity": 1,
+        "grid": 15,
+        "spacingMm": 15.075,
+        "faces": 338,
+        "previewPath": "/uploads/models/baby-broncosaurus/grid-1.glb"
       },
       {
-        "name": "rocket",
-        "role": "primary",
-        "faces": 19,
+        "intensity": 2,
+        "grid": 18,
+        "spacingMm": 12.563,
+        "faces": 491,
+        "previewPath": "/uploads/models/baby-broncosaurus/grid-2.glb"
+      },
+      {
+        "intensity": 3,
+        "grid": 20,
+        "spacingMm": 11.307,
+        "faces": 591,
+        "previewPath": "/uploads/models/baby-broncosaurus/grid-3.glb"
+      },
+      {
+        "intensity": 4,
+        "grid": 22,
+        "spacingMm": 10.279,
+        "faces": 718,
+        "previewPath": "/uploads/models/baby-broncosaurus/grid-4.glb"
+      },
+      {
+        "intensity": 5,
+        "grid": 25,
+        "spacingMm": 9.045,
+        "faces": 924,
+        "previewPath": "/uploads/models/baby-broncosaurus/grid-5.glb"
+      }
+    ],
+    "parts": [
+      {
+        "name": "subject",
+        "role": "#707050",
+        "faces": 924,
         "pages": 2,
         "colours": [
           {
-            "role": "primary",
-            "hex": "#F26B5B"
-          },
-          {
-            "role": "shadow",
-            "hex": "#3E3227"
+            "role": "#707050",
+            "hex": "#707050"
           }
         ],
-        "netPath": "/uploads/ready/rocket-pad/nets/rocket.pdf",
+        "netPath": "/uploads/models/baby-broncosaurus/nets/subject.pdf",
         "vectorPaths": [
-          "/uploads/ready/rocket-pad/nets/rocket_page0.svg",
-          "/uploads/ready/rocket-pad/nets/rocket_page1.svg"
-        ]
-      },
-      {
-        "name": "tree",
-        "role": "accent",
-        "faces": 11,
-        "pages": 1,
-        "colours": [
-          {
-            "role": "accent",
-            "hex": "#5BC0A8"
-          }
-        ],
-        "netPath": "/uploads/ready/rocket-pad/nets/tree.pdf",
-        "vectorPaths": [
-          "/uploads/ready/rocket-pad/nets/tree.svg"
-        ]
-      }
-    ]
-  },
-  {
-    "id": "forest-fox",
-    "state": "draft",
-    "title": "Forest fox",
-    "tier": {
-      "id": "tier-3",
-      "ages": "10-12",
-      "style": "Detailed low-poly",
-      "palette": "earth"
-    },
-    "createdAt": "2026-01-14T09:00:00+00:00",
-    "clean": true,
-    "scriptPath": "/uploads/draft/forest-fox/model.py",
-    "previewPath": "/uploads/draft/forest-fox/model.glb",
-    "parts": [
-      {
-        "name": "fox",
-        "role": "primary",
-        "faces": 250,
-        "pages": 5,
-        "colours": [
-          {
-            "role": "primary",
-            "hex": "#B07156"
-          },
-          {
-            "role": "neutral",
-            "hex": "#EFE6D8"
-          },
-          {
-            "role": "shadow",
-            "hex": "#4A3D33"
-          }
-        ],
-        "netPath": "/uploads/draft/forest-fox/nets/fox.pdf",
-        "vectorPaths": [
-          "/uploads/draft/forest-fox/nets/fox_page0.svg"
-        ]
-      }
-    ]
-  },
-  {
-    "id": "dirty-dino",
-    "state": "draft",
-    "title": "Unwelded dinosaur",
-    "tier": {
-      "id": "tier-1",
-      "ages": "4-6",
-      "style": "Minecraft Super Cute",
-      "palette": "vibrant"
-    },
-    "createdAt": "2026-01-13T09:00:00+00:00",
-    "clean": false,
-    "scriptPath": "/uploads/draft/dirty-dino/model.py",
-    "previewPath": "/uploads/draft/dirty-dino/model.glb",
-    "parts": [
-      {
-        "name": "dino",
-        "role": "primary",
-        "faces": 24,
-        "pages": 1,
-        "colours": [
-          {
-            "role": "primary",
-            "hex": "#E63946"
-          }
-        ],
-        "netPath": "/uploads/draft/dirty-dino/nets/dino.pdf",
-        "vectorPaths": []
-      }
-    ]
-  },
-  {
-    "id": "old-fox",
-    "state": "backup",
-    "title": "Sitting fox, first cut",
-    "tier": {
-      "id": "tier-3",
-      "ages": "10-12",
-      "style": "Lofted bodies",
-      "palette": "earth"
-    },
-    "createdAt": "2026-01-10T09:00:00+00:00",
-    "clean": true,
-    "scriptPath": "/uploads/backup/old-fox/model.py",
-    "previewPath": "/uploads/backup/old-fox/model.glb",
-    "parts": [
-      {
-        "name": "fox",
-        "role": "primary",
-        "faces": 88,
-        "pages": 2,
-        "colours": [
-          {
-            "role": "primary",
-            "hex": "#D9773F"
-          },
-          {
-            "role": "shade",
-            "hex": "#F4EDE2"
-          }
-        ],
-        "netPath": "/uploads/backup/old-fox/nets/fox.pdf",
-        "vectorPaths": [
-          "/uploads/backup/old-fox/nets/fox_page0.svg"
+          "/uploads/models/baby-broncosaurus/nets/subject_page0.svg",
+          "/uploads/models/baby-broncosaurus/nets/subject_page1.svg"
         ]
       }
     ]

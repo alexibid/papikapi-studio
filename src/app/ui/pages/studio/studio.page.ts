@@ -4,10 +4,10 @@ import { BadgeComponent, ButtonComponent, CardComponent, EmptyStateComponent } f
 import { ModelCatalogueService } from '../../../application/services/model-catalogue.service';
 import {
   MODEL_STAGES,
+  ModelGrid,
   ModelStage,
   PaperModel,
   printedColours,
-  totalFaces,
   totalPages,
 } from '../../../domain/models/paper-model';
 import { ModelViewer3DComponent } from '../../components/model-viewer-3d/model-viewer-3d';
@@ -30,9 +30,15 @@ export class StudioPage implements OnInit {
   protected readonly catalogue = inject(ModelCatalogueService);
 
   protected readonly selected = this.catalogue.selected;
-  protected readonly preview = computed(() => this.selected()?.previewPath ?? '');
+  protected readonly grid = this.catalogue.grid;
+  protected readonly intensity = this.catalogue.intensity;
+  protected readonly grids = computed<readonly ModelGrid[]>(() => this.selected()?.grids ?? []);
+  protected readonly provenance = computed(() => this.selected()?.provenance);
+  protected readonly preview = computed(
+    () => this.grid()?.previewPath ?? this.selected()?.previewPath ?? ''
+  );
   protected readonly pageTally = computed(() => this.tally(totalPages));
-  protected readonly faceTally = computed(() => this.tally(totalFaces));
+  protected readonly faceTally = computed(() => this.grid()?.faces ?? 0);
   protected readonly cardCount = computed(() => this.colours().length);
   protected readonly colours = computed(() => {
     const model = this.selected();
@@ -63,6 +69,10 @@ export class StudioPage implements OnInit {
 
   protected isChosen(model: PaperModel): boolean {
     return this.selected()?.id === model.id;
+  }
+
+  protected pick(value: string): void {
+    this.catalogue.pick(Number(value));
   }
 
   protected refresh(): void {

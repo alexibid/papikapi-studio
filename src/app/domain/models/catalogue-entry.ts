@@ -1,7 +1,9 @@
 import {
   MODEL_STAGES,
   ModelColour,
+  ModelGrid,
   ModelPart,
+  ModelProvenance,
   ModelStage,
   PaperModel,
   TIER_IDS,
@@ -25,9 +27,18 @@ interface RawEntry {
   readonly createdAt?: unknown;
   readonly clean?: unknown;
   readonly previewPath?: unknown;
-  readonly scriptPath?: unknown;
+  readonly grids?: unknown;
+  readonly provenance?: unknown;
   readonly state?: unknown;
   readonly parts?: unknown;
+}
+
+interface RawGrid {
+  readonly intensity?: unknown;
+  readonly grid?: unknown;
+  readonly spacingMm?: unknown;
+  readonly faces?: unknown;
+  readonly previewPath?: unknown;
 }
 
 export function readCatalogue(payload: unknown): readonly PaperModel[] {
@@ -55,8 +66,39 @@ function toModel(entry: RawEntry): PaperModel {
     createdAt: text(entry.createdAt),
     clean: entry.clean === true,
     previewPath: text(entry.previewPath),
-    scriptPath: text(entry.scriptPath),
+    grids: Array.isArray(entry.grids)
+      ? entry.grids.map(toGrid).sort((left, right) => left.intensity - right.intensity)
+      : [],
+    provenance: toProvenance(entry.provenance),
     parts: Array.isArray(entry.parts) ? entry.parts.map(toPart) : [],
+  };
+}
+
+function toProvenance(raw: unknown): ModelProvenance | undefined {
+  if (typeof raw !== 'object' || raw === null) {
+    return undefined;
+  }
+  const source = raw as Record<string, unknown>;
+  const machine = (source['machine'] ?? {}) as Record<string, unknown>;
+  const software = (source['software'] ?? {}) as Record<string, unknown>;
+  const tokens = (source['agentTokens'] ?? {}) as Record<string, unknown>;
+  return {
+    version: count(source['version']),
+    producedAt: text(source['producedAt']),
+    machine: [text(machine['cpu']), `${count(machine['cores'])} cores`,
+      `${count(machine['memoryGb'])} GB`, text(machine['accelerator'])]
+      .filter(Boolean).join(' · '),
+    software: [text(software['blender']), text(software['reconstructor']), text(software['cutout'])]
+      .filter(Boolean).join(' · '),
+    stages: Array.isArray(source['stages'])
+      ? (source['stages'] as Record<string, unknown>[]).map((row) => ({
+          stage: text(row['stage']),
+          tool: text(row['tool']),
+          seconds: count(row['seconds']),
+        }))
+      : [],
+    secondsTotal: count(source['secondsTotal']),
+    agentTokens: count(tokens['spentExploring']),
   };
 }
 
@@ -69,6 +111,16 @@ function toPart(raw: RawPart): ModelPart {
     colours: Array.isArray(raw.colours) ? raw.colours.map(toColour) : [],
     netPath: text(raw.netPath),
     vectorPaths: Array.isArray(raw.vectorPaths) ? raw.vectorPaths.map(text).filter(Boolean) : [],
+  };
+}
+
+function toGrid(raw: RawGrid): ModelGrid {
+  return {
+    intensity: count(raw.intensity),
+    grid: count(raw.grid),
+    spacingMm: count(raw.spacingMm),
+    faces: count(raw.faces),
+    previewPath: text(raw.previewPath),
   };
 }
 

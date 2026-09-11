@@ -1,0 +1,51 @@
+{
+  "id": "baby-broncosaurus",
+  "title": "baby-broncosaurus",
+  "state": "draft",
+  "build": {
+    "view": "left",
+    "mcResolution": 512,
+    "faces": 534,
+    "turnDegrees": 90,
+    "views": [
+      "left",
+      "top",
+      "front"
+    ]
+  },
+  "difficulty": {
+    "grid": 20,
+    "levels": [
+      {
+        "intensity": 1,
+        "grid": 15,
+        "spacingMm": 0,
+        "faces": 0
+      },
+      {
+        "intensity": 2,
+        "grid": 18,
+        "spacingMm": 0,
+        "faces": 0
+      },
+      {
+        "intensity": 3,
+        "grid": 20,
+        "spacingMm": 0,
+        "faces": 0
+      },
+      {
+        "intensity": 4,
+        "grid": 22,
+        "spacingMm": 0,
+        "faces": 0
+      },
+      {
+        "intensity": 5,
+        "grid": 25,
+        "spacingMm": 0,
+        "faces": 0
+      }
+    ]
+  }
+}

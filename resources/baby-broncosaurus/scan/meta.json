@@ -1,0 +1,11 @@
+{
+  "source": "/Users/alexsantos/Projects/ibid-workspace/apps/kirigami-studio/resources/baby-broncosaurus/cutouts/left.png",
+  "checkpoint": "stabilityai/TripoSR",
+  "device": "mps",
+  "marchingCubes": 512,
+  "vertices": 137616,
+  "faces": 275228,
+  "watertight": true,
+  "heightMm": 200.0,
+  "mesh": "/Users/alexsantos/Projects/ibid-workspace/apps/kirigami-studio/resources/baby-broncosaurus/scan/mesh.glb"
+}

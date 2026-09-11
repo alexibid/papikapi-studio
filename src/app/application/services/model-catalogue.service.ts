@@ -1,6 +1,13 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { readCatalogue } from '../../domain/models/catalogue-entry';
-import { MODEL_STAGES, ModelStage, PaperModel } from '../../domain/models/paper-model';
+import {
+  MODEL_STAGES,
+  ModelGrid,
+  ModelStage,
+  PaperModel,
+  defaultIntensity,
+  gridAt,
+} from '../../domain/models/paper-model';
 
 const CATALOGUE_URL = '/uploads/gallery.json';
 
@@ -11,6 +18,7 @@ export class ModelCatalogueService {
   private readonly stage = signal<ModelStage>('ready');
   private readonly loading = signal<boolean>(false);
   private readonly problem = signal<string>('');
+  private readonly chosenIntensity = signal<number>(0);
 
   readonly shelf = this.stage.asReadonly();
   readonly all = computed(() => this.models().filter((model) => model.state === this.stage()));
@@ -21,6 +29,11 @@ export class ModelCatalogueService {
   readonly selected = computed(() =>
     this.all().find((model) => model.id === this.selectedId())
   );
+  readonly intensity = this.chosenIntensity.asReadonly();
+  readonly grid = computed<ModelGrid | undefined>(() => {
+    const model = this.selected();
+    return model ? gridAt(model, this.chosenIntensity()) : undefined;
+  });
 
   async load(): Promise<void> {
     this.loading.set(true);
@@ -41,17 +54,29 @@ export class ModelCatalogueService {
 
   select(id: string): void {
     this.selectedId.set(id);
+    this.settleIntensity();
+  }
+
+  pick(intensity: number): void {
+    this.chosenIntensity.set(intensity);
   }
 
   show(stage: ModelStage): void {
     this.stage.set(stage);
     this.selectedId.set(this.all()[0]?.id ?? '');
+    this.settleIntensity();
   }
 
   private adopt(models: readonly PaperModel[]): void {
     this.models.set(models);
     this.stage.set(this.firstStocked(models));
     this.selectedId.set(this.all()[0]?.id ?? '');
+    this.settleIntensity();
+  }
+
+  private settleIntensity(): void {
+    const model = this.selected();
+    this.chosenIntensity.set(model ? defaultIntensity(model) : 0);
   }
 
   private firstStocked(models: readonly PaperModel[]): ModelStage {

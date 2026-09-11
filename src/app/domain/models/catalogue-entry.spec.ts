@@ -9,8 +9,11 @@ describe('readCatalogue', () => {
     tier: { id: 'tier-4', ages: '13+', style: 'High-density 3D puzzle', palette: 'monochrome' },
     createdAt: '2026-09-07T21:00:29+00:00',
     clean: true,
-    previewPath: '/uploads/draft/cat-v2/model.glb',
-    scriptPath: '/uploads/draft/cat-v2/model.py',
+    previewPath: '/uploads/models/cat-v2/grid-2.glb',
+    grids: [
+      { intensity: 2, grid: 18, spacingMm: 12.563, faces: 491, previewPath: '/uploads/models/cat-v2/grid-2.glb' },
+      { intensity: 1, grid: 15, spacingMm: 15.075, faces: 338, previewPath: '/uploads/models/cat-v2/grid-1.glb' },
+    ],
     parts: [
       {
         name: 'cat',
@@ -50,12 +53,12 @@ describe('readCatalogue', () => {
     const shelves = readCatalogue([
       { ...entry, id: 'a', state: 'ready' },
       { ...entry, id: 'b', state: 'draft' },
-      { ...entry, id: 'c', state: 'backup' },
+      { ...entry, id: 'c', state: 'nowhere' },
       { ...entry, id: 'd', state: 'archived' },
       { ...entry, id: 'e', state: undefined },
     ]).map((model) => model.state);
 
-    expect(shelves).toEqual(['ready', 'draft', 'backup', 'draft', 'draft']);
+    expect(shelves).toEqual(['ready', 'draft', 'draft', 'draft', 'draft']);
   });
 
   it('falls back to the id when a model carries no title', () => {
@@ -76,5 +79,13 @@ describe('readCatalogue', () => {
     const [model] = readCatalogue([{ ...entry, tier: { id: 'tier-9' } }]);
 
     expect(model.tier.id).toBe('tier-1');
+  });
+
+  it('sorts the grids by intensity and drops a payload without them', () => {
+    const [withGrids] = readCatalogue([entry]);
+    expect(withGrids.grids.map((grid) => grid.intensity)).toEqual([1, 2]);
+
+    const [without] = readCatalogue([{ ...entry, grids: undefined }]);
+    expect(without.grids).toEqual([]);
   });
 });

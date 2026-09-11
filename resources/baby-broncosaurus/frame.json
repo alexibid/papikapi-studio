@@ -1,0 +1,38 @@
+{
+  "heightMm": 200.0,
+  "lengthMm": 226.13,
+  "widthMm": 84.67,
+  "heightSpread": 0.0126,
+  "views": {
+    "front": {
+      "pixels": [
+        600,
+        1445
+      ]
+    },
+    "back": {
+      "pixels": [
+        615,
+        1440
+      ]
+    },
+    "left": {
+      "pixels": [
+        1626,
+        1428
+      ]
+    },
+    "right": {
+      "pixels": [
+        1619,
+        1427
+      ]
+    },
+    "top": {
+      "pixels": [
+        1244,
+        471
+      ]
+    }
+  }
+}
