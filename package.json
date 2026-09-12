@@ -17,6 +17,13 @@
     "kirigami:reindex": "node ../../tools/kirigami/mcp/reindex.mjs",
     "kirigami:tiers": "python3 ../../tools/kirigami/blender/dump_contract.py",
     "kirigami:mcp": "node ../../tools/kirigami/mcp/server.mjs",
-    "kirigami:inspirations": "node ../../tools/kirigami/inspirations.mjs"
+    "kirigami:inspirations": "node ../../tools/kirigami/inspirations.mjs",
+    "stage:pipeline": "node ../../tools/kirigami/stage/pipeline.mjs",
+    "stage:0": "node ../../tools/kirigami/stage/pipeline.mjs 0",
+    "stage:1": "node ../../tools/kirigami/stage/pipeline.mjs 1",
+    "stage:2": "node ../../tools/kirigami/stage/pipeline.mjs 2",
+    "stage:3": "node ../../tools/kirigami/stage/pipeline.mjs 3",
+    "stage:4": "node ../../tools/kirigami/stage/pipeline.mjs 4",
+    "stage": "node ../../tools/kirigami/stage/pipeline.mjs"
   }
 }

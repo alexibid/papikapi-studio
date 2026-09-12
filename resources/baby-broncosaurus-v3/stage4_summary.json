@@ -1,0 +1,60 @@
+{
+  "collection": "Snapped Cutouts",
+  "created_objects": [
+    "Snapped_Cutout_Left",
+    "Snapped_Cutout_Right",
+    "Snapped_Cutout_Front",
+    "Snapped_Cutout_Back",
+    "Snapped_Cutout_Top",
+    "Snapped_Cutout_Bottom"
+  ],
+  "reconstructed_model": {
+    "name": "Stage5_Model_Reconstructed_3D",
+    "total_vertices": 590,
+    "total_faces": 529
+  },
+  "views": {
+    "Left": {
+      "total_vertices": 123,
+      "unconnected_red": 0,
+      "duplicate_yellow": 47,
+      "unique_green": 76,
+      "total_faces": 86
+    },
+    "Right": {
+      "total_vertices": 127,
+      "unconnected_red": 0,
+      "duplicate_yellow": 48,
+      "unique_green": 79,
+      "total_faces": 89
+    },
+    "Front": {
+      "total_vertices": 136,
+      "unconnected_red": 0,
+      "duplicate_yellow": 46,
+      "unique_green": 90,
+      "total_faces": 91
+    },
+    "Back": {
+      "total_vertices": 109,
+      "unconnected_red": 0,
+      "duplicate_yellow": 35,
+      "unique_green": 74,
+      "total_faces": 84
+    },
+    "Top": {
+      "total_vertices": 126,
+      "unconnected_red": 0,
+      "duplicate_yellow": 56,
+      "unique_green": 70,
+      "total_faces": 95
+    },
+    "Bottom": {
+      "total_vertices": 128,
+      "unconnected_red": 0,
+      "duplicate_yellow": 52,
+      "unique_green": 76,
+      "total_faces": 87
+    }
+  }
+}
