@@ -1,0 +1,56 @@
+[
+ {
+  "id": "bear",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "cheetah",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "dalmatian",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "darth-cat",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "fox",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "giraffe",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "lion",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "police-car",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "t-rex",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ }
+]

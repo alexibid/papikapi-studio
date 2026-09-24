@@ -28,6 +28,7 @@ Thumbs.db
 .nx/
 .angular
 vitest.config.*.timestamp*
+__pycache__/
 
 .env
 .env.production
@@ -49,8 +50,9 @@ documentation.json
 
 .firebase/
 
-uploads/*
-!uploads/.gitkeep
+resources/*
+!resources/.gitkeep
+*.blend1
 imports/*
 !imports/.gitkeep
 

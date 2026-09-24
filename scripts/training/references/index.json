@@ -1,0 +1,218 @@
+[
+  {
+    "group": "vehicles",
+    "name": "fire-truck",
+    "file": "vehicles/fire-truck.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute red fire truck with a ladder and blue and red lights, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "vehicles",
+    "name": "police-car",
+    "file": "vehicles/police-car.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute blue and white police car with a light bar, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "vehicles",
+    "name": "tractor",
+    "file": "vehicles/tractor.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute green tractor with a yellow cab, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "vehicles",
+    "name": "submarine",
+    "file": "vehicles/submarine.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute yellow submarine with a periscope, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "vehicles",
+    "name": "plane",
+    "file": "vehicles/plane.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute red and blue propeller plane, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "vehicles",
+    "name": "train",
+    "file": "vehicles/train.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute red and blue steam locomotive, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "dinosaurs",
+    "name": "t-rex",
+    "file": "dinosaurs/t-rex.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute green tyrannosaurus rex, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "dinosaurs",
+    "name": "triceratops",
+    "file": "dinosaurs/triceratops.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute orange triceratops with yellow spots, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "dinosaurs",
+    "name": "brachiosaurus",
+    "file": "dinosaurs/brachiosaurus.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute teal long-necked dinosaur with purple spots, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "dinosaurs",
+    "name": "stegosaurus",
+    "file": "dinosaurs/stegosaurus.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute yellow stegosaurus with red plates, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "dinosaurs",
+    "name": "ankylosaurus",
+    "file": "dinosaurs/ankylosaurus.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute pink ankylosaurus with an armoured back, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "dinosaurs",
+    "name": "velociraptor",
+    "file": "dinosaurs/velociraptor.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute red velociraptor, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "cats",
+    "name": "orange-tabby",
+    "file": "cats/orange-tabby.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute sitting orange tabby kitten with darker stripes, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "cats",
+    "name": "gray-kitten",
+    "file": "cats/gray-kitten.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute standing gray kitten with blue eyes and white paws, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "cats",
+    "name": "calico",
+    "file": "cats/calico.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute standing calico kitten with orange and black patches, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "cats",
+    "name": "black-tuxedo",
+    "file": "cats/black-tuxedo.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute standing black kitten with yellow eyes, a white chin, a white chest and white paws, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "cats",
+    "name": "siamese",
+    "file": "cats/siamese.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute sitting siamese kitten with a cream body, dark brown face, paws and tail, and blue eyes, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "cats",
+    "name": "white-kitten",
+    "file": "cats/white-kitten.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute lying white kitten with blue eyes and a red collar, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "safari",
+    "name": "lion",
+    "file": "safari/lion.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute sitting lion cub with a brown mane and a tufted tail, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "safari",
+    "name": "elephant",
+    "file": "safari/elephant.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute standing gray baby elephant with large ears, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "safari",
+    "name": "giraffe",
+    "file": "safari/giraffe.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute standing yellow baby giraffe with brown spots, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "safari",
+    "name": "zebra",
+    "file": "safari/zebra.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute standing black and white striped zebra foal, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "safari",
+    "name": "hippo",
+    "file": "safari/hippo.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute sitting blue-gray baby hippo, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "safari",
+    "name": "cheetah",
+    "file": "safari/cheetah.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute lying spotted cheetah cub with a long raised tail, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "forest",
+    "name": "squirrel",
+    "file": "forest/squirrel.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute sitting orange squirrel holding an acorn, with a big bushy tail, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "forest",
+    "name": "fawn",
+    "file": "forest/fawn.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute standing brown fawn with white spots and pink ears, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "forest",
+    "name": "fox",
+    "file": "forest/fox.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute sitting orange fox with a white chest and a white-tipped tail, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "forest",
+    "name": "bear",
+    "file": "forest/bear.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute standing brown bear cub, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "forest",
+    "name": "hedgehog",
+    "file": "forest/hedgehog.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute standing hedgehog with a beige face and brown spikes, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "forest",
+    "name": "raccoon",
+    "file": "forest/raccoon.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute sitting gray raccoon with a dark mask and a striped tail, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "dogs",
+    "name": "dalmatian",
+    "file": "dogs/dalmatian.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute white dalmatian puppy with black spots, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "dogs",
+    "name": "german-shepherd",
+    "file": "dogs/german-shepherd.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute tan and black german shepherd puppy, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "dogs",
+    "name": "pug",
+    "file": "dogs/pug.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute cream pug puppy with a dark face, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "dogs",
+    "name": "blue-eyed-pug",
+    "file": "dogs/blue-eyed-pug.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute fawn pug puppy with blue eyes and a dark tail, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "dogs",
+    "name": "golden-puppy",
+    "file": "dogs/golden-puppy.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute golden retriever puppy, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  },
+  {
+    "group": "dogs",
+    "name": "rottweiler",
+    "file": "dogs/rottweiler.jpeg",
+    "caption": "A low-poly faceted papercraft figure of a cute black and tan rottweiler puppy, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background."
+  }
+]

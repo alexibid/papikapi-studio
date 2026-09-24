@@ -1,0 +1,233 @@
+import { existsSync, globSync, readdirSync, readFileSync, statSync, unlinkSync } from 'node:fs';
+import { basename, isAbsolute, join, resolve } from 'node:path';
+import { CatalogueManager } from './common/catalogue-manager.js';
+import { GeminiClient, InlineImage } from './common/gemini-client.js';
+import { PipelineConfigLoader, PipelineStep } from './common/pipeline-config.js';
+import { ModelExecutionReport, StageReporter, StepExecutionResult } from './common/stage-reporter.js';
+import { TrainingReferences } from './common/training-references.js';
+import { WorkspacePaths } from './common/workspace-paths.js';
+import { AlternativesGenerator } from './stage-0/step-1-alternatives.js';
+import { AlternativePicker } from './stage-0/step-2-pick.js';
+import { TrellisGenerator } from './stage-1/step-1-trellis.js';
+
+interface CliArguments {
+  stage: number;
+  step: string | null;
+  model: string | null;
+  pick: number | null;
+  prompt: string | null;
+  ref: string | null;
+}
+
+export class StageOrchestrator {
+  private static parseCliArgs(): CliArguments {
+    const rawArgs = process.argv.slice(2);
+    const args: string[] = [];
+    for (let i = 0; i < rawArgs.length; i++) {
+      const a = rawArgs[i];
+      if (a === '--args' && rawArgs[i + 1] !== undefined) {
+        args.push(...rawArgs[++i].split(/\s+/).filter(Boolean));
+      } else if (a.startsWith('--args=')) {
+        args.push(...a.slice('--args='.length).split(/\s+/).filter(Boolean));
+      } else {
+        args.push(a);
+      }
+    }
+    const flags: CliArguments = { stage: 1, step: null, model: null, pick: null, prompt: null, ref: null };
+
+    for (let i = 0; i < args.length; i++) {
+      const a = args[i];
+      if (a === '--stage' && args[i + 1] !== undefined) flags.stage = Number.parseInt(args[++i], 10);
+      else if (a.startsWith('--stage=')) flags.stage = Number.parseInt(a.split('=')[1], 10);
+      else if (a === '--step' && args[i + 1] !== undefined) flags.step = args[++i];
+      else if (a.startsWith('--step=')) flags.step = a.split('=')[1];
+      else if ((a === '--model' || a === '--subject') && args[i + 1] !== undefined) flags.model = args[++i];
+      else if (a.startsWith('--model=') || a.startsWith('--subject=')) flags.model = a.split('=')[1];
+      else if (a === '--pick' && args[i + 1] !== undefined) flags.pick = Number.parseInt(args[++i], 10);
+      else if (a.startsWith('--pick=')) flags.pick = Number.parseInt(a.split('=')[1], 10);
+      else if (a === '--prompt' && args[i + 1] !== undefined) flags.prompt = args[++i];
+      else if (a.startsWith('--prompt=')) flags.prompt = a.split('=')[1];
+      else if (a === '--ref' && args[i + 1] !== undefined) flags.ref = args[++i];
+      else if (a.startsWith('--ref=')) flags.ref = a.split('=')[1];
+      else if (!a.startsWith('-') && !flags.model) flags.model = a;
+    }
+    return flags;
+  }
+
+  private static discoverModels(pattern: string): readonly string[] {
+    const position = pattern.split('/').indexOf('*');
+    const matches = globSync(pattern, { cwd: WorkspacePaths.appRoot });
+    const names = matches.map((m) => m.split('/')[position]);
+    return [...new Set(names)].sort();
+  }
+
+  private static resolveTargetModels(flags: CliArguments, activeSteps: readonly PipelineStep[]): readonly string[] {
+    if (flags.model) return [flags.model.trim()];
+    const config = PipelineConfigLoader.load();
+    const pattern = activeSteps[0]?.models_from ?? config.workspace.models_from;
+    return this.discoverModels(pattern);
+  }
+
+  private static cleanOutputs(model: string, stageIndex: number, step: PipelineStep): void {
+    const resourceDir = WorkspacePaths.resourcePath(model);
+    const publicDir = WorkspacePaths.modelPath(model);
+    const stageDir = join(resourceDir, `stage-${stageIndex}`);
+    const cleaned: string[] = [];
+
+    if (step.id === 's0-step-1') {
+      const extensions = ['.jpeg', '.jpg', '.png', '.webp'];
+      for (const ext of extensions) {
+        const resAlt = join(stageDir, `step-1-alternatives${ext}`);
+        if (existsSync(resAlt)) { unlinkSync(resAlt); cleaned.push(basename(resAlt)); }
+        const pubAlt = join(publicDir, `alternatives${ext}`);
+        if (existsSync(pubAlt)) { unlinkSync(pubAlt); cleaned.push(`public/${basename(pubAlt)}`); }
+      }
+      const manifest = join(stageDir, 'step-1-manifest.json');
+      if (existsSync(manifest)) { unlinkSync(manifest); cleaned.push(basename(manifest)); }
+    } else if (step.id === 's0-step-2') {
+      const extensions = ['.jpeg', '.jpg', '.png', '.webp'];
+      for (const ext of extensions) {
+        const resArt = join(stageDir, `step-1-art${ext}`);
+        if (existsSync(resArt)) { unlinkSync(resArt); cleaned.push(basename(resArt)); }
+        const pubArt = join(publicDir, `art${ext}`);
+        if (existsSync(pubArt)) { unlinkSync(pubArt); cleaned.push(`public/${basename(pubArt)}`); }
+      }
+      const manifest = join(stageDir, 'step-2-manifest.json');
+      if (existsSync(manifest)) { unlinkSync(manifest); cleaned.push(basename(manifest)); }
+    } else if (step.id === 's1-step-1') {
+      if (existsSync(stageDir)) {
+        for (const file of readdirSync(stageDir)) {
+          const full = join(stageDir, file);
+          if (existsSync(full) && statSync(full).isFile()) { unlinkSync(full); cleaned.push(file); }
+        }
+      }
+      const pubModel = join(publicDir, 'model.glb');
+      if (existsSync(pubModel)) { unlinkSync(pubModel); cleaned.push('public/model.glb'); }
+    }
+
+    if (cleaned.length > 0) {
+      console.log(`  \x1b[90m🧹 [Pre-Clean]\x1b[0m Purged ${cleaned.length} previous output file(s): ${cleaned.join(', ')}`);
+    }
+  }
+
+  public static async run(): Promise<void> {
+    const flags = this.parseCliArgs();
+    const stage = PipelineConfigLoader.getStage(flags.stage);
+    const activeSteps = flags.step
+      ? stage.steps.filter((s) => s.id === flags.step)
+      : stage.steps;
+
+    if (activeSteps.length === 0) {
+      throw new Error(`No matching steps found for stage ${flags.stage} and step ${flags.step}`);
+    }
+
+    const models = this.resolveTargetModels(flags, activeSteps);
+    StageReporter.printHeader(stage.stage, models.length);
+
+    const reports: ModelExecutionReport[] = [];
+
+    for (let mIdx = 0; mIdx < models.length; mIdx++) {
+      const model = models[mIdx];
+      const stepResults: StepExecutionResult[] = [];
+      let modelPassed = true;
+      const modelStart = Date.now();
+
+      const label = `[${String(mIdx + 1).padStart(2, '0')}/${String(models.length).padStart(2, '0')}] ${model.toUpperCase()}`;
+      console.log(`━━ ${label.padEnd(58, ' ')} [ START ]`);
+
+      for (const step of activeSteps) {
+        this.cleanOutputs(model, flags.stage, step);
+        const stepStart = Date.now();
+        let status: 'DONE' | 'FAIL' = 'DONE';
+        let errMsg = '';
+
+        try {
+          if (step.id === 's0-step-1') {
+            const defaultPrompt = flags.prompt || (model === 't-rex' ? 't-rex' : model.replace(/-/g, ' '));
+            console.log(`  [s0-step-1] Input Prompt: "${defaultPrompt}"`);
+            let referenceImages: InlineImage[] | undefined;
+            if (flags.ref) {
+              const candidates = [
+                isAbsolute(flags.ref) ? flags.ref : resolve(process.cwd(), flags.ref),
+                resolve(WorkspacePaths.workspaceRoot, flags.ref),
+                resolve(WorkspacePaths.appRoot, flags.ref),
+              ];
+              const refPath = candidates.find((c) => existsSync(c));
+              if (!refPath) {
+                throw new Error(`Reference image not found: ${flags.ref}`);
+              }
+              const bytes = readFileSync(refPath);
+              const mime = GeminiClient.sniffMime(bytes);
+              referenceImages = [{ bytes, mime }];
+              console.log(`  [s0-step-1] Visual Reference: ${refPath} (${mime}, ${(bytes.length / 1024).toFixed(1)} KB)`);
+            } else {
+              const trainingMatch = TrainingReferences.getInlineImage(model) || TrainingReferences.getInlineImage(defaultPrompt);
+              if (trainingMatch) {
+                referenceImages = [trainingMatch.image];
+                console.log(`  [s0-step-1] 🎨 Training Reference Auto-Matched: ${trainingMatch.item.file} (${trainingMatch.item.name} in ${trainingMatch.item.group})`);
+              }
+            }
+            const res = await AlternativesGenerator.execute({
+              name: model,
+              prompt: defaultPrompt,
+              referenceImages,
+            });
+            const size = statSync(res.resourcePath).size;
+            console.log(`  [s0-step-1] Output Sheet: ${res.resourcePath} (${(size / 1024).toFixed(1)} KB)`);
+          } else if (step.id === 's0-step-2') {
+            const pick = flags.pick ?? 3;
+            console.log(`  [s0-step-2] Input Sheet: resources/${model}/stage-0/step-1-alternatives.jpeg (Pick #${pick})`);
+            const res = await AlternativePicker.execute({
+              name: model,
+              pick,
+            });
+            const size = statSync(res.resourceArtPath).size;
+            console.log(`  [s0-step-2] Output Art: ${res.resourceArtPath} (${(size / 1024).toFixed(1)} KB)`);
+          } else if (step.id === 's1-step-1') {
+            const artPath = join(WorkspacePaths.resourcePath(model), 'stage-0', 'step-1-art.jpeg');
+            const artSize = existsSync(artPath) ? statSync(artPath).size : 0;
+            console.log(`  [s1-step-1] Input Art: ${artPath} (${(artSize / 1024).toFixed(1)} KB)`);
+            const res = await TrellisGenerator.execute(model);
+            const size = statSync(res.outputPath).size;
+            console.log(`  [s1-step-1] Output 3D Mesh: ${res.outputPath} (${(size / (1024 * 1024)).toFixed(2)} MB)`);
+            CatalogueManager.sync();
+          }
+        } catch (err) {
+          status = 'FAIL';
+          modelPassed = false;
+          errMsg = (err as Error).message;
+          console.error(`  ❌ Step error: ${errMsg}`);
+        }
+
+        const duration = (Date.now() - stepStart) / 1000;
+        stepResults.push({
+          stepId: step.id,
+          label: step.label,
+          status,
+          duration,
+          message: errMsg,
+        });
+
+        StageReporter.printStepCard(step.label, status, duration);
+        if (!modelPassed) break;
+      }
+
+      const totalDuration = (Date.now() - modelStart) / 1000;
+      reports.push({
+        modelName: model,
+        stepResults,
+        totalDuration,
+        passed: modelPassed,
+      });
+    }
+
+    StageReporter.printSummary(reports);
+  }
+}
+
+if (process.argv[1] && process.argv[1].endsWith('stage-orchestrator.ts')) {
+  void StageOrchestrator.run().catch((err) => {
+    console.error(`\n[Fatal Error] ${(err as Error).message}\n`);
+    process.exit(1);
+  });
+}

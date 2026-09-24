@@ -1,0 +1,144 @@
+<ibid-card customClass="c-model-creator">
+  <div class="c-model-creator__header">
+    <div class="c-model-creator__heading">
+      <h2 class="c-model-creator__title">{{ i18n.translate('creatorTitle') }}</h2>
+      <span class="c-model-creator__subtitle">{{ i18n.translate('creatorSubtitle') }}</span>
+    </div>
+    <ibid-button variant="outlined" (clicked)="close()">
+      ✕ {{ i18n.translate('close') }}
+    </ibid-button>
+  </div>
+
+  @if (creator.error()) {
+    <div class="c-model-creator__alert">
+      <span>{{ creator.error() }}</span>
+    </div>
+  }
+
+  <div class="c-model-creator__body">
+    <div class="c-model-creator__input-section">
+      <div class="c-model-creator__field">
+        <label class="c-model-creator__label" for="modelPrompt">
+          {{ i18n.translate('promptLabel') }}
+        </label>
+        <ibid-textarea
+          [placeholder]="i18n.translate('promptPlaceholder')"
+          [rows]="3"
+          [value]="prompt()"
+          (valueChange)="onPromptChange($event)"
+        />
+      </div>
+
+      <div class="c-model-creator__field">
+        <label class="c-model-creator__label" for="modelNameInput">
+          {{ i18n.translate('modelIdentifierLabel') }}
+        </label>
+        <input
+          id="modelNameInput"
+          type="text"
+          class="c-model-creator__text-input"
+          [placeholder]="i18n.translate('modelIdentifierPlaceholder')"
+          [value]="modelName()"
+          (input)="modelName.set($any($event.target).value)"
+        />
+      </div>
+
+      <div class="c-model-creator__field">
+        <div class="c-model-creator__label-row">
+          <span class="c-model-creator__label">{{ i18n.translate('referencePhotosLabel') }}</span>
+          <ibid-badge [label]="references().length + '/3'" />
+        </div>
+
+        <div class="c-model-creator__photos-row">
+          @for (ref of references(); track ref.id) {
+            <div class="c-model-creator__photo-thumb">
+              <img [src]="ref.dataUrl" [alt]="ref.name" class="c-model-creator__thumb-img" />
+              <button
+                type="button"
+                class="c-model-creator__thumb-remove"
+                (click)="removeReference(ref.id)"
+                aria-label="Remove"
+              >
+                ✕
+              </button>
+            </div>
+          }
+
+          @if (references().length < 3) {
+            <label class="c-model-creator__upload-btn">
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                (change)="onFileSelect($event)"
+                class="c-model-creator__hidden-file"
+              />
+              <span class="c-model-creator__upload-plus">+</span>
+              <span class="c-model-creator__upload-text">{{ i18n.translate('addPhoto') }}</span>
+            </label>
+          }
+        </div>
+      </div>
+
+      <div class="c-model-creator__actions">
+        <ibid-button
+          variant="primary"
+          [disabled]="creator.isGenerating() || creator.isPicking() || !prompt().trim()"
+          (clicked)="generateAlternatives()"
+        >
+          @if (creator.isGenerating()) {
+            ⟳ {{ i18n.translate('generatingAlternatives') }}
+          } @else {
+            ✨ {{ i18n.translate('exploreAlternatives') }}
+          }
+        </ibid-button>
+      </div>
+    </div>
+
+    @if (creator.currentSheet(); as sheet) {
+      <div class="c-model-creator__results-section">
+        <div class="c-model-creator__results-header">
+          <h3 class="c-model-creator__results-title">{{ i18n.translate('pickAlternativeTitle') }}</h3>
+          <span class="c-model-creator__results-subtitle">{{ i18n.translate('pickAlternativeSubtitle') }}</span>
+        </div>
+
+        <div class="c-model-creator__grid-3x2">
+          @for (label of cellLabels; track $index) {
+            <button
+              type="button"
+              class="c-model-creator__cell"
+              [class.c-model-creator__cell--selected]="selectedPick() === ($index + 1)"
+              (click)="selectCell($index + 1)"
+            >
+              <div
+                class="c-model-creator__cell-preview"
+                [style.background-image]="'url(' + sheet + ')'"
+                [style.background-position]="(($index % 3) * 50) + '% ' + (mathFloor($index / 3) * 100) + '%'"
+              ></div>
+              <div class="c-model-creator__cell-footer">
+                <span class="c-model-creator__cell-tag">{{ label }}</span>
+                @if (selectedPick() === ($index + 1)) {
+                  <span class="c-model-creator__cell-check">✓</span>
+                }
+              </div>
+            </button>
+          }
+        </div>
+
+        <div class="c-model-creator__pick-actions">
+          <ibid-button
+            variant="primary"
+            [disabled]="!selectedPick() || creator.isPicking()"
+            (clicked)="advanceWithPick()"
+          >
+            @if (creator.isPicking()) {
+              ⟳ {{ i18n.translate('generating3dModel') }}
+            } @else {
+              🧊 {{ i18n.translate('proceedWithModel') }} (#{{ selectedPick() }})
+            }
+          </ibid-button>
+        </div>
+      </div>
+    }
+  </div>
+</ibid-card>

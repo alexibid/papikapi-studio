@@ -5,10 +5,27 @@
       <span class="p-studio__subtitle">{{ i18n.translate('tagline') }}</span>
     </div>
 
-    <ibid-button variant="outlined" (clicked)="refresh()">
-      ↻ {{ i18n.translate('refreshCatalogue') }}
-    </ibid-button>
+    <div class="p-studio__header-actions">
+      <ibid-button variant="primary" (clicked)="openCreator()">
+        + {{ i18n.translate('createModel') }}
+      </ibid-button>
+      <ibid-button variant="outlined" (clicked)="refresh()">
+        ↻ {{ i18n.translate('refreshCatalogue') }}
+      </ibid-button>
+    </div>
   </header>
+
+  @if (showCreator()) {
+    <ibid-scrim (dismissed)="closeCreator()" />
+    <div class="p-studio__creator-overlay">
+      <div class="p-studio__creator-dialog">
+        <kirigami-model-creator
+          (modelCreated)="onModelCreated($event)"
+          (closed)="closeCreator()"
+        />
+      </div>
+    </div>
+  }
 
   <main class="p-studio__main">
     <section class="p-studio__catalogue-col">
@@ -16,21 +33,6 @@
         <div class="p-studio__card-header">
           <h2 class="p-studio__card-title">{{ i18n.translate('catalogue') }}</h2>
           <ibid-badge [label]="catalogue.all().length + ''" />
-        </div>
-
-        <div class="p-studio__shelves" role="tablist">
-          @for (shelf of shelves; track shelf) {
-            <button
-              type="button"
-              role="tab"
-              class="p-studio__shelf"
-              [class.p-studio__shelf--live]="isShelf(shelf)"
-              [attr.aria-selected]="isShelf(shelf)"
-              (click)="show(shelf)"
-            >
-              {{ i18n.translate(shelf) }} · {{ countOf(shelf) }}
-            </button>
-          }
         </div>
 
         @if (catalogue.all().length === 0) {
@@ -45,14 +47,8 @@
                   [class.p-studio__model--chosen]="isChosen(model)"
                   (click)="choose(model)"
                 >
-                  <span class="p-studio__model-name">{{ model.title }}</span>
-                  <span class="p-studio__model-meta">
-                    {{ model.tier.style }} · {{ model.tier.ages }}
-                  </span>
-                  <span
-                    class="p-studio__dot"
-                    [class.p-studio__dot--clean]="model.clean"
-                  ></span>
+                  <img class="p-studio__thumb" [src]="model.previewPath" alt="" />
+                  <span class="p-studio__model-name">{{ model.id }}</span>
                 </button>
               </li>
             }
@@ -63,101 +59,25 @@
       @if (selected(); as model) {
         <ibid-card customClass="p-studio__card">
           <div class="p-studio__card-header">
-            <h3 class="p-studio__card-title">{{ i18n.translate('meshReport') }}</h3>
-            @if (model.clean) {
-              <span class="p-studio__badge p-studio__badge--success">
-                {{ i18n.translate('zeroOffenders') }}
-              </span>
-            } @else {
-              <span class="p-studio__badge p-studio__badge--error">
-                {{ i18n.translate('offendersFound') }}
-              </span>
+            <h3 class="p-studio__card-title">{{ i18n.translate('referenceImages') }}</h3>
+            <div class="p-studio__card-actions">
+              <ibid-button variant="outlined" (clicked)="changePick(model.id)">
+                ✂️ {{ i18n.translate('changePick') }}
+              </ibid-button>
+              <ibid-button variant="outlined" (clicked)="deleteModel(model.id)">
+                🗑️ {{ i18n.translate('deleteModel') }}
+              </ibid-button>
+            </div>
+          </div>
+          <div class="p-studio__reference-images">
+            <img class="p-studio__reference-image" [src]="model.imagePath" alt="" />
+            @if (model.secondaryImagePath; as secondary) {
+              <img class="p-studio__reference-image" [src]="secondary" alt="" />
+            }
+            @if (model.topImagePath; as top) {
+              <img class="p-studio__reference-image" [src]="top" alt="" />
             }
           </div>
-
-          @if (grids().length > 1) {
-            <label class="p-studio__difficulty">
-              <span class="p-studio__difficulty-label">{{ i18n.translate('difficulty') }}</span>
-              <select
-                class="p-studio__difficulty-select"
-                (change)="pick($any($event.target).value)"
-              >
-                @for (option of grids(); track option.intensity) {
-                  <option [value]="option.intensity" [selected]="option.intensity === intensity()">
-                    {{ i18n.translate('intensity') }} {{ option.intensity }} ·
-                    {{ option.faces }} {{ i18n.translate('faces') }}
-                  </option>
-                }
-              </select>
-            </label>
-          }
-
-          <ul class="p-studio__facts">
-            <li>{{ model.parts.length }} {{ i18n.translate('parts') }}</li>
-            <li>{{ faceTally() }} {{ i18n.translate('faces') }}</li>
-            <li>{{ pageTally() }} {{ i18n.translate('printedPages') }}</li>
-            <li>{{ cardCount() }} {{ i18n.translate('printedColours') }}</li>
-          </ul>
-
-          @if (provenance(); as made) {
-            <details class="p-studio__made">
-              <summary class="p-studio__made-summary">{{ i18n.translate('howItWasMade') }}</summary>
-              <dl class="p-studio__made-list">
-                <dt>{{ i18n.translate('buildVersion') }}</dt>
-                <dd>{{ made.version }} · {{ made.producedAt }}</dd>
-                <dt>{{ i18n.translate('producedOn') }}</dt>
-                <dd>{{ made.machine }}</dd>
-                <dt>{{ i18n.translate('producedWith') }}</dt>
-                <dd>{{ made.software }}</dd>
-                <dt>{{ i18n.translate('timePerStage') }}</dt>
-                <dd>
-                  <ul class="p-studio__made-stages">
-                    @for (step of made.stages; track step.stage) {
-                      <li>{{ step.stage }} · {{ step.seconds }}s</li>
-                    }
-                  </ul>
-                </dd>
-                <dt>{{ i18n.translate('totalTime') }}</dt>
-                <dd>{{ made.secondsTotal }}s</dd>
-                <dt>{{ i18n.translate('agentTokens') }}</dt>
-                <dd>{{ made.agentTokens }}</dd>
-              </dl>
-            </details>
-          }
-
-          <ul class="p-studio__swatches">
-            @for (colour of colours(); track colour) {
-              <li class="p-studio__swatch">
-                <span class="p-studio__chip" [style.background]="colour.hex"></span>
-                {{ colour.role }}
-              </li>
-            }
-          </ul>
-        </ibid-card>
-
-        <ibid-card customClass="p-studio__card">
-          <div class="p-studio__card-header">
-            <h3 class="p-studio__card-title">{{ i18n.translate('printableNets') }}</h3>
-          </div>
-
-          <ul class="p-studio__net-list">
-            @for (part of model.parts; track part.name) {
-              <li class="p-studio__net">
-                <span class="p-studio__net-name">{{ part.name }}</span>
-                <span class="p-studio__net-meta">
-                  {{ part.faces }} {{ i18n.translate('faces') }} ·
-                  {{ part.pages }} {{ i18n.translate('printedPages') }} ·
-                  {{ part.colours.length }} {{ i18n.translate('printedColours') }}
-                </span>
-                <span class="p-studio__net-links">
-                  <a [href]="part.netPath" target="_blank" rel="noopener">PDF</a>
-                  @for (vector of part.vectorPaths; track vector; let index = $index) {
-                    <a [href]="vector" target="_blank" rel="noopener">SVG {{ index + 1 }}</a>
-                  }
-                </span>
-              </li>
-            }
-          </ul>
         </ibid-card>
       }
     </section>

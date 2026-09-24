@@ -1,29 +1,17 @@
 {
   "name": "kirigami-studio",
   "version": "0.1.0",
-  "private": true,
+  "type": "module",
   "scripts": {
-    "kirigami:cutout": "node ../../tools/kirigami/stage.mjs cutout",
-    "kirigami:creases": "node ../../tools/kirigami/stage.mjs creases",
-    "kirigami:scan": "node ../../tools/kirigami/stage.mjs scan",
-    "kirigami:reduce": "node ../../tools/kirigami/stage.mjs reduce",
-    "kirigami:net": "node ../../tools/kirigami/stage.mjs net",
-    "kirigami:snapshots": "node ../../tools/kirigami/stage.mjs snapshots",
-    "kirigami:report": "node ../../tools/kirigami/stage.mjs dossier",
-    "kirigami:make": "node ../../tools/kirigami/stage.mjs all",
-    "kirigami:dossier": "node ../../tools/kirigami/qa/dossier.mjs",
-    "kirigami:provenance": "node ../../tools/kirigami/qa/provenance.mjs",
-    "kirigami:performance": "node ../../tools/kirigami/qa/performance.mjs",
-    "kirigami:reindex": "node ../../tools/kirigami/mcp/reindex.mjs",
-    "kirigami:tiers": "python3 ../../tools/kirigami/blender/dump_contract.py",
-    "kirigami:mcp": "node ../../tools/kirigami/mcp/server.mjs",
-    "kirigami:inspirations": "node ../../tools/kirigami/inspirations.mjs",
-    "stage:pipeline": "node ../../tools/kirigami/stage/pipeline.mjs",
-    "stage:0": "node ../../tools/kirigami/stage/pipeline.mjs 0",
-    "stage:1": "node ../../tools/kirigami/stage/pipeline.mjs 1",
-    "stage:2": "node ../../tools/kirigami/stage/pipeline.mjs 2",
-    "stage:3": "node ../../tools/kirigami/stage/pipeline.mjs 3",
-    "stage:4": "node ../../tools/kirigami/stage/pipeline.mjs 4",
-    "stage": "node ../../tools/kirigami/stage/pipeline.mjs"
+    "stages": "tsx scripts/stage-orchestrator.ts",
+    "stage:0": "tsx scripts/stage-orchestrator.ts --stage 0",
+    "stage:0:step:1": "tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-1",
+    "stage:0:step:2": "tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-2",
+    "stage:1": "tsx scripts/stage-orchestrator.ts --stage 1",
+    "stage:1:step:1": "tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-1",
+    "server": "tsx scripts/server.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0"
   }
 }

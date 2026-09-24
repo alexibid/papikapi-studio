@@ -4,9 +4,7 @@
   "projectType": "application",
   "prefix": "kirigami",
   "sourceRoot": "apps/kirigami-studio/src",
-  "tags": [
-    "skip-platform:android"
-  ],
+  "tags": ["skip-platform:android"],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
@@ -15,13 +13,11 @@
         "production",
         "^production",
         {
-          "runtime": "shasum apps/kirigami-studio/uploads/gallery.json 2>/dev/null || echo no-gallery"
+          "runtime": "shasum apps/kirigami-studio/public/models/index.json 2>/dev/null || echo no-index"
         }
       ],
       "options": {
-        "styles": [
-          "apps/kirigami-studio/src/styles.scss"
-        ],
+        "styles": ["apps/kirigami-studio/src/styles.scss"],
         "assets": [
           {
             "glob": "**/*",
@@ -36,11 +32,6 @@
             "glob": "**/*",
             "input": "apps/kirigami-studio/src/assets",
             "output": "/assets"
-          },
-          {
-            "glob": "**/*",
-            "input": "apps/kirigami-studio/uploads",
-            "output": "/uploads"
           }
         ]
       },
@@ -63,11 +54,30 @@
     },
     "desktop": {},
     "desktop-build": {},
-    "serve": {
+    "serve-app": {
       "executor": "@angular/build:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "port": 4500
+        "port": 4500,
+        "proxyConfig": "apps/kirigami-studio/proxy.conf.json"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx nx run kirigami-studio:server",
+          "npx nx run kirigami-studio:serve-app"
+        ],
+        "parallel": true
+      }
+    },
+    "server": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/server.ts",
+        "cwd": "apps/kirigami-studio"
       }
     },
     "serve-e2e": {
@@ -96,6 +106,94 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "playwright test",
+        "cwd": "apps/kirigami-studio"
+      }
+    },
+    "stages": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts",
+        "cwd": "apps/kirigami-studio"
+      }
+    },
+    "stage:0": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 0",
+        "cwd": "apps/kirigami-studio"
+      }
+    },
+    "stage-0": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 0",
+        "cwd": "apps/kirigami-studio"
+      }
+    },
+    "stage:0:step:1": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-1",
+        "cwd": "apps/kirigami-studio"
+      }
+    },
+    "stage-0:step-1": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-1",
+        "cwd": "apps/kirigami-studio"
+      }
+    },
+    "stage:0:step:2": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-2",
+        "cwd": "apps/kirigami-studio"
+      }
+    },
+    "stage-0:step-2": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-2",
+        "cwd": "apps/kirigami-studio"
+      }
+    },
+    "stage:1": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 1",
+        "cwd": "apps/kirigami-studio"
+      }
+    },
+    "stage-1": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 1",
+        "cwd": "apps/kirigami-studio"
+      }
+    },
+    "stage:1:step:1": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-1",
+        "cwd": "apps/kirigami-studio"
+      }
+    },
+    "stage-1:step-1": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-1",
         "cwd": "apps/kirigami-studio"
       }
     }

@@ -1,0 +1,69 @@
+{
+  "caption_template": "A low-poly faceted papercraft figure of {subject}, seen in an isometric view from the top right corner. Large flat facets, thin black lines of the same thickness on every edge, flat light grey background.",
+  "groups": {
+    "vehicles": [
+      { "name": "fire-truck", "subject": "a cute red fire truck with a ladder and blue and red lights" },
+      { "name": "police-car", "subject": "a cute blue and white police car with a light bar" },
+      { "name": "tractor", "subject": "a cute green tractor with a yellow cab" },
+      { "name": "submarine", "subject": "a cute yellow submarine with a periscope" },
+      { "name": "plane", "subject": "a cute red and blue propeller plane" },
+      { "name": "train", "subject": "a cute red and blue steam locomotive" }
+    ],
+    "dinosaurs": [
+      { "name": "t-rex", "subject": "a cute green tyrannosaurus rex" },
+      { "name": "triceratops", "subject": "a cute orange triceratops with yellow spots" },
+      { "name": "brachiosaurus", "subject": "a cute teal long-necked dinosaur with purple spots" },
+      { "name": "stegosaurus", "subject": "a cute yellow stegosaurus with red plates" },
+      { "name": "ankylosaurus", "subject": "a cute pink ankylosaurus with an armoured back" },
+      { "name": "velociraptor", "subject": "a cute red velociraptor" }
+    ],
+    "cats": [
+      { "name": "orange-tabby", "subject": "a cute sitting orange tabby kitten with darker stripes" },
+      { "name": "gray-kitten", "subject": "a cute standing gray kitten with blue eyes and white paws" },
+      { "name": "calico", "subject": "a cute standing calico kitten with orange and black patches" },
+      { "name": "black-tuxedo", "subject": "a cute standing black kitten with yellow eyes, a white chin, a white chest and white paws" },
+      { "name": "siamese", "subject": "a cute sitting siamese kitten with a cream body, dark brown face, paws and tail, and blue eyes" },
+      { "name": "white-kitten", "subject": "a cute lying white kitten with blue eyes and a red collar" }
+    ],
+    "safari": [
+      { "name": "lion", "subject": "a cute sitting lion cub with a brown mane and a tufted tail" },
+      { "name": "elephant", "subject": "a cute standing gray baby elephant with large ears" },
+      { "name": "giraffe", "subject": "a cute standing yellow baby giraffe with brown spots" },
+      { "name": "zebra", "subject": "a cute standing black and white striped zebra foal" },
+      { "name": "hippo", "subject": "a cute sitting blue-gray baby hippo" },
+      { "name": "cheetah", "subject": "a cute lying spotted cheetah cub with a long raised tail" }
+    ],
+    "forest": [
+      { "name": "squirrel", "subject": "a cute sitting orange squirrel holding an acorn, with a big bushy tail" },
+      { "name": "fawn", "subject": "a cute standing brown fawn with white spots and pink ears" },
+      { "name": "fox", "subject": "a cute sitting orange fox with a white chest and a white-tipped tail" },
+      { "name": "bear", "subject": "a cute standing brown bear cub" },
+      { "name": "hedgehog", "subject": "a cute standing hedgehog with a beige face and brown spikes" },
+      { "name": "raccoon", "subject": "a cute sitting gray raccoon with a dark mask and a striped tail" }
+    ],
+    "dogs": [
+      { "name": "dalmatian", "subject": "a cute white dalmatian puppy with black spots" },
+      { "name": "german-shepherd", "subject": "a cute tan and black german shepherd puppy" },
+      { "name": "pug", "subject": "a cute cream pug puppy with a dark face" },
+      { "name": "blue-eyed-pug", "subject": "a cute fawn pug puppy with blue eyes and a dark tail" },
+      { "name": "golden-puppy", "subject": "a cute golden retriever puppy" },
+      { "name": "rottweiler", "subject": "a cute black and tan rottweiler puppy" }
+    ],
+    "minecraft": [
+      { "name": "steve", "subject": "a cute blocky Minecraft Steve with brown hair, a cyan shirt and blue trousers" },
+      { "name": "alex", "subject": "a cute blocky Minecraft Alex with orange hair, a green shirt, brown trousers and gray boots" },
+      { "name": "creeper", "subject": "a cute blocky green speckled Minecraft creeper with a black sad face and four short legs" },
+      { "name": "zombie", "subject": "a cute blocky Minecraft zombie with teal green skin, a light blue shirt, blue trousers and arms stretched forward" },
+      { "name": "enderman", "subject": "a cute blocky tall thin black Minecraft enderman with purple eyes holding a grass block" },
+      { "name": "pig", "subject": "a cute blocky pink Minecraft pig with a snout and four short legs" }
+    ],
+    "games": [
+      { "name": "mario", "subject": "a cute standing plumber in a red cap with an M, a brown moustache, blue overalls and white gloves, raising one hand to his cap" },
+      { "name": "sonic", "subject": "a cute standing blue hedgehog with spiky quills, a beige belly, white gloves and red sneakers, with a hand on his hip" },
+      { "name": "donkey-kong", "subject": "a cute standing brown gorilla with a beige face, a red necktie with the letters DK and big knuckles on the ground" },
+      { "name": "pikachu", "subject": "a cute standing yellow mouse with red cheeks, long ears with black tips and a lightning bolt tail" },
+      { "name": "yoshi", "subject": "a cute standing green dinosaur with a white belly, a red saddle, red spikes on the back and orange shoes" },
+      { "name": "kirby", "subject": "a cute round pink puffball with blue eyes, rosy cheeks, small round arms and red feet" }
+    ]
+  }
+}

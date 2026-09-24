@@ -1,0 +1,53 @@
+{
+  "apple-tree": {
+    "prompt": "low-poly papercraft stylized apple tree standing upright, brown faceted trunk and branches, green polygonal foliage crowns, orange geometric apples, on a green faceted base"
+  },
+  "brontosaurus-baby": {
+    "prompt": "cute baby brontosaurus sauropod dinosaur, light teal green faceted body, pale yellow underbelly and throat, darker green spots on the back, four sturdy legs, long neck, facing left in the side view"
+  },
+  "creeper-minecraft": {
+    "prompt": "Minecraft creeper: a blocky pixelated green body with a darker green speckled pattern, a square head with the iconic sad black face, four short square legs, facing front"
+  },
+  "cute-baby-cat": {
+    "prompt": "cute baby kitten sitting upright, faceted cream and brown tabby coat with darker stripes, pointy ears, sweet face, long tail resting along the floor"
+  },
+  "darth": {
+    "prompt": "A black and white tuxedo cat sitting upright, like in the attached photographs. The white blaze on the face starts thin on the forehead and widens down between the eyes into the white muzzle. It is asymmetric: on the eye on the left side of the image the white touches the inner corner of the eye directly, while on the eye on the right side of the image (the cat's left eye) the area next to the inner corner is black in its upper half and white in its lower half.",
+    "references": [
+      "front.jpg",
+      "side.jpg",
+      "back.jpg"
+    ]
+  },
+  "dog": {
+    "prompt": "jack russell terrier dog sitting upright, white faceted body, brown patches on the ears and the back, charcoal nose"
+  },
+  "fox": {
+    "prompt": "standing red fox, vibrant orange faceted coat, white chest and muzzle, large pointed ears with dark tips, bushy white-tipped tail"
+  },
+  "green-dino": {
+    "prompt": "cute long-neck sauropod dinosaur, vibrant green faceted body, pale yellow throat and underbelly, round eye, four sturdy legs, facing left in the side view"
+  },
+  "owl": {
+    "prompt": "geometric owl perched on a low pedestal, tan and white faceted body, sharp yellow beak and talons, big round eyes"
+  },
+  "parrot": {
+    "prompt": "colorful macaw parrot perched upright, red head and chest, yellow wing band, blue wings and long blue tail, dark beak, facing left in the side view"
+  },
+  "penguin": {
+    "prompt": "baby penguin standing upright, charcoal black head and back, white faceted belly and face, small beak and flippers"
+  },
+  "polar-bear": {
+    "prompt": "standing cute polar teddy bear, white faceted body, light brown tan belly and muzzle patch, round ears, small dark nose. The top view is what a drone looking straight down at the standing bear would see: only the round crown of the head with its two round ears, the two shoulders, the tops of the two arms and the rounded back, foreshortened from above. Its outline is as wide as the front view and only as deep as the side view is wide. The face, the belly and the legs are never visible in the top view, and it is never a back view"
+  },
+  "red-car": {
+    "prompt": "classic red sedan car, bright red geometric body, clear windows, spoked wheels, white round headlights. The car floats on the flat light grey background in all three panels: no road, no ground, no shadow, no dark or colored backdrop",
+    "references": []
+  },
+  "steve-minecraft": {
+    "prompt": "Minecraft Steve facing front: brown hair, cyan shirt, blue trousers, holding a diamond sword that is visible in the side profile. The top view is a perfectly orthographic plan view: no part of the face or the legs may be visible from above"
+  },
+  "zumbi-minecraft": {
+    "prompt": "Minecraft zombie facing front: pixelated green skin, teal shirt, dark blue trousers, arms hanging down at the sides. The top view is a perfectly orthographic plan view from directly above: the square top of the head, the two shoulders and the tops of the two arms. The body is only as deep as the side profile is wide, a narrow block, and no face, no front of the torso and no legs are visible from above"
+  }
+}

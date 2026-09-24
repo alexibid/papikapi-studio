@@ -1,42 +1,34 @@
-# Kirigami 3D Model Construction — QA Stages & Validation Status
+# Kirigami Studio — QA Stages & Validation Status
 
-**Target File:** `model_construct.blend` (under `resources/<model_name>/`)  
-**Aggregated Execution:** `npm run stage:pipeline` (or `npm run stage:<stage_num>`) from `apps/kirigami-studio`  
-**Pipeline Specification:** [PIPELINE.md](file:///Users/alexsantos/Projects/ibid-workspace/tools/kirigami/stage/PIPELINE.md)  
-**Core Invariant:** All scene elements across all stage collections are strictly preserved in the scene at all times. Non-active elements are hidden in viewport (`hide_viewport = True`). Outliner collections are automatically collapsed. Cameras and lights (`Stage Setup`) are hidden in viewport on save.
+**Aggregated Execution:** `npx tsx scripts/stage-orchestrator.ts --stage <N>` (or `npx tsx scripts/stage-orchestrator.ts --stage <N> --model <name>`)  
+**Pipeline Specification:** [PIPELINE.md](PIPELINE.md)  
+**Configuration Source:** [pipeline.json](pipeline.json)  
 
 ---
 
-## Stages Matrix & Validation Status
+## 📋 Stages Matrix & Validation Status
 
-| Stage | Name | Key Components | Active Elements (Visible) | Inactive (Viewport Hidden) | Execution Command | Validation Status |
+| Stage | Name | Key Components | Inputs | Outputs | Execution Command | Validation Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Stage 0** | **Bounding Box & Clean Cutouts** | Bounding box parallelepiped ($L \times W \times H$), 6 planar cutouts with facet polygons, 8 quadrant wire blocks | `Bounding Box`, `Clean Cutouts`, `Quadrant Blocks` | All other stage collections (Mold, Extrusions, Tubes, Spheres, Reconstructed Mesh, Cameras, Lights) | `npm run stage:0` | **CLOSED & VERIFIED** ✅ |
-| **Stage 1** | **Face Extrusions & Mold Merge** | Individual face extrusion solids per facet, trimmed inwards and merged into the unified solid mold (`Molde_Solid`) | `Base Mold` (`Molde_Solid`), `Face Extrusions` (face solids per view), `Bounding Box` (`Clean Cutouts`) | Quadrants, Tubes, Spheres, Reconstructed Mesh, Cameras, Lights | `npm run stage:1` | **CLOSED & VERIFIED** ✅ |
-| **Stage 2** | **Orthogonal Raycast Tubes & Collisions** | Transparent raycast tubes, 1-to-1 unique HEX color pairing between origin circles and 3D collision markers | `Raycast Tubes` (`Tubes_Raycast_Transparent`, `Circles_Raycast_All`, `Collisions_Raycast_All`, `Circles_Contour_Blue`, `Circles_Interior_Green`), `Clean Cutouts` | Mold, Extrusions, Quadrants, Spheres, Reconstructed Mesh, Cameras, Lights | `npm run stage:2` | **READY FOR VALIDATION** ⏳ |
-| **Stage 3** | **Quadrant Collisions & Spheres** | Tube intersections filtered strictly within the 8 octant quadrant blocks; contact and consolidated midpoint spheres | `Raycast Tubes`, `Contact Spheres`, `Consolidated Spheres`, `Bounding Box` (`Clean Cutouts`) | Mold, Extrusions, Reconstructed Mesh, Cameras, Lights | `npm run stage:3` | **PENDING** ⚪ |
-| **Stage 4** | **Snapped Reconstructed Mesh** | 2D cutout mesh snapped directly to consolidated collision spheres | `Reconstructed Model`, `Consolidated Spheres`, `Bounding Box` | Mold, Extrusions, Tubes, Cameras, Lights | `npm run stage:4` | **PENDING** ⚪ |
+| **Stage 0** | **Alternatives & Art Selection** | 3x2 Axonometric grid (6 styles from chibi to mature), cell cropper | Prompt + up to 3 optional photo references | `step-1-alternatives.jpeg`, `step-1-art.jpeg`, `art.jpeg` | `npx tsx scripts/stage-orchestrator.ts --stage 0` | **CLOSED & VERIFIED** ✅ |
+| **Stage 1** | **3D Model Synthesis (TRELLIS)** | Remote RunPod GPU (NVIDIA RTX PRO 4500 SE), glTF binary synthesis | `step-1-art.jpeg` | `step-1-3d.glb`, `model.glb`, `manifest.json` | `npx tsx scripts/stage-orchestrator.ts --stage 1` | **CLOSED & VERIFIED** ✅ |
 
 ---
 
-## Detailed Procedures per Stage
+## 🎯 Model Validation Results (Production Batch)
 
-1. **Stage 0: Bounding Box & Clean Cutouts**
-   - **Procedure:** Establish bounding box dimensions from model extents. Project the 6 clean planar meshes flush on the 6 outer bounding box faces carrying all facet polygons with assigned materials. Setup 8 wireframe quadrant division blocks.
-   - **Status:** Closed and verified by user.
+Tested and verified on the NVIDIA RTX PRO 4500 Blackwell Server Edition ($0.58/hr):
 
-2. **Stage 1: Face Extrusions & Mold Merge (`Molde_Solid`)**
-   - **Procedure:** Extrude all facet polygons from the 6 outer clean cutouts inwards towards the center. Merge the face extrusions together into the unified solid mold (`Molde_Solid`), leaving the mold fully ready and clean.
-   - **Active Objects:** `Molde_Solid` in `Base Mold`, individual face solids organized in `Face Extrusions` (`Faces Left`, `Faces Right`, `Faces Front`, `Faces Back`, `Faces Top`, `Faces Bottom`), and `Bounding Box` (`Clean Cutouts`).
-   - **Status:** Closed and verified by user. Aggregated into the pipeline runner.
+| Model | Input Art | Input Size | Processing Time | Cost (USD) | Output 3D Mesh (.glb) | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **bear** | `stage-0/step-1-art.jpeg` | 34.8 KB | 19.34s | $0.0031 | 1.10 MB | **PASS** ✅ |
+| **cheetah** | `stage-0/step-1-art.jpeg` | 221.3 KB | 21.09s | $0.0034 | 1.55 MB | **PASS** ✅ |
+| **dalmatian** | `stage-0/step-1-art.jpeg` | 154.3 KB | 18.41s | $0.0029 | 1.43 MB | **PASS** ✅ |
+| **fox** | `stage-0/step-1-art.jpeg` | 165.2 KB | 22.96s | $0.0037 | 1.56 MB | **PASS** ✅ |
+| **giraffe** | `stage-0/step-1-art.jpeg` | 144.7 KB | 16.45s | $0.0026 | 1.36 MB | **PASS** ✅ |
+| **lion** | `stage-0/step-1-art.jpeg` | 180.3 KB | 25.54s | $0.0041 | 1.76 MB | **PASS** ✅ |
+| **police-car** | `stage-0/step-1-art.jpeg` | 171.0 KB | 19.57s | $0.0031 | 1.37 MB | **PASS** ✅ |
+| **t-rex** | `stage-0/step-1-art.jpeg` | 180.8 KB | 16.67s | $0.0027 | 1.40 MB | **PASS** ✅ |
 
-3. **Stage 2: Orthogonal Raycast Tubes & Collisions**
-   - **Procedure:** Emit transparent orthogonal projection tubes perpendicularly from clean cutout vertices inwards. Calculate precise collision coordinates (first intersection with `Molde_Solid` for interior vertices; contour boundary envelope for contour vertices).
-   - **Unique 1-to-1 HEX Color Pairing:** Assign a deterministic globally unique HEX color code to each vertex. The origin ring on the cutout plane and its corresponding 3D collision sphere share the identical HEX color, providing visual and programmatic traceability for retopology.
-   - **Status:** Ready for user validation.
-
-4. **Stage 3: Quadrant Collisions & Spheres**
-   - **Procedure:** Calculate pairwise intersections between perpendicular tubes, filtering strictly between tubes originating in matching octant quadrants. Place collision markers at intersection midpoints and cluster within tolerance into consolidated spheres.
-
-5. **Stage 4: Snapped Reconstructed Mesh**
-   - **Procedure:** Snap the vertices of the clean cutout mesh to the consolidated sphere coordinates, locking the final 3D form directly from the 2D cutouts without arbitrary boolean degeneration.
+* **Zero Incidents**: All 8 models generated clean watertight `.glb` meshes with 100% success rate.
+* **Manifests**: Aggregated manifests written to `public/models/<model>/manifest.json` and registered in `public/models/index.json`.

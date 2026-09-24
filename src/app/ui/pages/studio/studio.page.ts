@@ -1,15 +1,10 @@
-import { Component, OnInit, computed, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { I18nService } from '@ibid/services';
-import { BadgeComponent, ButtonComponent, CardComponent, EmptyStateComponent } from 'ibid-ui';
+import { BadgeComponent, ButtonComponent, CardComponent, EmptyStateComponent, ScrimComponent } from 'ibid-ui';
 import { ModelCatalogueService } from '../../../application/services/model-catalogue.service';
-import {
-  MODEL_STAGES,
-  ModelGrid,
-  ModelStage,
-  PaperModel,
-  printedColours,
-  totalPages,
-} from '../../../domain/models/paper-model';
+import { ModelCreatorService } from '../../../application/services/model-creator.service';
+import { PaperModel } from '../../../domain/models/paper-model';
+import { ModelCreatorComponent } from '../../components/model-creator/model-creator';
 import { ModelViewer3DComponent } from '../../components/model-viewer-3d/model-viewer-3d';
 
 @Component({
@@ -20,7 +15,9 @@ import { ModelViewer3DComponent } from '../../components/model-viewer-3d/model-v
     ButtonComponent,
     CardComponent,
     EmptyStateComponent,
+    ModelCreatorComponent,
     ModelViewer3DComponent,
+    ScrimComponent,
   ],
   templateUrl: './studio.page.html',
   styleUrl: './studio.page.scss',
@@ -28,39 +25,14 @@ import { ModelViewer3DComponent } from '../../components/model-viewer-3d/model-v
 export class StudioPage implements OnInit {
   protected readonly i18n = inject(I18nService);
   protected readonly catalogue = inject(ModelCatalogueService);
+  protected readonly creator = inject(ModelCreatorService);
 
   protected readonly selected = this.catalogue.selected;
-  protected readonly grid = this.catalogue.grid;
-  protected readonly intensity = this.catalogue.intensity;
-  protected readonly grids = computed<readonly ModelGrid[]>(() => this.selected()?.grids ?? []);
-  protected readonly provenance = computed(() => this.selected()?.provenance);
-  protected readonly preview = computed(
-    () => this.grid()?.previewPath ?? this.selected()?.previewPath ?? ''
-  );
-  protected readonly pageTally = computed(() => this.tally(totalPages));
-  protected readonly faceTally = computed(() => this.grid()?.faces ?? 0);
-  protected readonly cardCount = computed(() => this.colours().length);
-  protected readonly colours = computed(() => {
-    const model = this.selected();
-    return model ? printedColours(model) : [];
-  });
+  protected readonly preview = computed(() => this.selected()?.modelPath ?? '');
+  protected readonly showCreator = signal<boolean>(false);
 
   ngOnInit(): void {
     void this.catalogue.load();
-  }
-
-  protected readonly shelves = MODEL_STAGES;
-
-  protected show(stage: ModelStage): void {
-    this.catalogue.show(stage);
-  }
-
-  protected isShelf(stage: ModelStage): boolean {
-    return this.catalogue.shelf() === stage;
-  }
-
-  protected countOf(stage: ModelStage): number {
-    return this.catalogue.countOf(stage);
   }
 
   protected choose(model: PaperModel): void {
@@ -71,16 +43,45 @@ export class StudioPage implements OnInit {
     return this.selected()?.id === model.id;
   }
 
-  protected pick(value: string): void {
-    this.catalogue.pick(Number(value));
-  }
-
   protected refresh(): void {
     void this.catalogue.load();
   }
 
-  private tally(measure: (model: PaperModel) => number): number {
-    const model = this.selected();
-    return model ? measure(model) : 0;
+  protected openCreator(): void {
+    this.creator.reset();
+    this.showCreator.set(true);
+  }
+
+  protected closeCreator(): void {
+    this.showCreator.set(false);
+  }
+
+  protected async changePick(modelId: string): Promise<void> {
+    const hasAlternatives = await this.creator.loadExistingAlternatives(modelId);
+    if (hasAlternatives) {
+      this.showCreator.set(true);
+    } else {
+      alert(this.i18n.translate('noAlternativesFound'));
+    }
+  }
+
+  protected async deleteModel(modelId: string): Promise<void> {
+    const confirmed = window.confirm(this.i18n.translate('deleteModelConfirm'));
+    if (!confirmed) return;
+
+    const ok = await this.creator.deleteModel(modelId);
+    if (ok) {
+      await this.catalogue.load();
+      const all = this.catalogue.all();
+      if (all.length > 0) {
+        this.catalogue.select(all[0].id);
+      }
+    }
+  }
+
+  protected async onModelCreated(modelId: string): Promise<void> {
+    this.showCreator.set(false);
+    await this.catalogue.load();
+    this.catalogue.select(modelId);
   }
 }
