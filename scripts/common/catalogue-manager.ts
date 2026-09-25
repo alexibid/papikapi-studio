@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { WorkspacePaths } from './workspace-paths.js';
 
@@ -19,7 +19,7 @@ export class CatalogueManager {
     const verifiedModels: CatalogueModelEntry[] = [];
 
     for (const entry of entries) {
-      if (!entry.isDirectory()) {
+      if (!entry.isDirectory() || entry.name.startsWith('.')) {
         continue;
       }
 
@@ -28,7 +28,11 @@ export class CatalogueManager {
       const glbPath = join(modelDir, 'model.glb');
       const artPath = join(modelDir, 'art.jpeg');
 
-      if (existsSync(glbPath) && existsSync(artPath)) {
+      if (
+        existsSync(glbPath) &&
+        existsSync(artPath) &&
+        statSync(glbPath).size > 1000
+      ) {
         verifiedModels.push({
           id: modelId,
           model: 'model.glb',

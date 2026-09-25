@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, openAsBlob, unlinkSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, openAsBlob, statSync, unlinkSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { ManifestManager } from '../common/manifest-manager.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
@@ -10,6 +10,8 @@ export interface TrellisGenerateResponse {
   readonly publicPath: string;
   readonly seconds: number;
   readonly costUsd: number;
+  readonly cached?: boolean;
+  readonly pick?: number;
 }
 
 export class TrellisGenerator {
@@ -30,21 +32,69 @@ export class TrellisGenerator {
     throw new Error(`Input art not found for model '${modelName}'`);
   }
 
-  public static async execute(modelName: string): Promise<TrellisGenerateResponse> {
-    const inputPath = this.findInputArt(modelName);
-    const step = PipelineConfigLoader.getStep(this.stepId);
-    const params = step.parameters ?? {};
-
+  public static async execute(modelName: string, requestedPick?: number): Promise<TrellisGenerateResponse> {
+    const stage0Dir = join(WorkspacePaths.resourcePath(modelName), 'stage-0');
     const stage1Dir = join(WorkspacePaths.resourcePath(modelName), 'stage-1');
     const publicDir = WorkspacePaths.modelPath(modelName);
     mkdirSync(stage1Dir, { recursive: true });
     mkdirSync(publicDir, { recursive: true });
 
+    const step2Manifest = ManifestManager.readStepResult(modelName, 's0-step-2');
+    const pick = requestedPick ?? (step2Manifest?.data?.chosenPick ? Number(step2Manifest.data.chosenPick) : null);
+
     const outputPath = join(stage1Dir, 'step-1-3d.glb');
     const publicPath = join(publicDir, 'model.glb');
+    const cachedResGlb = pick ? join(stage1Dir, `step-1-3d-pick-${pick}.glb`) : null;
+    const cachedPubGlb = pick ? join(publicDir, `model-pick-${pick}.glb`) : null;
+
+    const hasCachedGlb = Boolean(
+      (cachedResGlb && existsSync(cachedResGlb) && statSync(cachedResGlb).size > 1000) ||
+      (cachedPubGlb && existsSync(cachedPubGlb) && statSync(cachedPubGlb).size > 1000)
+    );
+
+    if (hasCachedGlb && pick) {
+      const sourceGlb = (cachedResGlb && existsSync(cachedResGlb)) ? cachedResGlb : cachedPubGlb!;
+      copyFileSync(sourceGlb, outputPath);
+      copyFileSync(sourceGlb, publicPath);
+      if (cachedResGlb && !existsSync(cachedResGlb)) copyFileSync(sourceGlb, cachedResGlb);
+      if (cachedPubGlb && !existsSync(cachedPubGlb)) copyFileSync(sourceGlb, cachedPubGlb);
+
+      const cachedResArt = join(stage0Dir, `step-1-art-pick-${pick}.jpeg`);
+      const cachedPubArt = join(publicDir, `art-pick-${pick}.jpeg`);
+      if (existsSync(cachedResArt)) copyFileSync(cachedResArt, join(stage0Dir, 'step-1-art.jpeg'));
+      if (existsSync(cachedPubArt)) copyFileSync(cachedPubArt, join(publicDir, 'art.jpeg'));
+
+      console.log(`  \x1b[32m⚡ [Cache Hit]\x1b[0m Restored 3D Model for pick #${pick} from local cache (0.0s, $0.0000)\n`);
+
+      ManifestManager.writeStepResult(modelName, this.stepId, {
+        status: 'DONE',
+        seconds: 0.05,
+        costUsd: 0,
+        costNote: 'Restored from local pick cache',
+        metrics: { fileSize: statSync(outputPath).size },
+        data: {
+          cached: true,
+          chosenPick: pick,
+          format: 'model/gltf-binary',
+        },
+      });
+
+      return {
+        name: modelName,
+        outputPath,
+        publicPath: `/models/${modelName}/model.glb`,
+        seconds: 0.05,
+        costUsd: 0,
+        cached: true,
+        pick,
+      };
+    }
+
+    const inputPath = this.findInputArt(modelName);
+    const step = PipelineConfigLoader.getStep(this.stepId);
+    const params = step.parameters ?? {};
 
     if (existsSync(outputPath)) unlinkSync(outputPath);
-    if (existsSync(publicPath)) unlinkSync(publicPath);
 
     const endpoint = (params.endpoint as string) || this.defaultEndpoint;
     const seed = (params.seed as number) ?? 1;
@@ -88,6 +138,8 @@ export class TrellisGenerator {
 
     writeFileSync(outputPath, buffer);
     writeFileSync(publicPath, buffer);
+    if (cachedResGlb) writeFileSync(cachedResGlb, buffer);
+    if (cachedPubGlb) writeFileSync(cachedPubGlb, buffer);
 
     const duration = Math.round(((Date.now() - startTime) / 1000) * 100) / 100;
     const costUsd = Math.round(duration * this.defaultUsdPerSec * 10000) / 10000;
@@ -104,6 +156,8 @@ export class TrellisGenerator {
       data: {
         fileSize: buffer.length,
         format: 'model/gltf-binary',
+        chosenPick: pick,
+        cached: false,
         device: 'NVIDIA RTX PRO 4500 Blackwell Server Edition',
         parameters: { seed, simplify, texture_size: textureSize },
       },
@@ -115,6 +169,8 @@ export class TrellisGenerator {
       publicPath: `/models/${modelName}/model.glb`,
       seconds: duration,
       costUsd,
+      cached: false,
+      pick: pick ?? undefined,
     };
   }
 }

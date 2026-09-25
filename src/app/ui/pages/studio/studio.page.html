@@ -20,6 +20,7 @@
     <div class="p-studio__creator-overlay">
       <div class="p-studio__creator-dialog">
         <kirigami-model-creator
+          (pickSelected)="onPickSelected($event)"
           (modelCreated)="onModelCreated($event)"
           (closed)="closeCreator()"
         />
@@ -32,7 +33,7 @@
       <ibid-card customClass="p-studio__card">
         <div class="p-studio__card-header">
           <h2 class="p-studio__card-title">{{ i18n.translate('catalogue') }}</h2>
-          <ibid-badge [label]="catalogue.all().length + ''" />
+          <ibid-badge size="sm" [label]="catalogue.all().length + ''" />
         </div>
 
         @if (catalogue.all().length === 0) {
@@ -47,8 +48,25 @@
                   [class.p-studio__model--chosen]="isChosen(model)"
                   (click)="choose(model)"
                 >
-                  <img class="p-studio__thumb" [src]="model.previewPath" alt="" />
+                  <img class="p-studio__thumb" [src]="model.previewPath + '?v=' + previewVersion()" alt="" />
                   <span class="p-studio__model-name">{{ model.id }}</span>
+                  @if (creator.isGenerating3d(model.id)) {
+                    <ibid-badge size="xs" label="⟳ 3D..." />
+                  }
+                </button>
+              </li>
+            }
+            @for (gen of pendingGenerations(); track gen.modelName) {
+              <li>
+                <button
+                  type="button"
+                  class="p-studio__model"
+                  [class.p-studio__model--chosen]="selectedModelId() === gen.modelName"
+                  (click)="chooseById(gen.modelName)"
+                >
+                  <span class="p-studio__thumb-placeholder">⚡</span>
+                  <span class="p-studio__model-name">{{ gen.modelName }}</span>
+                  <ibid-badge size="xs" label="⟳ 3D..." />
                 </button>
               </li>
             }
@@ -70,12 +88,12 @@
             </div>
           </div>
           <div class="p-studio__reference-images">
-            <img class="p-studio__reference-image" [src]="model.imagePath" alt="" />
+            <img class="p-studio__reference-image" [src]="model.imagePath + '?v=' + previewVersion()" alt="" />
             @if (model.secondaryImagePath; as secondary) {
-              <img class="p-studio__reference-image" [src]="secondary" alt="" />
+              <img class="p-studio__reference-image" [src]="secondary + '?v=' + previewVersion()" alt="" />
             }
             @if (model.topImagePath; as top) {
-              <img class="p-studio__reference-image" [src]="top" alt="" />
+              <img class="p-studio__reference-image" [src]="top + '?v=' + previewVersion()" alt="" />
             }
           </div>
         </ibid-card>
@@ -84,6 +102,17 @@
 
     <section class="p-studio__preview-col">
       <kirigami-model-viewer-3d [source]="preview()" />
+
+      @if (activeCanvasLoader(); as loaderInfo) {
+        <div class="p-studio__canvas-loader">
+          <kirigami-process-loader
+            mode="3d"
+            [modelName]="loaderInfo.modelName"
+            [pick]="loaderInfo.pick"
+            [startedAt]="loaderInfo.startedAt"
+          />
+        </div>
+      }
     </section>
   </main>
 </div>

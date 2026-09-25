@@ -41,6 +41,9 @@ export class ModelCatalogueService {
 
   private adopt(models: readonly PaperModel[]): void {
     this.models.set(models);
-    this.selectedId.set(models[0]?.id ?? '');
+    const current = this.selectedId();
+    if (!current || !models.some((m) => m.id === current)) {
+      this.selectedId.set(models[0]?.id ?? '');
+    }
   }
 }

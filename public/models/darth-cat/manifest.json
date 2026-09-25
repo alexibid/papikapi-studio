@@ -17,38 +17,33 @@
     },
     "s0-step-2": {
       "stageId": "s0-step-2",
-      "at": "2026-09-24T16:43:52.548Z",
+      "at": "2026-09-25T09:46:23.351Z",
       "status": "DONE",
-      "seconds": 0.17,
+      "seconds": 0.02,
       "costUsd": 0,
       "data": {
-        "chosenPick": 2,
-        "artSize": 26213
+        "chosenPick": 1,
+        "artSize": 24259
       }
     },
     "s1-step-1": {
       "stageId": "s1-step-1",
-      "at": "2026-09-24T16:44:09.667Z",
+      "at": "2026-09-25T09:46:23.359Z",
       "status": "DONE",
-      "seconds": 17.12,
-      "costUsd": 0.0027,
-      "costNote": "RunPod RTX PRO 4500 SE ($0.58/hr)",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
       "data": {
-        "fileSize": 1212980,
-        "format": "model/gltf-binary",
-        "device": "NVIDIA RTX PRO 4500 Blackwell Server Edition",
-        "parameters": {
-          "seed": 1,
-          "simplify": 0.95,
-          "texture_size": 1024
-        }
+        "cached": true,
+        "chosenPick": 1,
+        "format": "model/gltf-binary"
       },
       "metrics": {
-        "fileSize": 1212980
+        "fileSize": 1196464
       }
     }
   },
-  "totalSeconds": 31.65,
-  "totalCostUsd": 0.1537,
-  "updatedAt": "2026-09-24T16:44:09.668Z"
+  "totalSeconds": 14.43,
+  "totalCostUsd": 0.151,
+  "updatedAt": "2026-09-25T09:46:23.360Z"
 }

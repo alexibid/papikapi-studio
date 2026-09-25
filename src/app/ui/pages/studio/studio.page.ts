@@ -6,6 +6,7 @@ import { ModelCreatorService } from '../../../application/services/model-creator
 import { PaperModel } from '../../../domain/models/paper-model';
 import { ModelCreatorComponent } from '../../components/model-creator/model-creator';
 import { ModelViewer3DComponent } from '../../components/model-viewer-3d/model-viewer-3d';
+import { ProcessLoaderComponent } from '../../components/process-loader/process-loader';
 
 @Component({
   selector: 'kirigami-studio-page',
@@ -17,6 +18,7 @@ import { ModelViewer3DComponent } from '../../components/model-viewer-3d/model-v
     EmptyStateComponent,
     ModelCreatorComponent,
     ModelViewer3DComponent,
+    ProcessLoaderComponent,
     ScrimComponent,
   ],
   templateUrl: './studio.page.html',
@@ -28,23 +30,79 @@ export class StudioPage implements OnInit {
   protected readonly creator = inject(ModelCreatorService);
 
   protected readonly selected = this.catalogue.selected;
-  protected readonly preview = computed(() => this.selected()?.modelPath ?? '');
+  protected readonly pendingModelId = signal<string>(this.loadInitialSelected());
+  protected readonly previewVersion = signal<number>(Date.now());
+
+  protected readonly selectedModelId = computed(() => {
+    return this.selected()?.id || this.pendingModelId();
+  });
+
+  protected readonly activeCanvasLoader = computed(() => {
+    const id = this.selectedModelId();
+    if (!id) return null;
+    return this.creator.getGeneration(id);
+  });
+
+  protected readonly pendingGenerations = computed(() => {
+    const existingIds = new Set(this.catalogue.all().map((m) => m.id));
+    return Object.values(this.creator.activeGenerations()).filter(
+      (gen) => !existingIds.has(gen.modelName)
+    );
+  });
+
+  protected readonly preview = computed(() => {
+    const model = this.selected();
+    if (!model || this.creator.isGenerating3d(model.id)) return '';
+    return `${model.modelPath}?v=${this.previewVersion()}`;
+  });
   protected readonly showCreator = signal<boolean>(false);
 
+  private loadInitialSelected(): string {
+    if (typeof window === 'undefined') return '';
+    try {
+      return localStorage.getItem('kirigami_selected_model') || '';
+    } catch {
+      return '';
+    }
+  }
+
+  private saveSelected(id: string): void {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem('kirigami_selected_model', id);
+    } catch {}
+  }
+
   ngOnInit(): void {
-    void this.catalogue.load();
+    void this.catalogue.load().then(() => {
+      const saved = this.loadInitialSelected();
+      if (saved) {
+        this.pendingModelId.set(saved);
+        this.catalogue.select(saved);
+      }
+    });
   }
 
   protected choose(model: PaperModel): void {
+    this.pendingModelId.set(model.id);
     this.catalogue.select(model.id);
+    this.saveSelected(model.id);
+  }
+
+  protected chooseById(id: string): void {
+    this.pendingModelId.set(id);
+    this.catalogue.select(id);
+    this.saveSelected(id);
   }
 
   protected isChosen(model: PaperModel): boolean {
-    return this.selected()?.id === model.id;
+    return this.selectedModelId() === model.id;
   }
 
-  protected refresh(): void {
-    void this.catalogue.load();
+  protected async refresh(): Promise<void> {
+    await fetch('/api/catalogue/sync', { method: 'POST' }).catch(() => {});
+    await this.catalogue.load();
+    this.previewVersion.set(Date.now());
   }
 
   protected openCreator(): void {
@@ -76,12 +134,41 @@ export class StudioPage implements OnInit {
       if (all.length > 0) {
         this.catalogue.select(all[0].id);
       }
+      this.previewVersion.set(Date.now());
+    }
+  }
+
+  protected async onPickSelected(event: { name: string; pick: number }): Promise<void> {
+    const { name, pick } = event;
+    this.showCreator.set(false);
+    this.pendingModelId.set(name);
+    this.catalogue.select(name);
+    this.saveSelected(name);
+
+    const isCached = this.creator.cachedPicks().includes(pick);
+    if (isCached) {
+      const result = await this.creator.pickAlternative(name, pick, true);
+      if (result && result.success) {
+        await this.catalogue.load();
+        this.catalogue.select(result.name);
+        this.previewVersion.set(Date.now());
+      }
+    } else {
+      void this.creator.pickAlternative(name, pick, false).then(async (result) => {
+        if (result && result.success) {
+          await this.catalogue.load();
+          this.catalogue.select(result.name);
+          this.previewVersion.set(Date.now());
+        }
+      });
     }
   }
 
   protected async onModelCreated(modelId: string): Promise<void> {
     this.showCreator.set(false);
+    this.pendingModelId.set(modelId);
     await this.catalogue.load();
     this.catalogue.select(modelId);
+    this.previewVersion.set(Date.now());
   }
 }

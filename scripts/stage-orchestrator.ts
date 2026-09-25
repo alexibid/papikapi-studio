@@ -98,7 +98,10 @@ export class StageOrchestrator {
       if (existsSync(stageDir)) {
         for (const file of readdirSync(stageDir)) {
           const full = join(stageDir, file);
-          if (existsSync(full) && statSync(full).isFile()) { unlinkSync(full); cleaned.push(file); }
+          if (existsSync(full) && statSync(full).isFile() && !file.includes('-pick-')) {
+            unlinkSync(full);
+            cleaned.push(file);
+          }
         }
       }
       const pubModel = join(publicDir, 'model.glb');
@@ -187,7 +190,7 @@ export class StageOrchestrator {
             const artPath = join(WorkspacePaths.resourcePath(model), 'stage-0', 'step-1-art.jpeg');
             const artSize = existsSync(artPath) ? statSync(artPath).size : 0;
             console.log(`  [s1-step-1] Input Art: ${artPath} (${(artSize / 1024).toFixed(1)} KB)`);
-            const res = await TrellisGenerator.execute(model);
+            const res = await TrellisGenerator.execute(model, flags.pick ?? undefined);
             const size = statSync(res.outputPath).size;
             console.log(`  [s1-step-1] Output 3D Mesh: ${res.outputPath} (${(size / (1024 * 1024)).toFixed(2)} MB)`);
             CatalogueManager.sync();

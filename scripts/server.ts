@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, statSync } from 'node:fs';
 import http, { IncomingMessage, ServerResponse } from 'node:http';
 import { join } from 'node:path';
 import { CatalogueManager } from './common/catalogue-manager.js';
@@ -137,6 +137,7 @@ export class CreatorApiServer {
 
         const cleanName = name.trim().toLowerCase().replace(/\s+/g, '-');
         const stage0Dir = join(WorkspacePaths.resourcePath(cleanName), 'stage-0');
+        const stage1Dir = join(WorkspacePaths.resourcePath(cleanName), 'stage-1');
         const publicDir = WorkspacePaths.modelPath(cleanName);
 
         const hasAlternatives = [
@@ -150,11 +151,49 @@ export class CreatorApiServer {
           join(publicDir, 'alternatives.webp'),
         ].some((p) => existsSync(p));
 
+        const cachedPicks: number[] = [];
+        for (let p = 1; p <= 6; p++) {
+          const pubPickGlb = join(publicDir, `model-pick-${p}.glb`);
+          if (existsSync(pubPickGlb) && statSync(pubPickGlb).size > 1000) {
+            cachedPicks.push(p);
+          }
+        }
+
+        let currentPick: number | null = null;
+        const pubModel = join(publicDir, 'model.glb');
+        const hasPubModel = existsSync(pubModel) && statSync(pubModel).size > 1000;
+
+        const step2Manifest = join(stage0Dir, 'step-2-manifest.json');
+        if (existsSync(step2Manifest) && hasPubModel) {
+          try {
+            const parsed = JSON.parse(readFileSync(step2Manifest, 'utf-8'));
+            if (parsed?.data?.chosenPick) {
+              currentPick = Number(parsed.data.chosenPick);
+              if (!cachedPicks.includes(currentPick)) {
+                cachedPicks.push(currentPick);
+              }
+            }
+          } catch {}
+        }
+
+        cachedPicks.sort((a, b) => a - b);
+
         this.sendJson(res, 200, {
           name: cleanName,
           hasAlternatives,
           sheetUrl: hasAlternatives ? `/api/creator/sheet?name=${cleanName}` : null,
+          cachedPicks,
+          currentPick,
         });
+        return;
+      }
+
+      if (
+        (req.method === 'POST' || req.method === 'GET') &&
+        (url.pathname === '/api/catalogue/sync' || url.pathname === '/api/creator/sync')
+      ) {
+        const synced = CatalogueManager.sync();
+        this.sendJson(res, 200, { success: true, count: synced.length, models: synced });
         return;
       }
 
@@ -227,17 +266,20 @@ export class CreatorApiServer {
           }
 
           const cleanName = body.name.trim().toLowerCase().replace(/\s+/g, '-');
+          const pick = Number(body.pick);
           const cropResult = await AlternativePicker.execute({
             name: cleanName,
-            pick: Number(body.pick),
+            pick,
           });
 
-          await TrellisGenerator.execute(cleanName);
+          const trellisResult = await TrellisGenerator.execute(cleanName, pick);
           CatalogueManager.sync();
 
           this.sendJson(res, 200, {
             success: true,
             name: cleanName,
+            pick,
+            cached: trellisResult.cached ?? false,
             artPath: cropResult.publicArtPath,
             modelPath: `/models/${cleanName}/model.glb`,
           });
@@ -251,6 +293,7 @@ export class CreatorApiServer {
     });
 
     server.listen(this.port, () => {
+      CatalogueManager.sync();
       console.log(`Kirigami Studio API server listening on http://localhost:${this.port}`);
     });
 

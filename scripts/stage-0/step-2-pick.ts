@@ -73,6 +73,11 @@ export class AlternativePicker {
     writeFileSync(resourceArt, croppedBuffer);
     writeFileSync(publicArt, croppedBuffer);
 
+    const resourceArtPick = join(stage0Dir, `step-1-art-pick-${pick}.jpeg`);
+    const publicArtPick = join(publicDir, `art-pick-${pick}.jpeg`);
+    writeFileSync(resourceArtPick, croppedBuffer);
+    writeFileSync(publicArtPick, croppedBuffer);
+
     const duration = Math.round(((Date.now() - start) / 1000) * 100) / 100;
 
     ManifestManager.writeStepResult(name, this.stepId, {

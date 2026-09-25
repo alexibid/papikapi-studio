@@ -28,6 +28,21 @@ export interface ModelManifest {
 export class ManifestManager {
   private static readonly manifestVersion = 1;
 
+  public static readStepResult(subject: string, stageId: string): StepRecord | null {
+    const stageDirName = stageId.startsWith('s0-') ? 'stage-0' : 'stage-1';
+    const targetFile = join(
+      WorkspacePaths.resourcePath(subject),
+      stageDirName,
+      `${stageId.replace(/^s\d+-/, '')}-manifest.json`
+    );
+    if (!existsSync(targetFile)) return null;
+    try {
+      return JSON.parse(readFileSync(targetFile, 'utf8')) as StepRecord;
+    } catch {
+      return null;
+    }
+  }
+
   public static writeStepResult(
     subject: string,
     stageId: string,

@@ -4,9 +4,11 @@
       <h2 class="c-model-creator__title">{{ i18n.translate('creatorTitle') }}</h2>
       <span class="c-model-creator__subtitle">{{ i18n.translate('creatorSubtitle') }}</span>
     </div>
-    <ibid-button variant="outlined" (clicked)="close()">
-      ✕ {{ i18n.translate('close') }}
-    </ibid-button>
+    @if (!creator.isGenerating()) {
+      <ibid-button variant="outlined" (clicked)="close()">
+        ✕ {{ i18n.translate('close') }}
+      </ibid-button>
+    }
   </div>
 
   @if (creator.error()) {
@@ -15,7 +17,14 @@
     </div>
   }
 
-  <div class="c-model-creator__body">
+  @if (creator.isGenerating()) {
+    <kirigami-process-loader
+      mode="alternatives"
+      [modelName]="creator.currentName() || modelName()"
+      [pick]="selectedPick()"
+    />
+  } @else {
+    <div class="c-model-creator__body">
     <div class="c-model-creator__input-section">
       <div class="c-model-creator__field">
         <label class="c-model-creator__label" for="modelPrompt">
@@ -46,7 +55,7 @@
       <div class="c-model-creator__field">
         <div class="c-model-creator__label-row">
           <span class="c-model-creator__label">{{ i18n.translate('referencePhotosLabel') }}</span>
-          <ibid-badge [label]="references().length + '/3'" />
+          <ibid-badge size="sm" [label]="references().length + '/3'" />
         </div>
 
         <div class="c-model-creator__photos-row">
@@ -114,12 +123,25 @@
                 class="c-model-creator__cell-preview"
                 [style.background-image]="'url(' + sheet + ')'"
                 [style.background-position]="(($index % 3) * 50) + '% ' + (mathFloor($index / 3) * 100) + '%'"
-              ></div>
+              >
+                @if (!isPickCached($index + 1)) {
+                  <span class="c-model-creator__badge-no-3d">
+                    🎨 {{ i18n.translate('no3dBadge') }}
+                  </span>
+                }
+              </div>
               <div class="c-model-creator__cell-footer">
                 <span class="c-model-creator__cell-tag">{{ label }}</span>
-                @if (selectedPick() === ($index + 1)) {
-                  <span class="c-model-creator__cell-check">✓</span>
-                }
+                <div class="c-model-creator__cell-status">
+                  @if (isPickActive($index + 1)) {
+                    <ibid-badge size="xs" [label]="'✓ ' + i18n.translate('pickActiveBadge')" />
+                  } @else if (isPickCached($index + 1)) {
+                    <ibid-badge size="xs" [label]="'⚡ ' + i18n.translate('pickCachedBadge')" />
+                  }
+                  @if (selectedPick() === ($index + 1)) {
+                    <span class="c-model-creator__cell-check">✓</span>
+                  }
+                </div>
               </div>
             </button>
           }
@@ -133,6 +155,8 @@
           >
             @if (creator.isPicking()) {
               ⟳ {{ i18n.translate('generating3dModel') }}
+            } @else if (isSelectedCached()) {
+              ⚡ {{ i18n.translate('activateCachedModel') }} (#{{ selectedPick() }})
             } @else {
               🧊 {{ i18n.translate('proceedWithModel') }} (#{{ selectedPick() }})
             }
@@ -141,4 +165,5 @@
       </div>
     }
   </div>
+}
 </ibid-card>

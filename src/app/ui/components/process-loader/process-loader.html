@@ -1,0 +1,180 @@
+<div class="c-paper-loader">
+
+  <!-- 1. Kinetic Papercraft Origami Folding Mechanism (Pedro Aquino Google Style) -->
+  <div class="c-origami">
+    <div class="c-origami__cluster">
+      <div class="c-origami__tile c-origami__tile--1">
+        <div class="c-origami__face c-origami__face--front"></div>
+        <div class="c-origami__face c-origami__face--back"></div>
+      </div>
+      <div class="c-origami__tile c-origami__tile--2">
+        <div class="c-origami__face c-origami__face--front"></div>
+        <div class="c-origami__face c-origami__face--back"></div>
+      </div>
+      <div class="c-origami__tile c-origami__tile--3">
+        <div class="c-origami__face c-origami__face--front"></div>
+        <div class="c-origami__face c-origami__face--back"></div>
+      </div>
+      <div class="c-origami__tile c-origami__tile--4">
+        <div class="c-origami__face c-origami__face--front"></div>
+        <div class="c-origami__face c-origami__face--back"></div>
+      </div>
+      <div class="c-origami__core"></div>
+    </div>
+    <div class="c-origami__shadow"></div>
+  </div>
+
+  <!-- 2. Papercraft 3D Isometric Stepped Ribbon Progress Bar (Ruslan Style) -->
+  <div class="c-iso-tracker">
+
+    <!-- Top Track & Floating Status Pill -->
+    <div class="c-iso-tracker__top">
+      <div class="c-iso-tracker__dotted"></div>
+      <div class="c-iso-tracker__pill">
+        <span>⏱️ {{ formattedTime() }}</span>
+        <span>·</span>
+        <span>{{ progressPercent() }}%</span>
+      </div>
+    </div>
+
+    <!-- Step Names Above Pedestals -->
+    <div
+      class="c-iso-tracker__labels"
+      [style.grid-template-columns]="'repeat(' + milestones().length + ', 1fr)'"
+    >
+      @for (m of milestones(); track m.id) {
+        <span
+          class="c-iso-tracker__label"
+          [class.c-iso-tracker__label--past]="m.isPast"
+          [class.c-iso-tracker__label--active]="m.isActive"
+        >
+          @if (m.isPast) { ✓ } {{ m.title }}
+        </span>
+      }
+    </div>
+
+    <!-- 3D Isometric SVG Stage with Scored Papercraft Ribbon & Blocks -->
+    <div class="c-iso-tracker__stage">
+      <svg class="c-iso-tracker__svg" viewBox="0 0 520 100">
+        <defs>
+          <filter id="pDropShadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.12" />
+          </filter>
+          <filter id="pActiveGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0284c7" flood-opacity="0.28" />
+          </filter>
+
+          <!-- Papercraft Cardstock Texture Pattern -->
+          <linearGradient id="paperRibbonDone" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#10b981"/>
+            <stop offset="100%" stop-color="#059669"/>
+          </linearGradient>
+          <linearGradient id="paperRibbonActive" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#059669"/>
+            <stop offset="100%" stop-color="#0284c7"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Stepped Folded Cardstock Ribbon Segments -->
+        @for (seg of ribbonSegments(); track $index) {
+          <!-- Upper paper face -->
+          <polygon
+            [attr.points]="seg.pointsTop"
+            [attr.fill]="seg.fillTop"
+            [attr.stroke]="seg.stroke"
+            stroke-width="0.5"
+            opacity="0.95"
+          />
+          <!-- Lower paper thickness crease -->
+          <polygon
+            [attr.points]="seg.pointsBottom"
+            [attr.fill]="seg.fillBottom"
+            opacity="0.85"
+          />
+        }
+
+        <!-- Leaping Arc Indicator from Previous Step to Active Step -->
+        @if (leapArc(); as arcPath) {
+          <path
+            [attr.d]="arcPath"
+            fill="none"
+            stroke="#0284c7"
+            stroke-width="2.2"
+            class="c-iso-tracker__leap"
+          />
+        }
+
+        <!-- 3D Papercraft Origami Pedestals -->
+        @for (m of milestones(); track m.id) {
+          @if (m.isPast) {
+            <!-- Completed Step: Green Papercraft Block with Score Line -->
+            <g [attr.transform]="'translate(' + m.x + ',' + m.y + ')'" filter="url(#pDropShadow)">
+              <!-- Left face -->
+              <polygon points="-16,10 0,18 0,36 -16,28" fill="#059669" />
+              <!-- Right face -->
+              <polygon points="0,18 16,10 16,28 0,36" fill="#047857" />
+              <!-- Top diamond paper facet -->
+              <polygon points="0,0 16,10 0,18 -16,10" fill="#34d399" />
+              <!-- Scored paper fold line (mountain crease) -->
+              <line x1="-16" y1="10" x2="16" y2="10" stroke="#a7f3d0" stroke-width="0.75" stroke-dasharray="2 1.5" />
+              <line x1="0" y1="0" x2="0" y2="18" stroke="#047857" stroke-width="0.5" />
+              <!-- Crisp checkmark symbol -->
+              <text x="0" y="13" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">✓</text>
+            </g>
+          } @else if (m.isActive) {
+            <!-- Active Step: Elevated Sky Blue Papercraft Podium with Folded Paper Crystal -->
+            <g [attr.transform]="'translate(' + m.x + ',' + m.y + ')'" filter="url(#pActiveGlow)">
+              <!-- Left face -->
+              <polygon points="-20,12 0,22 0,48 -20,38" fill="#0284c7" />
+              <!-- Right face -->
+              <polygon points="0,22 20,12 20,38 0,48" fill="#0369a1" />
+              <!-- Top diamond paper facet -->
+              <polygon points="0,0 20,12 0,22 -20,12" fill="#38bdf8" />
+              <!-- Scored paper fold crease -->
+              <line x1="-20" y1="12" x2="20" y2="12" stroke="#bae6fd" stroke-width="0.75" stroke-dasharray="2 1.5" />
+              <line x1="0" y1="0" x2="0" y2="22" stroke="#0369a1" stroke-width="0.5" />
+              <text x="0" y="15" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">{{ m.icon }}</text>
+
+              <!-- Folded Papercraft Geometric Crystal / Cube on Top (Ruslan Style) -->
+              <polygon points="0,-16 14,-7 0,2 -14,-7" fill="rgba(255,255,255,0.4)" stroke="#ffffff" stroke-width="1.2" />
+              <line x1="-14" y1="-7" x2="-14" y2="8" stroke="#ffffff" stroke-width="1.2" opacity="0.7"/>
+              <line x1="14" y1="-7" x2="14" y2="8" stroke="#ffffff" stroke-width="1.2" opacity="0.7"/>
+              <line x1="0" y1="2" x2="0" y2="17" stroke="#ffffff" stroke-width="1.2" opacity="0.9"/>
+            </g>
+          } @else {
+            <!-- Future Step: Muted Cardstock Block with Dashed Fold Guides -->
+            <g [attr.transform]="'translate(' + m.x + ',' + m.y + ')'">
+              <polygon points="-16,10 0,18 0,32 -16,24" fill="#cbd5e1" />
+              <polygon points="0,18 16,10 16,24 0,32" fill="#94a3b8" />
+              <polygon points="0,0 16,10 0,18 -16,10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.75" />
+              <line x1="-16" y1="10" x2="16" y2="10" stroke="#94a3b8" stroke-width="0.75" stroke-dasharray="2 1.5" />
+              <!-- Dashed wireframe cube (fold blueprint) -->
+              <polygon points="0,-12 12,-5 0,2 -12,-5" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2 2" />
+              <text x="0" y="13" text-anchor="middle" fill="#64748b" font-size="9">{{ m.icon }}</text>
+            </g>
+          }
+        }
+
+      </svg>
+    </div>
+
+    <!-- Active Step Description -->
+    <div class="c-iso-tracker__desc">
+      <span>{{ activeStep().icon }}</span>
+      <span>{{ i18n.translate(activeStep().descKey) }}</span>
+    </div>
+
+    <!-- Metadata footer -->
+    <div class="c-iso-tracker__meta">
+      @if (modelName) {
+        <span class="c-iso-tracker__meta-badge">{{ modelName }}</span>
+      }
+      @if (pick) {
+        <span class="c-iso-tracker__meta-badge">#{{ pick }}</span>
+      }
+      <span>NVIDIA RTX PRO 4500</span>
+    </div>
+
+  </div>
+
+</div>

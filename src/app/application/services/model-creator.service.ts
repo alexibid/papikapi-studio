@@ -14,6 +14,14 @@ export interface PickResponse {
   readonly name: string;
   readonly artPath: string;
   readonly modelPath: string;
+  readonly cached?: boolean;
+  readonly pick?: number;
+}
+
+export interface Active3DGeneration {
+  readonly modelName: string;
+  readonly pick: number;
+  readonly startedAt: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -26,6 +34,43 @@ export class ModelCreatorService {
   readonly error = signal<string>('');
   readonly currentSheet = signal<string | null>(null);
   readonly currentName = signal<string>('');
+  readonly cachedPicks = signal<readonly number[]>([]);
+  readonly currentPick = signal<number | null>(null);
+  readonly activeGenerations = signal<Record<string, Active3DGeneration>>(this.loadInitialGenerations());
+
+  getGeneration(name: string): Active3DGeneration | null {
+    return this.activeGenerations()[name] ?? null;
+  }
+
+  isGenerating3d(name: string): boolean {
+    return Boolean(this.activeGenerations()[name]);
+  }
+
+  private loadInitialGenerations(): Record<string, Active3DGeneration> {
+    if (typeof window === 'undefined') return {};
+    try {
+      const raw = localStorage.getItem('kirigami_active_generations');
+      if (!raw) return {};
+      const parsed = JSON.parse(raw) as Record<string, Active3DGeneration>;
+      const valid: Record<string, Active3DGeneration> = {};
+      const now = Date.now();
+      for (const [k, v] of Object.entries(parsed)) {
+        if (now - v.startedAt < 120000) {
+          valid[k] = v;
+        }
+      }
+      return valid;
+    } catch {
+      return {};
+    }
+  }
+
+  private saveGenerations(gens: Record<string, Active3DGeneration>): void {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem('kirigami_active_generations', JSON.stringify(gens));
+    } catch {}
+  }
 
   private resolveApiBase(): string {
     if (typeof window !== 'undefined' && window.location.port === '4500') {
@@ -75,7 +120,19 @@ export class ModelCreatorService {
     try {
       const res = await fetch(`${this.baseUrl}/api/creator/info?name=${encodeURIComponent(name)}`);
       if (!res.ok) return false;
-      const data = (await res.json()) as { hasAlternatives?: boolean };
+      const data = (await res.json()) as {
+        hasAlternatives?: boolean;
+        cachedPicks?: number[];
+        currentPick?: number | null;
+      };
+
+      if (data.cachedPicks) {
+        this.cachedPicks.set(data.cachedPicks);
+      }
+      if (data.currentPick !== undefined) {
+        this.currentPick.set(data.currentPick);
+      }
+
       if (data.hasAlternatives) {
         const sheetUrl = `${this.baseUrl}/api/creator/sheet?name=${encodeURIComponent(name)}&t=${Date.now()}`;
         this.currentSheet.set(sheetUrl);
@@ -111,7 +168,22 @@ export class ModelCreatorService {
     }
   }
 
-  async pickAlternative(name: string, pick: number): Promise<PickResponse | null> {
+  async pickAlternative(name: string, pick: number, isCached = false): Promise<PickResponse | null> {
+    const cached = isCached || this.cachedPicks().includes(pick);
+    if (!cached) {
+      this.activeGenerations.update((prev) => {
+        const next = {
+          ...prev,
+          [name]: {
+            modelName: name,
+            pick,
+            startedAt: Date.now(),
+          },
+        };
+        this.saveGenerations(next);
+        return next;
+      });
+    }
     this.isPicking.set(true);
     this.error.set('');
     this.statusMessage.set('generating3dModel');
@@ -129,6 +201,10 @@ export class ModelCreatorService {
       }
 
       const result: PickResponse = await response.json();
+      this.currentPick.set(pick);
+      if (!this.cachedPicks().includes(pick)) {
+        this.cachedPicks.update((prev) => [...prev, pick].sort((a, b) => a - b));
+      }
       this.statusMessage.set('modelReady');
       return result;
     } catch (err: unknown) {
@@ -137,6 +213,12 @@ export class ModelCreatorService {
       return null;
     } finally {
       this.isPicking.set(false);
+      this.activeGenerations.update((prev) => {
+        const next = { ...prev };
+        delete next[name];
+        this.saveGenerations(next);
+        return next;
+      });
     }
   }
 
@@ -147,5 +229,7 @@ export class ModelCreatorService {
     this.error.set('');
     this.currentSheet.set(null);
     this.currentName.set('');
+    this.cachedPicks.set([]);
+    this.currentPick.set(null);
   }
 }

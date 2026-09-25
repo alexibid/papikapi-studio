@@ -59,7 +59,9 @@
       "defaultConfiguration": "development",
       "options": {
         "port": 4500,
-        "proxyConfig": "apps/kirigami-studio/proxy.conf.json"
+        "proxyConfig": "apps/kirigami-studio/proxy.conf.json",
+        "liveReload": false,
+        "hmr": false
       }
     },
     "serve": {
@@ -76,7 +78,7 @@
       "cache": false,
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx tsx scripts/server.ts",
+        "command": "npx tsx watch --clear-screen=false --exclude 'resources/**' --exclude 'public/**' scripts/server.ts",
         "cwd": "apps/kirigami-studio"
       }
     },

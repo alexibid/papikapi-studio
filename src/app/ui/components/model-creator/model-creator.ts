@@ -5,6 +5,8 @@ import { BadgeComponent, ButtonComponent, CardComponent, TextareaComponent } fro
 import { I18nService } from '@ibid/services';
 import { ModelCreatorService } from '../../../application/services/model-creator.service';
 
+import { ProcessLoaderComponent } from '../process-loader/process-loader';
+
 interface ReferenceFile {
   readonly id: string;
   readonly name: string;
@@ -21,6 +23,7 @@ interface ReferenceFile {
     ButtonComponent,
     CardComponent,
     TextareaComponent,
+    ProcessLoaderComponent,
   ],
   templateUrl: './model-creator.html',
   styleUrl: './model-creator.scss',
@@ -29,6 +32,7 @@ export class ModelCreatorComponent {
   protected readonly creator = inject(ModelCreatorService);
   protected readonly i18n = inject(I18nService);
 
+  @Output() readonly pickSelected = new EventEmitter<{ name: string; pick: number }>();
   @Output() readonly modelCreated = new EventEmitter<string>();
   @Output() readonly closed = new EventEmitter<void>();
 
@@ -104,15 +108,25 @@ export class ModelCreatorComponent {
     this.selectedPick.set(pick);
   }
 
-  protected async advanceWithPick(): Promise<void> {
+  protected isPickCached(pick: number): boolean {
+    return this.creator.cachedPicks().includes(pick);
+  }
+
+  protected isPickActive(pick: number): boolean {
+    return this.creator.currentPick() === pick;
+  }
+
+  protected isSelectedCached(): boolean {
+    const p = this.selectedPick();
+    return p !== null && this.isPickCached(p);
+  }
+
+  protected advanceWithPick(): void {
     const pick = this.selectedPick();
     const name = this.creator.currentName();
     if (!pick || !name) return;
 
-    const result = await this.creator.pickAlternative(name, pick);
-    if (result && result.success) {
-      this.modelCreated.emit(result.name);
-    }
+    this.pickSelected.emit({ name, pick });
   }
 
   protected close(): void {
