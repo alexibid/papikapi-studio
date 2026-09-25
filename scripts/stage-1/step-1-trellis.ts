@@ -1,7 +1,8 @@
-import { copyFileSync, existsSync, mkdirSync, openAsBlob, statSync, unlinkSync, writeFileSync } from 'node:fs';
-import { basename, join } from 'node:path';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { ManifestManager } from '../common/manifest-manager.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
+import { RunPodClient } from '../common/runpod-client.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
 
 interface TrellisStepInputs {
@@ -23,11 +24,22 @@ interface TrellisStepOutputs {
   readonly manifest: string;
 }
 
+interface TrellisServerlessConfig {
+  readonly env_endpoint_key: string;
+  readonly container_image: string;
+  readonly api_url_pattern: string;
+  readonly async_url_pattern: string;
+  readonly status_url_pattern: string;
+}
+
 interface TrellisStepParameters {
-  readonly endpoint: string;
   readonly seed: number;
   readonly simplify: number;
   readonly texture_size: number;
+  readonly ss_sampling_steps?: number;
+  readonly slat_sampling_steps?: number;
+  readonly ss_guidance_strength?: number;
+  readonly slat_guidance_strength?: number;
 }
 
 interface TrellisStepRunner {
@@ -61,6 +73,7 @@ interface TrellisStepDependsOn {
 interface TrellisStepDefinition {
   readonly id: string;
   readonly stage_dir: string;
+  readonly serverless: TrellisServerlessConfig;
   readonly depends_on: TrellisStepDependsOn;
   readonly inputs: TrellisStepInputs;
   readonly outputs: TrellisStepOutputs;
@@ -106,7 +119,7 @@ export class TrellisGenerator {
 
     const contract = step.manifest_contract;
     const step2Manifest = ManifestManager.readStepResult(modelName, step.depends_on.step_id);
-    const pick = requestedPick ?? (step2Manifest?.data?.chosenPick ? Number(step2Manifest.data.chosenPick) : null);
+    const pick = requestedPick !== undefined ? requestedPick : (step2Manifest?.data?.chosenPick ? Number(step2Manifest.data.chosenPick) : null);
 
     const outputPath = join(stage1Dir, step.outputs.model_resource);
     const publicPath = join(publicDir, step.outputs.model_public);
@@ -167,56 +180,48 @@ export class TrellisGenerator {
 
     if (existsSync(outputPath)) unlinkSync(outputPath);
 
-    const endpoint = params.endpoint;
+    const envKey = step.serverless.env_endpoint_key ? step.serverless.env_endpoint_key : 'RUNPOD_TRELLIS_ENDPOINT_ID';
+    const endpointId = RunPodClient.getEndpointId(envKey);
     const seed = params.seed;
     const simplify = params.simplify;
     const textureSize = params.texture_size;
 
-    const url = new URL(endpoint);
-    url.searchParams.set('seed', String(seed));
-    url.searchParams.set('simplify', String(simplify));
-    url.searchParams.set('texture_size', String(textureSize));
+    const imageBuffer = readFileSync(inputPath);
+    const imageBase64 = imageBuffer.toString('base64');
 
-    const fileBlob = await openAsBlob(inputPath);
-    const formData = new FormData();
-    formData.append('file', fileBlob, basename(inputPath));
+    const payload = {
+      image_base64: imageBase64,
+      seed,
+      simplify,
+      texture_size: textureSize,
+    };
 
-    const startTime = Date.now();
-    let elapsed = 0;
-    const progressInterval = setInterval(() => {
-      elapsed += 2;
-      const progressMsg = step.messages.progress
-        .replace('{runner}', runner.platform)
-        .replace('{device}', runner.device)
-        .replace('{elapsed}', String(elapsed));
-      process.stdout.write(`\r  \x1b[36m${progressMsg}\x1b[0m`);
-    }, 2000);
+    const startMsg = step.messages.start.replace('{model}', modelName);
+    console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
 
-    let response: Response;
-    try {
-      response = await fetch(url.toString(), {
-        method: 'POST',
-        body: formData,
-      });
-    } finally {
-      clearInterval(progressInterval);
-      process.stdout.write('\r\x1b[K');
-    }
+    const result = await RunPodClient.execute<typeof payload, { glb_base64: string; file_size: number }>(
+      endpointId,
+      payload,
+      {
+        onProgress: (elapsed) => {
+          const progressMsg = step.messages.progress
+            .replace('{runner}', runner.platform)
+            .replace('{device}', runner.device)
+            .replace('{elapsed}', String(elapsed));
+          process.stdout.write(`\r  \x1b[36m${progressMsg}\x1b[0m`);
+        },
+      }
+    );
+    process.stdout.write('\r\x1b[K');
 
-    if (!response.ok) {
-      const err = await response.text().catch(() => 'Unknown server error');
-      throw new Error(`TRELLIS API error (${response.status}): ${err}`);
-    }
-
-    const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const buffer = Buffer.from(result.output.glb_base64, 'base64');
 
     writeFileSync(outputPath, buffer);
     writeFileSync(publicPath, buffer);
     if (cachedResGlb) writeFileSync(cachedResGlb, buffer);
     if (cachedPubGlb) writeFileSync(cachedPubGlb, buffer);
 
-    const duration = Math.round(((Date.now() - startTime) / 1000) * 100) / 100;
+    const duration = result.seconds;
     const costUsd = Math.round(duration * usdPerSec * 10000) / 10000;
     const sizeMb = (buffer.length / (1024 * 1024)).toFixed(2);
 
@@ -250,7 +255,7 @@ export class TrellisGenerator {
       seconds: duration,
       costUsd,
       cached: false,
-      pick: pick ?? undefined,
+      pick: pick !== null ? pick : undefined,
     };
   }
 }

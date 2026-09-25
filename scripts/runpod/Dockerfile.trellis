@@ -1,0 +1,40 @@
+FROM pytorch/pytorch:2.4.0-cuda12.1-cudnn9-devel
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV SPCONV_ALGO=native
+ENV ATTN_BACKEND=sdpa
+ENV SPARSE_ATTN_BACKEND=sdpa
+ENV XFORMERS_DISABLED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    wget \
+    curl \
+    ninja-build \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir \
+    runpod \
+    pillow \
+    trimesh \
+    fastapi \
+    spconv-cu120 \
+    diffusers \
+    transformers \
+    imageio \
+    imageio-ffmpeg
+
+RUN git clone --recurse-submodules https://github.com/microsoft/TRELLIS.git /app/trellis && \
+    cd /app/trellis && \
+    pip install --no-cache-dir -e .
+
+COPY rp_handler.trellis.py /app/rp_handler.trellis.py
+
+CMD ["python", "-u", "/app/rp_handler.trellis.py"]
