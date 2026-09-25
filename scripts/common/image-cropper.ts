@@ -11,7 +11,10 @@ export interface CropCellOptions {
 export class ImageCropper {
   public static async cropCell(options: CropCellOptions): Promise<Buffer> {
     const total = options.columns * options.rows;
-    if (options.pickIndex < 1 || options.pickIndex > total) {
+    if (options.pickIndex < 1) {
+      throw new Error(`Pick index ${options.pickIndex} out of bounds [1, ${total}]`);
+    }
+    if (options.pickIndex > total) {
       throw new Error(`Pick index ${options.pickIndex} out of bounds [1, ${total}]`);
     }
 

@@ -46,7 +46,7 @@ export class TrainingReferences {
 
     const nameMatch = items.find((i) => {
       const itemName = i.name.toLowerCase();
-      return normalized.includes(itemName) || itemName.includes(normalized);
+      return normalized.includes(itemName) ? true : itemName.includes(normalized);
     });
     if (nameMatch) {
       const fullPath = join(WorkspacePaths.appRoot, 'scripts/training/references', nameMatch.file);

@@ -4,6 +4,72 @@ import { ManifestManager } from '../common/manifest-manager.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
 
+interface TrellisStepInputs {
+  readonly stage_dir: string;
+  readonly art_resource: string;
+  readonly art_public: string;
+  readonly art_pick_resource_pattern: string;
+  readonly art_pick_public_pattern: string;
+  readonly allowed_extensions: readonly string[];
+}
+
+interface TrellisStepOutputs {
+  readonly stage_dir: string;
+  readonly model_resource: string;
+  readonly model_public: string;
+  readonly model_pick_resource_pattern: string;
+  readonly model_pick_public_pattern: string;
+  readonly public_url_pattern: string;
+  readonly manifest: string;
+}
+
+interface TrellisStepParameters {
+  readonly endpoint: string;
+  readonly seed: number;
+  readonly simplify: number;
+  readonly texture_size: number;
+}
+
+interface TrellisStepRunner {
+  readonly platform: string;
+  readonly device: string;
+  readonly rate: string;
+}
+
+interface TrellisStepMessages {
+  readonly start: string;
+  readonly progress: string;
+  readonly completed: string;
+  readonly cache_hit: string;
+}
+
+interface TrellisManifestContract {
+  readonly status: string;
+  readonly costNote: string;
+  readonly cache_cost_note: string;
+  readonly data: {
+    readonly format: string;
+    readonly device: string;
+  };
+}
+
+interface TrellisStepDependsOn {
+  readonly step_id: string;
+  readonly stage_dir: string;
+}
+
+interface TrellisStepDefinition {
+  readonly id: string;
+  readonly stage_dir: string;
+  readonly depends_on: TrellisStepDependsOn;
+  readonly inputs: TrellisStepInputs;
+  readonly outputs: TrellisStepOutputs;
+  readonly parameters: TrellisStepParameters;
+  readonly runner: TrellisStepRunner;
+  readonly messages: TrellisStepMessages;
+  readonly manifest_contract: TrellisManifestContract;
+}
+
 export interface TrellisGenerateResponse {
   readonly name: string;
   readonly outputPath: string;
@@ -16,90 +82,95 @@ export interface TrellisGenerateResponse {
 
 export class TrellisGenerator {
   private static readonly stepId = 's1-step-1';
-  private static readonly defaultEndpoint = 'https://nb2fo5r3psqvno-8888.proxy.runpod.net/generate';
-  private static readonly defaultUsdPerSec = 0.00016;
 
-  private static findInputArt(modelName: string): string {
-    const stage0Dir = join(WorkspacePaths.resourcePath(modelName), 'stage-0');
-    const extensions = ['.jpeg', '.jpg', '.png'];
-    for (const ext of extensions) {
-      const candidate = join(stage0Dir, `step-1-art${ext}`);
+  private static findInputArt(modelName: string, step: TrellisStepDefinition): string {
+    const stage0Dir = join(WorkspacePaths.resourcePath(modelName), step.inputs.stage_dir);
+    for (const ext of step.inputs.allowed_extensions) {
+      const baseName = step.inputs.art_resource.replace(/\.[^/.]+$/, '');
+      const candidate = join(stage0Dir, `${baseName}${ext}`);
       if (existsSync(candidate)) return candidate;
     }
-    const publicCandidate = join(WorkspacePaths.modelPath(modelName), 'art.jpeg');
+    const publicCandidate = join(WorkspacePaths.modelPath(modelName), step.inputs.art_public);
     if (existsSync(publicCandidate)) return publicCandidate;
 
     throw new Error(`Input art not found for model '${modelName}'`);
   }
 
   public static async execute(modelName: string, requestedPick?: number): Promise<TrellisGenerateResponse> {
-    const stage0Dir = join(WorkspacePaths.resourcePath(modelName), 'stage-0');
-    const stage1Dir = join(WorkspacePaths.resourcePath(modelName), 'stage-1');
+    const step = PipelineConfigLoader.getStep(this.stepId) as unknown as TrellisStepDefinition;
+    const stage0Dir = join(WorkspacePaths.resourcePath(modelName), step.inputs.stage_dir);
+    const stage1Dir = join(WorkspacePaths.resourcePath(modelName), step.stage_dir);
     const publicDir = WorkspacePaths.modelPath(modelName);
     mkdirSync(stage1Dir, { recursive: true });
     mkdirSync(publicDir, { recursive: true });
 
-    const step2Manifest = ManifestManager.readStepResult(modelName, 's0-step-2');
+    const contract = step.manifest_contract;
+    const step2Manifest = ManifestManager.readStepResult(modelName, step.depends_on.step_id);
     const pick = requestedPick ?? (step2Manifest?.data?.chosenPick ? Number(step2Manifest.data.chosenPick) : null);
 
-    const outputPath = join(stage1Dir, 'step-1-3d.glb');
-    const publicPath = join(publicDir, 'model.glb');
-    const cachedResGlb = pick ? join(stage1Dir, `step-1-3d-pick-${pick}.glb`) : null;
-    const cachedPubGlb = pick ? join(publicDir, `model-pick-${pick}.glb`) : null;
+    const outputPath = join(stage1Dir, step.outputs.model_resource);
+    const publicPath = join(publicDir, step.outputs.model_public);
+    const cachedResGlb = pick ? join(stage1Dir, step.outputs.model_pick_resource_pattern.replace('{pick}', String(pick))) : null;
+    const cachedPubGlb = pick ? join(publicDir, step.outputs.model_pick_public_pattern.replace('{pick}', String(pick))) : null;
 
-    const hasCachedGlb = Boolean(
-      (cachedResGlb && existsSync(cachedResGlb) && statSync(cachedResGlb).size > 1000) ||
-      (cachedPubGlb && existsSync(cachedPubGlb) && statSync(cachedPubGlb).size > 1000)
-    );
+    const resCached = Boolean(cachedResGlb && existsSync(cachedResGlb) && statSync(cachedResGlb).size > 1000);
+    const pubCached = Boolean(cachedPubGlb && existsSync(cachedPubGlb) && statSync(cachedPubGlb).size > 1000);
+    const hasCachedGlb = resCached ? true : pubCached;
 
     if (hasCachedGlb && pick) {
-      const sourceGlb = (cachedResGlb && existsSync(cachedResGlb)) ? cachedResGlb : cachedPubGlb!;
+      const sourceGlb = resCached ? cachedResGlb! : cachedPubGlb!;
       copyFileSync(sourceGlb, outputPath);
       copyFileSync(sourceGlb, publicPath);
       if (cachedResGlb && !existsSync(cachedResGlb)) copyFileSync(sourceGlb, cachedResGlb);
       if (cachedPubGlb && !existsSync(cachedPubGlb)) copyFileSync(sourceGlb, cachedPubGlb);
 
-      const cachedResArt = join(stage0Dir, `step-1-art-pick-${pick}.jpeg`);
-      const cachedPubArt = join(publicDir, `art-pick-${pick}.jpeg`);
-      if (existsSync(cachedResArt)) copyFileSync(cachedResArt, join(stage0Dir, 'step-1-art.jpeg'));
-      if (existsSync(cachedPubArt)) copyFileSync(cachedPubArt, join(publicDir, 'art.jpeg'));
+      const cachedResArt = join(stage0Dir, step.inputs.art_pick_resource_pattern.replace('{pick}', String(pick)));
+      const cachedPubArt = join(publicDir, step.inputs.art_pick_public_pattern.replace('{pick}', String(pick)));
+      if (existsSync(cachedResArt)) copyFileSync(cachedResArt, join(stage0Dir, step.inputs.art_resource));
+      if (existsSync(cachedPubArt)) copyFileSync(cachedPubArt, join(publicDir, step.inputs.art_public));
 
-      console.log(`  \x1b[32m⚡ [Cache Hit]\x1b[0m Restored 3D Model for pick #${pick} from local cache (0.0s, $0.0000)\n`);
+      const cacheMsg = step.messages.cache_hit.replace('{pick}', String(pick));
+      console.log(`  \x1b[32m${cacheMsg}\x1b[0m\n`);
+
+      const config = PipelineConfigLoader.load();
+      const cacheCostUsd = config.pricing.local_processing_usd;
 
       ManifestManager.writeStepResult(modelName, this.stepId, {
-        status: 'DONE',
+        status: contract.status,
         seconds: 0.05,
-        costUsd: 0,
-        costNote: 'Restored from local pick cache',
+        costUsd: cacheCostUsd,
+        costNote: contract.cache_cost_note,
         metrics: { fileSize: statSync(outputPath).size },
         data: {
           cached: true,
           chosenPick: pick,
-          format: 'model/gltf-binary',
+          format: contract.data.format,
         },
       });
 
       return {
         name: modelName,
         outputPath,
-        publicPath: `/models/${modelName}/model.glb`,
+        publicPath: step.outputs.public_url_pattern.replace('{model}', modelName),
         seconds: 0.05,
-        costUsd: 0,
+        costUsd: cacheCostUsd,
         cached: true,
         pick,
       };
     }
 
-    const inputPath = this.findInputArt(modelName);
-    const step = PipelineConfigLoader.getStep(this.stepId);
-    const params = step.parameters ?? {};
+    const inputPath = this.findInputArt(modelName, step);
+    const params = step.parameters;
+    const runner = step.runner;
+    const config = PipelineConfigLoader.load();
+    const usdPerSec = config.pricing.runpod_trellis_usd_per_sec;
 
     if (existsSync(outputPath)) unlinkSync(outputPath);
 
-    const endpoint = (params.endpoint as string) || this.defaultEndpoint;
-    const seed = (params.seed as number) ?? 1;
-    const simplify = (params.simplify as number) ?? 0.95;
-    const textureSize = (params.texture_size as number) ?? 1024;
+    const endpoint = params.endpoint;
+    const seed = params.seed;
+    const simplify = params.simplify;
+    const textureSize = params.texture_size;
 
     const url = new URL(endpoint);
     url.searchParams.set('seed', String(seed));
@@ -114,7 +185,11 @@ export class TrellisGenerator {
     let elapsed = 0;
     const progressInterval = setInterval(() => {
       elapsed += 2;
-      process.stdout.write(`\r  \x1b[36m⟳ [RunPod GPU]\x1b[0m Generating 3D Mesh on RTX PRO 4500 SE... (${elapsed}s elapsed)`);
+      const progressMsg = step.messages.progress
+        .replace('{runner}', runner.platform)
+        .replace('{device}', runner.device)
+        .replace('{elapsed}', String(elapsed));
+      process.stdout.write(`\r  \x1b[36m${progressMsg}\x1b[0m`);
     }, 2000);
 
     let response: Response;
@@ -142,23 +217,28 @@ export class TrellisGenerator {
     if (cachedPubGlb) writeFileSync(cachedPubGlb, buffer);
 
     const duration = Math.round(((Date.now() - startTime) / 1000) * 100) / 100;
-    const costUsd = Math.round(duration * this.defaultUsdPerSec * 10000) / 10000;
+    const costUsd = Math.round(duration * usdPerSec * 10000) / 10000;
     const sizeMb = (buffer.length / (1024 * 1024)).toFixed(2);
 
-    console.log(`  \x1b[32m✔ [RunPod GPU]\x1b[0m 3D Model generated: ${sizeMb} MB in ${duration}s ($${costUsd.toFixed(4)})\n`);
+    const completedMsg = step.messages.completed
+      .replace('{runner}', runner.platform)
+      .replace('{sizeMb}', sizeMb)
+      .replace('{duration}', String(duration))
+      .replace('{costUsd}', costUsd.toFixed(4));
+    console.log(`  \x1b[32m${completedMsg}\x1b[0m\n`);
 
     ManifestManager.writeStepResult(modelName, this.stepId, {
-      status: 'DONE',
+      status: contract.status,
       seconds: duration,
       costUsd,
-      costNote: 'RunPod RTX PRO 4500 SE ($0.58/hr)',
+      costNote: contract.costNote,
       metrics: { fileSize: buffer.length },
       data: {
         fileSize: buffer.length,
-        format: 'model/gltf-binary',
+        format: contract.data.format,
         chosenPick: pick,
         cached: false,
-        device: 'NVIDIA RTX PRO 4500 Blackwell Server Edition',
+        device: contract.data.device,
         parameters: { seed, simplify, texture_size: textureSize },
       },
     });
@@ -166,7 +246,7 @@ export class TrellisGenerator {
     return {
       name: modelName,
       outputPath,
-      publicPath: `/models/${modelName}/model.glb`,
+      publicPath: step.outputs.public_url_pattern.replace('{model}', modelName),
       seconds: duration,
       costUsd,
       cached: false,

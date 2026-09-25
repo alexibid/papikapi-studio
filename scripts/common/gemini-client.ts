@@ -122,7 +122,7 @@ export class GeminiClient {
 
     const duration = Math.round(((Date.now() - start) / 1000) * 100) / 100;
     const bytes = Buffer.from(inlineData.data, 'base64');
-    const mime = inlineData.mimeType || this.sniffMime(bytes);
+    const mime = inlineData.mimeType ? inlineData.mimeType : this.sniffMime(bytes);
 
     return { bytes, mime, seconds: duration };
   }

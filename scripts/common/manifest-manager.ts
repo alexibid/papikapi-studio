@@ -29,11 +29,12 @@ export class ManifestManager {
   private static readonly manifestVersion = 1;
 
   public static readStepResult(subject: string, stageId: string): StepRecord | null {
-    const stageDirName = stageId.startsWith('s0-') ? 'stage-0' : 'stage-1';
+    const step = PipelineConfigLoader.getStep(stageId) as unknown as { stage_dir: string; outputs?: { manifest?: string } };
+    const manifestName = step.outputs?.manifest ? step.outputs.manifest : `${stageId.replace(/^s\d+-/, '')}-manifest.json`;
     const targetFile = join(
       WorkspacePaths.resourcePath(subject),
-      stageDirName,
-      `${stageId.replace(/^s\d+-/, '')}-manifest.json`
+      step.stage_dir,
+      manifestName
     );
     if (!existsSync(targetFile)) return null;
     try {
@@ -48,8 +49,8 @@ export class ManifestManager {
     stageId: string,
     record: StepRecordInput
   ): ModelManifest {
-    const stageDirName = stageId.startsWith('s0-') ? 'stage-0' : 'stage-1';
-    const targetDir = join(WorkspacePaths.resourcePath(subject), stageDirName);
+    const step = PipelineConfigLoader.getStep(stageId) as unknown as { stage_dir: string; outputs?: { manifest?: string } };
+    const targetDir = join(WorkspacePaths.resourcePath(subject), step.stage_dir);
     mkdirSync(targetDir, { recursive: true });
 
     const entry: StepRecord = {
@@ -63,7 +64,8 @@ export class ManifestManager {
       ...(record.metrics ? { metrics: record.metrics } : {}),
     };
 
-    const targetFile = join(targetDir, `${stageId.replace(/^s\d+-/, '')}-manifest.json`);
+    const manifestName = step.outputs?.manifest ? step.outputs.manifest : `${stageId.replace(/^s\d+-/, '')}-manifest.json`;
+    const targetFile = join(targetDir, manifestName);
     writeFileSync(targetFile, `${JSON.stringify(entry, null, 2)}\n`);
 
     return this.buildAggregateManifest(subject);
@@ -95,8 +97,8 @@ export class ManifestManager {
     }
 
     const stageList = Object.values(stages);
-    const totalSeconds = Math.round(stageList.reduce((acc, s) => acc + (s.seconds || 0), 0) * 1000) / 1000;
-    const totalCostUsd = Math.round(stageList.reduce((acc, s) => acc + (s.costUsd || 0), 0) * 10000) / 10000;
+    const totalSeconds = Math.round(stageList.reduce((acc, s) => acc + (s.seconds !== undefined ? s.seconds : 0), 0) * 1000) / 1000;
+    const totalCostUsd = Math.round(stageList.reduce((acc, s) => acc + (s.costUsd !== undefined ? s.costUsd : 0), 0) * 10000) / 10000;
 
     const manifest: ModelManifest = {
       version: this.manifestVersion,

@@ -71,7 +71,8 @@ export class CreatorApiServer {
         return;
       }
 
-      const url = new URL(req.url ?? '/', `http://${req.headers.host || 'localhost'}`);
+      const host = req.headers.host !== undefined ? req.headers.host : 'localhost';
+      const url = new URL(req.url !== undefined ? req.url : '/', `http://${host}`);
 
       if (req.method === 'GET' && url.pathname === '/api/health') {
         this.sendJson(res, 200, { status: 'ok' });
@@ -96,19 +97,17 @@ export class CreatorApiServer {
         }
 
         const cleanName = name.trim().toLowerCase().replace(/\s+/g, '-');
-        const stage0Dir = join(WorkspacePaths.resourcePath(cleanName), 'stage-0');
+        const step1 = PipelineConfigLoader.getStep('s0-step-1');
+        const stage0Dir = join(WorkspacePaths.resourcePath(cleanName), step1.stage_dir);
         const publicDir = WorkspacePaths.modelPath(cleanName);
 
-        const candidates = [
-          join(stage0Dir, 'step-1-alternatives.jpeg'),
-          join(stage0Dir, 'step-1-alternatives.jpg'),
-          join(stage0Dir, 'step-1-alternatives.png'),
-          join(stage0Dir, 'step-1-alternatives.webp'),
-          join(publicDir, 'alternatives.jpeg'),
-          join(publicDir, 'alternatives.jpg'),
-          join(publicDir, 'alternatives.png'),
-          join(publicDir, 'alternatives.webp'),
-        ];
+        const candidates: string[] = [];
+        for (const ext of step1.outputs.allowed_extensions) {
+          const resBase = step1.outputs.sheet_resource.replace(/\.[^/.]+$/, '');
+          candidates.push(join(stage0Dir, `${resBase}${ext}`));
+          const pubBase = step1.outputs.sheet_public.replace(/\.[^/.]+$/, '');
+          candidates.push(join(publicDir, `${pubBase}${ext}`));
+        }
 
         const sheetPath = candidates.find((p) => existsSync(p));
         if (!sheetPath) {
@@ -136,34 +135,37 @@ export class CreatorApiServer {
         }
 
         const cleanName = name.trim().toLowerCase().replace(/\s+/g, '-');
-        const stage0Dir = join(WorkspacePaths.resourcePath(cleanName), 'stage-0');
-        const stage1Dir = join(WorkspacePaths.resourcePath(cleanName), 'stage-1');
+        const step1 = PipelineConfigLoader.getStep('s0-step-1');
+        const step2 = PipelineConfigLoader.getStep('s0-step-2');
+        const step3 = PipelineConfigLoader.getStep('s1-step-1');
+
+        const stage0Dir = join(WorkspacePaths.resourcePath(cleanName), step1.stage_dir);
         const publicDir = WorkspacePaths.modelPath(cleanName);
 
-        const hasAlternatives = [
-          join(stage0Dir, 'step-1-alternatives.jpeg'),
-          join(stage0Dir, 'step-1-alternatives.jpg'),
-          join(stage0Dir, 'step-1-alternatives.png'),
-          join(stage0Dir, 'step-1-alternatives.webp'),
-          join(publicDir, 'alternatives.jpeg'),
-          join(publicDir, 'alternatives.jpg'),
-          join(publicDir, 'alternatives.png'),
-          join(publicDir, 'alternatives.webp'),
-        ].some((p) => existsSync(p));
+        const candidates: string[] = [];
+        for (const ext of step1.outputs.allowed_extensions) {
+          const resBase = step1.outputs.sheet_resource.replace(/\.[^/.]+$/, '');
+          candidates.push(join(stage0Dir, `${resBase}${ext}`));
+          const pubBase = step1.outputs.sheet_public.replace(/\.[^/.]+$/, '');
+          candidates.push(join(publicDir, `${pubBase}${ext}`));
+        }
+        const hasAlternatives = candidates.some((p) => existsSync(p));
 
         const cachedPicks: number[] = [];
-        for (let p = 1; p <= 6; p++) {
-          const pubPickGlb = join(publicDir, `model-pick-${p}.glb`);
+        const alternativesCount = step1.parameters.alternatives_count;
+        for (let p = 1; p <= alternativesCount; p++) {
+          const pattern = step3.outputs.model_pick_public_pattern.replace('{pick}', String(p));
+          const pubPickGlb = join(publicDir, pattern);
           if (existsSync(pubPickGlb) && statSync(pubPickGlb).size > 1000) {
             cachedPicks.push(p);
           }
         }
 
         let currentPick: number | null = null;
-        const pubModel = join(publicDir, 'model.glb');
+        const pubModel = join(publicDir, step3.outputs.model_public);
         const hasPubModel = existsSync(pubModel) && statSync(pubModel).size > 1000;
 
-        const step2Manifest = join(stage0Dir, 'step-2-manifest.json');
+        const step2Manifest = join(stage0Dir, step2.outputs.manifest);
         if (existsSync(step2Manifest) && hasPubModel) {
           try {
             const parsed = JSON.parse(readFileSync(step2Manifest, 'utf-8'));
@@ -189,8 +191,8 @@ export class CreatorApiServer {
       }
 
       if (
-        (req.method === 'POST' || req.method === 'GET') &&
-        (url.pathname === '/api/catalogue/sync' || url.pathname === '/api/creator/sync')
+        (['POST', 'GET'].includes(req.method ?? '')) &&
+        (['/api/catalogue/sync', '/api/creator/sync'].includes(url.pathname))
       ) {
         const synced = CatalogueManager.sync();
         this.sendJson(res, 200, { success: true, count: synced.length, models: synced });
@@ -227,8 +229,12 @@ export class CreatorApiServer {
       if (req.method === 'POST' && url.pathname === '/api/creator/generate') {
         try {
           const body = await this.parseBody<{ name: string; prompt: string; images?: string[] }>(req);
-          if (!body.name || !body.prompt) {
-            this.sendJson(res, 400, { error: 'Both name and prompt are required' });
+          if (!body.name) {
+            this.sendJson(res, 400, { error: 'Name is required' });
+            return;
+          }
+          if (!body.prompt) {
+            this.sendJson(res, 400, { error: 'Prompt is required' });
             return;
           }
 
@@ -238,7 +244,8 @@ export class CreatorApiServer {
 
           const cleanName = body.name.trim().toLowerCase().replace(/\s+/g, '-');
           if (referenceImages.length === 0) {
-            const trainingMatch = TrainingReferences.getInlineImage(cleanName) || TrainingReferences.getInlineImage(body.prompt);
+            const matchByName = TrainingReferences.getInlineImage(cleanName);
+            const trainingMatch = matchByName !== null ? matchByName : TrainingReferences.getInlineImage(body.prompt);
             if (trainingMatch) {
               referenceImages.push(trainingMatch.image);
             }
@@ -260,8 +267,12 @@ export class CreatorApiServer {
       if (req.method === 'POST' && url.pathname === '/api/creator/pick') {
         try {
           const body = await this.parseBody<{ name: string; pick: number }>(req);
-          if (!body.name || !body.pick) {
-            this.sendJson(res, 400, { error: 'Both name and pick are required' });
+          if (!body.name) {
+            this.sendJson(res, 400, { error: 'Name is required' });
+            return;
+          }
+          if (!body.pick) {
+            this.sendJson(res, 400, { error: 'Pick is required' });
             return;
           }
 
@@ -275,13 +286,14 @@ export class CreatorApiServer {
           const trellisResult = await TrellisGenerator.execute(cleanName, pick);
           CatalogueManager.sync();
 
+          const step3 = PipelineConfigLoader.getStep('s1-step-1');
           this.sendJson(res, 200, {
             success: true,
             name: cleanName,
             pick,
             cached: trellisResult.cached ?? false,
             artPath: cropResult.publicArtPath,
-            modelPath: `/models/${cleanName}/model.glb`,
+            modelPath: step3.outputs.public_url_pattern.replace('{model}', cleanName),
           });
         } catch (err) {
           this.sendJson(res, 500, { error: (err as Error).message });
@@ -317,7 +329,10 @@ export class CreatorApiServer {
     const parentPid = process.ppid;
     const parentCheck = setInterval(() => {
       try {
-        if (process.ppid !== parentPid || !process.kill(parentPid, 0)) {
+        if (process.ppid !== parentPid) {
+          clearInterval(parentCheck);
+          shutdown();
+        } else if (!process.kill(parentPid, 0)) {
           clearInterval(parentCheck);
           shutdown();
         }

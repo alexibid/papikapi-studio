@@ -1,30 +1,8 @@
 {
-  "version": 1,
-  "subject": "dalmatian",
-  "stages": {
-    "s1-step-1": {
-      "stageId": "s1-step-1",
-      "at": "2026-09-24T15:02:09.015Z",
-      "status": "DONE",
-      "seconds": 18.41,
-      "costUsd": 0.0029,
-      "costNote": "RunPod RTX PRO 4500 SE ($0.58/hr)",
-      "data": {
-        "fileSize": 1496492,
-        "format": "model/gltf-binary",
-        "device": "NVIDIA RTX PRO 4500 Blackwell Server Edition",
-        "parameters": {
-          "seed": 1,
-          "simplify": 0.95,
-          "texture_size": 1024
-        }
-      },
-      "metrics": {
-        "fileSize": 1496492
-      }
-    }
-  },
-  "totalSeconds": 18.41,
-  "totalCostUsd": 0.0029,
-  "updatedAt": "2026-09-24T15:02:09.018Z"
+  "name": "dalmatian",
+  "group": "dogs",
+  "subject": "a cute standing dalmatian puppy, pure crisp white facets covered in distinct jet-black spots painted flat across the body, legs, and ears as a 2D UV texture map, closed black nose facet, floppy ears, exactly two brown eyes with white catchlights, zero floor shadow",
+  "chosenPick": 3,
+  "has3D": false,
+  "updatedAt": "2026-09-25T11:31:25.067Z"
 }

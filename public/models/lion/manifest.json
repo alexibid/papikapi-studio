@@ -1,49 +1,10 @@
 {
-  "version": 1,
-  "subject": "lion",
-  "stages": {
-    "s0-step-1": {
-      "stageId": "s0-step-1",
-      "at": "2026-09-24T20:35:06.967Z",
-      "status": "DONE",
-      "seconds": 10.05,
-      "costUsd": 0.151,
-      "data": {
-        "prompt": "lion",
-        "referenceCount": 1,
-        "alternativesCount": 6,
-        "format": "image/jpeg"
-      }
-    },
-    "s0-step-2": {
-      "stageId": "s0-step-2",
-      "at": "2026-09-25T09:50:57.369Z",
-      "status": "DONE",
-      "seconds": 0.02,
-      "costUsd": 0,
-      "data": {
-        "chosenPick": 1,
-        "artSize": 33651
-      }
-    },
-    "s1-step-1": {
-      "stageId": "s1-step-1",
-      "at": "2026-09-25T09:50:57.379Z",
-      "status": "DONE",
-      "seconds": 0.05,
-      "costUsd": 0,
-      "costNote": "Restored from local pick cache",
-      "data": {
-        "cached": true,
-        "chosenPick": 1,
-        "format": "model/gltf-binary"
-      },
-      "metrics": {
-        "fileSize": 1203796
-      }
-    }
-  },
-  "totalSeconds": 10.12,
-  "totalCostUsd": 0.151,
-  "updatedAt": "2026-09-25T09:50:57.380Z"
+  "name": "lion",
+  "group": "safari",
+  "subject": "a cute sitting lion cub, pure golden-yellow facets with rich chocolate-brown mane facets, closed muzzle with whisker dots painted flat as a 2D UV decal, tufted tail, exactly two eyes with white catchlights, zero floor shadow",
+  "chosenPick": 3,
+  "generatedBy": "black-forest-labs/FLUX.2-klein-4B",
+  "has3D": false,
+  "seconds": 267.15,
+  "updatedAt": "2026-09-25T13:00:14Z"
 }

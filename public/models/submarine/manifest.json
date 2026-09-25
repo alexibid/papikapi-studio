@@ -1,0 +1,9 @@
+{
+  "name": "submarine",
+  "group": "vehicles",
+  "subject": "yellow submarine",
+  "chosenPick": 3,
+  "generatedBy": "black-forest-labs/FLUX.2-klein-4B",
+  "has3D": false,
+  "updatedAt": "2026-09-25T12:27:06Z"
+}

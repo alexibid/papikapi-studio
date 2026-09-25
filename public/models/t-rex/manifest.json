@@ -1,49 +1,8 @@
 {
-  "version": 1,
-  "subject": "t-rex",
-  "stages": {
-    "s0-step-1": {
-      "stageId": "s0-step-1",
-      "at": "2026-09-24T16:46:16.530Z",
-      "status": "DONE",
-      "seconds": 11.71,
-      "costUsd": 0.151,
-      "data": {
-        "prompt": "t-rex",
-        "referenceCount": 1,
-        "alternativesCount": 6,
-        "format": "image/jpeg"
-      }
-    },
-    "s0-step-2": {
-      "stageId": "s0-step-2",
-      "at": "2026-09-25T10:22:54.032Z",
-      "status": "DONE",
-      "seconds": 0.03,
-      "costUsd": 0,
-      "data": {
-        "chosenPick": 2,
-        "artSize": 34871
-      }
-    },
-    "s1-step-1": {
-      "stageId": "s1-step-1",
-      "at": "2026-09-25T10:22:54.047Z",
-      "status": "DONE",
-      "seconds": 0.05,
-      "costUsd": 0,
-      "costNote": "Restored from local pick cache",
-      "data": {
-        "cached": true,
-        "chosenPick": 2,
-        "format": "model/gltf-binary"
-      },
-      "metrics": {
-        "fileSize": 1321992
-      }
-    }
-  },
-  "totalSeconds": 11.79,
-  "totalCostUsd": 0.151,
-  "updatedAt": "2026-09-25T10:22:54.048Z"
+  "name": "t-rex",
+  "group": "dinosaurs",
+  "subject": "a cute green tyrannosaurus rex, pure lime-green facets with pale yellow belly facets, closed solid wedge jaw with sharp white sawtooth teeth painted flat along the jawline as a 2D UV texture decal with no open mouth cavity and no 3D teeth, small green arms, exactly two round eyes with white catchlights, zero floor shadow",
+  "chosenPick": 3,
+  "has3D": false,
+  "updatedAt": "2026-09-25T11:31:25.049Z"
 }

@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { PipelineConfigLoader } from './pipeline-config.js';
 import { WorkspacePaths } from './workspace-paths.js';
 
 export interface CatalogueModelEntry {
@@ -15,18 +16,26 @@ export class CatalogueManager {
       return [];
     }
 
+    const step2 = PipelineConfigLoader.getStep('s0-step-2');
+    const step3 = PipelineConfigLoader.getStep('s1-step-1');
+    const glbFilename = step3.outputs.model_public;
+    const artFilename = step2.outputs.art_public;
+
     const entries = readdirSync(WorkspacePaths.publicModelsDir, { withFileTypes: true });
     const verifiedModels: CatalogueModelEntry[] = [];
 
     for (const entry of entries) {
-      if (!entry.isDirectory() || entry.name.startsWith('.')) {
+      if (!entry.isDirectory()) {
+        continue;
+      }
+      if (entry.name.startsWith('.')) {
         continue;
       }
 
       const modelId = entry.name;
       const modelDir = join(WorkspacePaths.publicModelsDir, modelId);
-      const glbPath = join(modelDir, 'model.glb');
-      const artPath = join(modelDir, 'art.jpeg');
+      const glbPath = join(modelDir, glbFilename);
+      const artPath = join(modelDir, artFilename);
 
       if (
         existsSync(glbPath) &&
@@ -35,9 +44,9 @@ export class CatalogueManager {
       ) {
         verifiedModels.push({
           id: modelId,
-          model: 'model.glb',
-          preview: 'art.jpeg',
-          image: 'art.jpeg',
+          model: glbFilename,
+          preview: artFilename,
+          image: artFilename,
         });
       }
     }

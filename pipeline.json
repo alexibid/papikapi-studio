@@ -6,12 +6,10 @@
     "models_from": "resources/*/stage-0/step-1-art.jpeg"
   },
   "pricing": {
-    "recraft_vectorize_usd": 0.01,
     "runpod_trellis_usd_per_sec": 0.00016,
-    "gemini_models": {
-      "gemini-3.1-flash-lite-image": 0.02,
-      "gemini-3.1-flash-image": 0.151,
-      "gemini-3-pro-image": 0.134
+    "local_processing_usd": 0.0,
+    "flux_models": {
+      "black-forest-labs/FLUX.2-klein-4B": 0.00015
     }
   },
   "pipeline_stages": [
@@ -26,53 +24,72 @@
           "script": "scripts/stage-0/step-1-alternatives.ts",
           "models_from": "resources/*/stage-0/step-1-art.jpeg",
           "parameters": {
-            "default_model": "gemini-3.1-flash-image",
-            "fallback_model": "gemini-3.1-flash-lite-image",
+            "default_model": "black-forest-labs/FLUX.2-klein-4B",
+            "fallback_model": "black-forest-labs/FLUX.2-klein-4B",
+            "inference_engine": "flux2-klein",
             "aspect_ratio": "3:2",
             "columns": 3,
             "rows": 2,
             "alternatives_count": 6,
             "max_reference_images": 3,
             "system_prompt": "You are an expert 3D low-poly papercraft designer, origami artist, and 3D unfold engineer. You design foldable low-poly figures made of simple primary geometric volumes where micro-details are illustrated flat on the paper surface. You follow the studio signature aesthetic: cute expressive eyes with circular white catchlights and vibrant paper colors. You generate exactly one image that follows all instructions. Never write any text, letters, watermark or labels. Every rule is mandatory and none may be broken.",
+            "negative_prompt": "shadow, floor shadow, ground shadow, drop shadow, contact shadow, ambient occlusion beneath model, cast shadow, dark ground, black outlines, black crease lines, ink borders, cartoon outlines, wireframe lines, dark edge seams, 3D extruded teeth, jagged 3D spikes, open mouth cavity, eye level perspective, front view, side profile view, extra eyes, three eyes, one eye, floating eyes, gradients, text, watermark, labels, cell divider borders",
             "prompt_templates": {
-              "specific_subject": "One reference sheet holding exactly six alternative papercraft designs of the subject: a single canvas in a strict grid of 3 columns and 2 rows (6 equal rectangular cells, 3:2 aspect ratio). Each cell holds one complete 3D low-poly papercraft figure seen in an isometric/axonometric three-quarter perspective from above. The six figures progress row by row, left to right, from the most childlike, cute, and chubby (top-left) to the most mature, elegant, and realistic low-poly form (bottom-right).\n\nSubject: {subject}.\n\n{reference_instruction}\n\nSTYLE & GEOMETRY:\n- Low-poly papercraft origami sculpture made of clean planar facets with sharp geometric edges.\n- Pure flat-shaded polygonal geometry: facets are defined by clean planes and natural directional lighting, with NO black outline strokes, NO drawn ink crease lines, and NO cartoon borders.\n- SIGNATURE EYES: Big, cute, expressive round eyes with a prominent circular white catchlight / pupil highlight in the upper-left corner, painted flat onto the head facet, matching the studio signature character aesthetic.\n- SIGNATURE PALETTE: Solid, vibrant, authentic papercraft colors matching the training references palette (e.g. golden-yellow with rich chocolate-brown mane for lion cub, vibrant lime-green with soft yellow chest for t-rex, rich orange with cream chest for fox, golden-yellow with brown spots for cheetah).\n- FOLDABLE PRIMARY VOLUMES: All bodies, heads, snouts, limbs, and manes consist of simple, solid, closed low-poly volumes (wedges, prisms, polyhedra) suitable for clean 3D reconstruction and papercraft folding.\n- SURFACE TEXTURE OVER SCULPTED MICRO-GEOMETRY: Fine details (such as dinosaur or animal teeth, lion mane hair strands, whiskers, claws, eyes, spots, stripes, and mouth lines) are FLAT 2D ILLUSTRATIONS painted directly onto the facet surfaces as a printed texture (UV map style), NEVER protruding 3D physical spikes, jagged cutouts, or thin extrusions.\n- SOLID CLOSED SNOUTS: Jaws and muzzles are clean closed geometric blocks; teeth are painted flat along the jawline texture, never modeled as individual 3D cutout spikes.\n- Neutral flat light grey #E5E5E5 background across the entire canvas.\n- No shadows on the floor, no background gradients, no text, no labels, no cell dividers.",
-              "generic_category": "One reference sheet holding exactly six distinct, diverse subjects matching the category: a single canvas in a strict grid of 3 columns and 2 rows (6 equal rectangular cells, 3:2 aspect ratio). Each cell holds one unique, different figure in the requested category, seen in an isometric/axonometric three-quarter perspective from above.\n\nCategory/Theme: {subject}.\n\nSTYLE & GEOMETRY:\n- Low-poly papercraft origami sculpture made of clean planar facets with sharp geometric edges.\n- Pure flat-shaded polygonal geometry: facets are defined by clean planes and natural directional lighting, with NO black outline strokes, NO drawn ink crease lines, and NO cartoon borders.\n- SIGNATURE EYES: Big, cute, expressive round eyes with a prominent circular white catchlight / pupil highlight in the upper-left corner, painted flat onto the head facet, matching the studio signature character aesthetic.\n- SIGNATURE PALETTE: Solid, vibrant, authentic papercraft colors matching the training references palette.\n- FOLDABLE PRIMARY VOLUMES: All bodies, heads, snouts, limbs, and manes consist of simple, solid, closed low-poly volumes (wedges, prisms, polyhedra) suitable for clean 3D reconstruction and papercraft folding.\n- SURFACE TEXTURE OVER SCULPTED MICRO-GEOMETRY: Fine details (such as dinosaur or animal teeth, lion mane hair strands, whiskers, claws, eyes, spots, stripes, and mouth lines) are FLAT 2D ILLUSTRATIONS painted directly onto the facet surfaces as a printed texture (UV map style), NEVER protruding 3D physical spikes, jagged cutouts, or thin extrusions.\n- SOLID CLOSED SNOUTS: Jaws and muzzles are clean closed geometric blocks; teeth are painted flat along the jawline texture, never modeled as individual 3D cutout spikes.\n- Neutral flat light grey #E5E5E5 background across the entire canvas.\n- No shadows on the floor, no background gradients, no text, no labels, no cell dividers."
+              "specific_subject": "papikapi-style low-poly papercraft figure of {subject}. One reference sheet holding a strict grid of 3 columns and 2 rows (6 equal rectangular cells, 3:2 aspect ratio). Each cell holds one complete 3D low-poly papercraft figure seen in a STRICT ORTHOGONAL AXONOMETRIC PERSPECTIVE FROM TOP-RIGHT CORNER (fixed camera angle identical for all models: 35° elevation from ground, 45° rotation, showing top, front, and right-side facets simultaneously).\n\nSubject: {subject}.\n\n{reference_instruction}\n\nSTUDIO INVARIANTS (MANDATORY):\n- STRICT ORTHOGONAL AXONOMETRIC VIEW: Every model must be rendered in the exact same top-right orthogonal axonometric angle. Never eye-level, never flat front, never side profile.\n- ABSOLUTELY ZERO SHADOWS: The entire canvas is a completely plain, seamless flat neutral light grey #E5E5E5 background. ZERO floor shadows, ZERO cast shadows, ZERO contact shadows under feet, ZERO ambient occlusion. The model rests shadowless on the plain background.\n- ZERO BLACK CREASE LINES: Facets and edges are defined purely by directional lighting and solid paper colors. ABSOLUTELY ZERO black outline strokes, ZERO dark ink borders, ZERO wireframe lines, ZERO cartoon borders.\n- 100% CLOSED GEOMETRIC VOLUMES: Muzzles, jaws, limbs, and heads are closed solid low-poly polyhedra. All mouths are closed.\n- FLAT 2D UV TEXTURE DECALS: Teeth, claws, whiskers, nostrils, spots (cheetah, dalmatian), stripes (zebra, tabby), and patches (calico) are 100% FLAT 2D DECALS printed directly on the facet surfaces (UV map style). Teeth are flat sawtooth decals on closed jaws, NEVER protruding 3D physical spikes, cutouts, or open cavities.\n- EXACTLY TWO EYES per figure: large cute round eye decals with circular white catchlights painted flat onto head facets. Never three eyes, never floating eyes.\n- No shadows, no gradients, no text, no labels, no cell dividers.",
+              "generic_category": "papikapi-style low-poly papercraft figures for {subject}. One reference sheet holding a strict grid of 3 columns and 2 rows (6 equal rectangular cells, 3:2 aspect ratio). Each cell holds one unique, different figure in the requested category, seen in a STRICT ORTHOGONAL AXONOMETRIC PERSPECTIVE FROM TOP-RIGHT CORNER (fixed camera angle identical for all models: 35° elevation from ground, 45° rotation, showing top, front, and right-side facets simultaneously).\n\nCategory/Theme: {subject}.\n\nSTUDIO INVARIANTS (MANDATORY):\n- STRICT ORTHOGONAL AXONOMETRIC VIEW: Every model must be rendered in the exact same top-right orthogonal axonometric angle. Never eye-level, never flat front, never side profile.\n- ABSOLUTELY ZERO SHADOWS: The entire canvas is a completely plain, seamless flat neutral light grey #E5E5E5 background. ZERO floor shadows, ZERO cast shadows, ZERO contact shadows under feet, ZERO ambient occlusion. The model rests shadowless on the plain background.\n- ZERO BLACK CREASE LINES: Facets and edges are defined purely by directional lighting and solid paper colors. ABSOLUTELY ZERO black outline strokes, ZERO dark ink borders, ZERO wireframe lines, ZERO cartoon borders.\n- 100% CLOSED GEOMETRIC VOLUMES: Muzzles, jaws, limbs, and heads are closed solid low-poly polyhedra. All mouths are closed.\n- FLAT 2D UV TEXTURE DECALS: Teeth, claws, whiskers, nostrils, spots, stripes, and patches are 100% FLAT 2D DECALS printed directly on the facet surfaces (UV map style). Teeth are flat sawtooth decals on closed jaws, NEVER protruding 3D physical spikes, cutouts, or open cavities.\n- EXACTLY TWO EYES per figure: large cute round eye decals with circular white catchlights painted flat onto head facets. Never three eyes, never floating eyes.\n- No shadows, no gradients, no text, no labels, no cell dividers."
             },
-            "reference_note_template": "VISUAL REFERENCE CONDITIONING ({count} attached image(s)): Faithfully preserve the subject's identity, pose, proportions, colors, markings, and distinctive features shown in the reference photo, but translate them into clean planar low-poly facets WITHOUT black outline strokes, WITHOUT drawn black crease lines, and WITHOUT cartoon borders. All micro-details like teeth, whiskers, and spots must be flat surface illustrations on the facets, not 3D spikes or cutouts. Adopt the signature cute round eyes with white catchlight highlights.",
+            "reference_note_template": "VISUAL REFERENCE CONDITIONING ({count} attached image(s)): Faithfully preserve the subject's identity, pose, proportions, colors, markings, and distinctive features shown in the reference photo, but translate them into clean planar low-poly facets WITHOUT black outline strokes, WITHOUT drawn black crease lines, and WITHOUT cartoon borders. Maintain the strict orthogonal axonometric top-right viewpoint, closed solid jaws, flat 2D UV texture decals for teeth and spots, exactly two eyes, and ABSOLUTELY ZERO FLOOR SHADOWS.",
             "maturity_descriptions": [
-              "Cell (0,0) [Top-Left]: Ultra-childlike, cute, chubby, chibi, highly simplified origami toy with large bold facets and friendly exaggerated proportions",
-              "Cell (0,1) [Top-Center]: Playful youthful papercraft figure with soft rounded geometry and cheerful character",
-              "Cell (0,2) [Top-Right] (Default Pick #3): Studio signature training style — balanced geometric proportions, expressive signature eyes with white catchlight, exact reference colors and features, translated into clean planar facets without black crease lines",
-              "Cell (1,0) [Bottom-Left] (Pick #4): Classic structured papercraft model with elegant faceted planes and precise anatomical structure matching the signature palette",
-              "Cell (1,1) [Bottom-Center]: Sophisticated detailed papercraft sculpture with refined angular facets and dynamic posture",
-              "Cell (1,2) [Bottom-Right]: Majestic realistic low-poly faceted sculpture with lifelike proportions and dignified mature stance"
+              "Cell (0,0) [Top-Left]: Ultra-childlike, cute, chubby, chibi, highly simplified origami toy with large bold facets and friendly exaggerated proportions in strict orthogonal axonometry",
+              "Cell (0,1) [Top-Center]: Playful youthful papercraft figure with soft rounded geometry and cheerful character in strict orthogonal axonometry",
+              "Cell (0,2) [Top-Right] (Default Pick #3): Studio signature training style — balanced geometric proportions, expressive signature eyes with white catchlight, exact reference colors and features, translated into clean planar facets without black crease lines and with flat 2D UV texture details on closed volumes in strict orthogonal axonometry",
+              "Cell (1,0) [Bottom-Left] (Pick #4): Classic structured papercraft model with elegant faceted planes and precise anatomical structure matching the signature palette in strict orthogonal axonometry",
+              "Cell (1,1) [Bottom-Center]: Sophisticated detailed papercraft sculpture with refined angular facets and dynamic posture in strict orthogonal axonometry",
+              "Cell (1,2) [Bottom-Right]: Majestic realistic low-poly faceted sculpture with lifelike proportions and dignified mature stance in strict orthogonal axonometry"
             ],
             "critical_rules": [
               "Strict 3x2 grid of exactly 6 equal cells: exactly 3 columns (left, center, right) and exactly 2 rows (top, bottom). Exactly one figure per cell, totaling exactly 6 figures. Never 4 columns, never 7 or 8 figures.",
-              "Isometric/axonometric three-quarter perspective from above in every cell.",
+              "Strict orthogonal axonometric perspective from the top-right corner in EVERY cell (identical 35° elevation, 45° rotation showing top, front, and right facets).",
               "Zero text, zero labels, zero words, zero letters anywhere on the canvas.",
-              "Every figure is complete, centered in its cell, on flat neutral #E5E5E5 background with no floor shadow.",
-              "Zero black stroke outlines: planes are defined by flat shading and geometry, not drawn ink borders or dark seam lines.",
-              "Signature eye styling: large cute round eyes with a prominent white circular catchlight reflection painted flat onto the facet.",
-              "Flat surface texture details: teeth, claws, whiskers, eyes, spots, and fur textures are painted flat onto the facet surfaces, NEVER modeled as protruding 3D spikes or cutouts.",
-              "Simple foldable primary volumes: all snouts, jaws, and limbs are closed solid geometric blocks suitable for papercraft folding."
+              "Every figure is complete, centered in its cell, on flat neutral #E5E5E5 background with ABSOLUTELY ZERO FLOOR SHADOWS, zero drop shadows, zero contact shadows beneath the figures.",
+              "Zero black crease lines: planes are defined by flat shading and pure facet colors, not drawn ink borders or dark seam lines.",
+              "Exactly two eyes per figure: large cute round eyes with a prominent white circular catchlight reflection painted flat onto the facet. Never three eyes.",
+              "Flat surface 2D UV texture details: teeth, claws, whiskers, eyes, spots, stripes, and fur textures are painted flat onto closed facet surfaces, NEVER modeled as protruding 3D spikes or open mouth cavities.",
+              "100% closed foldable primary volumes: all snouts, jaws, and limbs are closed solid geometric blocks suitable for papercraft folding."
             ],
             "self_check": [
               "Are there exactly 6 cells arranged in a 3x2 grid?",
-              "Is every cell drawn in an isometric/axonometric three-quarter view from above?",
+              "Is every cell drawn in the identical orthogonal axonometric top-right view?",
               "Is there zero text and zero divider borders anywhere?",
+              "Is the background completely plain and flat with ABSOLUTELY ZERO FLOOR SHADOWS beneath the figures?",
               "Are the figures clean planar low-poly facets without black outline strokes or cartoon ink lines?",
-              "Do the figures feature the signature cute eyes with white catchlight reflection?",
-              "Are teeth, claws, whiskers, and fine details painted flat onto the facet surfaces rather than separate 3D spikes?"
+              "Does every figure have EXACTLY TWO cute eyes with white catchlight reflection?",
+              "Are teeth, claws, whiskers, stripes, and spots painted flat onto closed facet surfaces rather than separate 3D spikes or open mouth cavities?"
             ]
           },
           "messages": {
             "start": "[Stage 0: Step 1] Generating 3x2 alternatives sheet for {model}",
             "completed": "[Stage 0: Step 1] Alternatives sheet generated in {duration}s"
           },
-          "files": {
-            "output_sheet": "alternatives.jpeg",
-            "manifest": "step-1-manifest.json"
+          "stage_dir": "stage-0",
+          "outputs": {
+            "sheet_resource": "step-1-alternatives.jpeg",
+            "sheet_public": "alternatives.jpeg",
+            "public_url_pattern": "/models/{model}/alternatives.jpeg",
+            "manifest": "step-1-manifest.json",
+            "allowed_extensions": [".jpeg", ".jpg", ".png", ".webp"]
+          },
+          "manifest_contract": {
+            "status": "DONE",
+            "seconds": "duration",
+            "costUsd": 0.00015,
+            "costNote": "FLUX.2-klein-4B Inference ($0.00015)",
+            "data": {
+              "prompt": "prompt",
+              "referenceCount": "referenceImages.length",
+              "alternativesCount": 6,
+              "format": "result.mime"
+            }
           }
         },
         {
@@ -81,8 +98,31 @@
           "label": "PICK",
           "emoji": "✂️",
           "script": "scripts/stage-0/step-2-pick.ts",
-          "models_from": "resources/*/stage-0/step-1-alternatives.*",
+          "stage_dir": "stage-0",
+          "depends_on": {
+            "step_id": "s0-step-1",
+            "stage_dir": "stage-0"
+          },
+          "inputs": {
+            "stage_dir": "stage-0",
+            "sheet_resource": "step-1-alternatives.jpeg",
+            "sheet_public": "alternatives.jpeg",
+            "sheet_resource_prefix": "step-1-alternatives",
+            "sheet_public_prefix": "alternatives",
+            "allowed_extensions": [".jpeg", ".jpg", ".png", ".webp"]
+          },
+          "outputs": {
+            "stage_dir": "stage-0",
+            "art_resource": "step-1-art.jpeg",
+            "art_public": "art.jpeg",
+            "art_pick_resource_pattern": "step-1-art-pick-{pick}.jpeg",
+            "art_pick_public_pattern": "art-pick-{pick}.jpeg",
+            "public_url_pattern": "/models/{model}/art.jpeg",
+            "manifest": "step-2-manifest.json",
+            "allowed_extensions": [".jpeg", ".jpg", ".png", ".webp"]
+          },
           "parameters": {
+            "default_pick": 3,
             "jpeg_quality": 95,
             "columns": 3,
             "rows": 2
@@ -91,8 +131,15 @@
             "start": "[Stage 0: Step 2] Picking and cropping chosen alternative #{pick} for {model}",
             "completed": "[Stage 0: Step 2] Alternative #{pick} cropped and saved to art.jpeg in {duration}s"
           },
-          "files": {
-            "output_art": "art.jpeg"
+          "manifest_contract": {
+            "status": "DONE",
+            "seconds": "duration",
+            "costUsd": 0.0,
+            "costNote": "Local CPU Image Processing ($0.00)",
+            "data": {
+              "chosenPick": "pick",
+              "artSize": "croppedBuffer.length"
+            }
           }
         }
       ]
@@ -106,24 +153,77 @@
           "label": "3D-GLB",
           "emoji": "🧊",
           "script": "scripts/stage-1/step-1-trellis.ts",
+          "stage_dir": "stage-1",
+          "depends_on": {
+            "step_id": "s0-step-2",
+            "stage_dir": "stage-0"
+          },
           "models_from": "resources/*/stage-0/step-1-art.jpeg",
           "runpod_console": "https://console.runpod.io/pods?id=nb2fo5r3psqvno",
           "inputs": {
-            "art": "stage-0/step-1-art.jpeg"
+            "stage_dir": "stage-0",
+            "art_resource": "step-1-art.jpeg",
+            "art_public": "art.jpeg",
+            "art_pick_resource_pattern": "step-1-art-pick-{pick}.jpeg",
+            "art_pick_public_pattern": "art-pick-{pick}.jpeg",
+            "allowed_extensions": [".jpeg", ".jpg", ".png"]
           },
           "outputs": {
-            "model": "step-1-3d.glb",
+            "stage_dir": "stage-1",
+            "model_resource": "step-1-3d.glb",
+            "model_public": "model.glb",
+            "model_pick_resource_pattern": "step-1-3d-pick-{pick}.glb",
+            "model_pick_public_pattern": "model-pick-{pick}.glb",
+            "public_url_pattern": "/models/{model}/model.glb",
             "manifest": "step-1-manifest.json"
+          },
+          "engine": {
+            "model": "microsoft/TRELLIS-image-large",
+            "type": "image-to-3d",
+            "notes": "TRELLIS is a purely vision-conditioned Image-to-3D diffusion model (no text prompt). The 3D geometry, low-poly planar facets, and 2D UV texture mapping are synthesized directly from the 2D orthogonal axonometric image generated in Stage 0."
           },
           "parameters": {
             "endpoint": "https://nb2fo5r3psqvno-8888.proxy.runpod.net/generate",
             "seed": 1,
             "simplify": 0.95,
-            "texture_size": 1024
+            "texture_size": 1024,
+            "ss_sampling_steps": 12,
+            "slat_sampling_steps": 12,
+            "ss_guidance_strength": 7.5,
+            "slat_guidance_strength": 3.0
+          },
+          "runner": {
+            "platform": "RunPod GPU",
+            "device": "NVIDIA RTX PRO 4500 Blackwell Server Edition",
+            "rate": "$0.58/hr"
           },
           "messages": {
             "start": "[Stage 1: Step 1] Generating 3D model for {model}",
-            "completed": "[Stage 1: Step 1] 3D model generated in {duration}s"
+            "progress": "⟳ [{runner}] Generating 3D Mesh on {device}... ({elapsed}s elapsed)",
+            "completed": "✔ [{runner}] 3D Model generated: {sizeMb} MB in {duration}s (${costUsd})",
+            "cache_hit": "⚡ [Cache Hit] Restored 3D Model for pick #{pick} from local cache (0.0s, $0.0000)"
+          },
+          "manifest_contract": {
+            "status": "DONE",
+            "seconds": "duration",
+            "costUsd": "costUsd",
+            "costNote": "RunPod RTX PRO 4500 SE ($0.58/hr)",
+            "cache_cost_note": "Restored from local pick cache",
+            "metrics": {
+              "fileSize": "buffer.length"
+            },
+            "data": {
+              "fileSize": "buffer.length",
+              "format": "model/gltf-binary",
+              "chosenPick": "pick",
+              "cached": false,
+              "device": "NVIDIA RTX PRO 4500 Blackwell Server Edition",
+              "parameters": {
+                "seed": "seed",
+                "simplify": "simplify",
+                "texture_size": "textureSize"
+              }
+            }
           }
         }
       ]

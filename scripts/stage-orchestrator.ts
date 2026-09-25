@@ -41,8 +41,8 @@ export class StageOrchestrator {
       else if (a.startsWith('--stage=')) flags.stage = Number.parseInt(a.split('=')[1], 10);
       else if (a === '--step' && args[i + 1] !== undefined) flags.step = args[++i];
       else if (a.startsWith('--step=')) flags.step = a.split('=')[1];
-      else if ((a === '--model' || a === '--subject') && args[i + 1] !== undefined) flags.model = args[++i];
-      else if (a.startsWith('--model=') || a.startsWith('--subject=')) flags.model = a.split('=')[1];
+      else if ((a === '--model' ? true : a === '--subject') && args[i + 1] !== undefined) flags.model = args[++i];
+      else if (a.startsWith('--model=') ? true : a.startsWith('--subject=')) flags.model = a.split('=')[1];
       else if (a === '--pick' && args[i + 1] !== undefined) flags.pick = Number.parseInt(args[++i], 10);
       else if (a.startsWith('--pick=')) flags.pick = Number.parseInt(a.split('=')[1], 10);
       else if (a === '--prompt' && args[i + 1] !== undefined) flags.prompt = args[++i];
@@ -68,44 +68,44 @@ export class StageOrchestrator {
     return this.discoverModels(pattern);
   }
 
-  private static cleanOutputs(model: string, stageIndex: number, step: PipelineStep): void {
+  private static cleanOutputs(model: string, step: PipelineStep): void {
     const resourceDir = WorkspacePaths.resourcePath(model);
     const publicDir = WorkspacePaths.modelPath(model);
-    const stageDir = join(resourceDir, `stage-${stageIndex}`);
+    const stageDir = join(resourceDir, step.stage_dir);
     const cleaned: string[] = [];
 
     if (step.id === 's0-step-1') {
-      const extensions = ['.jpeg', '.jpg', '.png', '.webp'];
-      for (const ext of extensions) {
-        const resAlt = join(stageDir, `step-1-alternatives${ext}`);
+      const stepOutputs = step.outputs as { allowed_extensions: string[]; sheet_resource: string; sheet_public: string; manifest: string };
+      for (const ext of stepOutputs.allowed_extensions) {
+        const resBase = stepOutputs.sheet_resource.replace(/\.[^/.]+$/, '');
+        const resAlt = join(stageDir, `${resBase}${ext}`);
         if (existsSync(resAlt)) { unlinkSync(resAlt); cleaned.push(basename(resAlt)); }
-        const pubAlt = join(publicDir, `alternatives${ext}`);
+        const pubBase = stepOutputs.sheet_public.replace(/\.[^/.]+$/, '');
+        const pubAlt = join(publicDir, `${pubBase}${ext}`);
         if (existsSync(pubAlt)) { unlinkSync(pubAlt); cleaned.push(`public/${basename(pubAlt)}`); }
       }
-      const manifest = join(stageDir, 'step-1-manifest.json');
+      const manifest = join(stageDir, stepOutputs.manifest);
       if (existsSync(manifest)) { unlinkSync(manifest); cleaned.push(basename(manifest)); }
     } else if (step.id === 's0-step-2') {
-      const extensions = ['.jpeg', '.jpg', '.png', '.webp'];
-      for (const ext of extensions) {
-        const resArt = join(stageDir, `step-1-art${ext}`);
+      const stepOutputs = step.outputs as { allowed_extensions: string[]; art_resource: string; art_public: string; manifest: string };
+      for (const ext of stepOutputs.allowed_extensions) {
+        const resBase = stepOutputs.art_resource.replace(/\.[^/.]+$/, '');
+        const resArt = join(stageDir, `${resBase}${ext}`);
         if (existsSync(resArt)) { unlinkSync(resArt); cleaned.push(basename(resArt)); }
-        const pubArt = join(publicDir, `art${ext}`);
+        const pubBase = stepOutputs.art_public.replace(/\.[^/.]+$/, '');
+        const pubArt = join(publicDir, `${pubBase}${ext}`);
         if (existsSync(pubArt)) { unlinkSync(pubArt); cleaned.push(`public/${basename(pubArt)}`); }
       }
-      const manifest = join(stageDir, 'step-2-manifest.json');
+      const manifest = join(stageDir, stepOutputs.manifest);
       if (existsSync(manifest)) { unlinkSync(manifest); cleaned.push(basename(manifest)); }
     } else if (step.id === 's1-step-1') {
-      if (existsSync(stageDir)) {
-        for (const file of readdirSync(stageDir)) {
-          const full = join(stageDir, file);
-          if (existsSync(full) && statSync(full).isFile() && !file.includes('-pick-')) {
-            unlinkSync(full);
-            cleaned.push(file);
-          }
-        }
-      }
-      const pubModel = join(publicDir, 'model.glb');
-      if (existsSync(pubModel)) { unlinkSync(pubModel); cleaned.push('public/model.glb'); }
+      const stepOutputs = step.outputs as { model_resource: string; model_public: string; manifest: string };
+      const resModel = join(stageDir, stepOutputs.model_resource);
+      if (existsSync(resModel)) { unlinkSync(resModel); cleaned.push(basename(resModel)); }
+      const pubModel = join(publicDir, stepOutputs.model_public);
+      if (existsSync(pubModel)) { unlinkSync(pubModel); cleaned.push(`public/${basename(pubModel)}`); }
+      const manifest = join(stageDir, stepOutputs.manifest);
+      if (existsSync(manifest)) { unlinkSync(manifest); cleaned.push(basename(manifest)); }
     }
 
     if (cleaned.length > 0) {
@@ -139,14 +139,16 @@ export class StageOrchestrator {
       console.log(`━━ ${label.padEnd(58, ' ')} [ START ]`);
 
       for (const step of activeSteps) {
-        this.cleanOutputs(model, flags.stage, step);
+        this.cleanOutputs(model, step);
         const stepStart = Date.now();
         let status: 'DONE' | 'FAIL' = 'DONE';
         let errMsg = '';
 
         try {
           if (step.id === 's0-step-1') {
-            const defaultPrompt = flags.prompt || (model === 't-rex' ? 't-rex' : model.replace(/-/g, ' '));
+            const promptFromFlag = flags.prompt;
+            const defaultSubjectPrompt = model === 't-rex' ? 't-rex' : model.replace(/-/g, ' ');
+            const defaultPrompt = promptFromFlag !== null ? promptFromFlag : defaultSubjectPrompt;
             console.log(`  [s0-step-1] Input Prompt: "${defaultPrompt}"`);
             let referenceImages: InlineImage[] | undefined;
             if (flags.ref) {
@@ -164,7 +166,8 @@ export class StageOrchestrator {
               referenceImages = [{ bytes, mime }];
               console.log(`  [s0-step-1] Visual Reference: ${refPath} (${mime}, ${(bytes.length / 1024).toFixed(1)} KB)`);
             } else {
-              const trainingMatch = TrainingReferences.getInlineImage(model) || TrainingReferences.getInlineImage(defaultPrompt);
+              const matchByName = TrainingReferences.getInlineImage(model);
+              const trainingMatch = matchByName !== null ? matchByName : TrainingReferences.getInlineImage(defaultPrompt);
               if (trainingMatch) {
                 referenceImages = [trainingMatch.image];
                 console.log(`  [s0-step-1] 🎨 Training Reference Auto-Matched: ${trainingMatch.item.file} (${trainingMatch.item.name} in ${trainingMatch.item.group})`);
@@ -178,8 +181,9 @@ export class StageOrchestrator {
             const size = statSync(res.resourcePath).size;
             console.log(`  [s0-step-1] Output Sheet: ${res.resourcePath} (${(size / 1024).toFixed(1)} KB)`);
           } else if (step.id === 's0-step-2') {
-            const pick = flags.pick ?? 3;
-            console.log(`  [s0-step-2] Input Sheet: resources/${model}/stage-0/step-1-alternatives.jpeg (Pick #${pick})`);
+            const pickStep = PipelineConfigLoader.getStep('s0-step-2');
+            const defaultPick = (pickStep.parameters as { default_pick: number }).default_pick;
+            const pick = flags.pick !== null ? flags.pick : defaultPick;
             const res = await AlternativePicker.execute({
               name: model,
               pick,
@@ -187,10 +191,11 @@ export class StageOrchestrator {
             const size = statSync(res.resourceArtPath).size;
             console.log(`  [s0-step-2] Output Art: ${res.resourceArtPath} (${(size / 1024).toFixed(1)} KB)`);
           } else if (step.id === 's1-step-1') {
-            const artPath = join(WorkspacePaths.resourcePath(model), 'stage-0', 'step-1-art.jpeg');
+            const trellisStep = PipelineConfigLoader.getStep('s1-step-1') as unknown as { inputs: { stage_dir: string; art_resource: string } };
+            const artPath = join(WorkspacePaths.resourcePath(model), trellisStep.inputs.stage_dir, trellisStep.inputs.art_resource);
             const artSize = existsSync(artPath) ? statSync(artPath).size : 0;
             console.log(`  [s1-step-1] Input Art: ${artPath} (${(artSize / 1024).toFixed(1)} KB)`);
-            const res = await TrellisGenerator.execute(model, flags.pick ?? undefined);
+            const res = await TrellisGenerator.execute(model, flags.pick !== null ? flags.pick : undefined);
             const size = statSync(res.outputPath).size;
             console.log(`  [s1-step-1] Output 3D Mesh: ${res.outputPath} (${(size / (1024 * 1024)).toFixed(2)} MB)`);
             CatalogueManager.sync();
