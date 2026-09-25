@@ -36,6 +36,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrender1 \
     && rm -rf /var/lib/apt/lists/*
 
+RUN conda install -y -c conda-forge "libstdcxx-ng>=12"
+
 WORKDIR /app
 
 RUN pip install --no-cache-dir --upgrade pip && \
