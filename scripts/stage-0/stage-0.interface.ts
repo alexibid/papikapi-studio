@@ -46,6 +46,10 @@ export interface AlternativesStepDefinition {
   readonly id: string;
   readonly stage_dir: string;
   readonly serverless?: AlternativesServerlessConfig;
+  readonly messages?: {
+    readonly start?: string;
+    readonly completed?: string;
+  };
   readonly parameters: AlternativesStepParameters;
   readonly outputs: AlternativesStepOutputs;
   readonly manifest_contract: AlternativesManifestContract;

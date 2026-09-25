@@ -101,10 +101,19 @@ export class AlternativesGenerator {
         rows: params.rows,
       };
 
+      const startMsg = step.messages?.start ? step.messages.start.replace('{model}', name) : `[Stage 0: Step 1] Generating 3x2 alternatives sheet for ${name}`;
+      console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
+
       const result = await RunPodClient.execute<typeof payload, { sheet_base64: string; mime?: string }>(
         endpointId,
-        payload
+        payload,
+        {
+          onProgress: (elapsed) => {
+            process.stdout.write(`\r  \x1b[36m⟳ [RunPod Serverless] Generating alternatives on FLUX.2 Serverless Worker... (${elapsed}s elapsed)\x1b[0m`);
+          },
+        }
       );
+      process.stdout.write('\r\x1b[K');
       imageBytes = Buffer.from(result.output.sheet_base64, 'base64');
       mime = result.output.mime ? result.output.mime : 'image/jpeg';
       seconds = result.seconds;

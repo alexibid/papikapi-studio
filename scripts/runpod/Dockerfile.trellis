@@ -46,7 +46,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 RUN git clone --recurse-submodules https://github.com/microsoft/TRELLIS.git /app/trellis && \
     cd /app/trellis && \
     bash setup.sh --basic --spconv --diffoctreerast --nvdiffrast --kaolin && \
-    pip install --no-cache-dir "transformers>=4.44.0,<4.46.0"
+    pip install --no-cache-dir "transformers>=4.44.0,<4.46.0" "numpy<2"
+
+RUN python -c "import numpy; import torch; import open3d; from trellis.pipelines import TrellisImageTo3DPipeline; print('[BUILD VERIFIED] Imports succeed! NumPy:', numpy.__version__, 'PyTorch:', torch.__version__, 'Open3D:', open3d.__version__)"
 
 COPY rp_handler.trellis.py /app/rp_handler.trellis.py
 

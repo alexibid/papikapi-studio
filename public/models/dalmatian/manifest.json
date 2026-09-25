@@ -1,8 +1,23 @@
 {
-  "name": "dalmatian",
-  "group": "dogs",
-  "subject": "a cute standing dalmatian puppy, pure crisp white facets covered in distinct jet-black spots painted flat across the body, legs, and ears as a 2D UV texture map, closed black nose facet, floppy ears, exactly two brown eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.067Z"
+  "version": 1,
+  "subject": "dalmatian",
+  "stages": {
+    "s0-step-1": {
+      "stageId": "s0-step-1",
+      "at": "2026-09-25T21:26:09.996Z",
+      "status": "DONE",
+      "seconds": 528.67,
+      "costUsd": 0.0793,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0793)",
+      "data": {
+        "prompt": "dalmatian",
+        "referenceCount": 1,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    }
+  },
+  "totalSeconds": 528.67,
+  "totalCostUsd": 0.0793,
+  "updatedAt": "2026-09-25T21:26:10.000Z"
 }
