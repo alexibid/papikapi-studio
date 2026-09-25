@@ -1,17 +1,6 @@
-export interface StepExecutionResult {
-  readonly stepId: string;
-  readonly label: string;
-  readonly status: 'DONE' | 'FAIL' | 'SKIP';
-  readonly duration: number;
-  readonly message?: string;
-}
+import type { ModelExecutionReport, StepExecutionResult } from './interfaces/index.js';
 
-export interface ModelExecutionReport {
-  readonly modelName: string;
-  readonly stepResults: readonly StepExecutionResult[];
-  readonly totalDuration: number;
-  readonly passed: boolean;
-}
+export type { StepExecutionResult, ModelExecutionReport };
 
 export class StageReporter {
   public static printHeader(stageTitle: string, modelCount: number): void {

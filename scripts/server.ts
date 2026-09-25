@@ -2,10 +2,11 @@ import { existsSync, readFileSync, rmSync, statSync } from 'node:fs';
 import http, { IncomingMessage, ServerResponse } from 'node:http';
 import { join } from 'node:path';
 import { CatalogueManager } from './common/catalogue-manager.js';
-import { GeminiClient, InlineImage } from './common/gemini-client.js';
+import { GeminiClient } from './common/gemini-client.js';
 import { PipelineConfigLoader } from './common/pipeline-config.js';
 import { TrainingReferences } from './common/training-references.js';
 import { WorkspacePaths } from './common/workspace-paths.js';
+import type { InlineImage } from './common/interfaces/index.js';
 import { AlternativesGenerator } from './stage-0/step-1-alternatives.js';
 import { AlternativePicker } from './stage-0/step-2-pick.js';
 import { TrellisGenerator } from './stage-1/step-1-trellis.js';
@@ -152,7 +153,7 @@ export class CreatorApiServer {
         const hasAlternatives = candidates.some((p) => existsSync(p));
 
         const cachedPicks: number[] = [];
-        const alternativesCount = step1.parameters.alternatives_count;
+        const alternativesCount = step1.parameters?.alternatives_count !== undefined ? Number(step1.parameters.alternatives_count) : 6;
         for (let p = 1; p <= alternativesCount; p++) {
           const pattern = step3.outputs.model_pick_public_pattern.replace('{pick}', String(p));
           const pubPickGlb = join(publicDir, pattern);

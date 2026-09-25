@@ -1,23 +1,8 @@
 import { existsSync, readFileSync } from 'node:fs';
+import type { GeminiGenerateOptions, GeminiGenerateResult, InlineImage } from './interfaces/index.js';
 import { WorkspacePaths } from './workspace-paths.js';
 
-export interface InlineImage {
-  readonly bytes: Buffer;
-  readonly mime: string;
-}
-
-export interface GeminiGenerateOptions {
-  readonly system?: string;
-  readonly prompt: string;
-  readonly referenceImages?: readonly InlineImage[];
-  readonly aspectRatio?: string;
-}
-
-export interface GeminiGenerateResult {
-  readonly bytes: Buffer;
-  readonly mime: string;
-  readonly seconds: number;
-}
+export type { InlineImage, GeminiGenerateOptions, GeminiGenerateResult };
 
 export class GeminiClient {
   private static readonly endpoint = 'https://generativelanguage.googleapis.com/v1beta/models';

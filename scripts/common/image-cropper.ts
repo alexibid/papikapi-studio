@@ -1,12 +1,7 @@
 import { createCanvas, loadImage } from 'canvas';
+import type { CropCellOptions } from './interfaces/index.js';
 
-export interface CropCellOptions {
-  readonly imageBuffer: Buffer;
-  readonly columns: number;
-  readonly rows: number;
-  readonly pickIndex: number;
-  readonly quality?: number;
-}
+export type { CropCellOptions };
 
 export class ImageCropper {
   public static async cropCell(options: CropCellOptions): Promise<Buffer> {

@@ -26,7 +26,7 @@
           "models_from": "resources/*/stage-0/step-1-art.jpeg",
           "serverless": {
             "env_endpoint_key": "RUNPOD_FLUX_ENDPOINT_ID",
-            "container_image": "ghcr.io/alexibid/kirigami-flux:latest",
+            "container_image": "ghcr.io/alexibid/papikapi-flux:latest",
             "min_workers": 0,
             "max_workers": 1,
             "idle_timeout_seconds": 5,
@@ -174,7 +174,7 @@
           "runpod_console": "https://console.runpod.io/serverless",
           "serverless": {
             "env_endpoint_key": "RUNPOD_TRELLIS_ENDPOINT_ID",
-            "container_image": "ghcr.io/alexibid/kirigami-trellis:latest",
+            "container_image": "ghcr.io/alexibid/papikapi-trellis:latest",
             "min_workers": 0,
             "max_workers": 1,
             "idle_timeout_seconds": 5,

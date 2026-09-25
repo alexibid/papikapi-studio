@@ -1,14 +1,8 @@
 import { existsSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import type { CatalogueModelEntry } from './interfaces/index.js';
 import { PipelineConfigLoader } from './pipeline-config.js';
 import { WorkspacePaths } from './workspace-paths.js';
-
-export interface CatalogueModelEntry {
-  readonly id: string;
-  readonly model: string;
-  readonly preview: string;
-  readonly image: string;
-}
 
 export class CatalogueManager {
   public static sync(): readonly CatalogueModelEntry[] {

@@ -1,60 +1,16 @@
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import type {
+  PickAlternativeRequest,
+  PickAlternativeResponse,
+  PickStepDefinition,
+} from './stage-0.interface.js';
 import { ImageCropper } from '../common/image-cropper.js';
 import { ManifestManager } from '../common/manifest-manager.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
 
-interface PickStepInputs {
-  readonly sheet_resource_prefix: string;
-  readonly sheet_public_prefix: string;
-  readonly allowed_extensions: readonly string[];
-}
-
-interface PickStepOutputs {
-  readonly stage_dir: string;
-  readonly art_resource: string;
-  readonly art_public: string;
-  readonly art_pick_resource_pattern: string;
-  readonly art_pick_public_pattern: string;
-  readonly public_url_pattern: string;
-  readonly manifest: string;
-  readonly allowed_extensions: readonly string[];
-}
-
-interface PickManifestContract {
-  readonly status: string;
-  readonly costUsd: number;
-  readonly costNote: string;
-}
-
-interface PickStepParameters {
-  readonly default_pick: number;
-  readonly jpeg_quality: number;
-  readonly columns: number;
-  readonly rows: number;
-}
-
-interface PickStepDefinition {
-  readonly id: string;
-  readonly stage_dir: string;
-  readonly inputs: PickStepInputs;
-  readonly outputs: PickStepOutputs;
-  readonly parameters: PickStepParameters;
-  readonly manifest_contract: PickManifestContract;
-}
-
-export interface PickAlternativeRequest {
-  readonly name: string;
-  readonly pick: number;
-}
-
-export interface PickAlternativeResponse {
-  readonly name: string;
-  readonly pick: number;
-  readonly resourceArtPath: string;
-  readonly publicArtPath: string;
-}
+export type { PickAlternativeRequest, PickAlternativeResponse };
 
 export class AlternativePicker {
   private static readonly stepId = 's0-step-2';

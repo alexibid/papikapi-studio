@@ -1,23 +1,21 @@
-import { existsSync, globSync, readdirSync, readFileSync, statSync, unlinkSync } from 'node:fs';
+import { existsSync, globSync, readFileSync, statSync, unlinkSync } from 'node:fs';
 import { basename, isAbsolute, join, resolve } from 'node:path';
+import type { CliArguments } from './orchestrator.interface.js';
+import type {
+  InlineImage,
+  ModelExecutionReport,
+  PipelineStep,
+  StepExecutionResult,
+} from './common/interfaces/index.js';
 import { CatalogueManager } from './common/catalogue-manager.js';
-import { GeminiClient, InlineImage } from './common/gemini-client.js';
-import { PipelineConfigLoader, PipelineStep } from './common/pipeline-config.js';
-import { ModelExecutionReport, StageReporter, StepExecutionResult } from './common/stage-reporter.js';
+import { GeminiClient } from './common/gemini-client.js';
+import { PipelineConfigLoader } from './common/pipeline-config.js';
+import { StageReporter } from './common/stage-reporter.js';
 import { TrainingReferences } from './common/training-references.js';
 import { WorkspacePaths } from './common/workspace-paths.js';
 import { AlternativesGenerator } from './stage-0/step-1-alternatives.js';
 import { AlternativePicker } from './stage-0/step-2-pick.js';
 import { TrellisGenerator } from './stage-1/step-1-trellis.js';
-
-interface CliArguments {
-  stage: number;
-  step: string | null;
-  model: string | null;
-  pick: number | null;
-  prompt: string | null;
-  ref: string | null;
-}
 
 export class StageOrchestrator {
   private static parseCliArgs(): CliArguments {
@@ -75,7 +73,7 @@ export class StageOrchestrator {
     const cleaned: string[] = [];
 
     if (step.id === 's0-step-1') {
-      const stepOutputs = step.outputs as { allowed_extensions: string[]; sheet_resource: string; sheet_public: string; manifest: string };
+      const stepOutputs = step.outputs as unknown as { allowed_extensions: string[]; sheet_resource: string; sheet_public: string; manifest: string };
       for (const ext of stepOutputs.allowed_extensions) {
         const resBase = stepOutputs.sheet_resource.replace(/\.[^/.]+$/, '');
         const resAlt = join(stageDir, `${resBase}${ext}`);
@@ -87,7 +85,7 @@ export class StageOrchestrator {
       const manifest = join(stageDir, stepOutputs.manifest);
       if (existsSync(manifest)) { unlinkSync(manifest); cleaned.push(basename(manifest)); }
     } else if (step.id === 's0-step-2') {
-      const stepOutputs = step.outputs as { allowed_extensions: string[]; art_resource: string; art_public: string; manifest: string };
+      const stepOutputs = step.outputs as unknown as { allowed_extensions: string[]; art_resource: string; art_public: string; manifest: string };
       for (const ext of stepOutputs.allowed_extensions) {
         const resBase = stepOutputs.art_resource.replace(/\.[^/.]+$/, '');
         const resArt = join(stageDir, `${resBase}${ext}`);

@@ -1,14 +1,10 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { InlineImage, GeminiClient } from './gemini-client.js';
+import type { InlineImage, ReferenceItem } from './interfaces/index.js';
+import { GeminiClient } from './gemini-client.js';
 import { WorkspacePaths } from './workspace-paths.js';
 
-export interface ReferenceItem {
-  readonly group: string;
-  readonly name: string;
-  readonly file: string;
-  readonly caption: string;
-}
+export type { ReferenceItem };
 
 export class TrainingReferences {
   private static cachedItems: readonly ReferenceItem[] | null = null;

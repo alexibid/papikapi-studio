@@ -1,77 +1,17 @@
 import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { GeminiClient, InlineImage } from '../common/gemini-client.js';
+import type {
+  AlternativesStepDefinition,
+  GenerateAlternativesRequest,
+  GenerateAlternativesResponse,
+} from './stage-0.interface.js';
+import { GeminiClient } from '../common/gemini-client.js';
 import { ManifestManager } from '../common/manifest-manager.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { RunPodClient } from '../common/runpod-client.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
 
-interface AlternativesStepOutputs {
-  readonly sheet_resource: string;
-  readonly sheet_public: string;
-  readonly public_url_pattern: string;
-  readonly manifest: string;
-  readonly allowed_extensions: readonly string[];
-}
-
-interface AlternativesServerlessConfig {
-  readonly env_endpoint_key: string;
-  readonly container_image: string;
-  readonly api_url_pattern: string;
-  readonly async_url_pattern: string;
-  readonly status_url_pattern: string;
-}
-
-interface AlternativesManifestContract {
-  readonly status: string;
-  readonly costUsd: number;
-  readonly costNote: string;
-}
-
-interface AlternativesStepParameters {
-  readonly default_model: string;
-  readonly fallback_model: string;
-  readonly inference_engine: string;
-  readonly aspect_ratio: string;
-  readonly columns: number;
-  readonly rows: number;
-  readonly alternatives_count: number;
-  readonly max_reference_images: number;
-  readonly system_prompt: string;
-  readonly negative_prompt: string;
-  readonly prompt_templates: {
-    readonly specific_subject: string;
-    readonly generic_category: string;
-  };
-  readonly reference_note_template: string;
-  readonly maturity_descriptions: readonly string[];
-  readonly critical_rules: readonly string[];
-}
-
-interface AlternativesStepDefinition {
-  readonly id: string;
-  readonly stage_dir: string;
-  readonly serverless?: AlternativesServerlessConfig;
-  readonly parameters: AlternativesStepParameters;
-  readonly outputs: AlternativesStepOutputs;
-  readonly manifest_contract: AlternativesManifestContract;
-}
-
-export interface GenerateAlternativesRequest {
-  readonly name: string;
-  readonly prompt: string;
-  readonly referenceImages?: readonly InlineImage[];
-  readonly engineOverride?: string;
-}
-
-export interface GenerateAlternativesResponse {
-  readonly name: string;
-  readonly prompt: string;
-  readonly resourcePath: string;
-  readonly publicPath: string;
-  readonly seconds: number;
-  readonly costUsd: number;
-}
+export type { GenerateAlternativesRequest, GenerateAlternativesResponse };
 
 export class AlternativesGenerator {
   private static readonly stepId = 's0-step-1';
@@ -127,6 +67,13 @@ export class AlternativesGenerator {
     let imageBytes: Buffer;
     let mime: string;
     let seconds: number;
+    let costUsd: number;
+    let costNote: string;
+
+    const contract = step.manifest_contract;
+    const config = PipelineConfigLoader.load();
+    const pricing = config.pricing as { runpod_flux_usd_per_sec?: number; flux_models?: Record<string, number> };
+    const fluxRate = pricing.runpod_flux_usd_per_sec ? pricing.runpod_flux_usd_per_sec : 0.00015;
 
     if (isGemini) {
       const result = await GeminiClient.generate(engine, {
@@ -138,6 +85,10 @@ export class AlternativesGenerator {
       imageBytes = result.bytes;
       mime = result.mime;
       seconds = result.seconds;
+      costUsd = pricing.flux_models && pricing.flux_models[engine] !== undefined
+        ? pricing.flux_models[engine]
+        : contract.costUsd;
+      costNote = contract.costNote;
     } else {
       const envKey = step.serverless ? step.serverless.env_endpoint_key : 'RUNPOD_FLUX_ENDPOINT_ID';
       const endpointId = RunPodClient.getEndpointId(envKey);
@@ -145,7 +96,7 @@ export class AlternativesGenerator {
       const payload = {
         prompt: fullPrompt,
         negative_prompt: params.negative_prompt,
-        reference_images: referenceImages.map((img) => img.data),
+        reference_images: referenceImages.map((img) => img.bytes.toString('base64')),
         columns: params.columns,
         rows: params.rows,
       };
@@ -157,6 +108,8 @@ export class AlternativesGenerator {
       imageBytes = Buffer.from(result.output.sheet_base64, 'base64');
       mime = result.output.mime ? result.output.mime : 'image/jpeg';
       seconds = result.seconds;
+      costUsd = Math.round(seconds * fluxRate * 10000) / 10000;
+      costNote = `RunPod Serverless FLUX.2 ($${costUsd.toFixed(4)})`;
     }
 
     const stage0Dir = join(WorkspacePaths.resourcePath(name), step.stage_dir);
@@ -179,20 +132,6 @@ export class AlternativesGenerator {
 
     writeFileSync(resourceFile, imageBytes);
     writeFileSync(publicFile, imageBytes);
-
-    const contract = step.manifest_contract;
-    const config = PipelineConfigLoader.load();
-    const pricing = config.pricing as { runpod_flux_usd_per_sec?: number; flux_models?: Record<string, number> };
-    const fluxRate = pricing.runpod_flux_usd_per_sec ? pricing.runpod_flux_usd_per_sec : 0.00015;
-    const costUsd = !isGemini
-      ? Math.round(seconds * fluxRate * 10000) / 10000
-      : (pricing.flux_models && pricing.flux_models[engine] !== undefined
-        ? pricing.flux_models[engine]
-        : contract.costUsd);
-
-    const costNote = !isGemini
-      ? `RunPod Serverless FLUX.2 ($${costUsd.toFixed(4)})`
-      : contract.costNote;
 
     ManifestManager.writeStepResult(name, this.stepId, {
       status: contract.status,

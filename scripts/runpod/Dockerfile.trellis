@@ -7,33 +7,44 @@ ENV ATTN_BACKEND=sdpa
 ENV SPARSE_ATTN_BACKEND=sdpa
 ENV XFORMERS_DISABLED=1
 
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=all
+ENV PYOPENGL_PLATFORM=egl
+
+ENV PYTHONPATH="/app/trellis:${PYTHONPATH}"
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     wget \
     curl \
     ninja-build \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
     build-essential \
+    libusb-1.0-0 \
+    libusb-1.0-0-dev \
+    libgl1 \
+    libglvnd0 \
+    libglvnd-dev \
+    libgl1-mesa-dev \
+    libegl1 \
+    libegl1-mesa-dev \
+    libgles2 \
+    libgles2-mesa-dev \
+    libglib2.0-0 \
+    libgomp1 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir \
-    runpod \
-    pillow \
-    trimesh \
-    fastapi \
-    spconv-cu120 \
-    diffusers \
-    transformers \
-    imageio \
-    imageio-ffmpeg
+    pip install --no-cache-dir runpod fastapi diffusers
 
 RUN git clone --recurse-submodules https://github.com/microsoft/TRELLIS.git /app/trellis && \
     cd /app/trellis && \
-    pip install --no-cache-dir -e .
+    bash setup.sh --basic --spconv --diffoctreerast --nvdiffrast --kaolin && \
+    pip install --no-cache-dir "transformers>=4.44.0,<4.46.0"
 
 COPY rp_handler.trellis.py /app/rp_handler.trellis.py
 

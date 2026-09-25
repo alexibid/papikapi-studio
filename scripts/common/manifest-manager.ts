@@ -1,29 +1,10 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import type { ModelManifest, StepRecord, StepRecordInput } from './interfaces/index.js';
+import { PipelineConfigLoader } from './pipeline-config.js';
 import { WorkspacePaths } from './workspace-paths.js';
 
-export interface StepRecordInput {
-  readonly status: string;
-  readonly seconds: number;
-  readonly costUsd: number;
-  readonly at?: string;
-  readonly costNote?: string;
-  readonly data?: Record<string, unknown>;
-  readonly metrics?: Record<string, unknown>;
-}
-
-export interface StepRecord extends StepRecordInput {
-  readonly stageId: string;
-}
-
-export interface ModelManifest {
-  readonly version: number;
-  readonly subject: string;
-  readonly stages: Record<string, StepRecord>;
-  readonly totalSeconds: number;
-  readonly totalCostUsd: number;
-  readonly updatedAt: string;
-}
+export type { StepRecordInput, StepRecord, ModelManifest };
 
 export class ManifestManager {
   private static readonly manifestVersion = 1;

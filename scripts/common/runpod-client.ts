@@ -1,25 +1,9 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import type { RunPodApiResponse, RunPodExecuteOptions, RunPodJobResult } from './interfaces/index.js';
 import { WorkspacePaths } from './workspace-paths.js';
 
-export interface RunPodJobResult<T> {
-  readonly output: T;
-  readonly seconds: number;
-}
-
-export interface RunPodExecuteOptions {
-  readonly onProgress?: (elapsedSeconds: number) => void;
-  readonly pollIntervalMs?: number;
-  readonly timeoutMs?: number;
-}
-
-interface RunPodApiResponse<T> {
-  readonly id: string;
-  readonly status: 'IN_QUEUE' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED' | 'CANCELLED' | 'TIMED_OUT';
-  readonly output?: T;
-  readonly error?: string;
-  readonly executionTime?: number;
-}
+export type { RunPodJobResult, RunPodExecuteOptions, RunPodApiResponse };
 
 export class RunPodClient {
   private static cachedApiKey: string | null = null;
