@@ -6,12 +6,13 @@ ENV SPCONV_ALGO=native
 ENV ATTN_BACKEND=sdpa
 ENV SPARSE_ATTN_BACKEND=sdpa
 ENV XFORMERS_DISABLED=1
+ENV TORCH_CUDA_ARCH_LIST="7.5;8.0;8.6;8.9;9.0+PTX"
 
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=all
 ENV PYOPENGL_PLATFORM=egl
 
-ENV PYTHONPATH="/app/trellis:${PYTHONPATH}"
+ENV PYTHONPATH="/app/trellis"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
@@ -45,10 +46,11 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 RUN git clone --recurse-submodules https://github.com/microsoft/TRELLIS.git /app/trellis && \
     cd /app/trellis && \
-    bash setup.sh --basic --spconv --diffoctreerast --nvdiffrast --kaolin && \
+    sed -i "s/torch.cuda.is_available()/True/g" setup.sh && \
+    bash setup.sh --basic --spconv --diffoctreerast --nvdiffrast --kaolin --mipgaussian && \
     pip install --no-cache-dir "transformers>=4.44.0,<4.46.0" "numpy<2"
 
-RUN python -c "import numpy; import torch; import open3d; from trellis.pipelines import TrellisImageTo3DPipeline; print('[BUILD VERIFIED] Imports succeed! NumPy:', numpy.__version__, 'PyTorch:', torch.__version__, 'Open3D:', open3d.__version__)"
+RUN python -c "import numpy; import torch; import open3d; from trellis.pipelines import TrellisImageTo3DPipeline; from trellis.utils import postprocessing_utils; print('[BUILD VERIFIED] Imports succeed! NumPy:', numpy.__version__, 'PyTorch:', torch.__version__, 'Open3D:', open3d.__version__)"
 
 COPY rp_handler.trellis.py /app/rp_handler.trellis.py
 
