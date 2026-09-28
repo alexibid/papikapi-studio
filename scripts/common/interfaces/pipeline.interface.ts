@@ -33,6 +33,7 @@ export interface PipelineStep {
   readonly name: string;
   readonly label: string;
   readonly emoji: string;
+  readonly expected_seconds: number;
   readonly script: string;
   readonly stage_dir: string;
   readonly depends_on?: {

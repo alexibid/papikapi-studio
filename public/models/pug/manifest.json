@@ -1,8 +1,35 @@
 {
-  "name": "pug",
-  "group": "dogs",
-  "subject": "a cute sitting pug puppy, pure warm fawn facets with dark black-brown mask and wrinkled brow lines painted flat on the muzzle facet as a 2D UV texture map, curled tail, exactly two large round eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.068Z"
+  "version": 1,
+  "subject": "pug",
+  "stages": {
+    "s0-step-1": {
+      "stageId": "s0-step-1",
+      "at": "2026-09-26T17:00:27.653Z",
+      "status": "DONE",
+      "seconds": 38.88,
+      "costUsd": 0.0058,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0058)",
+      "data": {
+        "prompt": "pug",
+        "referenceCount": 1,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s0-step-2": {
+      "stageId": "s0-step-2",
+      "at": "2026-09-26T17:00:38.566Z",
+      "status": "DONE",
+      "seconds": 0.13,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 44108
+      }
+    }
+  },
+  "totalSeconds": 39.01,
+  "totalCostUsd": 0.0058,
+  "updatedAt": "2026-09-26T17:00:38.567Z"
 }

@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type {
   PickAlternativeRequest,
@@ -8,6 +8,7 @@ import type {
 import { ImageCropper } from '../common/image-cropper.js';
 import { ManifestManager } from '../common/manifest-manager.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
+import { ProgressHub } from '../common/progress-hub.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
 
 export type { PickAlternativeRequest, PickAlternativeResponse };
@@ -42,6 +43,10 @@ export class AlternativePicker {
       throw new Error(`Alternatives sheet not found for '${name}'`);
     }
 
+    const startMsg = step.messages.start.replace('{pick}', String(pick)).replace('{model}', name);
+    console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
+    ProgressHub.report(name, this.stepId, startMsg);
+
     const start = Date.now();
     const sheetBuffer = readFileSync(sheetPath);
     const croppedBuffer = await ImageCropper.cropCell({
@@ -70,14 +75,34 @@ export class AlternativePicker {
     writeFileSync(resourceArt, croppedBuffer);
     writeFileSync(publicArt, croppedBuffer);
 
-    const resPattern = step.outputs.art_pick_resource_pattern.replace('{pick}', String(pick));
-    const pubPattern = step.outputs.art_pick_public_pattern.replace('{pick}', String(pick));
-    const resourceArtPick = join(stage0Dir, resPattern);
-    const publicArtPick = join(publicDir, pubPattern);
-    writeFileSync(resourceArtPick, croppedBuffer);
-    writeFileSync(publicArtPick, croppedBuffer);
+    const pickResCutout = join(stage0Dir, `step-1-art-pick-${pick}-cutout.png`);
+    const activeResCutout = join(stage0Dir, 'step-1-art-cutout.png');
+    const activePubCutout = join(publicDir, 'art-cutout.png');
+    if (existsSync(pickResCutout)) {
+      copyFileSync(pickResCutout, activeResCutout);
+      copyFileSync(pickResCutout, activePubCutout);
+    } else {
+      if (existsSync(activeResCutout)) unlinkSync(activeResCutout);
+      if (existsSync(activePubCutout)) unlinkSync(activePubCutout);
+    }
+
+    const totalPicks = columns * rows;
+    for (let p = 1; p <= totalPicks; p++) {
+      const pResPattern = step.outputs.art_pick_resource_pattern.replace('{pick}', String(p));
+      const pPubPattern = step.outputs.art_pick_public_pattern.replace('{pick}', String(p));
+      const pResPath = join(stage0Dir, pResPattern);
+      const pPubPath = join(publicDir, pPubPattern);
+      const pBuffer = p === pick ? croppedBuffer : await ImageCropper.cropCell({ imageBuffer: sheetBuffer, columns, rows, pickIndex: p, quality });
+      writeFileSync(pResPath, pBuffer);
+      writeFileSync(pPubPath, pBuffer);
+    }
 
     const duration = Math.round(((Date.now() - start) / 1000) * 100) / 100;
+    const completedMsg = step.messages.completed
+      .replace('{pick}', String(pick))
+      .replace('{duration}', String(duration));
+    console.log(`  \x1b[32m${completedMsg}\x1b[0m`);
+    ProgressHub.report(name, this.stepId, completedMsg);
     const contract = step.manifest_contract;
 
     ManifestManager.writeStepResult(name, this.stepId, {

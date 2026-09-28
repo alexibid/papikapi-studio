@@ -44,7 +44,7 @@ The application combines a modern Angular frontend, a local orchestration backen
 
 - **Interactive 3D Web Studio**: Built with Angular 19 and Three.js, featuring real-time orbit controls, wireframe toggles, tactile papercraft process loaders, and responsive model switching.
 - **Deterministic 2-Stage Pipeline**:
-  - **Stage 0 (Art & Alternatives)**: Generates a 3×2 grid of 6 styled papercraft variations sharing a strict orthogonal axonometric top-right camera angle and zero floor shadows, then crops the chosen pick.
+  - **Stage 0 (Art & Alternatives)**: Generates a 3×2 grid of 6 styled papercraft variations sharing a strict orthogonal axonometric top-left camera angle and zero floor shadows, then crops the chosen pick.
   - **Stage 1 (3D Synthesis)**: Uses Microsoft TRELLIS to reconstruct a watertight 3D mesh with planar low-poly facets and 2D UV texture mapping in ~20 seconds.
 - **Scale-to-Zero GPU Infrastructure**: Deployed on RunPod Serverless workers (`papikapi-flux` and `papikapi-trellis`) billed strictly per second of active compute ($0.00 idle cost).
 - **Single Source of Truth (`pipeline.json`)**: All prompts, system instructions, pricing rates, and GPU parameters live in [`pipeline.json`](./pipeline.json).

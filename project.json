@@ -119,6 +119,14 @@
         "cwd": "apps/kirigami-studio"
       }
     },
+    "lora:dataset": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/training/lora/lora-dataset-builder.ts",
+        "cwd": "apps/kirigami-studio"
+      }
+    },
     "stage:0": {
       "cache": false,
       "executor": "nx:run-commands",
@@ -196,6 +204,22 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-1",
+        "cwd": "apps/kirigami-studio"
+      }
+    },
+    "stage:1:step:2": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-2",
+        "cwd": "apps/kirigami-studio"
+      }
+    },
+    "stage-1:step-2": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-2",
         "cwd": "apps/kirigami-studio"
       }
     }

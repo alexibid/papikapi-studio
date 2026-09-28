@@ -1,1 +1,14 @@
-[]
+[
+ {
+  "id": "dalmatian",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "sonic",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ }
+]

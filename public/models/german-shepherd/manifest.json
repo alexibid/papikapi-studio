@@ -1,8 +1,35 @@
 {
-  "name": "german-shepherd",
-  "group": "dogs",
-  "subject": "a cute standing german shepherd puppy, pure tan facets with black saddle and black muzzle markings painted flat across the back and face as a 2D UV texture map, pointed ears, exactly two eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.067Z"
+  "version": 1,
+  "subject": "german-shepherd",
+  "stages": {
+    "s0-step-1": {
+      "stageId": "s0-step-1",
+      "at": "2026-09-26T16:59:00.481Z",
+      "status": "DONE",
+      "seconds": 34.32,
+      "costUsd": 0.0051,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0051)",
+      "data": {
+        "prompt": "german shepherd",
+        "referenceCount": 1,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s0-step-2": {
+      "stageId": "s0-step-2",
+      "at": "2026-09-26T16:59:06.200Z",
+      "status": "DONE",
+      "seconds": 0.15,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 37467
+      }
+    }
+  },
+  "totalSeconds": 34.47,
+  "totalCostUsd": 0.0051,
+  "updatedAt": "2026-09-26T16:59:06.201Z"
 }

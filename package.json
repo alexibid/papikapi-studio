@@ -9,9 +9,14 @@
     "stage:0:step:2": "tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-2",
     "stage:1": "tsx scripts/stage-orchestrator.ts --stage 1",
     "stage:1:step:1": "tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-1",
+    "stage:1:step:2": "tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-2",
     "server": "tsx scripts/server.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^4.3.0",
+    "sharp": "^0.35.5"
   }
 }

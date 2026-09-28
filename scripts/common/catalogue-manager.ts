@@ -11,7 +11,7 @@ export class CatalogueManager {
     }
 
     const step2 = PipelineConfigLoader.getStep('s0-step-2');
-    const step3 = PipelineConfigLoader.getStep('s1-step-1');
+    const step3 = PipelineConfigLoader.getStep('s1-step-2');
     const glbFilename = step3.outputs.model_public;
     const artFilename = step2.outputs.art_public;
 

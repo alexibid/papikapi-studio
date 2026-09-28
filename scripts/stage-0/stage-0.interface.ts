@@ -37,6 +37,7 @@ export interface AlternativesStepParameters {
     readonly specific_subject: string;
     readonly generic_category: string;
   };
+  readonly style_reference_note: string;
   readonly reference_note_template: string;
   readonly maturity_descriptions: readonly string[];
   readonly critical_rules: readonly string[];
@@ -53,6 +54,11 @@ export interface AlternativesStepDefinition {
   readonly parameters: AlternativesStepParameters;
   readonly outputs: AlternativesStepOutputs;
   readonly manifest_contract: AlternativesManifestContract;
+}
+
+export interface ReferenceComposition {
+  readonly hasStyle: boolean;
+  readonly subjectCount: number;
 }
 
 export interface GenerateAlternativesRequest {
@@ -108,6 +114,10 @@ export interface PickStepDefinition {
   readonly outputs: PickStepOutputs;
   readonly parameters: PickStepParameters;
   readonly manifest_contract: PickManifestContract;
+  readonly messages: {
+    readonly start: string;
+    readonly completed: string;
+  };
 }
 
 export interface PickAlternativeRequest {

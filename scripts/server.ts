@@ -4,12 +4,13 @@ import { join } from 'node:path';
 import { CatalogueManager } from './common/catalogue-manager.js';
 import { GeminiClient } from './common/gemini-client.js';
 import { PipelineConfigLoader } from './common/pipeline-config.js';
-import { TrainingReferences } from './common/training-references.js';
+import { ProgressHub } from './common/progress-hub.js';
 import { WorkspacePaths } from './common/workspace-paths.js';
 import type { InlineImage } from './common/interfaces/index.js';
 import { AlternativesGenerator } from './stage-0/step-1-alternatives.js';
 import { AlternativePicker } from './stage-0/step-2-pick.js';
-import { TrellisGenerator } from './stage-1/step-1-trellis.js';
+import { CutoutGenerator } from './stage-1/step-1-cutout.js';
+import { TrellisGenerator } from './stage-1/step-2-trellis.js';
 
 export class CreatorApiServer {
   private readonly port: number;
@@ -63,6 +64,50 @@ export class CreatorApiServer {
     };
   }
 
+  private cleanModelName(name: string): string {
+    return name.trim().toLowerCase().replace(/\s+/g, '-');
+  }
+
+  private streamProgress(req: IncomingMessage, res: ServerResponse, model: string): void {
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      Connection: 'keep-alive',
+    });
+    res.write(': connected\n\n');
+    const unsubscribe = ProgressHub.subscribe(model, (event) => {
+      res.write(`data: ${JSON.stringify(event)}\n\n`);
+    });
+    req.on('close', unsubscribe);
+  }
+
+  private async buildModel(name: string, pick: number) {
+    ProgressHub.begin(name, ['s0-step-2', 's1-step-1', 's1-step-2']);
+    try {
+      const cropResult = await AlternativePicker.execute({ name, pick });
+      await CutoutGenerator.execute(name, pick);
+      const trellisResult = await TrellisGenerator.execute(name, pick);
+      CatalogueManager.sync();
+      ProgressHub.finish(name);
+      return { cropResult, trellisResult };
+    } catch (err) {
+      ProgressHub.fail(name, (err as Error).message);
+      throw err;
+    }
+  }
+
+  private async generateAlternatives(name: string, prompt: string, referenceImages: readonly InlineImage[]) {
+    ProgressHub.begin(name, ['s0-step-1']);
+    try {
+      const result = await AlternativesGenerator.execute({ name, prompt, referenceImages });
+      ProgressHub.finish(name);
+      return result;
+    } catch (err) {
+      ProgressHub.fail(name, (err as Error).message);
+      throw err;
+    }
+  }
+
   public start(): void {
     const server = http.createServer(async (req, res) => {
       this.setCors(res);
@@ -97,7 +142,7 @@ export class CreatorApiServer {
           return;
         }
 
-        const cleanName = name.trim().toLowerCase().replace(/\s+/g, '-');
+        const cleanName = this.cleanModelName(name);
         const step1 = PipelineConfigLoader.getStep('s0-step-1');
         const stage0Dir = join(WorkspacePaths.resourcePath(cleanName), step1.stage_dir);
         const publicDir = WorkspacePaths.modelPath(cleanName);
@@ -135,10 +180,10 @@ export class CreatorApiServer {
           return;
         }
 
-        const cleanName = name.trim().toLowerCase().replace(/\s+/g, '-');
+        const cleanName = this.cleanModelName(name);
         const step1 = PipelineConfigLoader.getStep('s0-step-1');
         const step2 = PipelineConfigLoader.getStep('s0-step-2');
-        const step3 = PipelineConfigLoader.getStep('s1-step-1');
+        const step3 = PipelineConfigLoader.getStep('s1-step-2');
 
         const stage0Dir = join(WorkspacePaths.resourcePath(cleanName), step1.stage_dir);
         const publicDir = WorkspacePaths.modelPath(cleanName);
@@ -208,7 +253,7 @@ export class CreatorApiServer {
             return;
           }
 
-          const cleanName = body.name.trim().toLowerCase().replace(/\s+/g, '-');
+          const cleanName = this.cleanModelName(body.name);
           const resourceDir = WorkspacePaths.resourcePath(cleanName);
           const publicDir = WorkspacePaths.modelPath(cleanName);
 
@@ -224,6 +269,11 @@ export class CreatorApiServer {
         } catch (err) {
           this.sendJson(res, 500, { error: (err as Error).message });
         }
+        return;
+      }
+
+      if (req.method === 'GET' && url.pathname === '/api/creator/progress') {
+        this.streamProgress(req, res, this.cleanModelName(url.searchParams.get('name') ?? ''));
         return;
       }
 
@@ -243,20 +293,9 @@ export class CreatorApiServer {
             ? body.images.map((img) => this.dataUrlToImage(img))
             : [];
 
-          const cleanName = body.name.trim().toLowerCase().replace(/\s+/g, '-');
-          if (referenceImages.length === 0) {
-            const matchByName = TrainingReferences.getInlineImage(cleanName);
-            const trainingMatch = matchByName !== null ? matchByName : TrainingReferences.getInlineImage(body.prompt);
-            if (trainingMatch) {
-              referenceImages.push(trainingMatch.image);
-            }
-          }
+          const cleanName = this.cleanModelName(body.name);
 
-          const result = await AlternativesGenerator.execute({
-            name: cleanName,
-            prompt: body.prompt,
-            referenceImages,
-          });
+          const result = await this.generateAlternatives(cleanName, body.prompt, referenceImages);
 
           this.sendJson(res, 200, { success: true, ...result });
         } catch (err) {
@@ -277,17 +316,11 @@ export class CreatorApiServer {
             return;
           }
 
-          const cleanName = body.name.trim().toLowerCase().replace(/\s+/g, '-');
+          const cleanName = this.cleanModelName(body.name);
           const pick = Number(body.pick);
-          const cropResult = await AlternativePicker.execute({
-            name: cleanName,
-            pick,
-          });
+          const { cropResult, trellisResult } = await this.buildModel(cleanName, pick);
 
-          const trellisResult = await TrellisGenerator.execute(cleanName, pick);
-          CatalogueManager.sync();
-
-          const step3 = PipelineConfigLoader.getStep('s1-step-1');
+          const step3 = PipelineConfigLoader.getStep('s1-step-2');
           this.sendJson(res, 200, {
             success: true,
             name: cleanName,

@@ -111,4 +111,49 @@ export class GeminiClient {
 
     return { bytes, mime, seconds: duration };
   }
+
+  public static async auditVision(model: string, options: { system?: string; prompt: string; images: Array<{ bytes: Buffer; mime: string }> }): Promise<string> {
+    const key = this.readApiKey();
+    const parts: Array<Record<string, unknown>> = [];
+
+    for (const img of options.images) {
+      parts.push({
+        inlineData: {
+          mimeType: img.mime,
+          data: img.bytes.toString('base64'),
+        },
+      });
+    }
+    parts.push({ text: options.prompt });
+
+    const payload: Record<string, unknown> = {
+      contents: [{ role: 'user', parts }],
+      generationConfig: {
+        responseModalities: ['TEXT'],
+      },
+      ...(options.system ? { systemInstruction: { parts: [{ text: options.system }] } } : {}),
+    };
+
+    const url = `${this.endpoint}/${model}:generateContent?key=${key}`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const err = await response.text().catch(() => 'Unknown error');
+      throw new Error(`Gemini API error (${response.status}): ${err}`);
+    }
+
+    const json = await response.json() as {
+      candidates?: Array<{
+        content?: {
+          parts?: Array<{ text?: string }>;
+        };
+      }>;
+    };
+
+    return json.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+  }
 }

@@ -11,11 +11,11 @@ import { CatalogueManager } from './common/catalogue-manager.js';
 import { GeminiClient } from './common/gemini-client.js';
 import { PipelineConfigLoader } from './common/pipeline-config.js';
 import { StageReporter } from './common/stage-reporter.js';
-import { TrainingReferences } from './common/training-references.js';
 import { WorkspacePaths } from './common/workspace-paths.js';
 import { AlternativesGenerator } from './stage-0/step-1-alternatives.js';
 import { AlternativePicker } from './stage-0/step-2-pick.js';
-import { TrellisGenerator } from './stage-1/step-1-trellis.js';
+import { CutoutGenerator } from './stage-1/step-1-cutout.js';
+import { TrellisGenerator } from './stage-1/step-2-trellis.js';
 
 export class StageOrchestrator {
   private static parseCliArgs(): CliArguments {
@@ -97,6 +97,14 @@ export class StageOrchestrator {
       const manifest = join(stageDir, stepOutputs.manifest);
       if (existsSync(manifest)) { unlinkSync(manifest); cleaned.push(basename(manifest)); }
     } else if (step.id === 's1-step-1') {
+      const stepOutputs = step.outputs as { cutout_resource: string; cutout_public: string; manifest: string };
+      const resCutout = join(stageDir, stepOutputs.cutout_resource);
+      if (existsSync(resCutout)) { unlinkSync(resCutout); cleaned.push(basename(resCutout)); }
+      const pubCutout = join(publicDir, stepOutputs.cutout_public);
+      if (existsSync(pubCutout)) { unlinkSync(pubCutout); cleaned.push(`public/${basename(pubCutout)}`); }
+      const manifest = join(stageDir, stepOutputs.manifest);
+      if (existsSync(manifest)) { unlinkSync(manifest); cleaned.push(basename(manifest)); }
+    } else if (step.id === 's1-step-2') {
       const stepOutputs = step.outputs as { model_resource: string; model_public: string; manifest: string };
       const resModel = join(stageDir, stepOutputs.model_resource);
       if (existsSync(resModel)) { unlinkSync(resModel); cleaned.push(basename(resModel)); }
@@ -163,13 +171,6 @@ export class StageOrchestrator {
               const mime = GeminiClient.sniffMime(bytes);
               referenceImages = [{ bytes, mime }];
               console.log(`  [s0-step-1] Visual Reference: ${refPath} (${mime}, ${(bytes.length / 1024).toFixed(1)} KB)`);
-            } else {
-              const matchByName = TrainingReferences.getInlineImage(model);
-              const trainingMatch = matchByName !== null ? matchByName : TrainingReferences.getInlineImage(defaultPrompt);
-              if (trainingMatch) {
-                referenceImages = [trainingMatch.image];
-                console.log(`  [s0-step-1] 🎨 Training Reference Auto-Matched: ${trainingMatch.item.file} (${trainingMatch.item.name} in ${trainingMatch.item.group})`);
-              }
             }
             const res = await AlternativesGenerator.execute({
               name: model,
@@ -189,13 +190,21 @@ export class StageOrchestrator {
             const size = statSync(res.resourceArtPath).size;
             console.log(`  [s0-step-2] Output Art: ${res.resourceArtPath} (${(size / 1024).toFixed(1)} KB)`);
           } else if (step.id === 's1-step-1') {
-            const trellisStep = PipelineConfigLoader.getStep('s1-step-1') as unknown as { inputs: { stage_dir: string; art_resource: string } };
-            const artPath = join(WorkspacePaths.resourcePath(model), trellisStep.inputs.stage_dir, trellisStep.inputs.art_resource);
+            const cutoutStep = PipelineConfigLoader.getStep('s1-step-1') as unknown as { inputs: { stage_dir: string; art_resource: string } };
+            const artPath = join(WorkspacePaths.resourcePath(model), cutoutStep.inputs.stage_dir, cutoutStep.inputs.art_resource);
             const artSize = existsSync(artPath) ? statSync(artPath).size : 0;
             console.log(`  [s1-step-1] Input Art: ${artPath} (${(artSize / 1024).toFixed(1)} KB)`);
+            const res = await CutoutGenerator.execute(model, flags.pick !== null ? flags.pick : undefined);
+            const size = statSync(res.outputPath).size;
+            console.log(`  [s1-step-1] Output Cutout: ${res.outputPath} (${(size / 1024).toFixed(1)} KB)`);
+          } else if (step.id === 's1-step-2') {
+            const trellisStep = PipelineConfigLoader.getStep('s1-step-2') as unknown as { inputs: { stage_dir: string; cutout_resource: string } };
+            const cutoutPath = join(WorkspacePaths.resourcePath(model), trellisStep.inputs.stage_dir, trellisStep.inputs.cutout_resource);
+            const cutoutSize = existsSync(cutoutPath) ? statSync(cutoutPath).size : 0;
+            console.log(`  [s1-step-2] Input Cutout: ${cutoutPath} (${(cutoutSize / 1024).toFixed(1)} KB)`);
             const res = await TrellisGenerator.execute(model, flags.pick !== null ? flags.pick : undefined);
             const size = statSync(res.outputPath).size;
-            console.log(`  [s1-step-1] Output 3D Mesh: ${res.outputPath} (${(size / (1024 * 1024)).toFixed(2)} MB)`);
+            console.log(`  [s1-step-2] Output 3D Mesh: ${res.outputPath} (${(size / (1024 * 1024)).toFixed(2)} MB)`);
             CatalogueManager.sync();
           }
         } catch (err) {

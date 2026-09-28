@@ -1,8 +1,35 @@
 {
-  "name": "golden-puppy",
-  "group": "dogs",
-  "subject": "a cute sitting golden retriever puppy, pure warm butterscotch-yellow facets with cream chest facet, floppy ears, closed black nose facet, exactly two dark eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.070Z"
+  "version": 1,
+  "subject": "golden-puppy",
+  "stages": {
+    "s0-step-1": {
+      "stageId": "s0-step-1",
+      "at": "2026-09-26T17:04:16.541Z",
+      "status": "DONE",
+      "seconds": 36.03,
+      "costUsd": 0.0054,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0054)",
+      "data": {
+        "prompt": "golden puppy",
+        "referenceCount": 1,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s0-step-2": {
+      "stageId": "s0-step-2",
+      "at": "2026-09-26T17:04:25.413Z",
+      "status": "DONE",
+      "seconds": 0.18,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 39404
+      }
+    }
+  },
+  "totalSeconds": 36.21,
+  "totalCostUsd": 0.0054,
+  "updatedAt": "2026-09-26T17:04:25.414Z"
 }

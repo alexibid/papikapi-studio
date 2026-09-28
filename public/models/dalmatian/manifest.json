@@ -4,20 +4,74 @@
   "stages": {
     "s0-step-1": {
       "stageId": "s0-step-1",
-      "at": "2026-09-25T21:26:09.996Z",
+      "at": "2026-09-26T17:22:38.479Z",
       "status": "DONE",
-      "seconds": 528.67,
-      "costUsd": 0.0793,
-      "costNote": "RunPod Serverless FLUX.2 ($0.0793)",
+      "seconds": 85.76,
+      "costUsd": 0.0129,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0129)",
       "data": {
         "prompt": "dalmatian",
         "referenceCount": 1,
         "alternativesCount": 6,
         "format": "image/jpeg"
       }
+    },
+    "s0-step-2": {
+      "stageId": "s0-step-2",
+      "at": "2026-09-26T16:57:54.173Z",
+      "status": "DONE",
+      "seconds": 0.13,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 41267
+      }
+    },
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-26T17:33:24.013Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 94937
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-27T19:25:09.368Z",
+      "status": "DONE",
+      "seconds": 128.33,
+      "costUsd": 0.0205,
+      "costNote": "RunPod Serverless ($0.00016/s)",
+      "data": {
+        "fileSize": 1184612,
+        "faceCount": 500,
+        "format": "model/gltf-binary",
+        "chosenPick": 3,
+        "cached": false,
+        "device": "NVIDIA RTX 4090 Serverless Worker",
+        "parameters": {
+          "seed": 1,
+          "simplify": 0.95,
+          "target_faces": 500,
+          "texture_size": 1024
+        }
+      },
+      "metrics": {
+        "fileSize": 1184612,
+        "faceCount": 500
+      }
     }
   },
-  "totalSeconds": 528.67,
-  "totalCostUsd": 0.0793,
-  "updatedAt": "2026-09-25T21:26:10.000Z"
+  "totalSeconds": 214.23,
+  "totalCostUsd": 0.0334,
+  "updatedAt": "2026-09-27T19:25:09.371Z"
 }

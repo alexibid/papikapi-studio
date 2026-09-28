@@ -72,6 +72,10 @@ export class TrainingReferences {
     return null;
   }
 
+  public static findStyleImage(name: string, prompt: string): { image: InlineImage; item: ReferenceItem; path: string } | null {
+    return this.getInlineImage(name) ?? this.getInlineImage(prompt);
+  }
+
   public static getInlineImage(query: string): { image: InlineImage; item: ReferenceItem; path: string } | null {
     const match = this.find(query);
     if (!match) return null;

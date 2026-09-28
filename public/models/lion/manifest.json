@@ -1,10 +1,51 @@
 {
-  "name": "lion",
-  "group": "safari",
-  "subject": "a cute sitting lion cub, pure golden-yellow facets with rich chocolate-brown mane facets, closed muzzle with whisker dots painted flat as a 2D UV decal, tufted tail, exactly two eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "generatedBy": "black-forest-labs/FLUX.2-klein-4B",
-  "has3D": false,
-  "seconds": 267.15,
-  "updatedAt": "2026-09-25T13:00:14Z"
+  "version": 1,
+  "subject": "lion",
+  "stages": {
+    "s0-step-1": {
+      "stageId": "s0-step-1",
+      "at": "2026-09-28T09:15:56.664Z",
+      "status": "DONE",
+      "seconds": 320.86,
+      "costUsd": 0.0481,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0481)",
+      "data": {
+        "prompt": "lion",
+        "referenceCount": 1,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s0-step-2": {
+      "stageId": "s0-step-2",
+      "at": "2026-09-27T17:08:42.456Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 34771
+      }
+    },
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-27T17:08:54.825Z",
+      "status": "DONE",
+      "seconds": 0.67,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "cached": false,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 181006
+      }
+    }
+  },
+  "totalSeconds": 321.55,
+  "totalCostUsd": 0.0481,
+  "updatedAt": "2026-09-28T09:15:56.667Z"
 }

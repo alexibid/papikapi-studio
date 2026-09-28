@@ -1,22 +1,64 @@
-import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type {
   AlternativesStepDefinition,
+  AlternativesStepParameters,
   GenerateAlternativesRequest,
   GenerateAlternativesResponse,
+  ReferenceComposition,
 } from './stage-0.interface.js';
+import type { InlineImage } from '../common/interfaces/index.js';
 import { GeminiClient } from '../common/gemini-client.js';
+import { TrainingReferences } from '../common/training-references.js';
 import { ManifestManager } from '../common/manifest-manager.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
+import { ProgressHub } from '../common/progress-hub.js';
 import { RunPodClient } from '../common/runpod-client.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
 
 export type { GenerateAlternativesRequest, GenerateAlternativesResponse };
 
+interface FluxWorkerOutput {
+  readonly sheet_base64: string;
+  readonly mime?: string;
+  readonly lora?: string | null;
+  readonly reference_images_used?: number;
+}
+
 export class AlternativesGenerator {
   private static readonly stepId = 's0-step-1';
 
-  public static composePrompt(subject: string, referenceCount: number): { system: string; prompt: string; aspectRatio: string; model: string } {
+  private static describeWorker(output: FluxWorkerOutput): string {
+    if (output.reference_images_used === undefined) {
+      return 'outdated image (no LoRA support, references ignored)';
+    }
+    const lora = output.lora ? `LoRA ${output.lora}` : 'no LoRA';
+    return `${lora} · ${output.reference_images_used} reference image(s) used`;
+  }
+
+  private static getTrainingReferencePrompt(modelName: string): string | null {
+    const metaPath = join(process.cwd(), 'apps/kirigami-studio/scripts/training/references/metadata.jsonl');
+    const altMetaPath = join(process.cwd(), 'scripts/training/references/metadata.jsonl');
+    const targetPath = existsSync(metaPath) ? metaPath : existsSync(altMetaPath) ? altMetaPath : null;
+    if (!targetPath) return null;
+
+    try {
+      const content = readFileSync(targetPath, 'utf-8');
+      const lines = content.split('\n').filter(Boolean);
+      for (const line of lines) {
+        const item = JSON.parse(line) as { file_name: string; text: string };
+        const baseName = item.file_name.replace(/\.[^/.]+$/, '').split('/').pop();
+        if (baseName === modelName) {
+          return item.text.replace(/papikapi-style\s+/g, '');
+        }
+      }
+    } catch {
+      return null;
+    }
+    return null;
+  }
+
+  public static composePrompt(subject: string, references: ReferenceComposition, modelName?: string): { system: string; prompt: string; aspectRatio: string; model: string } {
     const step = PipelineConfigLoader.getStep(this.stepId) as unknown as AlternativesStepDefinition;
     const params = step.parameters;
     const templates = params.prompt_templates;
@@ -30,9 +72,7 @@ export class AlternativesGenerator {
     );
     const template = isGeneric ? templates.generic_category : templates.specific_subject;
 
-    const refInstruction = referenceCount > 0 && params.reference_note_template
-      ? params.reference_note_template.replace('{count}', String(referenceCount))
-      : '';
+    const refInstruction = this.composeReferenceInstruction(params, references);
 
     const maturity = !isGeneric && params.maturity_descriptions
       ? `\n\nMATURITY PROGRESSION (ROW BY ROW):\n${params.maturity_descriptions.join('\n')}`
@@ -42,8 +82,13 @@ export class AlternativesGenerator {
       ? `\n\nCRITICAL RULES:\n${params.critical_rules.map((r, i) => `${i + 1}. ${r}`).join('\n')}`
       : '';
 
+    const trainingPrompt = modelName ? this.getTrainingReferencePrompt(modelName) : null;
+    const effectiveSubject = trainingPrompt
+      ? `${subject} (${trainingPrompt})`
+      : subject;
+
     const prompt = template
-      .replace('{subject}', subject)
+      .replace('{subject}', effectiveSubject)
       .replace('{reference_instruction}', refInstruction)
       + maturity
       + critical;
@@ -55,11 +100,59 @@ export class AlternativesGenerator {
     return { system, prompt, aspectRatio, model };
   }
 
+  private static composeReferenceInstruction(params: AlternativesStepParameters, references: ReferenceComposition): string {
+    const styleNote = references.hasStyle ? params.style_reference_note : '';
+    const firstSubjectIndex = references.hasStyle ? 2 : 1;
+    const subjectNote = references.subjectCount > 0
+      ? params.reference_note_template
+        .replace('{count}', String(references.subjectCount))
+        .replace('{first}', String(firstSubjectIndex))
+      : '';
+    return [styleNote, subjectNote].filter(Boolean).join(' ');
+  }
+
+  private static composeReferenceImages(request: GenerateAlternativesRequest, maxSubjectImages: number): {
+    images: readonly InlineImage[];
+    composition: ReferenceComposition;
+  } {
+    const subjectImages = (request.referenceImages ?? []).slice(0, maxSubjectImages);
+    const style = TrainingReferences.findStyleImage(request.name, request.prompt);
+    if (style) {
+      const styleMessage = `🎨 Style Reference: ${style.item.file} (${style.item.name} in ${style.item.group})`;
+      console.log(`  [s0-step-1] ${styleMessage}`);
+      ProgressHub.report(request.name, this.stepId, styleMessage);
+    }
+    const subjectMessage = `📷 Subject Photos: ${subjectImages.length}`;
+    console.log(`  [s0-step-1] ${subjectMessage}`);
+    ProgressHub.report(request.name, this.stepId, subjectMessage);
+    return {
+      images: style ? [style.image, ...subjectImages] : subjectImages,
+      composition: { hasStyle: style !== null, subjectCount: subjectImages.length },
+    };
+  }
+
+  public static buildCellPrompts(name: string, subject: string): string[] {
+    const trainingPrompt = this.getTrainingReferencePrompt(name);
+    const details = trainingPrompt ? trainingPrompt : subject;
+
+    return [
+      `low-poly faceted 3D papercraft model of an ultra-cute baby chibi ${subject}, oversized round head, chubby compact body, tiny short legs, adorable infant proportions, ${details}, isometric 3/4 perspective, clean planar facets without black crease lines, seamless light grey #E5E5E5 background, zero shadows.`,
+      `low-poly faceted 3D papercraft model of a youthful playful young ${subject}, cheerful energetic stance, soft rounded planar geometry, ${details}, isometric 3/4 perspective, clean planar facets without black crease lines, seamless light grey #E5E5E5 background, zero shadows.`,
+      trainingPrompt
+        ? `${trainingPrompt}`
+        : `low-poly faceted 3D papercraft model of ${subject}, studio signature balanced geometric proportions, clean planar facets without black crease lines, isometric 3/4 perspective, seamless light grey background, zero shadows.`,
+      `low-poly faceted 3D papercraft model of a cute toy-like baby chibi ${subject}, bold simplified planar facets, compact rounded proportions, ${details}, isometric 3/4 perspective, zero crease lines, seamless light grey background, zero shadows.`,
+      `low-poly faceted 3D papercraft model of a lively playful ${subject}, dynamic posture, cheerful character, ${details}, isometric 3/4 perspective, zero crease lines, seamless light grey background, zero shadows.`,
+      `low-poly faceted 3D papercraft model of a structured mature ${subject}, elegant planar facets, dignified stance, ${details}, isometric 3/4 perspective, zero crease lines, seamless light grey background, zero shadows.`,
+    ];
+  }
+
   public static async execute(request: GenerateAlternativesRequest): Promise<GenerateAlternativesResponse> {
-    const { name, prompt, referenceImages = [], engineOverride } = request;
+    const { name, prompt, engineOverride } = request;
     const step = PipelineConfigLoader.getStep(this.stepId) as unknown as AlternativesStepDefinition;
     const params = step.parameters;
-    const { system, prompt: fullPrompt, aspectRatio, model: defaultModel } = this.composePrompt(prompt, referenceImages.length);
+    const { images: referenceImages, composition } = this.composeReferenceImages(request, params.max_reference_images);
+    const { system, prompt: fullPrompt, aspectRatio, model: defaultModel } = this.composePrompt(prompt, composition, name);
 
     const engine = engineOverride ? engineOverride : defaultModel;
     const isGemini = engine.toLowerCase().includes('gemini');
@@ -95,6 +188,7 @@ export class AlternativesGenerator {
 
       const payload = {
         prompt: fullPrompt,
+        cell_prompts: this.buildCellPrompts(name, prompt),
         negative_prompt: params.negative_prompt,
         reference_images: referenceImages.map((img) => img.bytes.toString('base64')),
         columns: params.columns,
@@ -103,17 +197,23 @@ export class AlternativesGenerator {
 
       const startMsg = step.messages?.start ? step.messages.start.replace('{model}', name) : `[Stage 0: Step 1] Generating 3x2 alternatives sheet for ${name}`;
       console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
+      ProgressHub.report(name, this.stepId, startMsg);
 
-      const result = await RunPodClient.execute<typeof payload, { sheet_base64: string; mime?: string }>(
+      const result = await RunPodClient.execute<typeof payload, FluxWorkerOutput>(
         endpointId,
         payload,
         {
           onProgress: (elapsed) => {
-            process.stdout.write(`\r  \x1b[36m⟳ [RunPod Serverless] Generating alternatives on FLUX.2 Serverless Worker... (${elapsed}s elapsed)\x1b[0m`);
+            const progressMsg = `⟳ [RunPod Serverless] Generating alternatives on FLUX.2 Serverless Worker... (${elapsed}s elapsed)`;
+            process.stdout.write(`\r  \x1b[36m${progressMsg}\x1b[0m`);
+            ProgressHub.report(name, this.stepId, progressMsg);
           },
         }
       );
       process.stdout.write('\r\x1b[K');
+      const workerMessage = `🧩 Worker: ${this.describeWorker(result.output)}`;
+      console.log(`  [${this.stepId}] ${workerMessage}`);
+      ProgressHub.report(name, this.stepId, workerMessage);
       imageBytes = Buffer.from(result.output.sheet_base64, 'base64');
       mime = result.output.mime ? result.output.mime : 'image/jpeg';
       seconds = result.seconds;

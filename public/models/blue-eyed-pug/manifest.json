@@ -1,8 +1,35 @@
 {
-  "name": "blue-eyed-pug",
-  "group": "dogs",
-  "subject": "a cute standing pug puppy, pure fawn-gray facets with dark muzzle mask decal, curled tail, exactly two vibrant blue eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.069Z"
+  "version": 1,
+  "subject": "blue-eyed-pug",
+  "stages": {
+    "s0-step-1": {
+      "stageId": "s0-step-1",
+      "at": "2026-09-26T17:02:27.298Z",
+      "status": "DONE",
+      "seconds": 44.8,
+      "costUsd": 0.0067,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0067)",
+      "data": {
+        "prompt": "blue eyed pug",
+        "referenceCount": 1,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s0-step-2": {
+      "stageId": "s0-step-2",
+      "at": "2026-09-26T17:02:33.920Z",
+      "status": "DONE",
+      "seconds": 0.13,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 40976
+      }
+    }
+  },
+  "totalSeconds": 44.93,
+  "totalCostUsd": 0.0067,
+  "updatedAt": "2026-09-26T17:02:33.920Z"
 }

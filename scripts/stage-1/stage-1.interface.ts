@@ -20,6 +20,7 @@ export interface TrellisStepOutputs {
 export interface TrellisServerlessConfig {
   readonly env_endpoint_key: string;
   readonly container_image: string;
+  readonly client_timeout_seconds: number;
   readonly api_url_pattern: string;
   readonly async_url_pattern: string;
   readonly status_url_pattern: string;
@@ -28,6 +29,7 @@ export interface TrellisServerlessConfig {
 export interface TrellisStepParameters {
   readonly seed: number;
   readonly simplify: number;
+  readonly target_faces: number;
   readonly texture_size: number;
   readonly ss_sampling_steps?: number;
   readonly slat_sampling_steps?: number;

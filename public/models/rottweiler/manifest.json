@@ -1,8 +1,35 @@
 {
-  "name": "rottweiler",
-  "group": "dogs",
-  "subject": "a cute standing rottweiler puppy, pure black facets with rich rust-tan markings painted flat on eyebrows, muzzle, chest, and paws as a 2D UV texture map, closed black nose facet, exactly two eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.070Z"
+  "version": 1,
+  "subject": "rottweiler",
+  "stages": {
+    "s0-step-1": {
+      "stageId": "s0-step-1",
+      "at": "2026-09-26T15:37:36.316Z",
+      "status": "DONE",
+      "seconds": 35.97,
+      "costUsd": 0.0054,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0054)",
+      "data": {
+        "prompt": "rottweiler",
+        "referenceCount": 1,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s0-step-2": {
+      "stageId": "s0-step-2",
+      "at": "2026-09-26T15:37:41.987Z",
+      "status": "DONE",
+      "seconds": 0.12,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 44886
+      }
+    }
+  },
+  "totalSeconds": 36.09,
+  "totalCostUsd": 0.0054,
+  "updatedAt": "2026-09-26T15:37:41.987Z"
 }
