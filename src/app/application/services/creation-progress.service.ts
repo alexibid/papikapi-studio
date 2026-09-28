@@ -4,6 +4,11 @@ const PROGRESS_STATES = ['running', 'done', 'failed'] as const;
 
 export type CreationProgressState = (typeof PROGRESS_STATES)[number];
 
+export interface CreationStageSummary {
+  readonly stepId: string;
+  readonly message: string;
+}
+
 export interface CreationProgress {
   readonly stepId: string;
   readonly message: string;
@@ -12,6 +17,7 @@ export interface CreationProgress {
   readonly expectedSeconds: number;
   readonly elapsedInStepMs: number;
   readonly state: CreationProgressState;
+  readonly stages: readonly CreationStageSummary[];
 }
 
 export type CreationProgressListener = (progress: CreationProgress) => void;
@@ -53,6 +59,20 @@ function isCreationProgress(value: unknown): value is CreationProgress {
     typeof value.elapsedInStepMs === 'number' &&
     'state' in value &&
     typeof value.state === 'string' &&
-    PROGRESS_STATES.some((state) => state === value.state)
+    PROGRESS_STATES.some((state) => state === value.state) &&
+    'stages' in value &&
+    Array.isArray(value.stages) &&
+    value.stages.every(isStageSummary)
+  );
+}
+
+function isStageSummary(value: unknown): value is CreationStageSummary {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'stepId' in value &&
+    typeof value.stepId === 'string' &&
+    'message' in value &&
+    typeof value.message === 'string'
   );
 }

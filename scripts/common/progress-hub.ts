@@ -2,6 +2,11 @@ import { PipelineConfigLoader } from './pipeline-config.js';
 
 export type ProgressState = 'running' | 'done' | 'failed';
 
+export interface StageSummary {
+  readonly stepId: string;
+  readonly message: string;
+}
+
 export interface ProgressEvent {
   readonly stepId: string;
   readonly message: string;
@@ -10,12 +15,14 @@ export interface ProgressEvent {
   readonly expectedSeconds: number;
   readonly elapsedInStepMs: number;
   readonly state: ProgressState;
+  readonly stages: readonly StageSummary[];
 }
 
 type ProgressListener = (event: ProgressEvent) => void;
 
 interface ProgressJob {
   readonly stepIds: readonly string[];
+  readonly messages: Map<string, string>;
   stepId: string;
   message: string;
   stepStartedAt: number;
@@ -29,6 +36,7 @@ export class ProgressHub {
   public static begin(model: string, stepIds: readonly string[]): void {
     this.jobs.set(model, {
       stepIds,
+      messages: new Map<string, string>(),
       stepId: stepIds[0],
       message: '',
       stepStartedAt: Date.now(),
@@ -45,6 +53,7 @@ export class ProgressHub {
       job.stepStartedAt = Date.now();
     }
     job.message = message;
+    job.messages.set(stepId, message);
     this.broadcast(model);
   }
 
@@ -83,14 +92,19 @@ export class ProgressHub {
   }
 
   private static toEvent(job: ProgressJob): ProgressEvent {
+    const stepIndex = job.stepIds.indexOf(job.stepId);
     return {
       stepId: job.stepId,
       message: job.message,
-      stepIndex: job.stepIds.indexOf(job.stepId),
+      stepIndex,
       stepCount: job.stepIds.length,
       expectedSeconds: PipelineConfigLoader.getStep(job.stepId).expected_seconds,
       elapsedInStepMs: Date.now() - job.stepStartedAt,
       state: job.state,
+      stages: job.stepIds.slice(0, stepIndex + 1).map((stepId) => ({
+        stepId,
+        message: job.messages.get(stepId) ?? '',
+      })),
     };
   }
 }

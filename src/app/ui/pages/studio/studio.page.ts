@@ -2,7 +2,10 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { I18nService } from '@ibid/services';
 import { BadgeComponent, ButtonComponent, CardComponent, EmptyStateComponent, ScrimComponent } from 'ibid-ui';
 import { ModelCatalogueService } from '../../../application/services/model-catalogue.service';
-import { ModelCreatorService } from '../../../application/services/model-creator.service';
+import {
+  Active3DGeneration,
+  ModelCreatorService,
+} from '../../../application/services/model-creator.service';
 import { PaperModel } from '../../../domain/models/paper-model';
 import { ModelCreatorComponent } from '../../components/model-creator/model-creator';
 import { ModelViewer3DComponent } from '../../components/model-viewer-3d/model-viewer-3d';
@@ -37,10 +40,11 @@ export class StudioPage implements OnInit {
     return this.selected()?.id || this.pendingModelId();
   });
 
+  protected readonly loaderPreview = signal<Active3DGeneration | null>(null);
+
   protected readonly activeCanvasLoader = computed(() => {
     const id = this.selectedModelId();
-    if (!id) return null;
-    return this.creator.getGeneration(id);
+    return this.loaderPreview() ?? (id ? this.creator.getGeneration(id) : null);
   });
 
   protected readonly pendingGenerations = computed(() => {
@@ -103,6 +107,13 @@ export class StudioPage implements OnInit {
     await fetch('/api/catalogue/sync', { method: 'POST' }).catch(() => {});
     await this.catalogue.load();
     this.previewVersion.set(Date.now());
+  }
+
+  protected toggleLoaderPreview(): void {
+    const isShowing = this.loaderPreview() !== null;
+    this.loaderPreview.set(
+      isShowing ? null : { modelName: this.selectedModelId(), pick: 3, startedAt: Date.now() },
+    );
   }
 
   protected openCreator(): void {
