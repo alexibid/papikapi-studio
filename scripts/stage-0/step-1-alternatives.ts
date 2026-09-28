@@ -37,7 +37,7 @@ export class AlternativesGenerator {
   }
 
   private static getTrainingReferencePrompt(modelName: string): string | null {
-    const metaPath = join(process.cwd(), 'apps/kirigami-studio/scripts/training/references/metadata.jsonl');
+    const metaPath = join(process.cwd(), 'apps/papikapi-studio/scripts/training/references/metadata.jsonl');
     const altMetaPath = join(process.cwd(), 'scripts/training/references/metadata.jsonl');
     const targetPath = existsSync(metaPath) ? metaPath : existsSync(altMetaPath) ? altMetaPath : null;
     if (!targetPath) return null;

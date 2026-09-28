@@ -28,7 +28,7 @@ import { OrbitCamera } from './orbit-camera';
 const MAX_PIXEL_RATIO = 2;
 
 @Component({
-  selector: 'kirigami-model-viewer-3d',
+  selector: 'papikapi-studio-model-viewer-3d',
   standalone: true,
   templateUrl: './model-viewer-3d.html',
   styleUrl: './model-viewer-3d.scss',

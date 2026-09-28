@@ -34,7 +34,7 @@ export class RunPodClient {
       }
     }
 
-    throw new Error('RUNPOD_API_KEY not found in environment or apps/kirigami-studio/.env');
+    throw new Error('RUNPOD_API_KEY not found in environment or apps/papikapi-studio/.env');
   }
 
   public static getEndpointId(envKeyName: string, defaultId?: string): string {
@@ -62,7 +62,7 @@ export class RunPodClient {
       return defaultId.trim();
     }
 
-    throw new Error(`RunPod serverless endpoint ID environment variable '${envKeyName}' is missing. Please define it in apps/kirigami-studio/.env or the environment.`);
+    throw new Error(`RunPod serverless endpoint ID environment variable '${envKeyName}' is missing. Please define it in apps/papikapi-studio/.env or the environment.`);
   }
 
   public static async execute<TInput extends Record<string, unknown>, TOutput>(

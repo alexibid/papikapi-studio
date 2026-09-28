@@ -340,7 +340,7 @@ export class CreatorApiServer {
 
     server.listen(this.port, () => {
       CatalogueManager.sync();
-      console.log(`Kirigami Studio API server listening on http://localhost:${this.port}`);
+      console.log(`Papikapi Studio API server listening on http://localhost:${this.port}`);
     });
 
     const shutdown = (): void => {

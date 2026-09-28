@@ -1,10 +1,10 @@
-@use 'libs/ibid-ui/src/themes/kirigami';
+@use 'libs/ibid-ui/src/themes/papikapi';
 
 :root {
   --header-nav-offset: 56px;
 }
 
-body.kirigami-studio.kirigami {
+body.papikapi-studio.papikapi {
   margin: 0;
   padding: 0;
   font-family: var(--font-family-base, system-ui, sans-serif);
@@ -13,9 +13,9 @@ body.kirigami-studio.kirigami {
   min-height: 100vh;
 
   --hand-drawn-intensity: 1;
-  --kirigami-snip: var(--kirigami-cut-1);
-  --kirigami-cut: var(--kirigami-cut-1);
-  --kirigami-paper-shadow: rgba(56, 51, 44, 0.08);
+  --papikapi-snip: var(--papikapi-cut-1);
+  --papikapi-cut: var(--papikapi-cut-1);
+  --papikapi-paper-shadow: rgba(56, 51, 44, 0.08);
 
   .m-card::after {
     display: none !important;
@@ -49,8 +49,8 @@ body.kirigami-studio.kirigami {
   .p-studio__main-tab {
     button.a-button--outlined,
     button.a-button--secondary {
-      background-color: var(--kirigami-blue-bg, #dbeafe) !important;
-      color: var(--kirigami-blue-text, #1e3a8a) !important;
+      background-color: var(--papikapi-blue-bg, #dbeafe) !important;
+      color: var(--papikapi-blue-text, #1e3a8a) !important;
       border: none !important;
 
       &:hover {
@@ -59,7 +59,7 @@ body.kirigami-studio.kirigami {
     }
 
     button.a-button--primary {
-      background-color: var(--kirigami-blue-solid, #2563eb) !important;
+      background-color: var(--papikapi-blue-solid, #2563eb) !important;
       color: #ffffff !important;
       border: none !important;
     }
@@ -67,14 +67,14 @@ body.kirigami-studio.kirigami {
 
   .p-studio__model-btn {
     &--flash button.a-button--secondary {
-      background-color: var(--kirigami-green-solid, #059669) !important;
+      background-color: var(--papikapi-green-solid, #059669) !important;
       color: #ffffff !important;
       border: none !important;
     }
 
     &--flash button.a-button--outlined {
-      background-color: var(--kirigami-green-bg, #d1fae5) !important;
-      color: var(--kirigami-green-text, #064e3b) !important;
+      background-color: var(--papikapi-green-bg, #d1fae5) !important;
+      color: var(--papikapi-green-text, #064e3b) !important;
       border: none !important;
 
       &:hover {
@@ -83,14 +83,14 @@ body.kirigami-studio.kirigami {
     }
 
     &--pro button.a-button--secondary {
-      background-color: var(--kirigami-purple-solid, #7c3aed) !important;
+      background-color: var(--papikapi-purple-solid, #7c3aed) !important;
       color: #ffffff !important;
       border: none !important;
     }
 
     &--pro button.a-button--outlined {
-      background-color: var(--kirigami-purple-bg, #ede9fe) !important;
-      color: var(--kirigami-purple-text, #5b21b6) !important;
+      background-color: var(--papikapi-purple-bg, #ede9fe) !important;
+      color: var(--papikapi-purple-text, #5b21b6) !important;
       border: none !important;
 
       &:hover {
@@ -100,8 +100,8 @@ body.kirigami-studio.kirigami {
   }
 
   .p-studio__sample-btn button {
-    background-color: var(--kirigami-yellow-bg, #fef3c7) !important;
-    color: var(--kirigami-yellow-text, #78350f) !important;
+    background-color: var(--papikapi-yellow-bg, #fef3c7) !important;
+    color: var(--papikapi-yellow-text, #78350f) !important;
     border: none !important;
 
     &:hover {
@@ -110,8 +110,8 @@ body.kirigami-studio.kirigami {
   }
 
   .p-studio__preset-btn button {
-    background-color: var(--kirigami-yellow-bg, #fef3c7) !important;
-    color: var(--kirigami-yellow-text, #78350f) !important;
+    background-color: var(--papikapi-yellow-bg, #fef3c7) !important;
+    color: var(--papikapi-yellow-text, #78350f) !important;
     border: none !important;
 
     &:hover {
@@ -121,8 +121,8 @@ body.kirigami-studio.kirigami {
 
   .p-studio__tier-btn {
     button.a-button--secondary {
-      background-color: var(--kirigami-green-bg, #d1fae5) !important;
-      color: var(--kirigami-green-text, #064e3b) !important;
+      background-color: var(--papikapi-green-bg, #d1fae5) !important;
+      color: var(--papikapi-green-text, #064e3b) !important;
       border: none !important;
 
       &:hover {
@@ -131,7 +131,7 @@ body.kirigami-studio.kirigami {
     }
 
     button.a-button--primary {
-      background-color: var(--kirigami-blue-solid, #2563eb) !important;
+      background-color: var(--papikapi-blue-solid, #2563eb) !important;
       color: #ffffff !important;
       border: none !important;
       box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3) !important;
@@ -140,14 +140,14 @@ body.kirigami-studio.kirigami {
 
   .p-studio__sheet-toggle {
     button.a-button--secondary {
-      background-color: var(--kirigami-green-solid, #059669) !important;
+      background-color: var(--papikapi-green-solid, #059669) !important;
       color: #ffffff !important;
       border: none !important;
     }
 
     button.a-button--outlined {
-      background-color: var(--kirigami-green-bg, #d1fae5) !important;
-      color: var(--kirigami-green-text, #064e3b) !important;
+      background-color: var(--papikapi-green-bg, #d1fae5) !important;
+      color: var(--papikapi-green-text, #064e3b) !important;
       border: none !important;
 
       &:hover {
@@ -158,8 +158,8 @@ body.kirigami-studio.kirigami {
 
   .p-studio__export-actions {
     ibid-button button.a-button--outlined {
-      background-color: var(--kirigami-yellow-bg, #fef3c7) !important;
-      color: var(--kirigami-yellow-text, #78350f) !important;
+      background-color: var(--papikapi-yellow-bg, #fef3c7) !important;
+      color: var(--papikapi-yellow-text, #78350f) !important;
       border: none !important;
 
       &:hover {
@@ -168,7 +168,7 @@ body.kirigami-studio.kirigami {
     }
 
     ibid-button button.a-button--primary {
-      background-color: var(--kirigami-blue-solid, #2563eb) !important;
+      background-color: var(--papikapi-blue-solid, #2563eb) !important;
       color: #ffffff !important;
       border: none !important;
     }

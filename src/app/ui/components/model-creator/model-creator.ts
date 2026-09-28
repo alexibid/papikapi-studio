@@ -14,7 +14,7 @@ interface ReferenceFile {
 }
 
 @Component({
-  selector: 'kirigami-model-creator',
+  selector: 'papikapi-studio-model-creator',
   standalone: true,
   imports: [
     CommonModule,

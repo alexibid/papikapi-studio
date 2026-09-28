@@ -18,7 +18,7 @@
   }
 
   @if (creator.isGenerating()) {
-    <kirigami-process-loader
+    <papikapi-studio-process-loader
       mode="alternatives"
       [modelName]="creator.currentName() || modelName()"
       [pick]="selectedPick()"

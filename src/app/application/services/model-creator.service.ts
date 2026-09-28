@@ -49,7 +49,7 @@ export class ModelCreatorService {
   private loadInitialGenerations(): Record<string, Active3DGeneration> {
     if (typeof window === 'undefined') return {};
     try {
-      const raw = localStorage.getItem('kirigami_active_generations');
+      const raw = localStorage.getItem('papikapi_active_generations');
       if (!raw) return {};
       const parsed = JSON.parse(raw) as Record<string, Active3DGeneration>;
       const valid: Record<string, Active3DGeneration> = {};
@@ -68,7 +68,7 @@ export class ModelCreatorService {
   private saveGenerations(gens: Record<string, Active3DGeneration>): void {
     if (typeof window === 'undefined') return;
     try {
-      localStorage.setItem('kirigami_active_generations', JSON.stringify(gens));
+      localStorage.setItem('papikapi_active_generations', JSON.stringify(gens));
     } catch {}
   }
 

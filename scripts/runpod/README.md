@@ -4,7 +4,7 @@ Scale-to-Zero serverless architecture for Stage 0 (FLUX.2 Alternatives) and Stag
 
 ## 1. Recipes
 
-Everything needed to rebuild the workers lives in `apps/kirigami-studio/scripts/runpod/`:
+Everything needed to rebuild the workers lives in `apps/papikapi-studio/scripts/runpod/`:
 
 | File | Worker | Role |
 | --- | --- | --- |
@@ -95,7 +95,7 @@ response reports the active LoRA in `output.lora`.
 
 ## 5. Configure Local Workspace
 
-Add your RunPod credentials to `apps/kirigami-studio/.env`:
+Add your RunPod credentials to `apps/papikapi-studio/.env`:
 
 ```env
 RUNPOD_API_KEY=your_runpod_api_key_here
@@ -103,4 +103,4 @@ RUNPOD_FLUX_ENDPOINT_ID=your_flux_endpoint_id
 RUNPOD_TRELLIS_ENDPOINT_ID=your_trellis_endpoint_id
 ```
 
-Or configure them directly in `apps/kirigami-studio/pipeline.json`.
+Or configure them directly in `apps/papikapi-studio/pipeline.json`.

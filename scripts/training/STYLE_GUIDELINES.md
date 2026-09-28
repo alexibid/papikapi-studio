@@ -1,6 +1,6 @@
-# Kirigami Studio — Visual Style Guide & Agent Quality Evaluation Directives
+# Papikapi Studio — Visual Style Guide & Agent Quality Evaluation Directives
 
-This document serves as the **single source of truth** and authoritative specification for the visual style of Kirigami Studio 3D models. It synthesizes the visual DNA across all 54 reference models in `scripts/training/references/` (dogs, cats, safari, forest, ocean, dinosaurs, vehicles, games, minecraft) and defines the exact verification rubric that any evaluating agent must follow before approving an asset.
+This document serves as the **single source of truth** and authoritative specification for the visual style of Papikapi Studio 3D models. It synthesizes the visual DNA across all 54 reference models in `scripts/training/references/` (dogs, cats, safari, forest, ocean, dinosaurs, vehicles, games, minecraft) and defines the exact verification rubric that any evaluating agent must follow before approving an asset.
 
 ---
 

@@ -17,7 +17,7 @@ interface ReceivedProgress {
 const TICK_MILLISECONDS = 500;
 
 @Component({
-  selector: 'kirigami-process-loader',
+  selector: 'papikapi-studio-process-loader',
   standalone: true,
   imports: [FlipTextComponent, FoldedTextComponent],
   templateUrl: './process-loader.html',

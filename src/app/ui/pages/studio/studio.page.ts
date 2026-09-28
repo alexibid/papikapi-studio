@@ -12,7 +12,7 @@ import { ModelViewer3DComponent } from '../../components/model-viewer-3d/model-v
 import { ProcessLoaderComponent } from '../../components/process-loader/process-loader';
 
 @Component({
-  selector: 'kirigami-studio-page',
+  selector: 'papikapi-studio-page',
   standalone: true,
   imports: [
     BadgeComponent,
@@ -64,7 +64,7 @@ export class StudioPage implements OnInit {
   private loadInitialSelected(): string {
     if (typeof window === 'undefined') return '';
     try {
-      return localStorage.getItem('kirigami_selected_model') || '';
+      return localStorage.getItem('papikapi_selected_model') || '';
     } catch {
       return '';
     }
@@ -73,7 +73,7 @@ export class StudioPage implements OnInit {
   private saveSelected(id: string): void {
     if (typeof window === 'undefined') return;
     try {
-      localStorage.setItem('kirigami_selected_model', id);
+      localStorage.setItem('papikapi_selected_model', id);
     } catch {}
   }
 

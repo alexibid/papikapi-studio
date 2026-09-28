@@ -1,4 +1,4 @@
-# Kirigami Studio — QA Stages & Validation Status
+# Papikapi Studio — QA Stages & Validation Status
 
 **Aggregated Execution:** `npx tsx scripts/stage-orchestrator.ts --stage <N>` (or `npx tsx scripts/stage-orchestrator.ts --stage <N> --model <name>`)  
 **Pipeline Specification:** [PIPELINE.md](PIPELINE.md)  

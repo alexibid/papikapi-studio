@@ -1,4 +1,4 @@
-# Papikapi Studio (`kirigami-studio`)
+# Papikapi Studio (`papikapi-studio`)
 
 > **Comprehensive Pipeline Specification:** See [**`PIPELINE.md`**](./PIPELINE.md) for the complete 2-stage generative architecture, stage configuration, GPU contracts, and manifest schemas.
 
@@ -55,7 +55,7 @@ The application combines a modern Angular frontend, a local orchestration backen
 ## 📁 Project Structure
 
 ```text
-apps/kirigami-studio/
+apps/papikapi-studio/
 ├── README.md                     # Project overview and entry point
 ├── PIPELINE.md                   # Full 2-stage pipeline specifications
 ├── pipeline.json                 # Single source of truth configuration
@@ -88,27 +88,27 @@ apps/kirigami-studio/
 
 ```bash
 # 1. Start backend API server on port 4502
-npx nx run kirigami-studio:server
+npx nx run papikapi-studio:server
 
 # 2. Start Angular Studio frontend on port 4500
-npm start -- kirigami-studio
+npm start -- papikapi-studio
 ```
 
 ### Running Pipeline Stages via CLI
 
 ```bash
 # Generate 3x2 alternatives grid for a model (Stage 0 Step 1)
-npx nx run kirigami-studio:stage:0:step:1 --model=dalmatian
+npx nx run papikapi-studio:stage:0:step:1 --model=dalmatian
 
 # Pick an alternative cell from the sheet (Stage 0 Step 2, e.g. pick #3)
-npx nx run kirigami-studio:stage:0:step:2 --model=dalmatian --pick=3
+npx nx run papikapi-studio:stage:0:step:2 --model=dalmatian --pick=3
 
 # Synthesize 3D low-poly model via RunPod GPU (Stage 1 Step 1)
-npx nx run kirigami-studio:stage:1:step:1 --model=dalmatian
+npx nx run papikapi-studio:stage:1:step:1 --model=dalmatian
 
 # Run complete Stage 0 or Stage 1 for a model
-npx nx run kirigami-studio:stage:0 --model=dalmatian
-npx nx run kirigami-studio:stage:1 --model=dalmatian
+npx nx run papikapi-studio:stage:0 --model=dalmatian
+npx nx run papikapi-studio:stage:1 --model=dalmatian
 ```
 
 ---

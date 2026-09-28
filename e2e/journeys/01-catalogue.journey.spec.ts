@@ -22,7 +22,7 @@ import {
   t,
 } from '../support/studio';
 
-test.describe('Kirigami Studio catalogue', () => {
+test.describe('Papikapi Studio catalogue', () => {
   test('opens a grid model, changes its difficulty and keeps it across a reload', async ({ page }, testInfo) => {
     const recorder = new FlowRecorder(page, testInfo, 'catalogue');
     await freezeClock(page, 1_700_000_000_000);

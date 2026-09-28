@@ -10,11 +10,11 @@ export default [
     rules: {
       '@angular-eslint/component-selector': [
         'error',
-        { type: 'element', prefix: 'kirigami', style: 'kebab-case' }
+        { type: 'element', prefix: 'papikapi', style: 'kebab-case' }
       ],
       '@angular-eslint/directive-selector': [
         'error',
-        { type: 'attribute', prefix: 'kirigami', style: 'camelCase' }
+        { type: 'attribute', prefix: 'papikapi', style: 'camelCase' }
       ]
     }
   }

@@ -22,7 +22,7 @@
     <ibid-scrim (dismissed)="closeCreator()" />
     <div class="p-studio__creator-overlay">
       <div class="p-studio__creator-dialog">
-        <kirigami-model-creator
+        <papikapi-studio-model-creator
           (pickSelected)="onPickSelected($event)"
           (modelCreated)="onModelCreated($event)"
           (closed)="closeCreator()"
@@ -104,11 +104,11 @@
     </section>
 
     <section class="p-studio__preview-col">
-      <kirigami-model-viewer-3d [source]="preview()" />
+      <papikapi-studio-model-viewer-3d [source]="preview()" />
 
       @if (activeCanvasLoader(); as loaderInfo) {
         <div class="p-studio__canvas-loader">
-          <kirigami-process-loader
+          <papikapi-studio-process-loader
             mode="3d"
             [modelName]="loaderInfo.modelName"
             [pick]="loaderInfo.pick"

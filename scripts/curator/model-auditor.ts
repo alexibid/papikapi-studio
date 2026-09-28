@@ -40,7 +40,7 @@ export class ModelAuditor {
   }
 
   private static loadGuidelines(): string {
-    const guidePath = join(process.cwd(), 'apps/kirigami-studio/scripts/training/STYLE_GUIDELINES.md');
+    const guidePath = join(process.cwd(), 'apps/papikapi-studio/scripts/training/STYLE_GUIDELINES.md');
     const altPath = join(process.cwd(), 'scripts/training/STYLE_GUIDELINES.md');
     const target = existsSync(guidePath) ? guidePath : existsSync(altPath) ? altPath : null;
     return target ? readFileSync(target, 'utf-8') : '';
@@ -69,7 +69,7 @@ export class ModelAuditor {
 
     if (evaluator === 'gemini') {
       console.log(`  \x1b[36m⟳ Querying Gemini 2.0 Flash Vision with STYLE_GUIDELINES rubric...\x1b[0m`);
-      const systemPrompt = `You are the lead visual quality auditor for Kirigami Studio. You strictly enforce the visual guidelines in STYLE_GUIDELINES.md. You examine the provided 3x2 alternatives sheet (Image 1) and cropped Pick #3 (Image 2) and evaluate all 6 Gate Checks (G1-G6). You must output valid JSON only conforming to the AuditVerdict schema.`;
+      const systemPrompt = `You are the lead visual quality auditor for Papikapi Studio. You strictly enforce the visual guidelines in STYLE_GUIDELINES.md. You examine the provided 3x2 alternatives sheet (Image 1) and cropped Pick #3 (Image 2) and evaluate all 6 Gate Checks (G1-G6). You must output valid JSON only conforming to the AuditVerdict schema.`;
 
       const auditPrompt = `STYLE GUIDELINES AND EVALUATION RUBRIC:
 ${guidelines}

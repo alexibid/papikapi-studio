@@ -7,8 +7,8 @@ import {
 import { THEME_CONFIG_TOKEN, ThemeConfig, ThemeService } from '@ibid/services';
 
 export const STUDIO_THEME_CONFIG: ThemeConfig = {
-  themes: [{ id: 'kirigami', label: 'Kirigami' }],
-  defaultTheme: 'kirigami',
+  themes: [{ id: 'papikapi', label: 'Papikapi' }],
+  defaultTheme: 'papikapi',
 };
 
 const wearConfiguredTheme = (): void => {

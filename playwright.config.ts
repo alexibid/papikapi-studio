@@ -13,7 +13,7 @@ export default defineConfig({
     permissions: ['clipboard-read', 'clipboard-write'],
   },
   webServer: {
-    command: 'npx nx run kirigami-studio:serve-e2e',
+    command: 'npx nx run papikapi-studio:serve-e2e',
     cwd: '../..',
     url: BASE_URL,
     reuseExistingServer: !process.env['CI'],

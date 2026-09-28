@@ -1,4 +1,4 @@
-# Automated Papercraft Pipeline (`kirigami-studio`)
+# Automated Papercraft Pipeline (`papikapi-studio`)
 
 Deterministic 2-stage generative pipeline that turns a text prompt and optional reference photos into an axonometric papercraft design (Stage 0) and synthesizes a production-ready 3D model (Stage 1).
 
@@ -9,7 +9,7 @@ Deterministic 2-stage generative pipeline that turns a text prompt and optional 
 The pipeline is implemented entirely in strict **TypeScript (`.ts`)** under Node 24 with `tsx`, abandoning all legacy Python scripts and ad-hoc `.mjs` utilities. Every module follows the **Single Responsibility Principle (SRP)** and object-oriented design:
 
 ```text
-apps/kirigami-studio/
+apps/papikapi-studio/
 ├── pipeline.json                 # 100% configurable single source of truth
 ├── resources/                    # Development working area (per model)
 │   └── [model]/
@@ -49,7 +49,7 @@ apps/kirigami-studio/
 
 ## ⚙️ Configuration: `pipeline.json`
 
-Every prompt, system instruction, maturity progression, aspect ratio, image dimension, and GPU endpoint is declared in [`pipeline.json`](file:///Users/alexsantos/Projects/ibid-workspace/apps/kirigami-studio/pipeline.json). No hardcoded prompts exist in TypeScript code.
+Every prompt, system instruction, maturity progression, aspect ratio, image dimension, and GPU endpoint is declared in [`pipeline.json`](file:///Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/pipeline.json). No hardcoded prompts exist in TypeScript code.
 
 ### Pipeline Stages Definition
 
@@ -75,34 +75,34 @@ Every prompt, system instruction, maturity progression, aspect ratio, image dime
 
 ## 🚀 Execution Commands
 
-All stages and steps are executed through Nx (`nx run kirigami-studio:...`):
+All stages and steps are executed through Nx (`nx run papikapi-studio:...`):
 
 ```bash
 # Run Stage 0 Step 1 (generate 3x2 alternatives grid for a subject)
-nx run kirigami-studio:stage:0:step:1 --model=cheetah --ref=resources/cheetah/stage-0/step-1-art.jpeg --prompt="A cute baby cheetah cub sitting down, identical pose and spots, clean low-poly papercraft facets without black crease lines"
+nx run papikapi-studio:stage:0:step:1 --model=cheetah --ref=resources/cheetah/stage-0/step-1-art.jpeg --prompt="A cute baby cheetah cub sitting down, identical pose and spots, clean low-poly papercraft facets without black crease lines"
 
 # Run Stage 0 Step 2 (pick cell 4 as final art)
-nx run kirigami-studio:stage:0:step:2 --model=cheetah --pick=4
+nx run papikapi-studio:stage:0:step:2 --model=cheetah --pick=4
 
 # Run Stage 1 Step 1 (synthesize 3D mesh via RunPod GPU)
-nx run kirigami-studio:stage:1:step:1 --model=cheetah
+nx run papikapi-studio:stage:1:step:1 --model=cheetah
 
 # Run complete Stage 0 or Stage 1 for a model
-nx run kirigami-studio:stage:0 --model=cheetah
-nx run kirigami-studio:stage:1 --model=cheetah
+nx run papikapi-studio:stage:0 --model=cheetah
+nx run papikapi-studio:stage:1 --model=cheetah
 
 # Process all discovered models across Stage 1
-nx run kirigami-studio:stage:1
+nx run papikapi-studio:stage:1
 ```
 
 ### Local API Server for Studio UI
 
 ```bash
 # Start backend API bridge on port 4502
-npx tsx apps/kirigami-studio/scripts/server.ts
+npx tsx apps/papikapi-studio/scripts/server.ts
 
 # In a separate terminal, launch the Angular Studio
-npm start -- kirigami-studio
+npm start -- papikapi-studio
 ```
 
 The Studio UI proxies `/api` requests to `http://localhost:4502`:

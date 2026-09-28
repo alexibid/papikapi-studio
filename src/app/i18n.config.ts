@@ -3,7 +3,7 @@ import { I18nConfig } from '@ibid/services';
 export const STUDIO_I18N_CONFIG: I18nConfig = {
   translations: {
     pt: {
-      appName: 'Kirigami Studio',
+      appName: 'Papikapi Studio',
       tagline: 'Modelos de papel gerados no Blender, prontos a imprimir',
       catalogue: 'Catálogo',
       catalogueEmpty: 'Ainda não há modelos publicados. Corre o pipeline para gerar o primeiro.',
@@ -25,7 +25,7 @@ export const STUDIO_I18N_CONFIG: I18nConfig = {
       showLoader: 'Ver Loader',
       hideLoader: 'Esconder Loader',
       createModel: 'Criar Modelo',
-      creatorTitle: 'Criador Kirigami 3D',
+      creatorTitle: 'Criador Papikapi 3D',
       creatorSubtitle: 'Descreve o teu modelo e anexa referências opcionais',
       promptLabel: 'Descrição do Modelo',
       promptPlaceholder: 'Ex: Um gato fofinho preto e branco, ou animais do deserto...',
@@ -68,7 +68,7 @@ export const STUDIO_I18N_CONFIG: I18nConfig = {
       loaderStepFinalizeDesc: 'A preparar o ficheiro 3D (.glb) para inspeção interativa.',
       loaderStepAltPrompt: 'Interpretação do pedido',
       loaderStepAltPromptDesc: 'A analisar a descrição anatómica e fotos de inspiração.',
-      loaderStepAltStyle: 'Aplicação da assinatura Kirigami',
+      loaderStepAltStyle: 'Aplicação da assinatura Papikapi',
       loaderStepAltStyleDesc: 'A condicionar facetas de papel autêntico e olhos expressivos.',
       loaderStepAltSynth: 'Geração das 6 variantes axonométricas',
       loaderStepAltSynthDesc: 'A sintetizar a folha 3×2 com Gemini (do nível Chibi ao Realista).',
@@ -86,7 +86,7 @@ export const STUDIO_I18N_CONFIG: I18nConfig = {
       loaderEstimated: 'Duração estimada',
     },
     en: {
-      appName: 'Kirigami Studio',
+      appName: 'Papikapi Studio',
       tagline: 'Paper models generated in Blender, ready to print',
       catalogue: 'Catalogue',
       catalogueEmpty: 'No models published yet. Run the pipeline to generate the first one.',
@@ -108,7 +108,7 @@ export const STUDIO_I18N_CONFIG: I18nConfig = {
       showLoader: 'Show Loader',
       hideLoader: 'Hide Loader',
       createModel: 'Create Model',
-      creatorTitle: 'Kirigami 3D Creator',
+      creatorTitle: 'Papikapi 3D Creator',
       creatorSubtitle: 'Describe your model and attach optional references',
       promptLabel: 'Model Description',
       promptPlaceholder: 'E.g.: A cute black and white cat, or desert animals...',
@@ -151,7 +151,7 @@ export const STUDIO_I18N_CONFIG: I18nConfig = {
       loaderStepFinalizeDesc: 'Preparing the 3D file (.glb) for real-time interactive inspection.',
       loaderStepAltPrompt: 'Prompt interpretation',
       loaderStepAltPromptDesc: 'Analyzing anatomical description and inspiration photos.',
-      loaderStepAltStyle: 'Applying Kirigami signature',
+      loaderStepAltStyle: 'Applying Papikapi signature',
       loaderStepAltStyleDesc: 'Conditioning authentic cut-paper facets and expressive eyes.',
       loaderStepAltSynth: 'Generating 6 axonometric variants',
       loaderStepAltSynthDesc: 'Synthesizing 3×2 sheet with Gemini (from Chibi to Realistic).',
