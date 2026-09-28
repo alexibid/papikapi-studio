@@ -4,7 +4,7 @@
   "projectType": "application",
   "prefix": "papikapi-studio",
   "sourceRoot": "apps/papikapi-studio/src",
-  "tags": ["skip-platform:android"],
+  "tags": ["skip-platform:android", "skip-platform:desktop"],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
