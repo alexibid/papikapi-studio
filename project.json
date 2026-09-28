@@ -1,9 +1,9 @@
 {
-  "name": "kirigami-studio",
+  "name": "papikapi-studio",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "prefix": "kirigami",
-  "sourceRoot": "apps/kirigami-studio/src",
+  "prefix": "papikapi-studio",
+  "sourceRoot": "apps/papikapi-studio/src",
   "tags": ["skip-platform:android"],
   "targets": {
     "build": {
@@ -13,15 +13,15 @@
         "production",
         "^production",
         {
-          "runtime": "shasum apps/kirigami-studio/public/models/index.json 2>/dev/null || echo no-index"
+          "runtime": "shasum apps/papikapi-studio/public/models/index.json 2>/dev/null || echo no-index"
         }
       ],
       "options": {
-        "styles": ["apps/kirigami-studio/src/styles.scss"],
+        "styles": ["apps/papikapi-studio/src/styles.scss"],
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/kirigami-studio/public"
+            "input": "apps/papikapi-studio/public"
           },
           {
             "glob": "**/*",
@@ -30,7 +30,7 @@
           },
           {
             "glob": "**/*",
-            "input": "apps/kirigami-studio/src/assets",
+            "input": "apps/papikapi-studio/src/assets",
             "output": "/assets"
           }
         ]
@@ -59,7 +59,7 @@
       "defaultConfiguration": "development",
       "options": {
         "port": 4500,
-        "proxyConfig": "apps/kirigami-studio/proxy.conf.json",
+        "proxyConfig": "apps/papikapi-studio/proxy.conf.json",
         "liveReload": false,
         "hmr": false
       }
@@ -68,8 +68,8 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "npx nx run kirigami-studio:server",
-          "npx nx run kirigami-studio:serve-app"
+          "npx nx run papikapi-studio:server",
+          "npx nx run papikapi-studio:serve-app"
         ],
         "parallel": true
       }
@@ -79,7 +79,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx watch --clear-screen=false --exclude 'resources/**' --exclude 'public/**' scripts/server.ts",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "serve-e2e": {
@@ -99,8 +99,8 @@
       "continuous": true,
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "kirigami-studio:build",
-        "staticFilePath": "dist/kirigami-studio/browser",
+        "buildTarget": "papikapi-studio:build",
+        "staticFilePath": "dist/papikapi-studio/browser",
         "spa": true
       }
     },
@@ -108,7 +108,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "playwright test",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "stages": {
@@ -116,7 +116,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "lora:dataset": {
@@ -124,7 +124,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/training/lora/lora-dataset-builder.ts",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "stage:0": {
@@ -132,7 +132,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts --stage 0",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "stage-0": {
@@ -140,7 +140,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts --stage 0",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "stage:0:step:1": {
@@ -148,7 +148,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-1",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "stage-0:step-1": {
@@ -156,7 +156,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-1",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "stage:0:step:2": {
@@ -164,7 +164,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-2",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "stage-0:step-2": {
@@ -172,7 +172,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-2",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "stage:1": {
@@ -180,7 +180,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts --stage 1",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "stage-1": {
@@ -188,7 +188,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts --stage 1",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "stage:1:step:1": {
@@ -196,7 +196,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-1",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "stage-1:step-1": {
@@ -204,7 +204,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-1",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "stage:1:step:2": {
@@ -212,7 +212,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-2",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     },
     "stage-1:step-2": {
@@ -220,7 +220,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-2",
-        "cwd": "apps/kirigami-studio"
+        "cwd": "apps/papikapi-studio"
       }
     }
   }
