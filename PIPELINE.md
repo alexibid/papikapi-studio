@@ -49,7 +49,7 @@ apps/papikapi-studio/
 
 ## ⚙️ Configuration: `pipeline.json`
 
-Every prompt, system instruction, maturity progression, aspect ratio, image dimension, and GPU endpoint is declared in [`pipeline.json`](file:///Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/pipeline.json). No hardcoded prompts exist in TypeScript code.
+Every prompt, system instruction, maturity progression, aspect ratio, image dimension, and GPU endpoint is declared in [`pipeline.json`](./pipeline.json). No hardcoded prompts exist in TypeScript code.
 
 ### Pipeline Stages Definition
 
