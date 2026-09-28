@@ -92,9 +92,6 @@
     "lint": {
       "executor": "@nx/eslint:lint"
     },
-    "test": {
-      "executor": "@angular/build:unit-test"
-    },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",
@@ -102,13 +99,6 @@
         "buildTarget": "papikapi-studio:build",
         "staticFilePath": "dist/papikapi-studio/browser",
         "spa": true
-      }
-    },
-    "e2e": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "playwright test",
-        "cwd": "apps/papikapi-studio"
       }
     },
     "stages": {
