@@ -1,8 +1,197 @@
 {
-  "name": "sea-turtle",
-  "group": "ocean",
-  "subject": "a cute sea turtle, pure olive-green head and flipper facets with rich brown faceted shell, geometric scale pattern painted flat on flippers as a 2D UV texture map, closed head, exactly two eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.080Z"
+  "version": 1,
+  "subject": "sea-turtle",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T18:29:40.574Z",
+      "status": "DONE",
+      "seconds": 105.01,
+      "costUsd": 0.0158,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0158)",
+      "data": {
+        "prompt": "A cute sea turtle",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T18:29:41.974Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 41138
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:13:35.920Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 253703
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:13:35.930Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1132096
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:13:36.726Z",
+      "status": "DONE",
+      "seconds": 0.79,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/sea-turtle/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 1446,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 2,
+        "plinthWidthMm": 580.2,
+        "plinthLengthMm": 557.1,
+        "plinthThicknessMm": 44.2
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:13:37.505Z",
+      "status": "DONE",
+      "seconds": 0.78,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/sea-turtle/stage-2/step-3-plinth.glb",
+        "lengthMm": 607.6,
+        "faces": 1478,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 355,
+        "meshFaces": 499,
+        "quads": 211,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.19,
+        "maxDeviationMm": 2.54,
+        "featureLossMm": 3.77
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:13:42.768Z",
+      "status": "DONE",
+      "seconds": 5.26,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/sea-turtle/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 499,
+        "texelsPerMm": 2.591
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T11:03:07.893Z",
+      "status": "DONE",
+      "seconds": 0.65,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/sea-turtle/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          300,
+          287.5,
+          163.15
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 449,
+        "quadCount": 187,
+        "pieces": 41,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 1.5,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T11:03:45.538Z",
+      "status": "DONE",
+      "seconds": 37.64,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 20,
+        "sheetCount": 8,
+        "pieceCount": 41,
+        "labelCollisions": 5
+      }
+    }
+  },
+  "totalSeconds": 150.21,
+  "totalCostUsd": 0.0158,
+  "updatedAt": "2026-10-01T13:13:42.772Z"
 }

@@ -1,8 +1,197 @@
 {
-  "name": "mario",
-  "group": "games",
-  "subject": "a cute standing plumber, pure solid red cap with red shirt, blue overalls with yellow button decals painted flat as a 2D UV map, brown moustache decal, white gloves, raising one hand, exactly two blue eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.075Z"
+  "version": 1,
+  "subject": "mario",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T18:00:50.917Z",
+      "status": "DONE",
+      "seconds": 51.86,
+      "costUsd": 0.0078,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0078)",
+      "data": {
+        "prompt": "A cute mario",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T18:00:52.293Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 44648
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:12:35.361Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 284249
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:12:35.370Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1145324
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:12:36.074Z",
+      "status": "DONE",
+      "seconds": 0.7,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/mario/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 1349,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 2,
+        "plinthWidthMm": 422.9,
+        "plinthLengthMm": 320.7,
+        "plinthThicknessMm": 61.7
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:12:36.723Z",
+      "status": "DONE",
+      "seconds": 0.65,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/mario/stage-2/step-3-plinth.glb",
+        "lengthMm": 560.9,
+        "faces": 1368,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 329,
+        "meshFaces": 480,
+        "quads": 186,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.09,
+        "maxDeviationMm": 2.03,
+        "featureLossMm": 4.66
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:12:40.321Z",
+      "status": "DONE",
+      "seconds": 3.6,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/mario/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 480,
+        "texelsPerMm": 3.036
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T10:56:08.305Z",
+      "status": "DONE",
+      "seconds": 0.7,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/mario/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          209.34,
+          169.08,
+          300
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 446,
+        "quadCount": 176,
+        "pieces": 45,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 2,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T10:56:39.362Z",
+      "status": "DONE",
+      "seconds": 31.05,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 21,
+        "sheetCount": 8,
+        "pieceCount": 45,
+        "labelCollisions": 10
+      }
+    }
+  },
+  "totalSeconds": 88.64,
+  "totalCostUsd": 0.0078,
+  "updatedAt": "2026-10-01T13:12:40.324Z"
 }

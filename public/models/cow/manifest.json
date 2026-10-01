@@ -1,8 +1,164 @@
 {
-  "name": "cow",
-  "group": "minecraft",
-  "subject": "a cute blocky cow, pure cuboid facets, black and white hide patches painted flat as a 2D UV texture map, pink snout block with nostrils, horn facets, exactly two eyes, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.074Z"
+  "version": 1,
+  "subject": "cow",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T16:49:45.227Z",
+      "status": "DONE",
+      "seconds": 532.61,
+      "costUsd": 0.0799,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0799)",
+      "data": {
+        "prompt": "A cute cow",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T16:49:46.400Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 39867
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T12:57:14.685Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 207880
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:08:53.144Z",
+      "status": "DONE",
+      "seconds": 698.34,
+      "costUsd": 0.2165,
+      "costNote": "RunPod Serverless ($0.00031/s)",
+      "data": {
+        "fileSize": 809768,
+        "faceCount": 3014,
+        "format": "model/gltf-binary",
+        "chosenPick": 3,
+        "cached": false,
+        "device": "NVIDIA RTX 4090 Serverless Worker",
+        "parameters": {
+          "seed": 1,
+          "simplify": 0.85,
+          "target_faces": 4000,
+          "texture_size": 1024
+        }
+      },
+      "metrics": {
+        "fileSize": 809768,
+        "faceCount": 3014,
+        "openEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-09-30T19:49:21.710Z",
+      "status": "DONE",
+      "seconds": 0.65,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/cow/stage-2/step-2-3d.glb",
+        "lengthMm": 439.7,
+        "minSpacingMm": 27.5,
+        "maxSpacingMm": 27.5,
+        "planes": 36,
+        "faces": 1141,
+        "parameters": {
+          "min_cell_percent": 6.25,
+          "max_cell_percent": 6.25,
+          "density_bin_percent": 1,
+          "density_clip_percent": 10,
+          "corner_angle_deg": 45,
+          "contour_fusion_ratio": 0.02,
+          "interior_fusion_ratio": 0.04,
+          "fusion_surface_tolerance_ratio": 0.01,
+          "weld_distance_ratio": 0.000001,
+          "contact_height_ratio": 0.02,
+          "ray_offset_ratio": 0.0001,
+          "surface_subdivision_cuts": 4,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60
+        }
+      },
+      "metrics": {
+        "points": 718,
+        "intersections": 392,
+        "corners": 326,
+        "crossingsDetected": 701,
+        "meshFaces": 925,
+        "openEdges": 7,
+        "nonManifoldEdges": 1,
+        "airtight": false,
+        "volumeChangePercent": -49.82,
+        "maxDeviationMm": 4.31,
+        "cornersDetected": 422
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-09-30T19:49:23.574Z",
+      "status": "DONE",
+      "seconds": 0.7,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/cow/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          184.8,
+          193.38,
+          297.88
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 852,
+        "quadCount": 426,
+        "islandCount": 64,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-09-30T19:49:26.234Z",
+      "status": "DONE",
+      "seconds": 2.66,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm",
+        "textureType": "NONE"
+      },
+      "metrics": {
+        "pageCount": 4,
+        "netPages": 3
+      }
+    }
+  },
+  "totalSeconds": 1234.99,
+  "totalCostUsd": 0.2964,
+  "updatedAt": "2026-10-01T13:08:53.148Z"
 }

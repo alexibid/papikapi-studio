@@ -1,14 +1,5 @@
 import sharp from 'sharp';
-import type { CropCellOptions } from './interfaces/index.js';
-
-export type { CropCellOptions };
-
-interface CellRegion {
-  readonly left: number;
-  readonly top: number;
-  readonly width: number;
-  readonly height: number;
-}
+import type { CellRegion, CropCellOptions } from './interfaces/index.js';
 
 export class ImageCropper {
   private static readonly insetRatio = 0.025;

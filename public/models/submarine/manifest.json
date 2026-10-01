@@ -1,9 +1,197 @@
 {
-  "name": "submarine",
-  "group": "vehicles",
-  "subject": "yellow submarine",
-  "chosenPick": 3,
-  "generatedBy": "black-forest-labs/FLUX.2-klein-4B",
-  "has3D": false,
-  "updatedAt": "2026-09-25T12:27:06Z"
+  "version": 1,
+  "subject": "submarine",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T18:46:41.050Z",
+      "status": "DONE",
+      "seconds": 50.85,
+      "costUsd": 0.0076,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0076)",
+      "data": {
+        "prompt": "A cute submarine",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T18:46:42.200Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 36003
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:14:26.090Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 238509
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:14:26.098Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1079256
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:14:27.016Z",
+      "status": "DONE",
+      "seconds": 0.92,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/submarine/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 1370,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 2,
+        "plinthWidthMm": 240.7,
+        "plinthLengthMm": 625.7,
+        "plinthThicknessMm": 75.1
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:14:27.864Z",
+      "status": "DONE",
+      "seconds": 0.85,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/submarine/stage-2/step-3-plinth.glb",
+        "lengthMm": 655.3,
+        "faces": 1390,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 325,
+        "meshFaces": 456,
+        "quads": 194,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.1,
+        "maxDeviationMm": 1.1,
+        "featureLossMm": 4.22
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:14:32.674Z",
+      "status": "DONE",
+      "seconds": 4.81,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/submarine/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 456,
+        "texelsPerMm": 3.156
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T11:07:33.237Z",
+      "status": "DONE",
+      "seconds": 0.7,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/submarine/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          140.58,
+          300,
+          247.13
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 443,
+        "quadCount": 181,
+        "pieces": 42,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 2.2,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T11:07:56.486Z",
+      "status": "DONE",
+      "seconds": 23.24,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 19,
+        "sheetCount": 7,
+        "pieceCount": 42,
+        "labelCollisions": 17
+      }
+    }
+  },
+  "totalSeconds": 81.45,
+  "totalCostUsd": 0.0076,
+  "updatedAt": "2026-10-01T13:14:32.676Z"
 }

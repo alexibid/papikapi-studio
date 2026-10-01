@@ -6,3 +6,6 @@ export * from './cropper.interface.js';
 export * from './runpod.interface.js';
 export * from './training.interface.js';
 export * from './reporter.interface.js';
+export * from './blender.interface.js';
+export * from './progress.interface.js';
+export * from './image-cutout.interface.js';

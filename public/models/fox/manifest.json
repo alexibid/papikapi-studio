@@ -1,8 +1,197 @@
 {
-  "name": "fox",
-  "group": "forest",
-  "subject": "a cute sitting fox, pure vibrant orange facets with pure white chest and tail tip facets, black paw facets, closed wedge snout with black nose facet, exactly two eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.064Z"
+  "version": 1,
+  "subject": "fox",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T17:09:45.807Z",
+      "status": "DONE",
+      "seconds": 53.47,
+      "costUsd": 0.008,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0080)",
+      "data": {
+        "prompt": "A cute fox",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T17:09:46.986Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 47492
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:11:50.903Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 302245
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:11:50.910Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1200016
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:11:51.587Z",
+      "status": "DONE",
+      "seconds": 0.67,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/fox/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 1309,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 3,
+        "plinthWidthMm": 549.6,
+        "plinthLengthMm": 310.3,
+        "plinthThicknessMm": 64.8
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:11:52.236Z",
+      "status": "DONE",
+      "seconds": 0.65,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/fox/stage-2/step-3-plinth.glb",
+        "lengthMm": 575.5,
+        "faces": 1356,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 344,
+        "meshFaces": 499,
+        "quads": 193,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.08,
+        "maxDeviationMm": 1.65,
+        "featureLossMm": 2.54
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:11:55.802Z",
+      "status": "DONE",
+      "seconds": 3.56,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/fox/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 499,
+        "texelsPerMm": 3.033
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T10:50:53.789Z",
+      "status": "DONE",
+      "seconds": 0.58,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/fox/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          300,
+          190.66,
+          298.85
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 449,
+        "quadCount": 167,
+        "pieces": 42,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 3.1,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T10:51:29.644Z",
+      "status": "DONE",
+      "seconds": 35.85,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 21,
+        "sheetCount": 9,
+        "pieceCount": 42,
+        "labelCollisions": 3
+      }
+    }
+  },
+  "totalSeconds": 94.86,
+  "totalCostUsd": 0.008,
+  "updatedAt": "2026-10-01T13:11:55.804Z"
 }

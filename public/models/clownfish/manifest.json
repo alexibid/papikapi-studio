@@ -1,8 +1,197 @@
 {
-  "name": "clownfish",
-  "group": "ocean",
-  "subject": "a cute swimming clownfish, pure vibrant orange facets with bold white vertical stripes and black borders painted flat across the body as a 2D UV texture map, dorsal and pectoral fins, exactly two eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.082Z"
+  "version": 1,
+  "subject": "clownfish",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T16:27:56.412Z",
+      "status": "DONE",
+      "seconds": 44.12,
+      "costUsd": 0.0066,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0066)",
+      "data": {
+        "prompt": "A cute clownfish",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T16:27:57.559Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 46389
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T12:57:08.869Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 289112
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T12:57:08.877Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1235876
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T12:57:09.620Z",
+      "status": "DONE",
+      "seconds": 0.74,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/clownfish/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 3735,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 1,
+        "loops": 0,
+        "plinthWidthMm": 314.9,
+        "plinthLengthMm": 833.2,
+        "plinthThicknessMm": 31.4
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T12:57:10.290Z",
+      "status": "DONE",
+      "seconds": 0.67,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/clownfish/stage-2/step-3-plinth.glb",
+        "lengthMm": 872.5,
+        "faces": 3740,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 324,
+        "meshFaces": 464,
+        "quads": 180,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.38,
+        "maxDeviationMm": 2.68,
+        "featureLossMm": 2.94
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T12:57:14.679Z",
+      "status": "DONE",
+      "seconds": 4.39,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/clownfish/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 464,
+        "texelsPerMm": 3.008
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T11:21:48.848Z",
+      "status": "DONE",
+      "seconds": 0.98,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/clownfish/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          104.6,
+          300,
+          157.06
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 437,
+        "quadCount": 165,
+        "pieces": 22,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 1.2,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T11:22:25.913Z",
+      "status": "DONE",
+      "seconds": 37.06,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 12,
+        "sheetCount": 5,
+        "pieceCount": 22,
+        "labelCollisions": 14
+      }
+    }
+  },
+  "totalSeconds": 88.04,
+  "totalCostUsd": 0.0066,
+  "updatedAt": "2026-10-01T12:57:14.681Z"
 }

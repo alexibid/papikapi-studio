@@ -1,8 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
-import type { PipelineConfig, PipelineStage, PipelineStep, PromptTemplates, StepParameters } from './interfaces/index.js';
+import type { PipelineConfig, PipelineStage, PipelineStep } from './interfaces/index.js';
 import { WorkspacePaths } from './workspace-paths.js';
-
-export type { PromptTemplates, StepParameters, PipelineStep, PipelineStage, PipelineConfig };
 
 export class PipelineConfigLoader {
   private static cachedConfig: PipelineConfig | null = null;
@@ -32,11 +30,11 @@ export class PipelineConfigLoader {
     throw new Error(`Step '${stepId}' not found in pipeline.json`);
   }
 
-  public static getStage(stageIndex: number): PipelineStage {
+  public static getStage(stageNumber: number): PipelineStage {
     const config = this.load();
-    const stage = config.pipeline_stages[stageIndex];
+    const stage = config.pipeline_stages.find((s) => s.stage.startsWith(`Stage ${stageNumber}:`));
     if (!stage) {
-      throw new Error(`Stage index ${stageIndex} not found in pipeline.json`);
+      throw new Error(`Stage ${stageNumber} not found in pipeline.json`);
     }
     return stage;
   }

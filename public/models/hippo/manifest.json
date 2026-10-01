@@ -1,10 +1,197 @@
 {
-  "name": "hippo",
-  "group": "safari",
-  "subject": "a cute sitting baby hippo, pure blue-gray facets with light lavender belly facet, wide closed rounded snout with nostril decals painted flat, exactly two eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "generatedBy": "black-forest-labs/FLUX.2-klein-4B",
-  "has3D": false,
-  "seconds": 319.96,
-  "updatedAt": "2026-09-25T13:22:46Z"
+  "version": 1,
+  "subject": "hippo",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T17:45:08.168Z",
+      "status": "DONE",
+      "seconds": 39.73,
+      "costUsd": 0.006,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0060)",
+      "data": {
+        "prompt": "A cute hippo",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T17:45:09.519Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 35197
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:12:20.693Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 216069
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:12:20.701Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1116460
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:12:21.362Z",
+      "status": "DONE",
+      "seconds": 0.66,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/hippo/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 1407,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 4,
+        "plinthWidthMm": 246,
+        "plinthLengthMm": 800.4,
+        "plinthThicknessMm": 33.7
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:12:22.002Z",
+      "status": "DONE",
+      "seconds": 0.64,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/hippo/stage-2/step-3-plinth.glb",
+        "lengthMm": 838.1,
+        "faces": 1458,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 329,
+        "meshFaces": 492,
+        "quads": 174,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.08,
+        "maxDeviationMm": 1.58,
+        "featureLossMm": 3.18
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:12:25.783Z",
+      "status": "DONE",
+      "seconds": 3.78,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/hippo/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 492,
+        "texelsPerMm": 3.058
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T10:54:17.859Z",
+      "status": "DONE",
+      "seconds": 0.81,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/hippo/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          123.16,
+          300,
+          121.47
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 448,
+        "quadCount": 152,
+        "pieces": 33,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 1.4,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T10:54:43.227Z",
+      "status": "DONE",
+      "seconds": 25.37,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 14,
+        "sheetCount": 4,
+        "pieceCount": 33,
+        "labelCollisions": 21
+      }
+    }
+  },
+  "totalSeconds": 71.07,
+  "totalCostUsd": 0.006,
+  "updatedAt": "2026-10-01T13:12:25.785Z"
 }

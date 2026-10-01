@@ -1,10 +1,197 @@
 {
-  "name": "zebra",
-  "group": "safari",
-  "subject": "a cute standing zebra foal, pure clean white facets covered in crisp black zebra stripes painted flat across the entire body, neck, and legs as a 2D UV texture map, black muzzle facet, exactly two eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "generatedBy": "black-forest-labs/FLUX.2-klein-4B",
-  "has3D": false,
-  "seconds": 409.68,
-  "updatedAt": "2026-09-25T13:17:26Z"
+  "version": 1,
+  "subject": "zebra",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T19:34:46.192Z",
+      "status": "DONE",
+      "seconds": 53.95,
+      "costUsd": 0.0081,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0081)",
+      "data": {
+        "prompt": "A cute zebra",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T19:34:47.347Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 51608
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:15:10.552Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 228694
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:15:10.560Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1353684
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:15:11.219Z",
+      "status": "DONE",
+      "seconds": 0.66,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/zebra/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 1472,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 4,
+        "plinthWidthMm": 656.5,
+        "plinthLengthMm": 200.3,
+        "plinthThicknessMm": 61.9
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:15:11.872Z",
+      "status": "DONE",
+      "seconds": 0.65,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/zebra/stage-2/step-3-plinth.glb",
+        "lengthMm": 687.5,
+        "faces": 1494,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 335,
+        "meshFaces": 492,
+        "quads": 190,
+        "openEdges": 0,
+        "nonManifoldEdges": 1,
+        "airtight": false,
+        "volumeChangePercent": -61.56,
+        "maxDeviationMm": 2.49,
+        "featureLossMm": 5.15
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:15:14.837Z",
+      "status": "DONE",
+      "seconds": 2.96,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/zebra/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 492,
+        "texelsPerMm": 3.009
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T11:13:30.857Z",
+      "status": "DONE",
+      "seconds": 0.72,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/zebra/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          300,
+          132.82,
+          275.7
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 433,
+        "quadCount": 175,
+        "pieces": 41,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 2.9,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T11:14:05.953Z",
+      "status": "DONE",
+      "seconds": 35.09,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 18,
+        "sheetCount": 6,
+        "pieceCount": 41,
+        "labelCollisions": 7
+      }
+    }
+  },
+  "totalSeconds": 94.11,
+  "totalCostUsd": 0.0081,
+  "updatedAt": "2026-10-01T13:15:14.839Z"
 }

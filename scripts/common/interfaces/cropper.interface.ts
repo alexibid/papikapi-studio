@@ -5,3 +5,11 @@ export interface CropCellOptions {
   readonly pickIndex: number;
   readonly quality?: number;
 }
+
+export interface CellRegion {
+  readonly left: number;
+  readonly top: number;
+  readonly width: number;
+  readonly height: number;
+}
+

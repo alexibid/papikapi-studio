@@ -1,6 +1,6 @@
 # Papikapi Studio — RunPod Serverless Deployment
 
-Scale-to-Zero serverless architecture for Stage 0 (FLUX.2 Alternatives) and Stage 1 (TRELLIS Image-to-3D).
+Scale-to-Zero serverless architecture for Stage 1 (FLUX.2 Alternatives) and Stage 2 (TRELLIS Image-to-3D).
 
 ## 1. Recipes
 

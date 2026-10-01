@@ -1,8 +1,197 @@
 {
-  "name": "zombie",
-  "group": "minecraft",
-  "subject": "a cute blocky zombie, pure teal-green cuboid facets for skin, light blue shirt, blue trousers, pixelated face features painted flat as a 2D UV decal, outstretched blocky arms, exactly two eyes, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.073Z"
+  "version": 1,
+  "subject": "zombie",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T19:36:28.970Z",
+      "status": "DONE",
+      "seconds": 46.1,
+      "costUsd": 0.0069,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0069)",
+      "data": {
+        "prompt": "A cute zombie",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T19:36:30.124Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 36510
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:15:14.841Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 220260
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:15:14.848Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 962412
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:15:15.511Z",
+      "status": "DONE",
+      "seconds": 0.66,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/zombie/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 793,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 1,
+        "plinthWidthMm": 465.9,
+        "plinthLengthMm": 216,
+        "plinthThicknessMm": 70.7
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:15:16.209Z",
+      "status": "DONE",
+      "seconds": 0.7,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/zombie/stage-2/step-3-plinth.glb",
+        "lengthMm": 553.9,
+        "faces": 808,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 322,
+        "meshFaces": 476,
+        "quads": 164,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.04,
+        "maxDeviationMm": 0.26,
+        "featureLossMm": 0.83
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:15:19.257Z",
+      "status": "DONE",
+      "seconds": 3.05,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/zombie/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 476,
+        "texelsPerMm": 3.424
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T11:14:10.812Z",
+      "status": "DONE",
+      "seconds": 0.73,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/zombie/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          234.29,
+          189.39,
+          300
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 430,
+        "quadCount": 164,
+        "pieces": 31,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 1.1,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T11:14:47.670Z",
+      "status": "DONE",
+      "seconds": 36.85,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 18,
+        "sheetCount": 9,
+        "pieceCount": 31,
+        "labelCollisions": 17
+      }
+    }
+  },
+  "totalSeconds": 88.17,
+  "totalCostUsd": 0.0069,
+  "updatedAt": "2026-10-01T13:15:19.259Z"
 }

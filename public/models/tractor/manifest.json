@@ -1,9 +1,197 @@
 {
-  "name": "tractor",
-  "group": "vehicles",
-  "subject": "green tractor",
-  "chosenPick": 3,
-  "generatedBy": "black-forest-labs/FLUX.2-klein-4B",
-  "has3D": false,
-  "updatedAt": "2026-09-25T12:33:54Z"
+  "version": 1,
+  "subject": "tractor",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T18:58:59.262Z",
+      "status": "DONE",
+      "seconds": 81.76,
+      "costUsd": 0.0123,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0123)",
+      "data": {
+        "prompt": "A cute tractor",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T18:59:00.430Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 42882
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:14:37.599Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 266594
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:14:37.606Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1140724
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:14:38.439Z",
+      "status": "DONE",
+      "seconds": 0.83,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/tractor/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 1635,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 2,
+        "loops": 1,
+        "plinthWidthMm": 390.2,
+        "plinthLengthMm": 295.7,
+        "plinthThicknessMm": 15.6
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:14:39.178Z",
+      "status": "DONE",
+      "seconds": 0.74,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/tractor/stage-2/step-3-plinth.glb",
+        "lengthMm": 408.6,
+        "faces": 1694,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 351,
+        "meshFaces": 524,
+        "quads": 194,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.92,
+        "maxDeviationMm": 2.25,
+        "featureLossMm": 3.78
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:14:43.796Z",
+      "status": "DONE",
+      "seconds": 4.61,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/tractor/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 524,
+        "texelsPerMm": 3.428
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T11:08:25.569Z",
+      "status": "DONE",
+      "seconds": 0.67,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/tractor/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          300,
+          223.34,
+          253.5
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 484,
+        "quadCount": 172,
+        "pieces": 56,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 2.1,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T11:09:25.189Z",
+      "status": "DONE",
+      "seconds": 59.62,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 31,
+        "sheetCount": 16,
+        "pieceCount": 56,
+        "labelCollisions": 3
+      }
+    }
+  },
+  "totalSeconds": 148.31,
+  "totalCostUsd": 0.0123,
+  "updatedAt": "2026-10-01T13:14:43.798Z"
 }

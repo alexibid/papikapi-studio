@@ -1,0 +1,72 @@
+{
+  "pt": {
+    "piece_prefix": "P",
+    "cover": {
+      "subtitle": "Modelo de papel para recortar, dobrar e colar",
+      "info": [
+        "Tamanho montado: {dimensions} mm. {pieces} partes em {sheets} folhas de moldes.",
+        "Imprime em A4 a 100% (sem ajustar à página), em papel de 160 a 200 g/m².",
+        "Precisas de tesoura ou x-ato, régua, cola branca ou de bastão e um objeto sem ponta para vincar."
+      ],
+      "legend_title": "Como ler os moldes",
+      "legend": [
+        { "kind": "cut", "label": "Linha contínua: cortar." },
+        { "kind": "mountain", "label": "Traço-ponto: dobra em monte (a linha fica por fora, em aresta)." },
+        { "kind": "valley", "label": "Tracejado: dobra em vale (a linha fica por dentro)." },
+        { "kind": "tab", "label": "Aba cinzenta: dobra-a para dentro, passa cola e cola-a por baixo da aresta com o mesmo número." }
+      ],
+      "method_title": "Como montar",
+      "method": [
+        "Segue os passos pela ordem: cada passo mostra a parte nova a laranja, no sítio onde encaixa.",
+        "Recorta a parte, vinca todas as dobras com a régua e dobra-as antes de colar.",
+        "Cola uma aba de cada vez, apertando alguns segundos. Os números iguais encaixam um no outro.",
+        "As partes P são numeradas pela ordem de montagem; a mesma etiqueta está no molde e no passo."
+      ]
+    },
+    "steps_heading": "Montagem passo a passo",
+    "step_title": "Passo {step} · Parte {piece}",
+    "step_sheet": "Molde na folha {sheet}.",
+    "step_first": "Começa por esta parte: recorta-a, vinca e dobra todas as linhas.",
+    "step_fold": "Recorta, vinca e dobra todas as linhas antes de colar.",
+    "step_join": "Une as arestas {edges} à parte {piece}.",
+    "step_close": "Fecha a própria parte unindo as arestas {edges}.",
+    "sheet_heading": "Moldes",
+    "sheet_pieces": "Partes nesta folha: {pieces}",
+    "page_label": "Folha {page} de {total}"
+  },
+  "en": {
+    "piece_prefix": "P",
+    "cover": {
+      "subtitle": "Paper model to cut, fold and glue",
+      "info": [
+        "Assembled size: {dimensions} mm. {pieces} parts on {sheets} template sheets.",
+        "Print on A4 at 100% (do not fit to page), on 160 to 200 g/m² paper.",
+        "You need scissors or a craft knife, a ruler, white glue or a glue stick and a blunt tool for scoring."
+      ],
+      "legend_title": "How to read the templates",
+      "legend": [
+        { "kind": "cut", "label": "Solid line: cut." },
+        { "kind": "mountain", "label": "Dash-dot line: mountain fold (the line ends up outside, on a ridge)." },
+        { "kind": "valley", "label": "Dashed line: valley fold (the line ends up inside)." },
+        { "kind": "tab", "label": "Grey tab: fold it inwards, apply glue and stick it under the edge with the same number." }
+      ],
+      "method_title": "How to assemble",
+      "method": [
+        "Follow the steps in order: each step shows the new part in orange, where it fits.",
+        "Cut out the part, score every fold with the ruler and fold before gluing.",
+        "Glue one tab at a time and hold it for a few seconds. Equal numbers go together.",
+        "Parts P are numbered in assembly order; the same label is on the template and in the step."
+      ]
+    },
+    "steps_heading": "Step-by-step assembly",
+    "step_title": "Step {step} · Part {piece}",
+    "step_sheet": "Template on sheet {sheet}.",
+    "step_first": "Start with this part: cut it out, score and fold every line.",
+    "step_fold": "Cut out, score and fold every line before gluing.",
+    "step_join": "Join edges {edges} to part {piece}.",
+    "step_close": "Close the part itself by joining edges {edges}.",
+    "sheet_heading": "Templates",
+    "sheet_pieces": "Parts on this sheet: {pieces}",
+    "page_label": "Sheet {page} of {total}"
+  }
+}

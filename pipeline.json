@@ -3,7 +3,9 @@
   "workspace": {
     "models_dir": "public/models",
     "resources_dir": "resources",
-    "models_from": "resources/*/stage-0/step-1-art.jpeg"
+    "models_from": "resources/*/stage-1/step-1-art.jpeg",
+    "sheet_language": "pt",
+    "sheet_translations": "scripts/stage-3/sheet-translations.json"
   },
   "pricing": {
     "runpod_trellis_usd_per_sec": 0.00031,
@@ -15,16 +17,17 @@
   },
   "pipeline_stages": [
     {
-      "stage": "Stage 0: 3D Papercraft Figure Alternatives & Selection",
+      "stage": "Stage 1: 3D Papercraft Figure Alternatives & Selection",
       "steps": [
         {
-          "id": "s0-step-1",
+          "id": "s1-step-1",
           "name": "Alternatives Sheet Generation",
           "label": "ALTERNATIVES",
           "emoji": "🎨",
           "expected_seconds": 20,
-          "script": "scripts/stage-0/step-1-alternatives.ts",
-          "models_from": "resources/*/stage-0/step-1-art.jpeg",
+          "script": "scripts/stage-1/step-1-alternatives.ts",
+          "models_from": "resources/*/stage-1/step-1-art.jpeg",
+          "skip_if_outputs_exist": true,
           "serverless": {
             "env_endpoint_key": "RUNPOD_FLUX_ENDPOINT_ID",
             "container_image": "ghcr.io/alexibid/papikapi-flux:latest",
@@ -46,24 +49,35 @@
             "alternatives_count": 6,
             "max_reference_images": 3,
             "system_prompt": "You are an expert 3D low-poly papercraft designer, origami artist, and 3D unfold engineer. You design foldable low-poly figures made of simple primary geometric volumes where micro-details are illustrated flat on the paper surface. You follow the studio signature aesthetic: cute expressive eyes with circular white catchlights and vibrant paper colors. You generate exactly one image that follows all instructions. Never write any text, letters, watermark or labels. Every rule is mandatory and none may be broken.",
-            "negative_prompt": "bust, headshot, portrait, close-up, cropped, truncated torso, severed neck, partial figure, wireframe, crease lines, black fold lines, black outline lines, blueprint markings, dark edge seams, shadow, floor shadow, ground shadow, drop shadow, contact shadow, ambient occlusion beneath model, cast shadow, dark ground, 3D extruded teeth, jagged 3D spikes, open mouth cavity, eye level perspective, front view, side profile view, extra eyes, three eyes, one eye, floating eyes, gradients, text, watermark, labels, cell divider borders, CGI, clay, plastic, smooth rounded cartoon",
+            "negative_prompt": "bust, headshot, portrait, close-up, cropped, truncated torso, severed neck, partial figure, wireframe, crease lines, black fold lines, black outline lines, blueprint markings, dark edge seams, shadow, floor shadow, ground shadow, drop shadow, contact shadow, ambient occlusion beneath model, cast shadow, dark ground, 3D extruded teeth, jagged 3D spikes, open mouth cavity, top-down view, high angle view, isometric view, tilted body, leaning body, floating feet, front view, side profile view, extra eyes, three eyes, one eye, floating eyes, gradients, text, watermark, labels, cell divider borders, CGI, clay, plastic, smooth rounded cartoon",
             "prompt_templates": {
-              "specific_subject": "low-poly faceted 3D papercraft model of {subject}. Seen in an ISOMETRIC THREE-QUARTER PERSPECTIVE VIEW FROM THE TOP-LEFT CORNER (showing front, top, and left-side facets simultaneously).\n\nSubject: {subject}.\n\n{reference_instruction}\n\nSTUDIO INVARIANTS (MANDATORY):\n- COMPLETE ENTIRE OBJECT: The entire complete {subject} must be 100% visible from end to end, fully centered with generous margin inside the cell. NEVER a bust, NEVER just a head, NEVER a close-up, NEVER cropped.\n- ISOMETRIC THREE-QUARTER PERSPECTIVE: Every figure is seen from an isometric three-quarter view from above-left, displaying full depth, height, and length.\n- ABSOLUTELY ZERO SHADOWS: Completely plain, seamless flat neutral light grey #E5E5E5 background. ZERO floor shadows, ZERO cast shadows, ZERO contact shadows under base, ZERO ambient occlusion.\n- CLEAN LOW-POLY PAPERCRAFT FACETS: Crisp planar polygon facets made of solid matte paper cardstock colors with directional flat-shading only. ABSOLUTELY ZERO BLACK OUTLINE STROKES, ZERO BLACK CREASE LINES, ZERO WIREFRAME, ZERO BLUEPRINT MARKS, ZERO FOLD GUIDE LINES. Facets meet cleanly without dark lines.\n- 100% CLOSED GEOMETRIC VOLUMES: All primary forms are closed solid low-poly polyhedra suitable for papercraft folding.\n- FLAT 2D UV TEXTURE DECALS: Fine surface details (spots, stripes, whiskers, headlights, teeth, decals) are 100% flat 2D decals printed directly on the facet surfaces, never protruding 3D physical spikes or open cavities.\n- EYES: For living creatures, exactly two large cute expressive round eyes with circular white catchlights painted flat onto head facets. Never three eyes, never floating eyes.\n- No shadows, no gradients, no text, no labels, no cell dividers, no grid lines.",
-              "generic_category": "low-poly faceted 3D papercraft model for {subject}. Seen in an ISOMETRIC THREE-QUARTER PERSPECTIVE VIEW FROM THE TOP-LEFT CORNER (showing front, top, and left-side facets simultaneously).\n\nCategory/Theme: {subject}.\n\nSTUDIO INVARIANTS (MANDATORY):\n- COMPLETE ENTIRE OBJECT: The entire complete {subject} must be 100% visible from end to end, fully centered with generous margin inside the cell. NEVER a bust, NEVER just a head, NEVER a close-up, NEVER cropped.\n- ISOMETRIC THREE-QUARTER PERSPECTIVE: Every figure is seen from an isometric three-quarter view from above-left, displaying full depth, height, and length.\n- ABSOLUTELY ZERO SHADOWS: Completely plain, seamless flat neutral light grey #E5E5E5 background. ZERO floor shadows, ZERO cast shadows, ZERO contact shadows under base, ZERO ambient occlusion.\n- CLEAN LOW-POLY PAPERCRAFT FACETS: Crisp planar polygon facets made of solid matte paper cardstock colors with directional flat-shading only. ABSOLUTELY ZERO BLACK OUTLINE STROKES, ZERO BLACK CREASE LINES, ZERO WIREFRAME, ZERO BLUEPRINT MARKS, ZERO FOLD GUIDE LINES. Facets meet cleanly without dark lines.\n- 100% CLOSED GEOMETRIC VOLUMES: All primary forms are closed solid low-poly polyhedra suitable for papercraft folding.\n- FLAT 2D UV TEXTURE DECALS: Fine surface details (spots, stripes, whiskers, headlights, teeth, decals) are 100% flat 2D decals printed directly on the facet surfaces, never protruding 3D physical spikes or open cavities.\n- EYES: For living creatures, exactly two large cute expressive round eyes with circular white catchlights painted flat onto head facets. Never three eyes, never floating eyes.\n- No shadows, no gradients, no text, no labels, no cell dividers, no grid lines."
+              "specific_subject": "low-poly faceted 3D papercraft model of {subject}. Seen in an EYE-LEVEL THREE-QUARTER VIEW, camera at the height of the subject's body (showing front and left-side facets), with all feet, paws or wheels resting on one flat horizontal ground plane.\n\nSubject: {subject}.\n\n{reference_instruction}\n\nSTUDIO INVARIANTS (MANDATORY):\n- COMPLETE ENTIRE OBJECT: The entire complete {subject} must be 100% visible from end to end, fully centered with generous margin inside the cell. NEVER a bust, NEVER just a head, NEVER a close-up, NEVER cropped.\n- EYE-LEVEL THREE-QUARTER VIEW: Every figure is seen from a three-quarter view with the camera level with the body, no top-down tilt, standing upright and level with all feet on one flat horizontal ground plane, never leaning or tilted.\n- ABSOLUTELY ZERO SHADOWS: Completely plain, seamless flat neutral light grey #E5E5E5 background. ZERO floor shadows, ZERO cast shadows, ZERO contact shadows under base, ZERO ambient occlusion.\n- CLEAN LOW-POLY PAPERCRAFT FACETS: Crisp planar polygon facets made of solid matte paper cardstock colors with directional flat-shading only. ABSOLUTELY ZERO BLACK OUTLINE STROKES, ZERO BLACK CREASE LINES, ZERO WIREFRAME, ZERO BLUEPRINT MARKS, ZERO FOLD GUIDE LINES. Facets meet cleanly without dark lines.\n- 100% CLOSED GEOMETRIC VOLUMES: All primary forms are closed solid low-poly polyhedra suitable for papercraft folding.\n- FLAT 2D UV TEXTURE DECALS: Fine surface details (spots, stripes, whiskers, headlights, teeth, decals) are 100% flat 2D decals printed directly on the facet surfaces, never protruding 3D physical spikes or open cavities.\n- EYES: For living creatures, exactly two large cute expressive round eyes with circular white catchlights painted flat onto head facets. Never three eyes, never floating eyes.\n- No shadows, no gradients, no text, no labels, no cell dividers, no grid lines.",
+              "generic_category": "low-poly faceted 3D papercraft model for {subject}. Seen in an EYE-LEVEL THREE-QUARTER VIEW, camera at the height of the subject's body (showing front and left-side facets), with all feet, paws or wheels resting on one flat horizontal ground plane.\n\nCategory/Theme: {subject}.\n\nSTUDIO INVARIANTS (MANDATORY):\n- COMPLETE ENTIRE OBJECT: The entire complete {subject} must be 100% visible from end to end, fully centered with generous margin inside the cell. NEVER a bust, NEVER just a head, NEVER a close-up, NEVER cropped.\n- EYE-LEVEL THREE-QUARTER VIEW: Every figure is seen from a three-quarter view with the camera level with the body, no top-down tilt, standing upright and level with all feet on one flat horizontal ground plane, never leaning or tilted.\n- ABSOLUTELY ZERO SHADOWS: Completely plain, seamless flat neutral light grey #E5E5E5 background. ZERO floor shadows, ZERO cast shadows, ZERO contact shadows under base, ZERO ambient occlusion.\n- CLEAN LOW-POLY PAPERCRAFT FACETS: Crisp planar polygon facets made of solid matte paper cardstock colors with directional flat-shading only. ABSOLUTELY ZERO BLACK OUTLINE STROKES, ZERO BLACK CREASE LINES, ZERO WIREFRAME, ZERO BLUEPRINT MARKS, ZERO FOLD GUIDE LINES. Facets meet cleanly without dark lines.\n- 100% CLOSED GEOMETRIC VOLUMES: All primary forms are closed solid low-poly polyhedra suitable for papercraft folding.\n- FLAT 2D UV TEXTURE DECALS: Fine surface details (spots, stripes, whiskers, headlights, teeth, decals) are 100% flat 2D decals printed directly on the facet surfaces, never protruding 3D physical spikes or open cavities.\n- EYES: For living creatures, exactly two large cute expressive round eyes with circular white catchlights painted flat onto head facets. Never three eyes, never floating eyes.\n- No shadows, no gradients, no text, no labels, no cell dividers, no grid lines."
             },
             "style_reference_note": "STYLE REFERENCE (attached image 1): copy ONLY its papercraft rendering style: low-poly folded cardstock, crisp planar facets, flat colors, cute round eyes with white catchlights, seamless light background. Never copy its subject, species, markings or colors.",
-            "reference_note_template": "SUBJECT PHOTOS (attached images {first} onward, {count} photo(s) of the real subject): Faithfully preserve the subject's identity, proportions, body shape, colors and the EXACT placement and size of every marking shown in these photos, rendered in the style of the style reference, in authentic low-poly folded papercraft cardstock style with crisp polygon facets. Maintain the strict isometric three-quarter top-left viewpoint, complete entire figure without cropping, closed solid volumes, flat 2D UV texture decals for teeth and spots, exactly two eyes, and ABSOLUTELY ZERO FLOOR SHADOWS.",
+            "reference_note_template": "SUBJECT PHOTOS (attached images {first} onward, {count} photo(s) of the real subject): Faithfully preserve the subject's identity, proportions, body shape, colors and the EXACT placement and size of every marking shown in these photos, rendered in the style of the style reference, in authentic low-poly folded papercraft cardstock style with crisp polygon facets. Maintain the strict eye-level three-quarter viewpoint with the body level and all feet on one flat ground plane, complete entire figure without cropping, closed solid volumes, flat 2D UV texture decals for teeth and spots, exactly two eyes, and ABSOLUTELY ZERO FLOOR SHADOWS.",
+            "view_clause": "eye-level three-quarter view with the camera at body height, standing naturally and level with all feet, paws or wheels flat on one horizontal ground plane, body upright and never tilted",
+            "base_clause": "the whole figure stands on a very simple low plinth: a thin flat rectangular slab of solid saturated warm terracotta-brown cardstock, clearly different from the grey background, only slightly wider than the figure, with a perfectly flat horizontal top and bottom, so the feet, paws or wheels rest on the slab",
+            "training_caption_view_phrase": "seen in an isometric three-quarter view from the top left corner",
+            "cell_prompt_templates": [
+              "low-poly faceted 3D papercraft model of an ultra-cute baby chibi {subject}, oversized round head, chubby compact body, tiny short legs, adorable infant proportions, {details}, {view}, {base}, clean planar facets without black crease lines, seamless light grey #E5E5E5 background, zero shadows.",
+              "low-poly faceted 3D papercraft model of a youthful playful young {subject}, cheerful energetic stance, soft rounded planar geometry, {details}, {view}, {base}, clean planar facets without black crease lines, seamless light grey #E5E5E5 background, zero shadows.",
+              "low-poly faceted 3D papercraft model of {subject}, studio signature balanced geometric proportions, {details}, {view}, {base}, clean planar facets without black crease lines, seamless light grey #E5E5E5 background, zero shadows.",
+              "low-poly faceted 3D papercraft model of a cute toy-like baby chibi {subject}, bold simplified planar facets, compact rounded proportions, {details}, {view}, {base},zero crease lines, seamless light grey background, zero shadows.",
+              "low-poly faceted 3D papercraft model of a lively playful {subject}, natural relaxed posture, cheerful character, {details}, {view}, {base},zero crease lines, seamless light grey background, zero shadows.",
+              "low-poly faceted 3D papercraft model of a structured mature {subject}, elegant planar facets, dignified stance, {details}, {view}, {base},zero crease lines, seamless light grey background, zero shadows."
+            ],
             "maturity_descriptions": [
-              "Cell (0,0) [Top-Left]: Ultra-childlike, cute, chubby, chibi, highly simplified origami toy with large bold facets and friendly exaggerated proportions in strict isometric three-quarter view",
-              "Cell (0,1) [Top-Center]: Playful youthful papercraft figure with soft rounded geometry and cheerful character in strict isometric three-quarter view",
-              "Cell (0,2) [Top-Right] (Default Pick #3): Studio signature training style — balanced geometric proportions, expressive signature eyes with white catchlight, exact reference colors and features, translated into clean planar facets and with flat 2D UV texture details on closed volumes in strict isometric three-quarter view",
-              "Cell (1,0) [Bottom-Left] (Pick #4): Classic structured papercraft model with elegant faceted planes and precise anatomical structure matching the signature palette in strict isometric three-quarter view",
-              "Cell (1,1) [Bottom-Center]: Sophisticated detailed papercraft sculpture with refined angular facets and dynamic posture in strict isometric three-quarter view",
-              "Cell (1,2) [Bottom-Right]: Majestic realistic low-poly faceted sculpture with lifelike proportions and dignified mature stance in strict isometric three-quarter view"
+              "Cell (0,0) [Top-Left]: Ultra-childlike, cute, chubby, chibi, highly simplified origami toy with large bold facets and friendly exaggerated proportions in strict eye-level three-quarter view",
+              "Cell (0,1) [Top-Center]: Playful youthful papercraft figure with soft rounded geometry and cheerful character in strict eye-level three-quarter view",
+              "Cell (0,2) [Top-Right] (Default Pick #3): Studio signature training style — balanced geometric proportions, expressive signature eyes with white catchlight, exact reference colors and features, translated into clean planar facets and with flat 2D UV texture details on closed volumes in strict eye-level three-quarter view",
+              "Cell (1,0) [Bottom-Left] (Pick #4): Classic structured papercraft model with elegant faceted planes and precise anatomical structure matching the signature palette in strict eye-level three-quarter view",
+              "Cell (1,1) [Bottom-Center]: Sophisticated detailed papercraft sculpture with refined angular facets and dynamic posture in strict eye-level three-quarter view",
+              "Cell (1,2) [Bottom-Right]: Majestic realistic low-poly faceted sculpture with lifelike proportions and dignified mature stance in strict eye-level three-quarter view"
             ],
             "critical_rules": [
               "Strict 3x2 grid of exactly 6 equal cells: exactly 3 columns (left, center, right) and exactly 2 rows (top, bottom). Exactly one figure per cell, totaling exactly 6 figures. Never 4 columns, never 7 or 8 figures.",
-              "Strict isometric three-quarter perspective from the top-left corner in EVERY cell (showing top, front, and left facets).",
+              "Strict eye-level three-quarter view in EVERY cell, camera level with the body, all feet on one flat horizontal ground plane, body upright and never tilted.",
               "Zero text, zero labels, zero words, zero letters anywhere on the canvas.",
               "Every figure is the complete entire subject from end to end, fully centered in its cell with margin around all sides. Never a bust, never a headshot, never cropped, on flat neutral #E5E5E5 background with ABSOLUTELY ZERO FLOOR SHADOWS, zero drop shadows, zero contact shadows beneath the figures.",
               "Clean planar low-poly papercraft facets with pure solid matte colors and flat-shading. ABSOLUTELY ZERO BLACK CREASE LINES, ZERO WIREFRAME, ZERO FOLD GUIDE LINES.",
@@ -73,7 +87,7 @@
             ],
             "self_check": [
               "Are there exactly 6 cells arranged in a 3x2 grid?",
-              "Is every cell drawn in the identical isometric three-quarter top-left view?",
+              "Is every cell drawn in the identical eye-level three-quarter view with all feet on one flat ground plane?",
               "Is there zero text and zero divider borders anywhere?",
               "Is the background completely plain and flat with ABSOLUTELY ZERO FLOOR SHADOWS beneath the figures?",
               "Are the figures clean planar low-poly facets without black outline strokes, wireframe, or black crease lines?",
@@ -83,10 +97,10 @@
             ]
           },
           "messages": {
-            "start": "[Stage 0: Step 1] Generating 3x2 alternatives sheet for {model}",
-            "completed": "[Stage 0: Step 1] Alternatives sheet generated in {duration}s"
+            "start": "[Stage 1: Step 1] Generating 3x2 alternatives sheet for {model}",
+            "completed": "[Stage 1: Step 1] Alternatives sheet generated in {duration}s"
           },
-          "stage_dir": "stage-0",
+          "stage_dir": "stage-1",
           "outputs": {
             "sheet_resource": "step-1-alternatives.jpeg",
             "sheet_public": "alternatives.jpeg",
@@ -108,19 +122,19 @@
           }
         },
         {
-          "id": "s0-step-2",
+          "id": "s1-step-2",
           "name": "Pick & Crop Alternative",
           "label": "PICK",
           "emoji": "✂️",
           "expected_seconds": 1,
-          "script": "scripts/stage-0/step-2-pick.ts",
-          "stage_dir": "stage-0",
+          "script": "scripts/stage-1/step-2-pick.ts",
+          "stage_dir": "stage-1",
           "depends_on": {
-            "step_id": "s0-step-1",
-            "stage_dir": "stage-0"
+            "step_id": "s1-step-1",
+            "stage_dir": "stage-1"
           },
           "inputs": {
-            "stage_dir": "stage-0",
+            "stage_dir": "stage-1",
             "sheet_resource": "step-1-alternatives.jpeg",
             "sheet_public": "alternatives.jpeg",
             "sheet_resource_prefix": "step-1-alternatives",
@@ -128,7 +142,7 @@
             "allowed_extensions": [".jpeg", ".jpg", ".png", ".webp"]
           },
           "outputs": {
-            "stage_dir": "stage-0",
+            "stage_dir": "stage-1",
             "art_resource": "step-1-art.jpeg",
             "art_public": "art.jpeg",
             "art_pick_resource_pattern": "step-1-art-pick-{pick}.jpeg",
@@ -144,8 +158,8 @@
             "rows": 2
           },
           "messages": {
-            "start": "[Stage 0: Step 2] Picking and cropping chosen alternative #{pick} for {model}",
-            "completed": "[Stage 0: Step 2] Alternative #{pick} cropped and saved to art.jpeg in {duration}s"
+            "start": "[Stage 1: Step 2] Picking and cropping chosen alternative #{pick} for {model}",
+            "completed": "[Stage 1: Step 2] Alternative #{pick} cropped and saved to art.jpeg in {duration}s"
           },
           "manifest_contract": {
             "status": "DONE",
@@ -161,22 +175,22 @@
       ]
     },
     {
-      "stage": "Stage 1: 3D Model Generation",
+      "stage": "Stage 2: 3D Model Generation",
       "steps": [
         {
-          "id": "s1-step-1",
+          "id": "s2-step-1",
           "name": "Create Cutout",
           "label": "CUTOUT",
           "emoji": "✂️",
           "expected_seconds": 2,
-          "script": "scripts/stage-1/step-1-cutout.ts",
-          "stage_dir": "stage-1",
+          "script": "scripts/stage-2/step-1-cutout.ts",
+          "stage_dir": "stage-2",
           "depends_on": {
-            "step_id": "s0-step-2",
-            "stage_dir": "stage-0"
+            "step_id": "s1-step-2",
+            "stage_dir": "stage-1"
           },
           "inputs": {
-            "stage_dir": "stage-0",
+            "stage_dir": "stage-1",
             "art_resource": "step-1-art.jpeg",
             "art_public": "art.jpeg",
             "art_pick_resource_pattern": "step-1-art-pick-{pick}.jpeg",
@@ -184,7 +198,7 @@
             "allowed_extensions": [".jpeg", ".jpg", ".png", ".webp"]
           },
           "outputs": {
-            "stage_dir": "stage-1",
+            "stage_dir": "stage-2",
             "cutout_resource": "step-1-art-cutout.png",
             "cutout_public": "art-cutout.png",
             "cutout_pick_resource_pattern": "step-1-art-pick-{pick}-cutout.png",
@@ -193,8 +207,8 @@
             "manifest": "step-1-manifest.json"
           },
           "messages": {
-            "start": "[Stage 1: Step 1] Creating transparent cutout for {model}",
-            "completed": "✔ [Stage 1: Step 1] Transparent cutout generated for {model} in {duration}s ($0.00)",
+            "start": "[Stage 2: Step 1] Creating transparent cutout for {model}",
+            "completed": "✔ [Stage 2: Step 1] Transparent cutout generated for {model} in {duration}s ($0.00)",
             "cache_hit": "⚡ [Cache Hit] Restored cutout for pick #{pick} from local cache (0.0s, $0.00)"
           },
           "manifest_contract": {
@@ -205,18 +219,18 @@
           }
         },
         {
-          "id": "s1-step-2",
+          "id": "s2-step-2",
           "name": "3D Generation",
           "label": "3D-GLB",
           "emoji": "🧊",
-          "expected_seconds": 25,
-          "script": "scripts/stage-1/step-2-trellis.ts",
-          "stage_dir": "stage-1",
+          "expected_seconds": 250,
+          "script": "scripts/stage-2/step-2-trellis.ts",
+          "stage_dir": "stage-2",
           "depends_on": {
-            "step_id": "s1-step-1",
-            "stage_dir": "stage-1"
+            "step_id": "s2-step-1",
+            "stage_dir": "stage-2"
           },
-          "models_from": "resources/*/stage-1/step-1-art-cutout.png",
+          "models_from": "resources/*/stage-2/step-1-art-cutout.png",
           "runpod_console": "https://console.runpod.io/serverless",
           "serverless": {
             "env_endpoint_key": "RUNPOD_TRELLIS_ENDPOINT_ID",
@@ -231,7 +245,7 @@
             "status_url_pattern": "https://api.runpod.ai/v2/{endpoint_id}/status/{job_id}"
           },
           "inputs": {
-            "stage_dir": "stage-1",
+            "stage_dir": "stage-2",
             "cutout_resource": "step-1-art-cutout.png",
             "cutout_public": "art-cutout.png",
             "cutout_pick_resource_pattern": "step-1-art-pick-{pick}-cutout.png",
@@ -239,7 +253,7 @@
             "allowed_extensions": [".png"]
           },
           "outputs": {
-            "stage_dir": "stage-1",
+            "stage_dir": "stage-2",
             "model_resource": "step-2-3d.glb",
             "model_public": "model.glb",
             "model_pick_resource_pattern": "step-2-3d-pick-{pick}.glb",
@@ -254,13 +268,28 @@
           },
           "parameters": {
             "seed": 1,
-            "simplify": 0.95,
-            "target_faces": 500,
+            "simplify": 0.85,
+            "target_faces": 4000,
             "texture_size": 1024,
             "ss_sampling_steps": 12,
             "slat_sampling_steps": 12,
             "ss_guidance_strength": 7.5,
-            "slat_guidance_strength": 3.0
+            "slat_guidance_strength": 3.0,
+            "plinth": {
+              "flatten_tolerance_ratio": 0.03,
+              "edge_inset_ratio": 0.01,
+              "margin_ratio": 0.12,
+              "sheet_thickness_ratio": 0.02,
+              "sheet_gap_ratio": 0.015,
+              "sheet_span_ratio": 1.3,
+              "weld_epsilon": 0.00001,
+              "fragment_min_triangles": 30,
+              "fragment_min_thickness_ratio": 0.01,
+              "plinth_hue_min_deg": 5,
+              "plinth_hue_max_deg": 40,
+              "plinth_min_saturation": 0.3,
+              "plinth_min_value": 0.3
+            }
           },
           "runner": {
             "platform": "RunPod Serverless",
@@ -268,7 +297,7 @@
             "rate": "$0.00031/s ($1.10/hr active, $0.00 idle)"
           },
           "messages": {
-            "start": "[Stage 1: Step 2] Generating 3D model for {model}",
+            "start": "[Stage 2: Step 2] Generating 3D model for {model}",
             "progress": "⟳ [{runner}] Generating 3D Mesh on {device}... ({elapsed}s elapsed)",
             "completed": "✔ [{runner}] 3D Model generated: {sizeMb} MB in {duration}s (${costUsd})",
             "cache_hit": "⚡ [Cache Hit] Restored 3D Model for pick #{pick} from local cache (0.0s, $0.0000)"
@@ -296,6 +325,296 @@
                 "texture_size": "textureSize"
               }
             }
+          }
+        },
+        {
+          "id": "s2-step-3",
+          "name": "Base Cut",
+          "label": "BASE",
+          "emoji": "✂️",
+          "expected_seconds": 15,
+          "script": "scripts/stage-2/step-3-base.ts",
+          "stage_dir": "stage-2",
+          "depends_on": {
+            "step_id": "s2-step-2",
+            "stage_dir": "stage-2"
+          },
+          "models_from": "resources/*/stage-2/step-2-3d.glb",
+          "blender": {
+            "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
+            "script": "scripts/stage-2/blender/base/cut_base.py"
+          },
+          "inputs": {
+            "stage_dir": "stage-2",
+            "model_resource": "step-2-3d.glb",
+            "model_pick_resource_pattern": "step-2-3d-pick-{pick}.glb"
+          },
+          "outputs": {
+            "stage_dir": "stage-2",
+            "model_resource": "step-3-base.glb",
+            "model_pick_resource_pattern": "step-3-base-pick-{pick}.glb",
+            "manifest": "step-3-manifest.json"
+          },
+          "parameters": {
+            "weld_distance_ratio": 1e-5,
+            "contact_height_ratio": 0.02,
+            "base_cut_lift_ratio": 0.05
+          },
+          "messages": {
+            "start": "[Stage 2: Step 3] Cutting the TRELLIS base and grounding the feet at z=0 for {model}",
+            "completed": "✔ [Stage 2: Step 3] Base cut ({faces} faces, {removedIslands} artifacts removed, {width}x{length}mm footprint) for {model} in {duration}s ($0.00)"
+          },
+          "manifest_contract": {
+            "status": "DONE",
+            "costNote": "Local Blender headless ($0.00)"
+          }
+        },
+        {
+          "id": "s2-step-4",
+          "name": "Low-Poly Simplification",
+          "label": "SIMPLIFY",
+          "emoji": "📐",
+          "expected_seconds": 40,
+          "script": "scripts/stage-2/step-4-simplify.ts",
+          "stage_dir": "stage-2",
+          "depends_on": {
+            "step_id": "s2-step-3",
+            "stage_dir": "stage-2"
+          },
+          "models_from": "resources/*/stage-2/step-3-base.glb",
+          "blender": {
+            "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
+            "script": "scripts/stage-2/blender/key_points/key_points.py"
+          },
+          "inputs": {
+            "stage_dir": "stage-2",
+            "model_resource": "step-3-base.glb",
+            "model_pick_resource_pattern": "step-3-base-pick-{pick}.glb"
+          },
+          "outputs": {
+            "stage_dir": "stage-2",
+            "points_resource": "step-4-reduce.json",
+            "mesh_resource": "step-4-reduce.glb",
+            "mesh_public": "model.glb",
+            "manifest": "step-4-manifest.json"
+          },
+          "parameters": {
+            "target_faces": 600,
+            "weld_distance_ratio": 1e-5,
+            "contact_height_ratio": 0.02,
+            "quad_face_angle_deg": 20,
+            "quad_shape_angle_deg": 60,
+            "face_max_extent_ratio": 0.5
+          },
+          "messages": {
+            "start": "[Stage 2: Step 4] Simplifying 3D mesh into low-poly papercraft for {model}",
+            "completed": "✔ [Stage 2: Step 4] Mesh simplified: {points} vertices, {meshFaces} faces ({quads} quads), max deviation {deviation} mm for {model} in {duration}s ($0.00)"
+          },
+          "manifest_contract": {
+            "status": "DONE",
+            "costNote": "Local Blender headless ($0.00)"
+          }
+        },
+        {
+          "id": "s2-step-5",
+          "name": "Texturize",
+          "label": "TEXTURIZE",
+          "emoji": "🎨",
+          "expected_seconds": 30,
+          "script": "scripts/stage-2/step-5-texturize.ts",
+          "stage_dir": "stage-2",
+          "depends_on": {
+            "step_id": "s2-step-4",
+            "stage_dir": "stage-2"
+          },
+          "models_from": "resources/*/stage-2/step-4-reduce.json",
+          "blender": {
+            "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
+            "script": "scripts/stage-2/blender/texturize/texturize.py"
+          },
+          "inputs": {
+            "stage_dir": "stage-2",
+            "model_resource": "step-2-3d.glb",
+            "model_pick_resource_pattern": "step-2-3d-pick-{pick}.glb",
+            "mesh_resource": "step-4-reduce.json",
+            "art_resource": "step-1-art-cutout.png"
+          },
+          "outputs": {
+            "stage_dir": "stage-2",
+            "model_resource": "step-5-texturize.glb",
+            "model_public": "model.glb",
+            "manifest": "step-5-manifest.json"
+          },
+          "parameters": {
+            "atlas_size_px": 4096,
+            "island_padding_px": 8,
+            "bleed_px": 6,
+            "cage_extrusion_ratio": 0.03,
+            "max_ray_distance_ratio": 0.15,
+            "bake_samples": 4,
+            "jpeg_quality": 92
+          },
+          "messages": {
+            "start": "[Stage 2: Step 5] Baking the original colours onto the simplified model of {model}",
+            "completed": "✔ [Stage 2: Step 5] {faces} faces textured at {texels} texels per mm for {model} in {duration}s ($0.00)"
+          },
+          "manifest_contract": {
+            "status": "DONE",
+            "costNote": "Local Blender headless ($0.00)"
+          }
+        },
+        {
+          "id": "s2-step-6",
+          "name": "White Plinth",
+          "label": "PLINTH",
+          "emoji": "🏛️",
+          "expected_seconds": 10,
+          "script": "scripts/stage-2/step-6-plinth.ts",
+          "stage_dir": "stage-2",
+          "depends_on": {
+            "step_id": "s2-step-5",
+            "stage_dir": "stage-2"
+          },
+          "models_from": "resources/*/stage-2/step-5-texturize.glb",
+          "blender": {
+            "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
+            "script": "scripts/stage-2/blender/plinth/build_plinth.py"
+          },
+          "inputs": {
+            "stage_dir": "stage-2",
+            "mesh_resource": "step-4-reduce.json",
+            "model_resource": "step-5-texturize.glb"
+          },
+          "outputs": {
+            "stage_dir": "stage-2",
+            "mesh_resource": "step-6-plinth.json",
+            "model_resource": "step-6-plinth.glb",
+            "model_public": "model.glb",
+            "manifest": "step-6-manifest.json"
+          },
+          "parameters": {
+            "plinth_thickness_ratio": 0.05,
+            "plinth_slope_ratio": 0.02,
+            "plinth_margin_ratio": 0.004,
+            "face_max_extent_ratio": 0.5
+          },
+          "messages": {
+            "start": "[Stage 2: Step 6] Fusing the white plinth to the feet of {model}",
+            "completed": "✔ [Stage 2: Step 6] White plinth fused to {loops} feet ({faces} faces) for {model} in {duration}s ($0.00)"
+          },
+          "manifest_contract": {
+            "status": "DONE",
+            "costNote": "Local Blender headless ($0.00)"
+          }
+        }
+      ]
+    },
+    {
+      "stage": "Stage 3: Papercraft Unfolding",
+      "steps": [
+        {
+          "id": "s3-step-1",
+          "name": "Unfold Model",
+          "label": "UNFOLD",
+          "emoji": "📐",
+          "expected_seconds": 30,
+          "script": "scripts/stage-3/step-1-unfold.ts",
+          "stage_dir": "stage-3",
+          "depends_on": {
+            "step_id": "s2-step-6",
+            "stage_dir": "stage-2"
+          },
+          "models_from": "resources/*/stage-2/step-6-plinth.json",
+          "blender": {
+            "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
+            "unfold_script": "scripts/stage-3/blender/unfold_model.py",
+            "render_script": "scripts/stage-3/blender/render_steps.py"
+          },
+          "inputs": {
+            "stage_dir": "stage-2",
+            "model_resource": "step-6-plinth.json"
+          },
+          "outputs": {
+            "stage_dir": "stage-3",
+            "net_resource": "step-1-net.json",
+            "manifest": "step-1-manifest.json"
+          },
+          "parameters": {
+            "target_size_mm": 300,
+            "weld_distance_mm": 0.05,
+            "min_face_area_mm2": 4,
+            "flatten_iterations": 100,
+            "piece_max_width_mm": 170,
+            "piece_max_height_mm": 245,
+            "piece_compactness": 0.7
+          },
+          "messages": {
+            "start": "[Stage 3: Step 1] Unfolding 3D model for {model}",
+            "completed": "✔ [Stage 3: Step 1] Model unfolded into {islands} parts for {model} in {duration}s ($0.00)"
+          },
+          "manifest_contract": {
+            "status": "DONE",
+            "costNote": "Local Blender headless ($0.00)"
+          }
+        },
+        {
+          "id": "s3-step-2",
+          "name": "Export Sheets",
+          "label": "SHEETS",
+          "emoji": "🖨️",
+          "expected_seconds": 30,
+          "script": "scripts/stage-3/step-2-sheets.ts",
+          "stage_dir": "stage-3",
+          "depends_on": {
+            "step_id": "s3-step-1",
+            "stage_dir": "stage-3"
+          },
+          "models_from": "resources/*/stage-3/step-1-net.json",
+          "blender": {
+            "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
+            "unfold_script": "scripts/stage-3/blender/unfold_model.py",
+            "render_script": "scripts/stage-3/blender/render_steps.py",
+            "texture_script": "scripts/stage-3/blender/texture_pages.py"
+          },
+          "inputs": {
+            "net_resource": "step-1-net.json",
+            "texture_stage_dir": "stage-2",
+            "texture_model": "step-6-plinth.glb"
+          },
+          "outputs": {
+            "stage_dir": "stage-3",
+            "sheets_resource": "step-2-sheets.pdf",
+            "renders_dir": "step-2-renders",
+            "sheets_public": "sheets.pdf",
+            "public_url_pattern": "/models/{model}/sheets.pdf",
+            "manifest": "step-2-manifest.json"
+          },
+          "parameters": {
+            "page_width_mm": 210,
+            "page_height_mm": 297,
+            "margin_mm": 10,
+            "header_mm": 10,
+            "piece_gap_mm": 2,
+            "nesting_cell_mm": 1,
+            "tab_height_mm": 6,
+            "edge_number_mm": 2.6,
+            "min_edge_number_mm": 1.8,
+            "piece_label_mm": 4.5,
+            "image_size_px": 900,
+            "texture_dpi": 200,
+            "texture_bleed_mm": 1.5,
+            "texture_jpeg_quality": 95,
+            "cage_extrusion_ratio": 0.01,
+            "max_ray_distance_ratio": 0.03,
+            "bake_samples": 4
+          },
+          "messages": {
+            "start": "[Stage 3: Step 2] Building the assembly booklet for {model}",
+            "completed": "✔ [Stage 3: Step 2] {pages} A4 pages ({sheets} template sheets, {pieces} parts) for {model} in {duration}s ($0.00)"
+          },
+          "manifest_contract": {
+            "status": "DONE",
+            "costNote": "Local Blender headless ($0.00)"
           }
         }
       ]

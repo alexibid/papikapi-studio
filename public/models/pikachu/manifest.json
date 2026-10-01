@@ -1,8 +1,197 @@
 {
-  "name": "pikachu",
-  "group": "games",
-  "subject": "a cute standing yellow mouse, pure electric-yellow facets with brown back stripes painted flat as a 2D UV map, bright red circular cheek pouches painted flat on face facets, black-tipped ears, lightning bolt tail, exactly two eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.077Z"
+  "version": 1,
+  "subject": "pikachu",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T18:11:02.186Z",
+      "status": "DONE",
+      "seconds": 49.11,
+      "costUsd": 0.0074,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0074)",
+      "data": {
+        "prompt": "A cute pikachu",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T18:11:03.566Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 40491
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:13:00.239Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 257452
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:13:00.248Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1163864
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:13:01.147Z",
+      "status": "DONE",
+      "seconds": 0.9,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/pikachu/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 1105,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 1,
+        "plinthWidthMm": 522.2,
+        "plinthLengthMm": 368,
+        "plinthThicknessMm": 61.2
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:13:02.064Z",
+      "status": "DONE",
+      "seconds": 0.91,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/pikachu/stage-2/step-3-plinth.glb",
+        "lengthMm": 547.6,
+        "faces": 1138,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 341,
+        "meshFaces": 486,
+        "quads": 192,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.04,
+        "maxDeviationMm": 0.86,
+        "featureLossMm": 2.6
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:13:06.607Z",
+      "status": "DONE",
+      "seconds": 4.54,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/pikachu/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 486,
+        "texelsPerMm": 3.146
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T10:59:22.373Z",
+      "status": "DONE",
+      "seconds": 0.62,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/pikachu/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          300,
+          198.91,
+          272.05
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 451,
+        "quadCount": 169,
+        "pieces": 36,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 1.3,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T10:59:55.948Z",
+      "status": "DONE",
+      "seconds": 33.57,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 19,
+        "sheetCount": 9,
+        "pieceCount": 36,
+        "labelCollisions": 3
+      }
+    }
+  },
+  "totalSeconds": 89.73,
+  "totalCostUsd": 0.0074,
+  "updatedAt": "2026-10-01T13:13:06.611Z"
 }

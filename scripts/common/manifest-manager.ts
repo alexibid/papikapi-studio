@@ -4,8 +4,6 @@ import type { ModelManifest, StepRecord, StepRecordInput } from './interfaces/in
 import { PipelineConfigLoader } from './pipeline-config.js';
 import { WorkspacePaths } from './workspace-paths.js';
 
-export type { StepRecordInput, StepRecord, ModelManifest };
-
 export class ManifestManager {
   private static readonly manifestVersion = 1;
 

@@ -4,3 +4,9 @@ export interface ReferenceItem {
   readonly file: string;
   readonly caption: string;
 }
+
+export interface CaptionManifest {
+  readonly trigger: string;
+  readonly captions: Readonly<Record<string, string>>;
+}
+

@@ -1,8 +1,221 @@
 {
-  "name": "raccoon",
-  "group": "forest",
-  "subject": "a cute sitting raccoon, pure light gray facets with black bandit mask pattern painted flat across the face as a 2D UV texture map, black-and-gray striped tail decals, closed black nose facet, exactly two eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.066Z"
+  "version": 1,
+  "subject": "raccoon",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T18:23:09.507Z",
+      "status": "DONE",
+      "seconds": 43.29,
+      "costUsd": 0.0065,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0065)",
+      "data": {
+        "prompt": "A cute raccoon",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T18:23:10.873Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 43101
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T16:03:06.819Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 221004
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T16:03:06.825Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1216584
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T16:03:07.641Z",
+      "status": "DONE",
+      "seconds": 0.81,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/raccoon/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "base_cut_lift_ratio": 0.05
+        }
+      },
+      "metrics": {
+        "faces": 3678,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 1,
+        "widthMm": 430.7,
+        "lengthMm": 702.6
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T16:03:08.354Z",
+      "status": "DONE",
+      "seconds": 0.71,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/raccoon/stage-2/step-3-base.glb",
+        "lengthMm": 702.6,
+        "faces": 3711,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 308,
+        "meshFaces": 488,
+        "quads": 139,
+        "openEdges": 2,
+        "nonManifoldEdges": 1,
+        "airtight": false,
+        "volumeChangePercent": -3.81,
+        "maxDeviationMm": 19.97,
+        "featureLossMm": 51.78
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T16:03:24.755Z",
+      "status": "DONE",
+      "seconds": 16.4,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/raccoon/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.15,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 488,
+        "texelsPerMm": 2.498,
+        "azimuth": 43.4,
+        "elevation": 15.2,
+        "silhouetteScore": 0.912,
+        "colourDisagreement": 0.1101,
+        "visibleShare": 0.315
+      }
+    },
+    "s2-step-6": {
+      "stageId": "s2-step-6",
+      "at": "2026-10-01T16:03:25.579Z",
+      "status": "DONE",
+      "seconds": 0.82,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/raccoon/stage-2/step-5-texturize.glb",
+        "parameters": {
+          "plinth_thickness_ratio": 0.05,
+          "plinth_slope_ratio": 0.02,
+          "plinth_margin_ratio": 0.004,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "faces": 589,
+        "loops": 3,
+        "openEdges": 0,
+        "nonManifoldEdges": 5
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T16:03:27.349Z",
+      "status": "DONE",
+      "seconds": 0.58,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/raccoon/stage-2/step-6-plinth.json",
+        "dimensionsMm": [
+          187.08,
+          300,
+          266.2
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 348,
+        "quadCount": 108,
+        "pieces": 28,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 3.2,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T16:03:57.019Z",
+      "status": "DONE",
+      "seconds": 29.67,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 17,
+        "sheetCount": 9,
+        "pieceCount": 28,
+        "labelCollisions": 1
+      }
+    }
+  },
+  "totalSeconds": 92.36,
+  "totalCostUsd": 0.0065,
+  "updatedAt": "2026-10-01T16:03:57.028Z"
 }

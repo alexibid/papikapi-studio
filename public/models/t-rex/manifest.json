@@ -1,8 +1,197 @@
 {
-  "name": "t-rex",
-  "group": "dinosaurs",
-  "subject": "a cute green tyrannosaurus rex, pure lime-green facets with pale yellow belly facets, closed solid wedge jaw with sharp white sawtooth teeth painted flat along the jawline as a 2D UV texture decal with no open mouth cavity and no 3D teeth, small green arms, exactly two round eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.049Z"
+  "version": 1,
+  "subject": "t-rex",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T18:54:44.203Z",
+      "status": "DONE",
+      "seconds": 431.42,
+      "costUsd": 0.0647,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0647)",
+      "data": {
+        "prompt": "A cute t rex",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T18:54:45.408Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 46121
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:14:32.679Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 296948
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:14:32.688Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1200940
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:14:33.431Z",
+      "status": "DONE",
+      "seconds": 0.74,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/t-rex/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 1354,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 2,
+        "plinthWidthMm": 768,
+        "plinthLengthMm": 260.6,
+        "plinthThicknessMm": 85.6
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:14:34.433Z",
+      "status": "DONE",
+      "seconds": 1,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/t-rex/stage-2/step-3-plinth.glb",
+        "lengthMm": 804.2,
+        "faces": 1382,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 331,
+        "meshFaces": 480,
+        "quads": 186,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.14,
+        "maxDeviationMm": 1.53,
+        "featureLossMm": 3.7
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:14:37.595Z",
+      "status": "DONE",
+      "seconds": 3.16,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/t-rex/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 480,
+        "texelsPerMm": 2.778
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T11:08:00.500Z",
+      "status": "DONE",
+      "seconds": 0.66,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/t-rex/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          300,
+          140.96,
+          245.54
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 436,
+        "quadCount": 152,
+        "pieces": 35,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 1.8,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T11:08:21.524Z",
+      "status": "DONE",
+      "seconds": 21.02,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 16,
+        "sheetCount": 6,
+        "pieceCount": 35,
+        "labelCollisions": 11
+      }
+    }
+  },
+  "totalSeconds": 458.08,
+  "totalCostUsd": 0.0647,
+  "updatedAt": "2026-10-01T13:14:37.596Z"
 }

@@ -1,8 +1,197 @@
 {
-  "name": "steve",
-  "group": "minecraft",
-  "subject": "a cute blocky Steve, pure solid colored cuboid facets, brown hair, cyan shirt, blue trousers, pixelated face features painted flat as a 2D UV grid decal, exactly two eyes, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.071Z"
+  "version": 1,
+  "subject": "steve",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T18:43:20.242Z",
+      "status": "DONE",
+      "seconds": 50.31,
+      "costUsd": 0.0075,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0075)",
+      "data": {
+        "prompt": "A cute steve",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T18:43:21.401Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 34376
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:14:19.716Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 205534
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:14:19.722Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 673692
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:14:20.584Z",
+      "status": "DONE",
+      "seconds": 0.86,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/steve/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 815,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 1,
+        "loops": 1,
+        "plinthWidthMm": 175.3,
+        "plinthLengthMm": 235.7,
+        "plinthThicknessMm": 21.7
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:14:21.463Z",
+      "status": "DONE",
+      "seconds": 0.88,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/steve/stage-2/step-3-plinth.glb",
+        "lengthMm": 433.8,
+        "faces": 836,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 311,
+        "meshFaces": 504,
+        "quads": 114,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.02,
+        "maxDeviationMm": 0.14,
+        "featureLossMm": 0.35
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:14:26.084Z",
+      "status": "DONE",
+      "seconds": 4.62,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/steve/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 504,
+        "texelsPerMm": 4.731
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T11:06:43.543Z",
+      "status": "DONE",
+      "seconds": 0.74,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/steve/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          118.8,
+          176.2,
+          300
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 394,
+        "quadCount": 80,
+        "pieces": 25,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 0.7,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T11:07:28.292Z",
+      "status": "DONE",
+      "seconds": 44.75,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 16,
+        "sheetCount": 8,
+        "pieceCount": 25,
+        "labelCollisions": 6
+      }
+    }
+  },
+  "totalSeconds": 102.24,
+  "totalCostUsd": 0.0075,
+  "updatedAt": "2026-10-01T13:14:26.088Z"
 }

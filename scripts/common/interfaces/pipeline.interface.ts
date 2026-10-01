@@ -67,6 +67,8 @@ export interface PipelineConfig {
     readonly models_dir: string;
     readonly resources_dir: string;
     readonly models_from: string;
+    readonly sheet_language: string;
+    readonly sheet_translations: string;
   };
   readonly pricing: {
     readonly runpod_trellis_usd_per_sec?: number;

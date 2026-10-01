@@ -1,10 +1,205 @@
 {
-  "name": "fire-truck",
-  "group": "vehicles",
-  "subject": "a cute red fire truck with closed low-poly geometric cab, pure red facets, ladder and blue and red lights painted flat on top facets as 2D UV map decals, white wheel rims, zero floor shadow",
-  "chosenPick": 3,
-  "generatedBy": "black-forest-labs/FLUX.2-klein-4B",
-  "has3D": false,
-  "seconds": 54.02,
-  "updatedAt": "2026-09-25T11:40:21Z"
+  "version": 1,
+  "subject": "fire-truck",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T17:08:03.759Z",
+      "status": "DONE",
+      "seconds": 42.7,
+      "costUsd": 0.0064,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0064)",
+      "data": {
+        "prompt": "A cute fire truck",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T17:08:04.920Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 48665
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:09:20.279Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 305383
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:11:45.567Z",
+      "status": "DONE",
+      "seconds": 145.19,
+      "costUsd": 0.045,
+      "costNote": "RunPod Serverless ($0.00031/s)",
+      "data": {
+        "fileSize": 901760,
+        "faceCount": 3048,
+        "format": "model/gltf-binary",
+        "chosenPick": 3,
+        "cached": false,
+        "device": "NVIDIA RTX 4090 Serverless Worker",
+        "parameters": {
+          "seed": 1,
+          "simplify": 0.85,
+          "target_faces": 4000,
+          "texture_size": 1024
+        }
+      },
+      "metrics": {
+        "fileSize": 901760,
+        "faceCount": 3048,
+        "openEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:11:46.201Z",
+      "status": "DONE",
+      "seconds": 0.63,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/fire-truck/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 2887,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 1,
+        "loops": 0,
+        "plinthWidthMm": 242.2,
+        "plinthLengthMm": 412.2,
+        "plinthThicknessMm": 18.7
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:11:46.889Z",
+      "status": "DONE",
+      "seconds": 0.69,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/fire-truck/stage-2/step-3-plinth.glb",
+        "lengthMm": 435.5,
+        "faces": 2892,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 351,
+        "meshFaces": 506,
+        "quads": 216,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -16.38,
+        "maxDeviationMm": 5.84,
+        "featureLossMm": 12.46
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:11:50.898Z",
+      "status": "DONE",
+      "seconds": 4.01,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/fire-truck/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 506,
+        "texelsPerMm": 3.178
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-09-30T19:50:43.704Z",
+      "status": "DONE",
+      "seconds": 0.8,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/fire-truck/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          191.61,
+          300.03,
+          231.3
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 1074,
+        "quadCount": 440,
+        "islandCount": 89,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-09-30T19:50:46.169Z",
+      "status": "DONE",
+      "seconds": 2.46,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm",
+        "textureType": "NONE"
+      },
+      "metrics": {
+        "pageCount": 5,
+        "netPages": 4
+      }
+    }
+  },
+  "totalSeconds": 196.51,
+  "totalCostUsd": 0.0514,
+  "updatedAt": "2026-10-01T13:11:50.900Z"
 }

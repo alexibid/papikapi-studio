@@ -1,8 +1,197 @@
 {
-  "name": "squirrel",
-  "group": "forest",
-  "subject": "a cute sitting orange squirrel, pure bright orange facets with white belly facet, bushy tail, holding an acorn, closed muzzle with flat whisker decals, exactly two eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.063Z"
+  "version": 1,
+  "subject": "squirrel",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T18:39:54.294Z",
+      "status": "DONE",
+      "seconds": 43.12,
+      "costUsd": 0.0065,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0065)",
+      "data": {
+        "prompt": "A cute squirrel",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T18:39:55.463Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 43078
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:14:05.444Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 281773
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:14:05.458Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 979164
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:14:06.506Z",
+      "status": "DONE",
+      "seconds": 1.04,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/squirrel/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 1311,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 2,
+        "plinthWidthMm": 222.4,
+        "plinthLengthMm": 551.8,
+        "plinthThicknessMm": 71.6
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:14:07.331Z",
+      "status": "DONE",
+      "seconds": 0.82,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/squirrel/stage-2/step-3-plinth.glb",
+        "lengthMm": 577.8,
+        "faces": 1358,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 314,
+        "meshFaces": 472,
+        "quads": 174,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.68,
+        "maxDeviationMm": 6.82,
+        "featureLossMm": 17.9
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:14:12.570Z",
+      "status": "DONE",
+      "seconds": 5.24,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/squirrel/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 472,
+        "texelsPerMm": 2.638
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T11:05:08.234Z",
+      "status": "DONE",
+      "seconds": 0.62,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/squirrel/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          174.27,
+          300,
+          268.85
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 461,
+        "quadCount": 165,
+        "pieces": 41,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 6.3,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T11:06:15.505Z",
+      "status": "DONE",
+      "seconds": 67.27,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 30,
+        "sheetCount": 18,
+        "pieceCount": 41,
+        "labelCollisions": 0
+      }
+    }
+  },
+  "totalSeconds": 118.19,
+  "totalCostUsd": 0.0065,
+  "updatedAt": "2026-10-01T13:14:12.572Z"
 }

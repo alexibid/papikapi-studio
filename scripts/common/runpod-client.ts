@@ -3,8 +3,6 @@ import { join } from 'node:path';
 import type { RunPodApiResponse, RunPodExecuteOptions, RunPodJobResult } from './interfaces/index.js';
 import { WorkspacePaths } from './workspace-paths.js';
 
-export type { RunPodJobResult, RunPodExecuteOptions, RunPodApiResponse };
-
 export class RunPodClient {
   private static cachedApiKey: string | null = null;
 
@@ -118,10 +116,7 @@ export class RunPodClient {
 
     while (Date.now() - startTime < timeout) {
       await new Promise((resolve) => setTimeout(resolve, pollInterval));
-      const elapsed = Math.round((Date.now() - startTime) / 1000);
-      if (options?.onProgress !== undefined) {
-        options.onProgress(elapsed);
-      }
+      const elapsedSeconds = Math.round((Date.now() - startTime) / 1000);
 
       const pollRes = await fetch(statusUrl, {
         headers: {
@@ -130,6 +125,9 @@ export class RunPodClient {
       });
 
       if (!pollRes.ok) {
+        if (options?.onProgress !== undefined) {
+          options.onProgress({ elapsedSeconds, status: 'IN_QUEUE' });
+        }
         continue;
       }
 
@@ -141,6 +139,10 @@ export class RunPodClient {
           output: resolveOutput(pollData.output),
           seconds: duration,
         };
+      }
+
+      if (options?.onProgress !== undefined) {
+        options.onProgress({ elapsedSeconds, status: pollData.status });
       }
 
       if (pollData.status === 'FAILED') {

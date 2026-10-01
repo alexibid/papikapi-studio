@@ -1,8 +1,197 @@
 {
-  "name": "ankylosaurus",
-  "group": "dinosaurs",
-  "subject": "a cute pink ankylosaurus, pure pink facets with geometric armor plates, club tail, closed snout, exactly two eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.052Z"
+  "version": 1,
+  "subject": "ankylosaurus",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T15:30:10.029Z",
+      "status": "DONE",
+      "seconds": 46.17,
+      "costUsd": 0.0069,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0069)",
+      "data": {
+        "prompt": "A cute ankylosaurus",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T15:30:11.190Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 52281
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T12:56:34.641Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 306364
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T12:56:34.647Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1366280
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T12:56:35.297Z",
+      "status": "DONE",
+      "seconds": 0.65,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/ankylosaurus/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 3881,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 4,
+        "plinthWidthMm": 853.2,
+        "plinthLengthMm": 417.1,
+        "plinthThicknessMm": 49.2
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T12:56:35.942Z",
+      "status": "DONE",
+      "seconds": 0.64,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/ankylosaurus/stage-2/step-3-plinth.glb",
+        "lengthMm": 893.4,
+        "faces": 3918,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 339,
+        "meshFaces": 524,
+        "quads": 162,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.74,
+        "maxDeviationMm": 6.25,
+        "featureLossMm": 14.11
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T12:56:39.736Z",
+      "status": "DONE",
+      "seconds": 3.79,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/ankylosaurus/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 524,
+        "texelsPerMm": 2.38
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T11:16:48.372Z",
+      "status": "DONE",
+      "seconds": 0.63,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/ankylosaurus/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          300,
+          140.69,
+          137.8
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 483,
+        "quadCount": 137,
+        "pieces": 61,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 3.7,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T11:17:13.877Z",
+      "status": "DONE",
+      "seconds": 25.5,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 22,
+        "sheetCount": 5,
+        "pieceCount": 61,
+        "labelCollisions": 3
+      }
+    }
+  },
+  "totalSeconds": 77.46,
+  "totalCostUsd": 0.0069,
+  "updatedAt": "2026-10-01T12:56:39.747Z"
 }

@@ -1,8 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
-import type { GeminiGenerateOptions, GeminiGenerateResult, InlineImage } from './interfaces/index.js';
+import type { GeminiGenerateOptions, GeminiGenerateResult } from './interfaces/index.js';
 import { WorkspacePaths } from './workspace-paths.js';
-
-export type { InlineImage, GeminiGenerateOptions, GeminiGenerateResult };
 
 export class GeminiClient {
   private static readonly endpoint = 'https://generativelanguage.googleapis.com/v1beta/models';

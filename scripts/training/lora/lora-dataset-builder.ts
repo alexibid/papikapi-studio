@@ -1,12 +1,8 @@
 import { execFileSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
+import type { CaptionManifest } from '../../common/interfaces/index.js';
 import { WorkspacePaths } from '../../common/workspace-paths.js';
-
-interface CaptionManifest {
-  readonly trigger: string;
-  readonly captions: Readonly<Record<string, string>>;
-}
 
 export class LoraDatasetBuilder {
   private static readonly trainingDir = join(WorkspacePaths.appRoot, 'scripts/training');

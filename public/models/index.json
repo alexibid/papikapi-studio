@@ -1,12 +1,324 @@
 [
  {
+  "id": "alex",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "ankylosaurus",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "bear",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "black-tuxedo",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "blue-eyed-pug",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "brachiosaurus",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "calico",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "cheetah",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "clownfish",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "cow",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "creeper",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
   "id": "dalmatian",
   "model": "model.glb",
   "preview": "art.jpeg",
   "image": "art.jpeg"
  },
  {
+  "id": "dolphin",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "elephant",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "fawn",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "fire-truck",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "fox",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "german-shepherd",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "giraffe",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "golden-puppy",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "gray-kitten",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "hammerhead-shark",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "hippo",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "kirby",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "lion",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "mario",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "octopus",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "orange-tabby",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "owl",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "pig",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "pikachu",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "plane",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "police-car",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "pug",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "raccoon",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "rottweiler",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "sea-turtle",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "seahorse",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "siamese",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
   "id": "sonic",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "squirrel",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "stegosaurus",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "steve",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "submarine",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "t-rex",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "tractor",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "train",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "triceratops",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "unicornio",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "velociraptor",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "white-kitten",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "yoshi",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "zebra",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
+  "id": "zombie",
   "model": "model.glb",
   "preview": "art.jpeg",
   "image": "art.jpeg"

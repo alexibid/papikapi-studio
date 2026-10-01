@@ -117,54 +117,6 @@
         "cwd": "apps/papikapi-studio"
       }
     },
-    "stage:0": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 0",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-0": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 0",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:0:step:1": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-1",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-0:step-1": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-1",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:0:step:2": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-2",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-0:step-2": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 0 --step s0-step-2",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
     "stage:1": {
       "cache": false,
       "executor": "nx:run-commands",
@@ -210,6 +162,150 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-2",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage:2": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage-2": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage:2:step:1": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-1",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage-2:step-1": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-1",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage:2:step:2": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-2",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage-2:step-2": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-2",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage:2:step:3": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-3",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage-2:step-3": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-3",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage:2:step:4": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-4",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage-2:step-4": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-4",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage:2:step:5": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-5",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage-2:step-5": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-5",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage:3": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 3",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage-3": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 3",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage:3:step:1": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 3 --step s3-step-1",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage-3:step-1": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 3 --step s3-step-1",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage:3:step:2": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 3 --step s3-step-2",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage-3:step-2": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 3 --step s3-step-2",
         "cwd": "apps/papikapi-studio"
       }
     }

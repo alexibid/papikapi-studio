@@ -1,8 +1,107 @@
 {
-  "name": "donkey-kong",
-  "group": "games",
-  "subject": "a cute standing gorilla, pure chestnut-brown facets with peach face facet, red necktie with yellow DK letters painted flat as a 2D UV decal, large knuckle facets on ground, exactly two eyes, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.077Z"
+  "version": 1,
+  "subject": "donkey-kong",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T17:00:58.110Z",
+      "status": "DONE",
+      "seconds": 42.63,
+      "costUsd": 0.0064,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0064)",
+      "data": {
+        "prompt": "A cute donkey kong",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T17:00:59.276Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 44492
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:09:09.543Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 267697
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:09:09.549Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 884484
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-09-30T19:49:59.258Z",
+      "status": "DONE",
+      "seconds": 0.73,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/donkey-kong/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          213.15,
+          217.43,
+          300.56
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 903,
+        "quadCount": 381,
+        "islandCount": 88,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-09-30T19:50:14.937Z",
+      "status": "DONE",
+      "seconds": 15.68,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm",
+        "textureType": "NONE"
+      },
+      "metrics": {
+        "pageCount": 10,
+        "netPages": 9
+      }
+    }
+  },
+  "totalSeconds": 59.12,
+  "totalCostUsd": 0.0064,
+  "updatedAt": "2026-10-01T13:09:09.549Z"
 }

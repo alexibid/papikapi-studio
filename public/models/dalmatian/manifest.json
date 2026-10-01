@@ -2,35 +2,35 @@
   "version": 1,
   "subject": "dalmatian",
   "stages": {
-    "s0-step-1": {
-      "stageId": "s0-step-1",
-      "at": "2026-09-26T17:22:38.479Z",
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T16:55:08.354Z",
       "status": "DONE",
-      "seconds": 85.76,
-      "costUsd": 0.0129,
-      "costNote": "RunPod Serverless FLUX.2 ($0.0129)",
+      "seconds": 53.69,
+      "costUsd": 0.0081,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0081)",
       "data": {
-        "prompt": "dalmatian",
-        "referenceCount": 1,
+        "prompt": "A cute dalmatian",
+        "referenceCount": 2,
         "alternativesCount": 6,
         "format": "image/jpeg"
       }
     },
-    "s0-step-2": {
-      "stageId": "s0-step-2",
-      "at": "2026-09-26T16:57:54.173Z",
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T16:55:09.494Z",
       "status": "DONE",
-      "seconds": 0.13,
+      "seconds": 0.03,
       "costUsd": 0,
       "costNote": "Local CPU Image Processing ($0.00)",
       "data": {
         "chosenPick": 3,
-        "artSize": 41267
+        "artSize": 47722
       }
     },
-    "s1-step-1": {
-      "stageId": "s1-step-1",
-      "at": "2026-09-26T17:33:24.013Z",
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:08:59.705Z",
       "status": "DONE",
       "seconds": 0.01,
       "costUsd": 0,
@@ -41,37 +41,157 @@
         "format": "image/png"
       },
       "metrics": {
-        "fileSize": 94937
+        "fileSize": 237595
       }
     },
-    "s1-step-2": {
-      "stageId": "s1-step-2",
-      "at": "2026-09-27T19:25:09.368Z",
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:08:59.714Z",
       "status": "DONE",
-      "seconds": 128.33,
-      "costUsd": 0.0205,
-      "costNote": "RunPod Serverless ($0.00016/s)",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
       "data": {
-        "fileSize": 1184612,
-        "faceCount": 500,
-        "format": "model/gltf-binary",
+        "cached": true,
         "chosenPick": 3,
-        "cached": false,
-        "device": "NVIDIA RTX 4090 Serverless Worker",
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1253880
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:09:00.382Z",
+      "status": "DONE",
+      "seconds": 0.67,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/dalmatian/stage-2/step-2-3d.glb",
         "parameters": {
-          "seed": 1,
-          "simplify": 0.95,
-          "target_faces": 500,
-          "texture_size": 1024
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
         }
       },
       "metrics": {
-        "fileSize": 1184612,
-        "faceCount": 500
+        "faces": 3714,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 5,
+        "plinthWidthMm": 570.3,
+        "plinthLengthMm": 392,
+        "plinthThicknessMm": 71.1
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:09:01.053Z",
+      "status": "DONE",
+      "seconds": 0.67,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/dalmatian/stage-2/step-3-plinth.glb",
+        "lengthMm": 597.3,
+        "faces": 3790,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 351,
+        "meshFaces": 494,
+        "quads": 216,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.37,
+        "maxDeviationMm": 2.19,
+        "featureLossMm": 4.49
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:09:04.760Z",
+      "status": "DONE",
+      "seconds": 3.7,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/dalmatian/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 494,
+        "texelsPerMm": 2.809
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T11:22:55.074Z",
+      "status": "DONE",
+      "seconds": 0.66,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/dalmatian/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          300,
+          201.82,
+          286.27
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 494,
+        "quadCount": 194,
+        "pieces": 43,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 1.5,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T11:23:33.104Z",
+      "status": "DONE",
+      "seconds": 38.03,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 22,
+        "sheetCount": 10,
+        "pieceCount": 43,
+        "labelCollisions": 6
       }
     }
   },
-  "totalSeconds": 214.23,
-  "totalCostUsd": 0.0334,
-  "updatedAt": "2026-09-27T19:25:09.371Z"
+  "totalSeconds": 97.51,
+  "totalCostUsd": 0.0081,
+  "updatedAt": "2026-10-01T13:09:04.762Z"
 }

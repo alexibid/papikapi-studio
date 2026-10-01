@@ -1,23 +1,18 @@
-import { AutoModel, AutoProcessor, LogLevel, RawImage, Tensor, env } from '@huggingface/transformers';
+import { AutoModel, AutoProcessor, LogLevel, RawImage, env } from '@huggingface/transformers';
 import sharp from 'sharp';
+import type { CutoutOptions, LoadedModel } from './interfaces/index.js';
 
 env.allowLocalModels = false;
 env.logLevel = LogLevel.ERROR;
-
-export interface CutoutOptions {
-  readonly imageBuffer: Buffer;
-}
-
-interface LoadedModel {
-  readonly model: { (args: { input: unknown }): Promise<{ output: Tensor[] }> };
-  readonly processor: { (img: unknown): Promise<{ pixel_values: unknown }> };
-}
 
 export class ImageCutout {
   private static readonly modelId = 'briaai/RMBG-1.4';
   private static readonly opaqueThreshold = 128;
   private static readonly transparentThreshold = 20;
   private static readonly minIslandPixels = 200;
+  private static readonly backgroundDistanceThreshold = 40;
+  private static readonly minSaturation = 0.18;
+  private static readonly borderWidthPixels = 4;
   private static readonly neighbourOffsets: readonly (readonly [number, number])[] = [
     [1, 0],
     [-1, 0],
@@ -30,6 +25,7 @@ export class ImageCutout {
     const image = (await RawImage.fromBlob(new Blob([new Uint8Array(options.imageBuffer)]))).rgb();
     const mask = await this.segmentMask(image);
     const alpha = this.alphaFromMask(mask.data);
+    this.addColouredSolids(alpha, image);
     this.removeSmallIslands(alpha, image.width, image.height);
     return this.encodePng(image, alpha);
   }
@@ -64,6 +60,37 @@ export class ImageCutout {
       }
     }
     return alpha;
+  }
+
+  private static estimateBackground(image: RawImage): readonly [number, number, number] {
+    const channels: number[][] = [[], [], []];
+    for (let row = 0; row < image.height; row++) {
+      for (let column = 0; column < image.width; column++) {
+        const onBorder =
+          row < this.borderWidthPixels ||
+          column < this.borderWidthPixels ||
+          row >= image.height - this.borderWidthPixels ||
+          column >= image.width - this.borderWidthPixels;
+        if (!onBorder) continue;
+        const offset = (row * image.width + column) * 3;
+        for (let channel = 0; channel < 3; channel++) channels[channel].push(image.data[offset + channel]);
+      }
+    }
+    const median = (values: number[]): number => values.sort((a, b) => a - b)[Math.floor(values.length / 2)];
+    return [median(channels[0]), median(channels[1]), median(channels[2])];
+  }
+
+  private static addColouredSolids(alpha: Uint8Array, image: RawImage): void {
+    const [backgroundRed, backgroundGreen, backgroundBlue] = this.estimateBackground(image);
+    for (let pixel = 0; pixel < alpha.length; pixel++) {
+      const red = image.data[pixel * 3];
+      const green = image.data[pixel * 3 + 1];
+      const blue = image.data[pixel * 3 + 2];
+      const distance = Math.hypot(red - backgroundRed, green - backgroundGreen, blue - backgroundBlue);
+      const brightest = Math.max(red, green, blue);
+      const saturation = brightest === 0 ? 0 : (brightest - Math.min(red, green, blue)) / brightest;
+      if (distance > this.backgroundDistanceThreshold && saturation > this.minSaturation) alpha[pixel] = 255;
+    }
   }
 
   private static removeSmallIslands(alpha: Uint8Array, width: number, height: number): void {

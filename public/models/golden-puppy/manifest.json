@@ -2,34 +2,196 @@
   "version": 1,
   "subject": "golden-puppy",
   "stages": {
-    "s0-step-1": {
-      "stageId": "s0-step-1",
-      "at": "2026-09-26T17:04:16.541Z",
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T17:20:32.117Z",
       "status": "DONE",
-      "seconds": 36.03,
-      "costUsd": 0.0054,
-      "costNote": "RunPod Serverless FLUX.2 ($0.0054)",
+      "seconds": 46.05,
+      "costUsd": 0.0069,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0069)",
       "data": {
-        "prompt": "golden puppy",
-        "referenceCount": 1,
+        "prompt": "A cute golden puppy",
+        "referenceCount": 2,
         "alternativesCount": 6,
         "format": "image/jpeg"
       }
     },
-    "s0-step-2": {
-      "stageId": "s0-step-2",
-      "at": "2026-09-26T17:04:25.413Z",
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T17:20:33.534Z",
       "status": "DONE",
-      "seconds": 0.18,
+      "seconds": 0.02,
       "costUsd": 0,
       "costNote": "Local CPU Image Processing ($0.00)",
       "data": {
         "chosenPick": 3,
-        "artSize": 39404
+        "artSize": 40246
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:12:05.392Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 259203
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:12:05.400Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1172044
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:12:06.124Z",
+      "status": "DONE",
+      "seconds": 0.72,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/golden-puppy/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 1472,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 6,
+        "plinthWidthMm": 304,
+        "plinthLengthMm": 608.1,
+        "plinthThicknessMm": 53.5
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:12:06.764Z",
+      "status": "DONE",
+      "seconds": 0.64,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/golden-puppy/stage-2/step-3-plinth.glb",
+        "lengthMm": 636.8,
+        "faces": 1520,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 335,
+        "meshFaces": 518,
+        "quads": 180,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.44,
+        "maxDeviationMm": 25.81,
+        "featureLossMm": 5.26
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:12:10.825Z",
+      "status": "DONE",
+      "seconds": 4.06,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/golden-puppy/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 518,
+        "texelsPerMm": 2.542
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T10:52:31.172Z",
+      "status": "DONE",
+      "seconds": 0.58,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/golden-puppy/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          141.52,
+          300,
+          242.91
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 363,
+        "quadCount": 131,
+        "pieces": 37,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 5.6,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T10:52:54.825Z",
+      "status": "DONE",
+      "seconds": 23.65,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 18,
+        "sheetCount": 7,
+        "pieceCount": 37,
+        "labelCollisions": 2
       }
     }
   },
-  "totalSeconds": 36.21,
-  "totalCostUsd": 0.0054,
-  "updatedAt": "2026-09-26T17:04:25.414Z"
+  "totalSeconds": 75.78,
+  "totalCostUsd": 0.0069,
+  "updatedAt": "2026-10-01T13:12:10.827Z"
 }

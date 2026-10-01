@@ -1,8 +1,197 @@
 {
-  "name": "velociraptor",
-  "group": "dinosaurs",
-  "subject": "a cute red velociraptor, pure crimson-red facets, closed wedge snout with sawtooth teeth painted flat on the facet surface as a 2D UV decal with closed jaw and no 3D teeth, sharp claw tips painted flat, exactly two eyes with white catchlights, zero floor shadow",
-  "chosenPick": 3,
-  "has3D": false,
-  "updatedAt": "2026-09-25T11:31:25.053Z"
+  "version": 1,
+  "subject": "velociraptor",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T19:25:02.423Z",
+      "status": "DONE",
+      "seconds": 46.65,
+      "costUsd": 0.007,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0070)",
+      "data": {
+        "prompt": "A cute velociraptor",
+        "referenceCount": 2,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T19:25:03.578Z",
+      "status": "DONE",
+      "seconds": 0.02,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 3,
+        "artSize": 47940
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:14:56.872Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 287172
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:14:56.878Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1182180
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:14:57.640Z",
+      "status": "DONE",
+      "seconds": 0.76,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/velociraptor/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 1379,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 2,
+        "plinthWidthMm": 272.3,
+        "plinthLengthMm": 998.8,
+        "plinthThicknessMm": 79.6
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:14:58.313Z",
+      "status": "DONE",
+      "seconds": 0.67,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/velociraptor/stage-2/step-3-plinth.glb",
+        "lengthMm": 1046,
+        "faces": 1408,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 331,
+        "meshFaces": 472,
+        "quads": 190,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": 0.01,
+        "maxDeviationMm": 1.16,
+        "featureLossMm": 1.92
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:15:01.404Z",
+      "status": "DONE",
+      "seconds": 3.09,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/velociraptor/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 472,
+        "texelsPerMm": 2.548
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T11:11:22.852Z",
+      "status": "DONE",
+      "seconds": 0.61,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/velociraptor/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          104.96,
+          300,
+          178.86
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 417,
+        "quadCount": 173,
+        "pieces": 33,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 0.5,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T11:11:41.021Z",
+      "status": "DONE",
+      "seconds": 18.16,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 14,
+        "sheetCount": 4,
+        "pieceCount": 33,
+        "labelCollisions": 24
+      }
+    }
+  },
+  "totalSeconds": 70.02,
+  "totalCostUsd": 0.007,
+  "updatedAt": "2026-10-01T13:15:01.405Z"
 }

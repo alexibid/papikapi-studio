@@ -2,34 +2,196 @@
   "version": 1,
   "subject": "blue-eyed-pug",
   "stages": {
-    "s0-step-1": {
-      "stageId": "s0-step-1",
-      "at": "2026-09-26T17:02:27.298Z",
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T15:39:29.079Z",
       "status": "DONE",
-      "seconds": 44.8,
-      "costUsd": 0.0067,
-      "costNote": "RunPod Serverless FLUX.2 ($0.0067)",
+      "seconds": 47.18,
+      "costUsd": 0.0071,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0071)",
       "data": {
-        "prompt": "blue eyed pug",
-        "referenceCount": 1,
+        "prompt": "A cute blue eyed pug",
+        "referenceCount": 2,
         "alternativesCount": 6,
         "format": "image/jpeg"
       }
     },
-    "s0-step-2": {
-      "stageId": "s0-step-2",
-      "at": "2026-09-26T17:02:33.920Z",
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T15:39:30.232Z",
       "status": "DONE",
-      "seconds": 0.13,
+      "seconds": 0.02,
       "costUsd": 0,
       "costNote": "Local CPU Image Processing ($0.00)",
       "data": {
         "chosenPick": 3,
-        "artSize": 40976
+        "artSize": 40168
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T12:56:49.835Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 228919
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T12:56:49.842Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1206012
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T12:56:50.468Z",
+      "status": "DONE",
+      "seconds": 0.63,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/blue-eyed-pug/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 3402,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 4,
+        "plinthWidthMm": 486.2,
+        "plinthLengthMm": 291.5,
+        "plinthThicknessMm": 48.8
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T12:56:51.103Z",
+      "status": "DONE",
+      "seconds": 0.63,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/blue-eyed-pug/stage-2/step-3-plinth.glb",
+        "lengthMm": 510.2,
+        "faces": 3452,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 344,
+        "meshFaces": 503,
+        "quads": 197,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.16,
+        "maxDeviationMm": 2.13,
+        "featureLossMm": 4.13
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T12:56:54.639Z",
+      "status": "DONE",
+      "seconds": 3.53,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/blue-eyed-pug/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 503,
+        "texelsPerMm": 3.157
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T11:19:04.988Z",
+      "status": "DONE",
+      "seconds": 0.8,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/blue-eyed-pug/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          300,
+          194.95,
+          276.53
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 478,
+        "quadCount": 190,
+        "pieces": 37,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 1.7,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T11:20:04.426Z",
+      "status": "DONE",
+      "seconds": 59.43,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 25,
+        "sheetCount": 14,
+        "pieceCount": 37,
+        "labelCollisions": 2
       }
     }
   },
-  "totalSeconds": 44.93,
-  "totalCostUsd": 0.0067,
-  "updatedAt": "2026-09-26T17:02:33.920Z"
+  "totalSeconds": 112.28,
+  "totalCostUsd": 0.0071,
+  "updatedAt": "2026-10-01T12:56:54.641Z"
 }

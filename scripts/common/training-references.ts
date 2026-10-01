@@ -4,8 +4,6 @@ import type { InlineImage, ReferenceItem } from './interfaces/index.js';
 import { GeminiClient } from './gemini-client.js';
 import { WorkspacePaths } from './workspace-paths.js';
 
-export type { ReferenceItem };
-
 export class TrainingReferences {
   private static cachedItems: readonly ReferenceItem[] | null = null;
 

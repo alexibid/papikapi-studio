@@ -2,34 +2,196 @@
   "version": 1,
   "subject": "rottweiler",
   "stages": {
-    "s0-step-1": {
-      "stageId": "s0-step-1",
-      "at": "2026-09-26T15:37:36.316Z",
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T18:25:04.881Z",
       "status": "DONE",
-      "seconds": 35.97,
-      "costUsd": 0.0054,
-      "costNote": "RunPod Serverless FLUX.2 ($0.0054)",
+      "seconds": 53.64,
+      "costUsd": 0.008,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0080)",
       "data": {
-        "prompt": "rottweiler",
-        "referenceCount": 1,
+        "prompt": "A cute rottweiler",
+        "referenceCount": 2,
         "alternativesCount": 6,
         "format": "image/jpeg"
       }
     },
-    "s0-step-2": {
-      "stageId": "s0-step-2",
-      "at": "2026-09-26T15:37:41.987Z",
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T18:25:06.246Z",
       "status": "DONE",
-      "seconds": 0.12,
+      "seconds": 0.02,
       "costUsd": 0,
       "costNote": "Local CPU Image Processing ($0.00)",
       "data": {
         "chosenPick": 3,
-        "artSize": 44886
+        "artSize": 41203
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:13:27.588Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 226746
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:13:27.595Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1107500
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:13:28.303Z",
+      "status": "DONE",
+      "seconds": 0.71,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/rottweiler/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 1409,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 4,
+        "plinthWidthMm": 584.6,
+        "plinthLengthMm": 240.7,
+        "plinthThicknessMm": 59.2
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:13:29.293Z",
+      "status": "DONE",
+      "seconds": 0.99,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/rottweiler/stage-2/step-3-plinth.glb",
+        "lengthMm": 612.2,
+        "faces": 1438,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 323,
+        "meshFaces": 452,
+        "quads": 202,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.18,
+        "maxDeviationMm": 1.82,
+        "featureLossMm": 2.89
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:13:35.914Z",
+      "status": "DONE",
+      "seconds": 6.62,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/rottweiler/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 452,
+        "texelsPerMm": 3.286
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T11:02:34.931Z",
+      "status": "DONE",
+      "seconds": 0.64,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/rottweiler/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          300,
+          132.97,
+          254.23
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 444,
+        "quadCount": 182,
+        "pieces": 42,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 1.8,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T11:03:03.467Z",
+      "status": "DONE",
+      "seconds": 28.53,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 19,
+        "sheetCount": 7,
+        "pieceCount": 42,
+        "labelCollisions": 6
       }
     }
   },
-  "totalSeconds": 36.09,
-  "totalCostUsd": 0.0054,
-  "updatedAt": "2026-09-26T15:37:41.987Z"
+  "totalSeconds": 91.21,
+  "totalCostUsd": 0.008,
+  "updatedAt": "2026-10-01T13:13:35.917Z"
 }

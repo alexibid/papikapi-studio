@@ -2,34 +2,196 @@
   "version": 1,
   "subject": "german-shepherd",
   "stages": {
-    "s0-step-1": {
-      "stageId": "s0-step-1",
-      "at": "2026-09-26T16:59:00.481Z",
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-09-30T17:13:26.777Z",
       "status": "DONE",
-      "seconds": 34.32,
-      "costUsd": 0.0051,
-      "costNote": "RunPod Serverless FLUX.2 ($0.0051)",
+      "seconds": 43.58,
+      "costUsd": 0.0065,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0065)",
       "data": {
-        "prompt": "german shepherd",
-        "referenceCount": 1,
+        "prompt": "A cute german shepherd",
+        "referenceCount": 2,
         "alternativesCount": 6,
         "format": "image/jpeg"
       }
     },
-    "s0-step-2": {
-      "stageId": "s0-step-2",
-      "at": "2026-09-26T16:59:06.200Z",
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-09-30T17:13:27.930Z",
       "status": "DONE",
-      "seconds": 0.15,
+      "seconds": 0.02,
       "costUsd": 0,
       "costNote": "Local CPU Image Processing ($0.00)",
       "data": {
         "chosenPick": 3,
-        "artSize": 37467
+        "artSize": 44813
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-01T13:11:55.809Z",
+      "status": "DONE",
+      "seconds": 0.01,
+      "costUsd": 0,
+      "costNote": "Local Cache Hit ($0.00)",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 253550
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-01T13:11:55.817Z",
+      "status": "DONE",
+      "seconds": 0.05,
+      "costUsd": 0,
+      "costNote": "Restored from local pick cache",
+      "data": {
+        "cached": true,
+        "chosenPick": 3,
+        "format": "model/gltf-binary"
+      },
+      "metrics": {
+        "fileSize": 1135784
+      }
+    },
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-01T13:11:56.461Z",
+      "status": "DONE",
+      "seconds": 0.64,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/german-shepherd/stage-2/step-2-3d.glb",
+        "parameters": {
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "plinth_min_height_ratio": 0.04,
+          "plinth_cut_lift_ratio": 0.05,
+          "plinth_margin_ratio": 0.03,
+          "plinth_slope_ratio": 0.025
+        }
+      },
+      "metrics": {
+        "faces": 1382,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "removedIslands": 0,
+        "loops": 4,
+        "plinthWidthMm": 520,
+        "plinthLengthMm": 200.7,
+        "plinthThicknessMm": 66.7
+      }
+    },
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-01T13:11:57.101Z",
+      "status": "DONE",
+      "seconds": 0.64,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/german-shepherd/stage-2/step-3-plinth.glb",
+        "lengthMm": 545,
+        "faces": 1422,
+        "parameters": {
+          "target_faces": 600,
+          "weld_distance_ratio": 0.00001,
+          "contact_height_ratio": 0.02,
+          "quad_face_angle_deg": 20,
+          "quad_shape_angle_deg": 60,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "points": 320,
+        "meshFaces": 458,
+        "quads": 190,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "airtight": true,
+        "volumeChangePercent": -0.28,
+        "maxDeviationMm": 1.85,
+        "featureLossMm": 3.37
+      }
+    },
+    "s2-step-5": {
+      "stageId": "s2-step-5",
+      "at": "2026-10-01T13:12:00.462Z",
+      "status": "DONE",
+      "seconds": 3.36,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/german-shepherd/stage-2/step-2-3d.glb",
+        "parameters": {
+          "atlas_size_px": 4096,
+          "island_padding_px": 8,
+          "bleed_px": 6,
+          "cage_extrusion_ratio": 0.03,
+          "max_ray_distance_ratio": 0.08,
+          "bake_samples": 4,
+          "jpeg_quality": 92
+        }
+      },
+      "metrics": {
+        "faces": 458,
+        "texelsPerMm": 3.628
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-01T10:51:33.689Z",
+      "status": "DONE",
+      "seconds": 0.63,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/german-shepherd/stage-2/step-3-reduce.blend",
+        "dimensionsMm": [
+          297.99,
+          197.72,
+          300
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 451,
+        "quadCount": 181,
+        "pieces": 35,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 3.2,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-01T10:52:04.451Z",
+      "status": "DONE",
+      "seconds": 30.75,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "format": "application/pdf",
+        "pageSize": "210x297mm"
+      },
+      "metrics": {
+        "pageCount": 18,
+        "sheetCount": 8,
+        "pieceCount": 35,
+        "labelCollisions": 0
       }
     }
   },
-  "totalSeconds": 34.47,
-  "totalCostUsd": 0.0051,
-  "updatedAt": "2026-09-26T16:59:06.201Z"
+  "totalSeconds": 79.68,
+  "totalCostUsd": 0.0065,
+  "updatedAt": "2026-10-01T13:12:00.466Z"
 }

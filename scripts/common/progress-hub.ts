@@ -1,33 +1,10 @@
-import { PipelineConfigLoader } from './pipeline-config.js';
-
-export type ProgressState = 'running' | 'done' | 'failed';
-
-export interface StageSummary {
-  readonly stepId: string;
-  readonly message: string;
-}
-
-export interface ProgressEvent {
-  readonly stepId: string;
-  readonly message: string;
-  readonly stepIndex: number;
-  readonly stepCount: number;
-  readonly expectedSeconds: number;
-  readonly elapsedInStepMs: number;
-  readonly state: ProgressState;
-  readonly stages: readonly StageSummary[];
-}
-
-type ProgressListener = (event: ProgressEvent) => void;
-
-interface ProgressJob {
-  readonly stepIds: readonly string[];
-  readonly messages: Map<string, string>;
-  stepId: string;
-  message: string;
-  stepStartedAt: number;
-  state: ProgressState;
-}
+import type {
+  ProgressEvent,
+  ProgressJob,
+  ProgressListener,
+  ProgressState,
+} from './interfaces/index.js';
+import { StepDurationEstimator } from './step-duration-estimator.js';
 
 export class ProgressHub {
   private static readonly jobs = new Map<string, ProgressJob>();
@@ -98,7 +75,7 @@ export class ProgressHub {
       message: job.message,
       stepIndex,
       stepCount: job.stepIds.length,
-      expectedSeconds: PipelineConfigLoader.getStep(job.stepId).expected_seconds,
+      expectedSeconds: StepDurationEstimator.expectedSeconds(job.stepId),
       elapsedInStepMs: Date.now() - job.stepStartedAt,
       state: job.state,
       stages: job.stepIds.slice(0, stepIndex + 1).map((stepId) => ({

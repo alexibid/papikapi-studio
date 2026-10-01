@@ -1,11 +1,9 @@
-import type { ModelExecutionReport, StepExecutionResult } from './interfaces/index.js';
-
-export type { StepExecutionResult, ModelExecutionReport };
+import type { ModelExecutionReport } from './interfaces/index.js';
 
 export class StageReporter {
   public static printHeader(stageTitle: string, modelCount: number): void {
     console.log('\n╔═════════════════════════════════════════════════════════════════╗');
-    console.log('║                  K I R I G A M I   S T U D I O                  ║');
+    console.log('║                  P A P I K A P I   S T U D I O                  ║');
     console.log('╚═════════════════════════════════════════════════════════════════╝');
     console.log(`  Stage: ${stageTitle}`);
     console.log(`  Models: ${modelCount}\n`);
@@ -21,29 +19,9 @@ export class StageReporter {
   }
 
   public static printSummary(reports: readonly ModelExecutionReport[]): void {
-    console.log('\n╔═════════════════════════════════════════════════════════════════╗');
-    console.log('║                     EXECUTION SUMMARY TABLE                     ║');
-    console.log('╚═════════════════════════════════════════════════════════════════╝');
-    console.log(' MODEL              │ STEPS  │ TIME   │ STATUS');
-    console.log('───────────────────────────────────────────────────────────────────');
-
-    let allPassed = true;
-    for (const rep of reports) {
-      if (!rep.passed) allPassed = false;
-      const model = rep.modelName.padEnd(18, ' ');
-      const steps = `${rep.stepResults.filter((s) => s.status === 'DONE').length}/${rep.stepResults.length}`.padEnd(6, ' ');
-      const time = `${rep.totalDuration.toFixed(2)}s`.padEnd(6, ' ');
-      const status = rep.passed ? ' PASS ' : ' FAIL ';
-      console.log(` ${model} │ ${steps} │ ${time} │ ${status}`);
-    }
-
-    console.log('───────────────────────────────────────────────────────────────────');
-    if (allPassed) {
-      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log(' 0 INCIDENTS: All steps executed and saved files successfully.');
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-    } else {
-      console.log('\n❌ Execution finished with errors.\n');
-    }
+    const failed = reports.filter((report) => !report.passed).length;
+    const skipped = reports.reduce((total, report) => total + report.stepResults.filter((step) => step.status === 'SKIP').length, 0);
+    const totals = `${reports.length} models, ${reports.length - failed} OK, ${failed} failed, ${skipped} steps skipped`;
+    console.log(failed === 0 ? `\n0 INCIDENTS: ${totals}\n` : `\n❌ Execution finished with errors: ${totals}\n`);
   }
 }
