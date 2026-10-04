@@ -126,7 +126,7 @@ def execute(model_name, resources_dir, resolution):
     evidences_dir = os.path.join(model_dir, "evidences")
     os.makedirs(evidences_dir, exist_ok=True)
 
-    views_dir = os.path.join(model_dir, "stage-2", "stage-2-step-3-views")
+    views_dir = os.path.join(model_dir, "stage-2", "step-3-views")
     if not os.path.exists(views_dir):
         views_dir = os.path.join(model_dir, "stage-3", "step-2-views")
 

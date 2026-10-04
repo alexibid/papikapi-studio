@@ -354,7 +354,7 @@
             "stage_dir": "stage-2",
             "model_resource": "step-3-base.glb",
             "model_pick_resource_pattern": "step-3-base-pick-{pick}.glb",
-            "views_dir": "stage-2-step-3-views",
+            "views_dir": "step-3-views",
             "manifest": "step-3-manifest.json"
           },
           "parameters": {
@@ -446,7 +446,7 @@
             "model_stage_dir": "stage-2",
             "model_resource": "step-3-base.glb",
             "model_pick_resource_pattern": "step-3-base-pick-{pick}.glb",
-            "views_dir": "stage-2-step-3-views",
+            "views_dir": "step-3-views",
             "mesh_resource": "step-1-reduce.json"
           },
           "outputs": {

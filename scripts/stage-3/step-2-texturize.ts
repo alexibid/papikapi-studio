@@ -56,7 +56,9 @@ export class TexturizeGenerator {
     ];
     const meshPath = meshCandidates.find((c) => existsSync(c));
     if (!meshPath) {
-      throw new Error(`Simplified mesh not found for '${modelName}': tried ${meshCandidates.join(', ')}`);
+      throw new Error(
+        `Simplified mesh not found for '${modelName}': tried ${meshCandidates.join(', ')}`,
+      );
     }
     const modelPath = join(stageDir, step.outputs.model_resource);
     const viewsDir = join(stageDir, step.outputs.views_dir);
@@ -68,10 +70,7 @@ export class TexturizeGenerator {
 
     const start = Date.now();
 
-    const stage2ViewsDir = join(
-      modelStageDir,
-      step.inputs.views_dir ?? 'stage-2-step-3-views',
-    );
+    const stage2ViewsDir = join(modelStageDir, step.inputs.views_dir ?? 'step-3-views');
     let renderStats: RenderViewsStatistics;
 
     if (existsSync(join(stage2ViewsDir, 'views.json'))) {
@@ -110,14 +109,11 @@ export class TexturizeGenerator {
       );
     }
 
-    const vectorStats = PythonRunner.run<VectorizeStatistics>(
-      step.vectorizer_script,
-      {
-        views_dir: viewsDir,
-        output_dir: svgDir,
-        resolution: step.parameters.resolution,
-      },
-    );
+    const vectorStats = PythonRunner.run<VectorizeStatistics>(step.vectorizer_script, {
+      views_dir: viewsDir,
+      output_dir: svgDir,
+      resolution: step.parameters.resolution,
+    });
 
     const projectStats = BlenderRunner.run<ProjectReduceStatistics>(
       step.blender,

@@ -97,9 +97,9 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-04T11:32:37.050Z",
+      "at": "2026-10-04T11:47:36.794Z",
       "status": "DONE",
-      "seconds": 0.68,
+      "seconds": 0.59,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -129,9 +129,9 @@
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-04T11:33:31.030Z",
+      "at": "2026-10-04T11:48:32.111Z",
       "status": "DONE",
-      "seconds": 53.97,
+      "seconds": 55.31,
       "costUsd": 0,
       "costNote": "Local Blender headless and Vectorizer ($0.00)",
       "data": {
@@ -144,37 +144,37 @@
         "palette": [
           {
             "index": 0,
-            "hex": "#030101",
-            "share": 0.9128,
+            "hex": "#050201",
+            "share": 0.9074,
             "kind": "neutral"
           },
           {
             "index": 1,
-            "hex": "#dddcda",
-            "share": 0.0383,
+            "hex": "#e6e6e5",
+            "share": 0.0431,
             "kind": "neutral"
           },
           {
             "index": 2,
-            "hex": "#504943",
-            "share": 0.0347,
+            "hex": "#544d47",
+            "share": 0.0339,
             "kind": "neutral"
           },
           {
             "index": 3,
-            "hex": "#ab5d3e",
-            "share": 0.0085,
+            "hex": "#b36342",
+            "share": 0.009,
             "kind": "hue"
           },
           {
             "index": 4,
-            "hex": "#97771d",
-            "share": 0.0055,
+            "hex": "#9b7b1f",
+            "share": 0.0062,
             "kind": "hue"
           },
           {
             "index": 5,
-            "hex": "#bcb98a",
+            "hex": "#c0be8e",
             "share": 0.0002,
             "kind": "hue"
           }
@@ -185,9 +185,9 @@
         "viewsCount": 6,
         "resolution": 2048,
         "familiesCount": 6,
-        "baseHex": "#030101",
-        "totalPaths": 91,
-        "totalNodes": 36539,
+        "baseHex": "#050201",
+        "totalPaths": 96,
+        "totalNodes": 38990,
         "hiddenFaces": 37,
         "viewsUsage": {
           "front": 84,
@@ -203,9 +203,9 @@
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-04T11:33:31.890Z",
+      "at": "2026-10-04T11:48:32.900Z",
       "status": "DONE",
-      "seconds": 0.86,
+      "seconds": 0.79,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -269,7 +269,7 @@
       }
     }
   },
-  "totalSeconds": 186.87,
+  "totalSeconds": 188.05,
   "totalCostUsd": 0.0069,
-  "updatedAt": "2026-10-04T11:33:31.891Z"
+  "updatedAt": "2026-10-04T11:48:32.901Z"
 }

@@ -52,9 +52,10 @@ export class BaseCutGenerator {
       ...step.parameters,
     });
 
-    const viewsDirName = step.outputs.views_dir ?? 'stage-2-step-3-views';
+    const viewsDirName = step.outputs.views_dir ?? 'step-3-views';
     const viewsDir = join(stageDir, viewsDirName);
-    const viewsScript = step.blender.views_script ?? 'scripts/stage-2/blender/base/render_base_views.py';
+    const viewsScript =
+      step.blender.views_script ?? 'scripts/stage-2/blender/base/render_base_views.py';
     BlenderRunner.run(step.blender, viewsScript, {
       input_glb: outputPath,
       output_dir: viewsDir,
@@ -62,7 +63,7 @@ export class BaseCutGenerator {
       margin: 0.0,
     });
 
-    const rootViewsDir = join(WorkspacePaths.resourcePath(modelName), 'stage-2-step-3-views');
+    const rootViewsDir = join(WorkspacePaths.resourcePath(modelName), 'step-3-views');
     if (rootViewsDir !== viewsDir) {
       if (existsSync(rootViewsDir)) {
         rmSync(rootViewsDir, { recursive: true, force: true });

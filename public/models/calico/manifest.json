@@ -97,9 +97,9 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-03T00:51:39.574Z",
+      "at": "2026-10-04T11:50:44.959Z",
       "status": "DONE",
-      "seconds": 0.84,
+      "seconds": 0.6,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -270,7 +270,7 @@
       }
     }
   },
-  "totalSeconds": 122.34,
+  "totalSeconds": 122.1,
   "totalCostUsd": 0.0068,
-  "updatedAt": "2026-10-04T11:22:02.497Z"
+  "updatedAt": "2026-10-04T11:50:44.965Z"
 }
