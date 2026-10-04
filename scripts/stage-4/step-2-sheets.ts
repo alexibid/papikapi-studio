@@ -9,10 +9,10 @@ import { Booklet } from './booklet.js';
 import type { NetDocument, RenderSet } from './interfaces/net.interface.js';
 import { PageTextures } from './page-textures.js';
 import { SheetTranslations } from './sheet-translations.js';
-import type { SheetsStepDefinition, Stage3Response } from './interfaces/stage-3.interface.js';
+import type { SheetsStepDefinition, Stage4Response } from './interfaces/stage-4.interface.js';
 
 export class SheetsExporter {
-  private static readonly stepId = 's3-step-2';
+  private static readonly stepId = 's4-step-2';
 
   private static displayName(modelName: string): string {
     return modelName
@@ -32,24 +32,41 @@ export class SheetsExporter {
     return JSON.parse(readFileSync(this.requireFile(path, 'Required file'), 'utf8')) as T;
   }
 
-  public static async execute(modelName: string): Promise<Stage3Response> {
+  public static async execute(modelName: string): Promise<Stage4Response> {
     const step = PipelineConfigLoader.getStep(this.stepId) as unknown as SheetsStepDefinition;
-    const stage3Dir = join(WorkspacePaths.resourcePath(modelName), step.stage_dir);
+    const stage4Dir = join(WorkspacePaths.resourcePath(modelName), step.stage_dir);
     const publicDir = WorkspacePaths.modelPath(modelName);
     mkdirSync(publicDir, { recursive: true });
 
-    const netPath = join(stage3Dir, step.inputs.net_resource);
-    const texturedModelPath = this.requireFile(
+    const netCandidates = [
+      join(stage4Dir, step.inputs.net_resource),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-4', 'step-1-net.json'),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-1-net.json'),
+    ];
+    const netPath = netCandidates.find((c) => existsSync(c));
+    if (!netPath) {
+      throw new Error(`Net document not found for '${modelName}': tried ${netCandidates.join(', ')}`);
+    }
+
+    const textureCandidates = [
       join(
         WorkspacePaths.resourcePath(modelName),
         step.inputs.texture_stage_dir,
         step.inputs.texture_model,
       ),
-      'Textured simplified model (run s2-step-5)',
-    );
-    const rendersDir = join(stage3Dir, step.outputs.renders_dir);
+      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-3-plinth.glb'),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-2-texturize.glb'),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-2', 'step-6-plinth.glb'),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-2', 'step-5-texturize.glb'),
+    ];
+    const texturedModelPath = textureCandidates.find((c) => existsSync(c));
+    if (!texturedModelPath) {
+      throw new Error(`Textured simplified model not found for '${modelName}': tried ${textureCandidates.join(', ')}`);
+    }
+
+    const rendersDir = join(stage4Dir, step.outputs.renders_dir);
     const rendersPath = join(rendersDir, 'renders.json');
-    const outputPath = join(stage3Dir, step.outputs.sheets_resource);
+    const outputPath = join(stage4Dir, step.outputs.sheets_resource);
 
     const startMsg = step.messages.start.replace('{model}', modelName);
     console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
@@ -68,7 +85,7 @@ export class SheetsExporter {
       blender: step.blender,
       modelPath: texturedModelPath,
       netPath,
-      directory: join(stage3Dir, 'step-2-textures'),
+      directory: join(stage4Dir, 'step-2-textures'),
       settings: step.parameters,
     });
     const summary = await Booklet.build(

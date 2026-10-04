@@ -1,4 +1,4 @@
-import { existsSync, unlinkSync } from 'node:fs';
+import { existsSync, rmSync, unlinkSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import type { PipelineStep } from './interfaces/index.js';
 import { WorkspacePaths } from './workspace-paths.js';
@@ -95,9 +95,10 @@ export class OutputCleaner {
           cleaned.push(basename(target));
         }
       }
-    } else if (step.id === 's2-step-4') {
+    } else if (step.id === 's3-step-1') {
       const stepOutputs = step.outputs as { points_resource: string; mesh_resource: string; mesh_public?: string; manifest: string };
       for (const name of [stepOutputs.points_resource, stepOutputs.mesh_resource, stepOutputs.manifest]) {
+        if (!name) continue;
         const target = join(stageDir, name);
         if (existsSync(target)) {
           unlinkSync(target);
@@ -111,9 +112,34 @@ export class OutputCleaner {
           cleaned.push(`public/${basename(pubMesh)}`);
         }
       }
-    } else if (step.id === 's2-step-5') {
-      const stepOutputs = step.outputs as { model_resource: string; model_public?: string; manifest: string };
+    } else if (step.id === 's3-step-2') {
+      const stepOutputs = step.outputs as { model_resource: string; model_public?: string; views_dir?: string; manifest: string };
       for (const name of [stepOutputs.model_resource, stepOutputs.manifest]) {
+        if (!name) continue;
+        const target = join(stageDir, name);
+        if (existsSync(target)) {
+          unlinkSync(target);
+          cleaned.push(basename(target));
+        }
+      }
+      if (stepOutputs.views_dir) {
+        const vDir = join(stageDir, stepOutputs.views_dir);
+        if (existsSync(vDir)) {
+          rmSync(vDir, { recursive: true, force: true });
+          cleaned.push(basename(vDir));
+        }
+      }
+      if (stepOutputs.model_public) {
+        const pubModel = join(publicDir, stepOutputs.model_public);
+        if (existsSync(pubModel)) {
+          unlinkSync(pubModel);
+          cleaned.push(`public/${basename(pubModel)}`);
+        }
+      }
+    } else if (step.id === 's3-step-3') {
+      const stepOutputs = step.outputs as { model_resource: string; mesh_resource: string; model_public: string; manifest: string };
+      for (const name of [stepOutputs.model_resource, stepOutputs.mesh_resource, stepOutputs.manifest]) {
+        if (!name) continue;
         const target = join(stageDir, name);
         if (existsSync(target)) {
           unlinkSync(target);
@@ -127,48 +153,44 @@ export class OutputCleaner {
           cleaned.push(`public/${basename(pubModel)}`);
         }
       }
-    } else if (step.id === 's2-step-6') {
-      const stepOutputs = step.outputs as { model_resource: string; mesh_resource: string; model_public: string; manifest: string };
-      for (const name of [stepOutputs.model_resource, stepOutputs.mesh_resource, stepOutputs.manifest]) {
-        const target = join(stageDir, name);
-        if (existsSync(target)) {
-          unlinkSync(target);
-          cleaned.push(basename(target));
+    } else if (step.id === 's4-step-1') {
+      const stepOutputs = step.outputs as { net_resource: string; manifest: string };
+      if (stepOutputs.net_resource) {
+        const resUnfolded = join(stageDir, stepOutputs.net_resource);
+        if (existsSync(resUnfolded)) {
+          unlinkSync(resUnfolded);
+          cleaned.push(basename(resUnfolded));
         }
       }
-      const pubModel = join(publicDir, stepOutputs.model_public);
-      if (existsSync(pubModel)) {
-        unlinkSync(pubModel);
-        cleaned.push(`public/${basename(pubModel)}`);
+      if (stepOutputs.manifest) {
+        const manifest = join(stageDir, stepOutputs.manifest);
+        if (existsSync(manifest)) {
+          unlinkSync(manifest);
+          cleaned.push(basename(manifest));
+        }
       }
-    } else if (step.id === 's3-step-1') {
-      const stepOutputs = step.outputs as { net_resource: string; manifest: string };
-      const resUnfolded = join(stageDir, stepOutputs.net_resource);
-      if (existsSync(resUnfolded)) {
-        unlinkSync(resUnfolded);
-        cleaned.push(basename(resUnfolded));
-      }
-      const manifest = join(stageDir, stepOutputs.manifest);
-      if (existsSync(manifest)) {
-        unlinkSync(manifest);
-        cleaned.push(basename(manifest));
-      }
-    } else if (step.id === 's3-step-2') {
+    } else if (step.id === 's4-step-2') {
       const stepOutputs = step.outputs as { sheets_resource: string; sheets_public: string; manifest: string };
-      const resSheets = join(stageDir, stepOutputs.sheets_resource);
-      if (existsSync(resSheets)) {
-        unlinkSync(resSheets);
-        cleaned.push(basename(resSheets));
+      if (stepOutputs.sheets_resource) {
+        const resSheets = join(stageDir, stepOutputs.sheets_resource);
+        if (existsSync(resSheets)) {
+          unlinkSync(resSheets);
+          cleaned.push(basename(resSheets));
+        }
       }
-      const pubSheets = join(publicDir, stepOutputs.sheets_public);
-      if (existsSync(pubSheets)) {
-        unlinkSync(pubSheets);
-        cleaned.push(`public/${basename(pubSheets)}`);
+      if (stepOutputs.sheets_public) {
+        const pubSheets = join(publicDir, stepOutputs.sheets_public);
+        if (existsSync(pubSheets)) {
+          unlinkSync(pubSheets);
+          cleaned.push(`public/${basename(pubSheets)}`);
+        }
       }
-      const manifest = join(stageDir, stepOutputs.manifest);
-      if (existsSync(manifest)) {
-        unlinkSync(manifest);
-        cleaned.push(basename(manifest));
+      if (stepOutputs.manifest) {
+        const manifest = join(stageDir, stepOutputs.manifest);
+        if (existsSync(manifest)) {
+          unlinkSync(manifest);
+          cleaned.push(basename(manifest));
+        }
       }
     }
 

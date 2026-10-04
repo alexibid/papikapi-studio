@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-01T13:12:26.446Z",
+      "at": "2026-10-04T11:22:59.107Z",
       "status": "DONE",
-      "seconds": 0.65,
+      "seconds": 4.33,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -72,35 +72,40 @@
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
-          "plinth_min_height_ratio": 0.04,
-          "plinth_cut_lift_ratio": 0.05,
-          "plinth_margin_ratio": 0.03,
-          "plinth_slope_ratio": 0.025
+          "base_cut_margin_ratios": [
+            0.003,
+            0.01,
+            0.02,
+            0.035,
+            0.05
+          ]
         }
       },
       "metrics": {
-        "faces": 1363,
+        "faces": 1366,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
         "removedIslands": 0,
         "loops": 1,
-        "plinthWidthMm": 408.6,
-        "plinthLengthMm": 369.3,
-        "plinthThicknessMm": 75.6
+        "widthMm": 384.6,
+        "lengthMm": 344.9,
+        "marginRatio": 0.003,
+        "repairedVertices": 0,
+        "repairedTriangles": 0
       }
     },
-    "s2-step-4": {
-      "stageId": "s2-step-4",
-      "at": "2026-10-01T13:12:27.086Z",
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-03T02:39:29.276Z",
       "status": "DONE",
-      "seconds": 0.64,
+      "seconds": 2.04,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/kirby/stage-2/step-3-plinth.glb",
-        "lengthMm": 429,
-        "faces": 1404,
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/kirby/stage-2/step-3-base.glb",
+        "lengthMm": 384.6,
+        "faces": 1392,
         "parameters": {
           "target_faces": 600,
           "weld_distance_ratio": 0.00001,
@@ -111,72 +116,146 @@
         }
       },
       "metrics": {
-        "points": 342,
-        "meshFaces": 503,
-        "quads": 181,
+        "points": 317,
+        "meshFaces": 473,
+        "quads": 161,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
-        "volumeChangePercent": -0.1,
+        "volumeChangePercent": -0.18,
         "maxDeviationMm": 1.13,
-        "featureLossMm": 1.94
+        "featureLossMm": 7
       }
     },
-    "s2-step-5": {
-      "stageId": "s2-step-5",
-      "at": "2026-10-01T13:12:30.456Z",
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-03T02:40:28.849Z",
       "status": "DONE",
-      "seconds": 3.37,
+      "seconds": 59.56,
       "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
+      "costNote": "Local Blender headless and Vectorizer ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/kirby/stage-2/step-2-3d.glb",
         "parameters": {
-          "atlas_size_px": 4096,
-          "island_padding_px": 8,
-          "bleed_px": 6,
-          "cage_extrusion_ratio": 0.03,
-          "max_ray_distance_ratio": 0.08,
-          "bake_samples": 4,
-          "jpeg_quality": 92
-        }
+          "resolution": 2048,
+          "margin": 0,
+          "min_facing": 0.2,
+          "flat_pattern": "flat_{name}.png"
+        },
+        "palette": [
+          {
+            "index": 0,
+            "hex": "#330607",
+            "share": 0.0649,
+            "kind": "neutral"
+          },
+          {
+            "index": 1,
+            "hex": "#eeedeb",
+            "share": 0.0018,
+            "kind": "neutral"
+          },
+          {
+            "index": 2,
+            "hex": "#c36887",
+            "share": 0.6443,
+            "kind": "hue"
+          },
+          {
+            "index": 3,
+            "hex": "#a94a3b",
+            "share": 0.2869,
+            "kind": "hue"
+          },
+          {
+            "index": 4,
+            "hex": "#245197",
+            "share": 0.0014,
+            "kind": "hue"
+          },
+          {
+            "index": 5,
+            "hex": "#81628e",
+            "share": 0.0008,
+            "kind": "hue"
+          }
+        ]
       },
       "metrics": {
-        "faces": 503,
-        "texelsPerMm": 3.2
+        "faces": 473,
+        "viewsCount": 6,
+        "resolution": 2048,
+        "familiesCount": 6,
+        "baseHex": "#c36887",
+        "totalPaths": 18,
+        "totalNodes": 5607,
+        "hiddenFaces": 61,
+        "viewsUsage": {
+          "front": 91,
+          "back": 68,
+          "right": 70,
+          "left": 75,
+          "top": 88,
+          "bottom": 81
+        },
+        "plinthFound": true,
+        "cleanFaces": 1366
       }
     },
-    "s3-step-1": {
-      "stageId": "s3-step-1",
-      "at": "2026-10-01T10:54:46.982Z",
+    "s3-step-3": {
+      "stageId": "s3-step-3",
+      "at": "2026-10-03T02:40:31.027Z",
       "status": "DONE",
-      "seconds": 0.62,
+      "seconds": 2.17,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/kirby/stage-2/step-3-reduce.blend",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/kirby/stage-3/step-2-texturize.glb",
+        "parameters": {
+          "plinth_thickness_ratio": 0.05,
+          "plinth_slope_ratio": 0.02,
+          "plinth_margin_ratio": 0.004,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "faces": 566,
+        "loops": 1,
+        "openEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s4-step-1": {
+      "stageId": "s4-step-1",
+      "at": "2026-10-03T02:40:33.108Z",
+      "status": "DONE",
+      "seconds": 2.08,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/kirby/stage-3/step-3-plinth.json",
         "dimensionsMm": [
-          284.62,
-          259.85,
-          300
+          300,
+          270.49,
+          270.22
         ],
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 501,
-        "quadCount": 169,
-        "pieces": 41,
+        "faceCount": 566,
+        "quadCount": 196,
+        "pieces": 43,
         "smallestPieceFaces": 1,
         "shortestCutMm": 1.4,
         "unpairedEdges": 0,
         "nonManifoldEdges": 0
       }
     },
-    "s3-step-2": {
-      "stageId": "s3-step-2",
-      "at": "2026-10-01T10:55:48.272Z",
+    "s4-step-2": {
+      "stageId": "s4-step-2",
+      "at": "2026-10-03T02:43:53.110Z",
       "status": "DONE",
-      "seconds": 61.29,
+      "seconds": 200,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -184,14 +263,14 @@
         "pageSize": "210x297mm"
       },
       "metrics": {
-        "pageCount": 27,
-        "sheetCount": 15,
-        "pieceCount": 41,
+        "pageCount": 26,
+        "sheetCount": 14,
+        "pieceCount": 43,
         "labelCollisions": 8
       }
     }
   },
-  "totalSeconds": 515.16,
+  "totalSeconds": 718.77,
   "totalCostUsd": 0.0673,
-  "updatedAt": "2026-10-01T13:12:30.459Z"
+  "updatedAt": "2026-10-04T11:22:59.116Z"
 }

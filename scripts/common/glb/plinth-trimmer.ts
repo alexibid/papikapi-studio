@@ -9,6 +9,7 @@ import type {
   Vertex,
 } from './glb.interface.js';
 import { GlbCodec } from './glb-codec.js';
+import { GlbRepair } from './glb-repair.js';
 import { PlinthDetector } from './plinth-detector.js';
 import { PlinthWalls } from './plinth-walls.js';
 import { FragmentRemover } from './fragment-remover.js';
@@ -19,14 +20,15 @@ import { PolygonClipper } from './polygon-clipper.js';
 
 export class PlinthTrimmer {
   public static async apply(glb: Buffer, parameters: PlinthParameters): Promise<PlinthTrimResult> {
-    const original = GlbCodec.read(glb);
+    const repair = GlbRepair.finiteOnly(GlbCodec.read(glb));
+    const original = repair.mesh;
     const cleaned = this.compact(FragmentRemover.remove(SheetRemover.remove(original, parameters), parameters));
     const texture = await TextureSampler.load(cleaned.image);
     const layout = PlinthDetector.detect(cleaned.vertices, cleaned.triangles, parameters, texture);
     const shaped = layout === null ? cleaned : this.trim(cleaned, layout, parameters);
     const sealed = MeshSealer.seal(shaped, parameters.weld_epsilon);
     const quality: MeshInspection = MeshSealer.inspect(sealed, parameters.weld_epsilon);
-    const modified = layout !== null || sealed !== shaped || shaped.triangles.length !== original.triangles.length;
+    const modified = repair.removedTriangles > 0 || layout !== null || sealed !== shaped || shaped.triangles.length !== original.triangles.length;
     if (!modified) return { glb, faceCount: original.triangles.length, trimmed: false, ...quality };
     return { glb: GlbCodec.write(sealed), faceCount: sealed.triangles.length, trimmed: true, ...quality };
   }

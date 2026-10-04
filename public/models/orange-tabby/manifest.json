@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-01T13:12:45.902Z",
+      "at": "2026-10-04T11:23:13.821Z",
       "status": "DONE",
-      "seconds": 0.66,
+      "seconds": 3.86,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -72,35 +72,40 @@
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
-          "plinth_min_height_ratio": 0.04,
-          "plinth_cut_lift_ratio": 0.05,
-          "plinth_margin_ratio": 0.03,
-          "plinth_slope_ratio": 0.025
+          "base_cut_margin_ratios": [
+            0.003,
+            0.01,
+            0.02,
+            0.035,
+            0.05
+          ]
         }
       },
       "metrics": {
-        "faces": 1468,
+        "faces": 1454,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
         "removedIslands": 0,
         "loops": 1,
-        "plinthWidthMm": 305.3,
-        "plinthLengthMm": 423.3,
-        "plinthThicknessMm": 20.1
+        "widthMm": 281.1,
+        "lengthMm": 399.2,
+        "marginRatio": 0.003,
+        "repairedVertices": 0,
+        "repairedTriangles": 0
       }
     },
-    "s2-step-4": {
-      "stageId": "s2-step-4",
-      "at": "2026-10-01T13:12:46.555Z",
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-03T02:55:21.711Z",
       "status": "DONE",
-      "seconds": 0.65,
+      "seconds": 2.41,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/orange-tabby/stage-2/step-3-plinth.glb",
-        "lengthMm": 443.4,
-        "faces": 1530,
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/orange-tabby/stage-2/step-3-base.glb",
+        "lengthMm": 400.8,
+        "faces": 1505,
         "parameters": {
           "target_faces": 600,
           "weld_distance_ratio": 0.00001,
@@ -111,72 +116,146 @@
         }
       },
       "metrics": {
-        "points": 326,
-        "meshFaces": 501,
-        "quads": 187,
+        "points": 409,
+        "meshFaces": 683,
+        "quads": 171,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
-        "volumeChangePercent": -0.44,
+        "volumeChangePercent": 0.44,
         "maxDeviationMm": 3.09,
-        "featureLossMm": 5.51
-      }
-    },
-    "s2-step-5": {
-      "stageId": "s2-step-5",
-      "at": "2026-10-01T13:12:49.708Z",
-      "status": "DONE",
-      "seconds": 3.15,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/orange-tabby/stage-2/step-2-3d.glb",
-        "parameters": {
-          "atlas_size_px": 4096,
-          "island_padding_px": 8,
-          "bleed_px": 6,
-          "cage_extrusion_ratio": 0.03,
-          "max_ray_distance_ratio": 0.08,
-          "bake_samples": 4,
-          "jpeg_quality": 92
-        }
-      },
-      "metrics": {
-        "faces": 501,
-        "texelsPerMm": 3.676
-      }
-    },
-    "s3-step-1": {
-      "stageId": "s3-step-1",
-      "at": "2026-10-01T10:57:28.113Z",
-      "status": "DONE",
-      "seconds": 0.63,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/orange-tabby/stage-2/step-3-reduce.blend",
-        "dimensionsMm": [
-          209.36,
-          297.56,
-          300
-        ],
-        "targetSizeMm": 300
-      },
-      "metrics": {
-        "faceCount": 336,
-        "quadCount": 134,
-        "pieces": 28,
-        "smallestPieceFaces": 2,
-        "shortestCutMm": 3.6,
-        "unpairedEdges": 0,
-        "nonManifoldEdges": 0
+        "featureLossMm": 5.37
       }
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-01T10:57:52.238Z",
+      "at": "2026-10-03T02:56:14.196Z",
       "status": "DONE",
-      "seconds": 24.12,
+      "seconds": 52.47,
+      "costUsd": 0,
+      "costNote": "Local Blender headless and Vectorizer ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/orange-tabby/stage-2/step-2-3d.glb",
+        "parameters": {
+          "resolution": 2048,
+          "margin": 0,
+          "min_facing": 0.2,
+          "flat_pattern": "flat_{name}.png"
+        },
+        "palette": [
+          {
+            "index": 0,
+            "hex": "#d5d4d2",
+            "share": 0.0956,
+            "kind": "neutral"
+          },
+          {
+            "index": 1,
+            "hex": "#211211",
+            "share": 0.0413,
+            "kind": "neutral"
+          },
+          {
+            "index": 2,
+            "hex": "#ac6631",
+            "share": 0.8061,
+            "kind": "hue"
+          },
+          {
+            "index": 3,
+            "hex": "#7d311c",
+            "share": 0.0467,
+            "kind": "hue"
+          },
+          {
+            "index": 4,
+            "hex": "#bf93a0",
+            "share": 0.0032,
+            "kind": "hue"
+          },
+          {
+            "index": 5,
+            "hex": "#d3ae6d",
+            "share": 0.0071,
+            "kind": "hue"
+          }
+        ]
+      },
+      "metrics": {
+        "faces": 683,
+        "viewsCount": 6,
+        "resolution": 2048,
+        "familiesCount": 6,
+        "baseHex": "#ac6631",
+        "totalPaths": 26,
+        "totalNodes": 7589,
+        "hiddenFaces": 219,
+        "viewsUsage": {
+          "front": 205,
+          "back": 54,
+          "right": 81,
+          "left": 76,
+          "top": 114,
+          "bottom": 153
+        },
+        "plinthFound": true,
+        "cleanFaces": 1059
+      }
+    },
+    "s3-step-3": {
+      "stageId": "s3-step-3",
+      "at": "2026-10-03T02:56:16.557Z",
+      "status": "DONE",
+      "seconds": 2.34,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/orange-tabby/stage-3/step-2-texturize.glb",
+        "parameters": {
+          "plinth_thickness_ratio": 0.05,
+          "plinth_slope_ratio": 0.02,
+          "plinth_margin_ratio": 0.004,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "faces": 774,
+        "loops": 1,
+        "openEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s4-step-1": {
+      "stageId": "s4-step-1",
+      "at": "2026-10-03T02:56:18.677Z",
+      "status": "DONE",
+      "seconds": 2.12,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/orange-tabby/stage-3/step-3-plinth.json",
+        "dimensionsMm": [
+          213.69,
+          298.26,
+          299.91
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 469,
+        "quadCount": 165,
+        "pieces": 42,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 3.4,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s4-step-2": {
+      "stageId": "s4-step-2",
+      "at": "2026-10-03T02:58:48.990Z",
+      "status": "DONE",
+      "seconds": 150.31,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -184,14 +263,14 @@
         "pageSize": "210x297mm"
       },
       "metrics": {
-        "pageCount": 19,
-        "sheetCount": 11,
-        "pieceCount": 28,
+        "pageCount": 22,
+        "sheetCount": 10,
+        "pieceCount": 42,
         "labelCollisions": 1
       }
     }
   },
-  "totalSeconds": 79.34,
+  "totalSeconds": 263.64,
   "totalCostUsd": 0.0075,
-  "updatedAt": "2026-10-01T13:12:49.709Z"
+  "updatedAt": "2026-10-04T11:23:13.830Z"
 }

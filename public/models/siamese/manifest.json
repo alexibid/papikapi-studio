@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-01T16:03:59.453Z",
+      "at": "2026-10-04T11:23:53.355Z",
       "status": "DONE",
-      "seconds": 0.75,
+      "seconds": 3.32,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -72,31 +72,40 @@
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
-          "base_cut_lift_ratio": 0.05
+          "base_cut_margin_ratios": [
+            0.003,
+            0.01,
+            0.02,
+            0.035,
+            0.05
+          ]
         }
       },
       "metrics": {
-        "faces": 3335,
+        "faces": 3610,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
         "removedIslands": 1,
         "loops": 4,
         "widthMm": 222.6,
-        "lengthMm": 450.8
+        "lengthMm": 450.8,
+        "marginRatio": 0.003,
+        "repairedVertices": 0,
+        "repairedTriangles": 0
       }
     },
-    "s2-step-4": {
-      "stageId": "s2-step-4",
-      "at": "2026-10-01T16:04:00.183Z",
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-03T04:14:43.500Z",
       "status": "DONE",
-      "seconds": 0.73,
+      "seconds": 0.82,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/siamese/stage-2/step-3-base.glb",
         "lengthMm": 450.8,
-        "faces": 3448,
+        "faces": 3740,
         "parameters": {
           "target_faces": 600,
           "weld_distance_ratio": 0.00001,
@@ -107,55 +116,101 @@
         }
       },
       "metrics": {
-        "points": 302,
-        "meshFaces": 436,
-        "quads": 164,
+        "points": 300,
+        "meshFaces": 451,
+        "quads": 149,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
-        "volumeChangePercent": -0.45,
-        "maxDeviationMm": 1.43,
-        "featureLossMm": 3.32
+        "volumeChangePercent": 0.57,
+        "maxDeviationMm": 1.77,
+        "featureLossMm": 8.38
       }
     },
-    "s2-step-5": {
-      "stageId": "s2-step-5",
-      "at": "2026-10-01T16:04:16.431Z",
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-03T04:15:06.704Z",
       "status": "DONE",
-      "seconds": 16.25,
+      "seconds": 23.2,
       "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
+      "costNote": "Local Blender headless and Vectorizer ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/siamese/stage-2/step-2-3d.glb",
         "parameters": {
-          "atlas_size_px": 4096,
-          "island_padding_px": 8,
-          "bleed_px": 6,
-          "cage_extrusion_ratio": 0.03,
-          "max_ray_distance_ratio": 0.15,
-          "bake_samples": 4,
-          "jpeg_quality": 92
-        }
+          "resolution": 2048,
+          "margin": 0,
+          "min_facing": 0.2,
+          "flat_pattern": "flat_{name}.png"
+        },
+        "palette": [
+          {
+            "index": 0,
+            "hex": "#cec8c2",
+            "share": 0.7249,
+            "kind": "neutral"
+          },
+          {
+            "index": 1,
+            "hex": "#201719",
+            "share": 0.248,
+            "kind": "neutral"
+          },
+          {
+            "index": 2,
+            "hex": "#7e503d",
+            "share": 0.0179,
+            "kind": "hue"
+          },
+          {
+            "index": 3,
+            "hex": "#217aba",
+            "share": 0.0054,
+            "kind": "hue"
+          },
+          {
+            "index": 4,
+            "hex": "#794944",
+            "share": 0.0027,
+            "kind": "hue"
+          },
+          {
+            "index": 5,
+            "hex": "#3b4677",
+            "share": 0.0012,
+            "kind": "hue"
+          }
+        ]
       },
       "metrics": {
-        "faces": 436,
-        "texelsPerMm": 5.006,
-        "azimuth": 36.7,
-        "elevation": 23.1,
-        "silhouetteScore": 0.888,
-        "colourDisagreement": 0.1118,
-        "visibleShare": 0.247
+        "faces": 451,
+        "viewsCount": 6,
+        "resolution": 2048,
+        "familiesCount": 6,
+        "baseHex": "#cec8c2",
+        "totalPaths": 22,
+        "totalNodes": 4754,
+        "hiddenFaces": 361,
+        "viewsUsage": {
+          "front": 53,
+          "back": 92,
+          "right": 109,
+          "left": 74,
+          "top": 72,
+          "bottom": 51
+        },
+        "plinthFound": true,
+        "cleanFaces": 3458
       }
     },
-    "s2-step-6": {
-      "stageId": "s2-step-6",
-      "at": "2026-10-01T16:04:17.240Z",
+    "s3-step-3": {
+      "stageId": "s3-step-3",
+      "at": "2026-10-03T04:15:07.636Z",
       "status": "DONE",
-      "seconds": 0.8,
+      "seconds": 0.93,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/siamese/stage-2/step-5-texturize.glb",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/siamese/stage-3/step-2-texturize.glb",
         "parameters": {
           "plinth_thickness_ratio": 0.05,
           "plinth_slope_ratio": 0.02,
@@ -164,43 +219,43 @@
         }
       },
       "metrics": {
-        "faces": 525,
+        "faces": 537,
         "loops": 4,
         "openEdges": 0,
-        "nonManifoldEdges": 0
+        "nonManifoldEdges": 2
       }
     },
-    "s3-step-1": {
-      "stageId": "s3-step-1",
-      "at": "2026-10-01T16:04:19.040Z",
+    "s4-step-1": {
+      "stageId": "s4-step-1",
+      "at": "2026-10-03T04:15:08.414Z",
       "status": "DONE",
-      "seconds": 0.59,
+      "seconds": 0.78,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/siamese/stage-2/step-6-plinth.json",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/siamese/stage-3/step-3-plinth.json",
         "dimensionsMm": [
           155.63,
           300,
-          250.11
+          261.94
         ],
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 518,
-        "quadCount": 196,
-        "pieces": 42,
+        "faceCount": 512,
+        "quadCount": 176,
+        "pieces": 41,
         "smallestPieceFaces": 1,
-        "shortestCutMm": 2.7,
+        "shortestCutMm": 2,
         "unpairedEdges": 0,
         "nonManifoldEdges": 0
       }
     },
-    "s3-step-2": {
-      "stageId": "s3-step-2",
-      "at": "2026-10-01T16:04:55.966Z",
+    "s4-step-2": {
+      "stageId": "s4-step-2",
+      "at": "2026-10-03T04:16:17.910Z",
       "status": "DONE",
-      "seconds": 36.92,
+      "seconds": 69.49,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -208,14 +263,14 @@
         "pageSize": "210x297mm"
       },
       "metrics": {
-        "pageCount": 20,
-        "sheetCount": 8,
-        "pieceCount": 42,
-        "labelCollisions": 6
+        "pageCount": 21,
+        "sheetCount": 9,
+        "pieceCount": 41,
+        "labelCollisions": 3
       }
     }
   },
-  "totalSeconds": 95.45,
+  "totalSeconds": 137.95,
   "totalCostUsd": 0.0059,
-  "updatedAt": "2026-10-01T16:04:55.976Z"
+  "updatedAt": "2026-10-04T11:23:53.367Z"
 }

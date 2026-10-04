@@ -8,7 +8,7 @@ import { WorkspacePaths } from '../common/workspace-paths.js';
 import type { PlinthResponse, PlinthStatistics, PlinthStepDefinition } from './interfaces/plinth.interface.js';
 
 export class PlinthGenerator {
-  private static readonly stepId = 's2-step-6';
+  private static readonly stepId = 's3-step-3';
 
   private static requireFile(path: string, description: string): string {
     if (!existsSync(path)) {
@@ -21,8 +21,29 @@ export class PlinthGenerator {
     const step = PipelineConfigLoader.getStep(this.stepId) as unknown as PlinthStepDefinition;
     const inputDir = join(WorkspacePaths.resourcePath(modelName), step.inputs.stage_dir);
     const outputDir = join(WorkspacePaths.resourcePath(modelName), step.outputs.stage_dir);
-    const reducedPath = this.requireFile(join(inputDir, step.inputs.mesh_resource), 'Simplified mesh');
-    const texturedPath = this.requireFile(join(inputDir, step.inputs.model_resource), 'Textured model');
+    mkdirSync(outputDir, { recursive: true });
+    const reducedCandidates = [
+      join(inputDir, step.inputs.mesh_resource),
+      join(inputDir, 'step-1-reduce.json'),
+      join(inputDir, 'step-4-reduce.json'),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-2', 'step-4-reduce.json'),
+    ];
+    const reducedPath = reducedCandidates.find((c) => existsSync(c));
+    if (!reducedPath) {
+      throw new Error(`Simplified mesh not found for '${modelName}': tried ${reducedCandidates.join(', ')}`);
+    }
+
+    const texturedCandidates = [
+      join(inputDir, step.inputs.model_resource),
+      join(inputDir, 'step-2-texturize.glb'),
+      join(inputDir, 'step-5-texturize.glb'),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-2', 'step-5-texturize.glb'),
+    ];
+    const texturedPath = texturedCandidates.find((c) => existsSync(c));
+    if (!texturedPath) {
+      throw new Error(`Textured model not found for '${modelName}': tried ${texturedCandidates.join(', ')}`);
+    }
+
     const modelPath = join(outputDir, step.outputs.model_resource);
     const meshPath = join(outputDir, step.outputs.mesh_resource);
 

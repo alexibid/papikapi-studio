@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import { extname, join } from 'node:path';
-import type { CliArguments } from '../stage-orchestrator.interface.js';
+import type { CliArguments } from '../orchestrator.interface.js';
 import type { PipelineStep } from './interfaces/index.js';
 import { WorkspacePaths } from './workspace-paths.js';
 
@@ -20,21 +20,45 @@ export class StepInputs {
   }
 
   private static skipsExisting(step: PipelineStep, flags: CliArguments): boolean {
+    if (flags.force) return false;
     if (step.skip_if_outputs_exist === true) return flags.step !== step.id;
-    return flags.stage === null && flags.step === null;
+    return flags.stage === null && flags.step === null && flags.fromStep === null;
   }
 
   public static missing(model: string, step: PipelineStep, pick: number | null): readonly string[] {
     const inputs: Record<string, unknown> = step.inputs ?? {};
-    const directory = this.directoryOf(model, step, inputs);
+    const defaultDirectory = this.directoryOf(model, step, inputs);
     const extensions = this.allowedExtensions(inputs);
 
     return this.resourceNames(inputs)
       .filter(({ key, name }) => {
+        const directory = this.directoryForResource(model, step, inputs, key);
         const candidates = [name, ...this.pickVariant(inputs, key, pick)];
-        return !candidates.some((candidate) => this.present(directory, candidate, extensions));
+        if (candidates.some((candidate) => this.present(directory, candidate, extensions))) {
+          return false;
+        }
+        const fallbacks = [
+          defaultDirectory,
+          WorkspacePaths.stageResourceDir(model, 'stage-2'),
+          WorkspacePaths.stageResourceDir(model, 'stage-3'),
+        ];
+        return !fallbacks.some((dir) => candidates.some((candidate) => this.present(dir, candidate, extensions)));
       })
       .map(({ name }) => name);
+  }
+
+  private static directoryForResource(
+    model: string,
+    step: PipelineStep,
+    inputs: Record<string, unknown>,
+    key: string,
+  ): string {
+    const prefix = key.replace(RESOURCE_SUFFIX, '');
+    const specificStageDir = inputs[`${prefix}_stage_dir`];
+    if (typeof specificStageDir === 'string') {
+      return WorkspacePaths.stageResourceDir(model, specificStageDir);
+    }
+    return this.directoryOf(model, step, inputs);
   }
 
   public static outputsPresent(model: string, step: PipelineStep): boolean {

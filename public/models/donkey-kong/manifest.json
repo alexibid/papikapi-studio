@@ -30,7 +30,7 @@
     },
     "s2-step-1": {
       "stageId": "s2-step-1",
-      "at": "2026-10-01T13:09:09.543Z",
+      "at": "2026-10-01T18:51:52.835Z",
       "status": "DONE",
       "seconds": 0.01,
       "costUsd": 0,
@@ -42,22 +42,6 @@
       },
       "metrics": {
         "fileSize": 267697
-      }
-    },
-    "s2-step-2": {
-      "stageId": "s2-step-2",
-      "at": "2026-10-01T13:09:09.549Z",
-      "status": "DONE",
-      "seconds": 0.05,
-      "costUsd": 0,
-      "costNote": "Restored from local pick cache",
-      "data": {
-        "cached": true,
-        "chosenPick": 3,
-        "format": "model/gltf-binary"
-      },
-      "metrics": {
-        "fileSize": 884484
       }
     },
     "s3-step-1": {
@@ -101,7 +85,7 @@
       }
     }
   },
-  "totalSeconds": 59.12,
+  "totalSeconds": 59.07,
   "totalCostUsd": 0.0064,
-  "updatedAt": "2026-10-01T13:09:09.549Z"
+  "updatedAt": "2026-10-01T18:51:52.837Z"
 }

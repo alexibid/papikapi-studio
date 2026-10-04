@@ -2,12 +2,13 @@ import type { BlenderConfig } from '../../common/interfaces/index.js';
 
 export interface BaseBlenderConfig extends BlenderConfig {
   readonly script: string;
+  readonly views_script?: string;
 }
 
 export interface BaseParameters {
   readonly weld_distance_ratio: number;
   readonly contact_height_ratio: number;
-  readonly base_cut_lift_ratio: number;
+  readonly base_cut_margin_ratios: readonly number[];
 }
 
 export interface BaseStatistics {
@@ -19,6 +20,7 @@ export interface BaseStatistics {
   readonly loops: number;
   readonly widthMm: number;
   readonly lengthMm: number;
+  readonly marginRatio: number;
 }
 
 export interface BaseStepDefinition {
@@ -43,6 +45,7 @@ export interface BaseStepDefinition {
     readonly stage_dir: string;
     readonly model_resource: string;
     readonly model_pick_resource_pattern: string;
+    readonly views_dir?: string;
     readonly manifest: string;
   };
   readonly parameters: BaseParameters;

@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-01T13:15:06.792Z",
+      "at": "2026-10-04T11:24:34.614Z",
       "status": "DONE",
-      "seconds": 0.84,
+      "seconds": 3.76,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -72,35 +72,40 @@
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
-          "plinth_min_height_ratio": 0.04,
-          "plinth_cut_lift_ratio": 0.05,
-          "plinth_margin_ratio": 0.03,
-          "plinth_slope_ratio": 0.025
+          "base_cut_margin_ratios": [
+            0.003,
+            0.01,
+            0.02,
+            0.035,
+            0.05
+          ]
         }
       },
       "metrics": {
-        "faces": 1136,
+        "faces": 1153,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
         "removedIslands": 0,
         "loops": 1,
-        "plinthWidthMm": 463.1,
-        "plinthLengthMm": 269.6,
-        "plinthThicknessMm": 35.8
+        "widthMm": 436.5,
+        "lengthMm": 243,
+        "marginRatio": 0.003,
+        "repairedVertices": 0,
+        "repairedTriangles": 0
       }
     },
-    "s2-step-4": {
-      "stageId": "s2-step-4",
-      "at": "2026-10-01T13:15:07.529Z",
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-03T05:55:54.140Z",
       "status": "DONE",
-      "seconds": 0.74,
+      "seconds": 0.81,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/yoshi/stage-2/step-3-plinth.glb",
-        "lengthMm": 485.2,
-        "faces": 1166,
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/yoshi/stage-2/step-3-base.glb",
+        "lengthMm": 436.5,
+        "faces": 1178,
         "parameters": {
           "target_faces": 600,
           "weld_distance_ratio": 0.00001,
@@ -111,72 +116,158 @@
         }
       },
       "metrics": {
-        "points": 341,
-        "meshFaces": 495,
-        "quads": 183,
+        "points": 302,
+        "meshFaces": 446,
+        "quads": 154,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
-        "volumeChangePercent": -0.23,
+        "volumeChangePercent": -0.36,
         "maxDeviationMm": 1.56,
         "featureLossMm": 1.81
       }
     },
-    "s2-step-5": {
-      "stageId": "s2-step-5",
-      "at": "2026-10-01T13:15:10.548Z",
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-03T05:56:26.087Z",
       "status": "DONE",
-      "seconds": 3.02,
+      "seconds": 31.95,
       "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
+      "costNote": "Local Blender headless and Vectorizer ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/yoshi/stage-2/step-2-3d.glb",
         "parameters": {
-          "atlas_size_px": 4096,
-          "island_padding_px": 8,
-          "bleed_px": 6,
-          "cage_extrusion_ratio": 0.03,
-          "max_ray_distance_ratio": 0.08,
-          "bake_samples": 4,
-          "jpeg_quality": 92
-        }
+          "resolution": 2048,
+          "margin": 0,
+          "min_facing": 0.2,
+          "flat_pattern": "flat_{name}.png"
+        },
+        "palette": [
+          {
+            "index": 0,
+            "hex": "#e1e2e1",
+            "share": 0.1116,
+            "kind": "neutral"
+          },
+          {
+            "index": 1,
+            "hex": "#000000",
+            "share": 0.0111,
+            "kind": "neutral"
+          },
+          {
+            "index": 2,
+            "hex": "#9e9db1",
+            "share": 0.0345,
+            "kind": "neutral"
+          },
+          {
+            "index": 3,
+            "hex": "#62a559",
+            "share": 0.7023,
+            "kind": "hue"
+          },
+          {
+            "index": 4,
+            "hex": "#d06128",
+            "share": 0.0981,
+            "kind": "hue"
+          },
+          {
+            "index": 5,
+            "hex": "#ab9649",
+            "share": 0.0088,
+            "kind": "hue"
+          },
+          {
+            "index": 6,
+            "hex": "#c3313a",
+            "share": 0.0311,
+            "kind": "hue"
+          },
+          {
+            "index": 7,
+            "hex": "#385b8d",
+            "share": 0.0026,
+            "kind": "hue"
+          }
+        ]
       },
       "metrics": {
-        "faces": 495,
-        "texelsPerMm": 3.47
+        "faces": 446,
+        "viewsCount": 6,
+        "resolution": 2048,
+        "familiesCount": 8,
+        "baseHex": "#62a559",
+        "totalPaths": 37,
+        "totalNodes": 7506,
+        "hiddenFaces": 29,
+        "viewsUsage": {
+          "front": 104,
+          "back": 82,
+          "right": 100,
+          "left": 56,
+          "top": 66,
+          "bottom": 38
+        },
+        "plinthFound": true,
+        "cleanFaces": 1112
       }
     },
-    "s3-step-1": {
-      "stageId": "s3-step-1",
-      "at": "2026-10-01T11:12:34.673Z",
+    "s3-step-3": {
+      "stageId": "s3-step-3",
+      "at": "2026-10-03T05:56:27.060Z",
       "status": "DONE",
-      "seconds": 0.6,
+      "seconds": 0.97,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/yoshi/stage-2/step-3-reduce.blend",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/yoshi/stage-3/step-2-texturize.glb",
+        "parameters": {
+          "plinth_thickness_ratio": 0.05,
+          "plinth_slope_ratio": 0.02,
+          "plinth_margin_ratio": 0.004,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "faces": 522,
+        "loops": 1,
+        "openEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s4-step-1": {
+      "stageId": "s4-step-1",
+      "at": "2026-10-03T05:56:27.859Z",
+      "status": "DONE",
+      "seconds": 0.8,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/yoshi/stage-3/step-3-plinth.json",
         "dimensionsMm": [
-          295.26,
-          221.94,
-          300
+          300,
+          173.21,
+          295.17
         ],
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 470,
-        "quadCount": 158,
-        "pieces": 40,
+        "faceCount": 520,
+        "quadCount": 194,
+        "pieces": 43,
         "smallestPieceFaces": 1,
-        "shortestCutMm": 2.8,
+        "shortestCutMm": 2.7,
         "unpairedEdges": 0,
         "nonManifoldEdges": 0
       }
     },
-    "s3-step-2": {
-      "stageId": "s3-step-2",
-      "at": "2026-10-01T11:13:25.984Z",
+    "s4-step-2": {
+      "stageId": "s4-step-2",
+      "at": "2026-10-03T05:57:48.240Z",
       "status": "DONE",
-      "seconds": 51.31,
+      "seconds": 80.38,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -184,14 +275,14 @@
         "pageSize": "210x297mm"
       },
       "metrics": {
-        "pageCount": 21,
+        "pageCount": 22,
         "sheetCount": 10,
-        "pieceCount": 40,
-        "labelCollisions": 8
+        "pieceCount": 43,
+        "labelCollisions": 6
       }
     }
   },
-  "totalSeconds": 101.67,
+  "totalSeconds": 163.83,
   "totalCostUsd": 0.0068,
-  "updatedAt": "2026-10-01T13:15:10.550Z"
+  "updatedAt": "2026-10-04T11:24:34.625Z"
 }

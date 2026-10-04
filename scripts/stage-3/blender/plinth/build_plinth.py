@@ -4,8 +4,8 @@ import traceback
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-sys.path.insert(0, str(Path(__file__).parent.parent / "base"))
 sys.path.insert(0, str(Path(__file__).parent.parent / "key_points"))
+sys.path.insert(0, str(Path(__file__).parents[3] / "stage-2" / "blender" / "base"))
 sys.path.insert(0, str(Path(__file__).parents[3] / "common" / "blender"))
 
 import bmesh
@@ -33,6 +33,10 @@ def build_reduced_mesh(settings):
     vertices = [surface.verts.new(vertex["position"]) for vertex in document["vertices"]]
     for indices in document["faces"]:
         surface.faces.new([vertices[index] for index in indices])
+    lowest = min(vertex.co.z for vertex in surface.verts)
+    if abs(lowest) > 1e-5:
+        bmesh.ops.translate(surface, vec=(0, 0, -lowest), verts=surface.verts)
+        surface.normal_update()
     statistics = add_white_plinth(surface, settings, document["lengthMeters"], 0)
     split_oversized_faces(surface, document["lengthMeters"], settings["face_max_extent_ratio"])
     document_out = {"lengthMeters": document["lengthMeters"], "vertices": vertex_records(surface), "faces": face_records(surface)}
@@ -58,6 +62,10 @@ def textured_figure(settings, length):
     surface = bmesh.new()
     surface.from_mesh(figure.data)
     bmesh.ops.remove_doubles(surface, verts=surface.verts, dist=WELD_DISTANCE)
+    lowest = min(vertex.co.z for vertex in surface.verts)
+    if abs(lowest) > 1e-5:
+        bmesh.ops.translate(surface, vec=(0, 0, -lowest), verts=surface.verts)
+        surface.normal_update()
     add_white_plinth(surface, settings, length, len(figure.data.materials))
     surface.to_mesh(figure.data)
     surface.free()

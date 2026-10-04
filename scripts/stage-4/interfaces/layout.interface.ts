@@ -1,7 +1,7 @@
 import type { PieceArtwork } from './artwork.interface.js';
 import type { BookletSettings, PageFrame } from './booklet.interface.js';
 import type { Point } from './net.interface.js';
-import type { PapercraftBlenderConfig } from './stage-3.interface.js';
+import type { PapercraftBlenderConfig } from './stage-4.interface.js';
 
 export interface Bounds {
   readonly minX: number;

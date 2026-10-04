@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-01T13:14:38.439Z",
+      "at": "2026-10-03T04:32:05.972Z",
       "status": "DONE",
-      "seconds": 0.83,
+      "seconds": 2.48,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -72,35 +72,40 @@
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
-          "plinth_min_height_ratio": 0.04,
-          "plinth_cut_lift_ratio": 0.05,
-          "plinth_margin_ratio": 0.03,
-          "plinth_slope_ratio": 0.025
+          "base_cut_margin_ratios": [
+            0.003,
+            0.01,
+            0.02,
+            0.035,
+            0.05
+          ]
         }
       },
       "metrics": {
-        "faces": 1635,
-        "openEdges": 0,
+        "faces": 1611,
+        "openEdges": 4,
         "nonManifoldEdges": 0,
-        "airtight": true,
+        "airtight": false,
         "removedIslands": 2,
         "loops": 1,
-        "plinthWidthMm": 390.2,
-        "plinthLengthMm": 295.7,
-        "plinthThicknessMm": 15.6
+        "widthMm": 368.1,
+        "lengthMm": 273.6,
+        "marginRatio": 0.003,
+        "repairedVertices": 0,
+        "repairedTriangles": 0
       }
     },
-    "s2-step-4": {
-      "stageId": "s2-step-4",
-      "at": "2026-10-01T13:14:39.178Z",
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-03T04:32:08.769Z",
       "status": "DONE",
-      "seconds": 0.74,
+      "seconds": 2.79,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/tractor/stage-2/step-3-plinth.glb",
-        "lengthMm": 408.6,
-        "faces": 1694,
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/tractor/stage-2/step-3-base.glb",
+        "lengthMm": 368.1,
+        "faces": 1674,
         "parameters": {
           "target_faces": 600,
           "weld_distance_ratio": 0.00001,
@@ -111,72 +116,158 @@
         }
       },
       "metrics": {
-        "points": 351,
-        "meshFaces": 524,
-        "quads": 194,
+        "points": 408,
+        "meshFaces": 656,
+        "quads": 176,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
-        "volumeChangePercent": -0.92,
-        "maxDeviationMm": 2.25,
-        "featureLossMm": 3.78
-      }
-    },
-    "s2-step-5": {
-      "stageId": "s2-step-5",
-      "at": "2026-10-01T13:14:43.796Z",
-      "status": "DONE",
-      "seconds": 4.61,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/tractor/stage-2/step-2-3d.glb",
-        "parameters": {
-          "atlas_size_px": 4096,
-          "island_padding_px": 8,
-          "bleed_px": 6,
-          "cage_extrusion_ratio": 0.03,
-          "max_ray_distance_ratio": 0.08,
-          "bake_samples": 4,
-          "jpeg_quality": 92
-        }
-      },
-      "metrics": {
-        "faces": 524,
-        "texelsPerMm": 3.428
-      }
-    },
-    "s3-step-1": {
-      "stageId": "s3-step-1",
-      "at": "2026-10-01T11:08:25.569Z",
-      "status": "DONE",
-      "seconds": 0.67,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/tractor/stage-2/step-3-reduce.blend",
-        "dimensionsMm": [
-          300,
-          223.34,
-          253.5
-        ],
-        "targetSizeMm": 300
-      },
-      "metrics": {
-        "faceCount": 484,
-        "quadCount": 172,
-        "pieces": 56,
-        "smallestPieceFaces": 1,
-        "shortestCutMm": 2.1,
-        "unpairedEdges": 0,
-        "nonManifoldEdges": 0
+        "volumeChangePercent": -3.45,
+        "maxDeviationMm": 2.38,
+        "featureLossMm": 3.7
       }
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-01T11:09:25.189Z",
+      "at": "2026-10-03T04:33:16.333Z",
       "status": "DONE",
-      "seconds": 59.62,
+      "seconds": 67.56,
+      "costUsd": 0,
+      "costNote": "Local Blender headless and Vectorizer ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/tractor/stage-2/step-2-3d.glb",
+        "parameters": {
+          "resolution": 2048,
+          "margin": 0,
+          "min_facing": 0.2,
+          "flat_pattern": "flat_{name}.png"
+        },
+        "palette": [
+          {
+            "index": 0,
+            "hex": "#030100",
+            "share": 0.3159,
+            "kind": "neutral"
+          },
+          {
+            "index": 1,
+            "hex": "#292e23",
+            "share": 0.0789,
+            "kind": "neutral"
+          },
+          {
+            "index": 2,
+            "hex": "#568f41",
+            "share": 0.3306,
+            "kind": "hue"
+          },
+          {
+            "index": 3,
+            "hex": "#c1ae24",
+            "share": 0.136,
+            "kind": "hue"
+          },
+          {
+            "index": 4,
+            "hex": "#7b98bb",
+            "share": 0.1243,
+            "kind": "hue"
+          },
+          {
+            "index": 5,
+            "hex": "#b2803e",
+            "share": 0.008,
+            "kind": "hue"
+          },
+          {
+            "index": 6,
+            "hex": "#5a876a",
+            "share": 0.0048,
+            "kind": "hue"
+          },
+          {
+            "index": 7,
+            "hex": "#6c92a4",
+            "share": 0.0015,
+            "kind": "hue"
+          }
+        ]
+      },
+      "metrics": {
+        "faces": 656,
+        "viewsCount": 6,
+        "resolution": 2048,
+        "familiesCount": 8,
+        "baseHex": "#568f41",
+        "totalPaths": 39,
+        "totalNodes": 16572,
+        "hiddenFaces": 502,
+        "viewsUsage": {
+          "front": 145,
+          "back": 91,
+          "right": 72,
+          "left": 87,
+          "top": 125,
+          "bottom": 136
+        },
+        "plinthFound": true,
+        "cleanFaces": 1285
+      }
+    },
+    "s3-step-3": {
+      "stageId": "s3-step-3",
+      "at": "2026-10-03T04:33:18.451Z",
+      "status": "DONE",
+      "seconds": 2.11,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/tractor/stage-3/step-2-texturize.glb",
+        "parameters": {
+          "plinth_thickness_ratio": 0.05,
+          "plinth_slope_ratio": 0.02,
+          "plinth_margin_ratio": 0.004,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "faces": 778,
+        "loops": 1,
+        "openEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s4-step-1": {
+      "stageId": "s4-step-1",
+      "at": "2026-10-03T04:33:20.458Z",
+      "status": "DONE",
+      "seconds": 2,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/tractor/stage-3/step-3-plinth.json",
+        "dimensionsMm": [
+          300,
+          226.85,
+          255.48
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 608,
+        "quadCount": 183,
+        "pieces": 63,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 0.3,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s4-step-2": {
+      "stageId": "s4-step-2",
+      "at": "2026-10-03T04:36:45.044Z",
+      "status": "DONE",
+      "seconds": 204.58,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -184,14 +275,14 @@
         "pageSize": "210x297mm"
       },
       "metrics": {
-        "pageCount": 31,
-        "sheetCount": 16,
-        "pieceCount": 56,
-        "labelCollisions": 3
+        "pageCount": 38,
+        "sheetCount": 21,
+        "pieceCount": 63,
+        "labelCollisions": 5
       }
     }
   },
-  "totalSeconds": 148.31,
+  "totalSeconds": 363.36,
   "totalCostUsd": 0.0123,
-  "updatedAt": "2026-10-01T13:14:43.798Z"
+  "updatedAt": "2026-10-03T04:36:45.054Z"
 }

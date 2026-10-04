@@ -12,7 +12,7 @@ import type {
 } from './interfaces/simplify.interface.js';
 
 export class SimplifyGenerator {
-  private static readonly stepId = 's2-step-4';
+  private static readonly stepId = 's3-step-1';
 
   private static resolveInputModel(modelName: string, step: SimplifyStepDefinition, pick?: number): string {
     const stageDir = join(WorkspacePaths.resourcePath(modelName), step.inputs.stage_dir);

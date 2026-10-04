@@ -5,7 +5,7 @@
     "resources_dir": "resources",
     "models_from": "resources/*/stage-1/step-1-art.jpeg",
     "sheet_language": "pt",
-    "sheet_translations": "scripts/stage-3/sheet-translations.json"
+    "sheet_translations": "scripts/stage-4/sheet-translations.json"
   },
   "pricing": {
     "runpod_trellis_usd_per_sec": 0.00031,
@@ -342,7 +342,8 @@
           "models_from": "resources/*/stage-2/step-2-3d.glb",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
-            "script": "scripts/stage-2/blender/base/cut_base.py"
+            "script": "scripts/stage-2/blender/base/cut_base.py",
+            "views_script": "scripts/stage-2/blender/base/render_base_views.py"
           },
           "inputs": {
             "stage_dir": "stage-2",
@@ -353,12 +354,13 @@
             "stage_dir": "stage-2",
             "model_resource": "step-3-base.glb",
             "model_pick_resource_pattern": "step-3-base-pick-{pick}.glb",
+            "views_dir": "stage-2-step-3-views",
             "manifest": "step-3-manifest.json"
           },
           "parameters": {
             "weld_distance_ratio": 1e-5,
             "contact_height_ratio": 0.02,
-            "base_cut_lift_ratio": 0.05
+            "base_cut_margin_ratios": [0.003, 0.01, 0.02, 0.035, 0.05]
           },
           "messages": {
             "start": "[Stage 2: Step 3] Cutting the TRELLIS base and grounding the feet at z=0 for {model}",
@@ -368,15 +370,20 @@
             "status": "DONE",
             "costNote": "Local Blender headless ($0.00)"
           }
-        },
+        }
+      ]
+    },
+    {
+      "stage": "Stage 3: Simplify and Optimize",
+      "steps": [
         {
-          "id": "s2-step-4",
+          "id": "s3-step-1",
           "name": "Low-Poly Simplification",
           "label": "SIMPLIFY",
           "emoji": "📐",
           "expected_seconds": 40,
-          "script": "scripts/stage-2/step-4-simplify.ts",
-          "stage_dir": "stage-2",
+          "script": "scripts/stage-3/step-1-simplify.ts",
+          "stage_dir": "stage-3",
           "depends_on": {
             "step_id": "s2-step-3",
             "stage_dir": "stage-2"
@@ -384,7 +391,7 @@
           "models_from": "resources/*/stage-2/step-3-base.glb",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
-            "script": "scripts/stage-2/blender/key_points/key_points.py"
+            "script": "scripts/stage-3/blender/key_points/key_points.py"
           },
           "inputs": {
             "stage_dir": "stage-2",
@@ -392,11 +399,11 @@
             "model_pick_resource_pattern": "step-3-base-pick-{pick}.glb"
           },
           "outputs": {
-            "stage_dir": "stage-2",
-            "points_resource": "step-4-reduce.json",
-            "mesh_resource": "step-4-reduce.glb",
+            "stage_dir": "stage-3",
+            "points_resource": "step-1-reduce.json",
+            "mesh_resource": "step-1-reduce.glb",
             "mesh_public": "model.glb",
-            "manifest": "step-4-manifest.json"
+            "manifest": "step-1-manifest.json"
           },
           "parameters": {
             "target_faces": 600,
@@ -407,8 +414,8 @@
             "face_max_extent_ratio": 0.5
           },
           "messages": {
-            "start": "[Stage 2: Step 4] Simplifying 3D mesh into low-poly papercraft for {model}",
-            "completed": "✔ [Stage 2: Step 4] Mesh simplified: {points} vertices, {meshFaces} faces ({quads} quads), max deviation {deviation} mm for {model} in {duration}s ($0.00)"
+            "start": "[Stage 3: Step 1] Simplifying 3D mesh into low-poly papercraft for {model}",
+            "completed": "✔ [Stage 3: Step 1] Mesh simplified: {points} vertices, {meshFaces} faces ({quads} quads), max deviation {deviation} mm for {model} in {duration}s ($0.00)"
           },
           "manifest_contract": {
             "status": "DONE",
@@ -416,81 +423,82 @@
           }
         },
         {
-          "id": "s2-step-5",
+          "id": "s3-step-2",
           "name": "Texturize",
           "label": "TEXTURIZE",
           "emoji": "🎨",
           "expected_seconds": 30,
-          "script": "scripts/stage-2/step-5-texturize.ts",
-          "stage_dir": "stage-2",
+          "script": "scripts/stage-3/step-2-texturize.ts",
+          "stage_dir": "stage-3",
           "depends_on": {
-            "step_id": "s2-step-4",
-            "stage_dir": "stage-2"
+            "step_id": "s3-step-1",
+            "stage_dir": "stage-3"
           },
-          "models_from": "resources/*/stage-2/step-4-reduce.json",
+          "models_from": "resources/*/stage-3/step-1-reduce.json",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
-            "script": "scripts/stage-2/blender/texturize/texturize.py"
+            "render_views_script": "scripts/stage-3/blender/texturize/render_views.py",
+            "project_reduce_script": "scripts/stage-3/blender/texturize/project_reduce.py"
           },
+          "vectorizer_script": "scripts/stage-3/python/vectorize/vectorizer.py",
           "inputs": {
-            "stage_dir": "stage-2",
-            "model_resource": "step-2-3d.glb",
-            "model_pick_resource_pattern": "step-2-3d-pick-{pick}.glb",
-            "mesh_resource": "step-4-reduce.json",
-            "art_resource": "step-1-art-cutout.png"
+            "stage_dir": "stage-3",
+            "model_stage_dir": "stage-2",
+            "model_resource": "step-3-base.glb",
+            "model_pick_resource_pattern": "step-3-base-pick-{pick}.glb",
+            "views_dir": "stage-2-step-3-views",
+            "mesh_resource": "step-1-reduce.json"
           },
           "outputs": {
-            "stage_dir": "stage-2",
-            "model_resource": "step-5-texturize.glb",
+            "stage_dir": "stage-3",
+            "model_resource": "step-2-texturize.glb",
             "model_public": "model.glb",
-            "manifest": "step-5-manifest.json"
+            "views_dir": "step-2-views",
+            "svg_dir": "step-2-views/svg",
+            "manifest": "step-2-manifest.json"
           },
           "parameters": {
-            "atlas_size_px": 4096,
-            "island_padding_px": 8,
-            "bleed_px": 6,
-            "cage_extrusion_ratio": 0.03,
-            "max_ray_distance_ratio": 0.15,
-            "bake_samples": 4,
-            "jpeg_quality": 92
+            "resolution": 2048,
+            "margin": 0.0,
+            "min_facing": 0.2
           },
           "messages": {
-            "start": "[Stage 2: Step 5] Baking the original colours onto the simplified model of {model}",
-            "completed": "✔ [Stage 2: Step 5] {faces} faces textured at {texels} texels per mm for {model} in {duration}s ($0.00)"
+            "start": "[Stage 3: Step 2] Vector texturizing orthogonal views with Bezier curves for {model}",
+            "completed": "✔ [Stage 3: Step 2] {faces} faces textured ({totalPaths} vector paths, {totalNodes} nodes) for {model} in {duration}s ($0.00)"
           },
           "manifest_contract": {
             "status": "DONE",
-            "costNote": "Local Blender headless ($0.00)"
+            "costNote": "Local Blender headless and Vectorizer ($0.00)"
           }
         },
         {
-          "id": "s2-step-6",
+          "id": "s3-step-3",
           "name": "White Plinth",
           "label": "PLINTH",
           "emoji": "🏛️",
           "expected_seconds": 10,
-          "script": "scripts/stage-2/step-6-plinth.ts",
-          "stage_dir": "stage-2",
+          "script": "scripts/stage-3/step-3-plinth.ts",
+          "stage_dir": "stage-3",
           "depends_on": {
-            "step_id": "s2-step-5",
-            "stage_dir": "stage-2"
+            "step_id": "s3-step-2",
+            "stage_dir": "stage-3"
           },
-          "models_from": "resources/*/stage-2/step-5-texturize.glb",
+          "models_from": "resources/*/stage-3/step-2-texturize.glb",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
-            "script": "scripts/stage-2/blender/plinth/build_plinth.py"
+            "script": "scripts/stage-3/blender/plinth/build_plinth.py"
           },
           "inputs": {
-            "stage_dir": "stage-2",
-            "mesh_resource": "step-4-reduce.json",
-            "model_resource": "step-5-texturize.glb"
+            "stage_dir": "stage-3",
+            "mesh_resource": "step-1-reduce.json",
+            "model_resource": "step-2-texturize.glb"
           },
           "outputs": {
-            "stage_dir": "stage-2",
-            "mesh_resource": "step-6-plinth.json",
-            "model_resource": "step-6-plinth.glb",
+            "stage_dir": "stage-3",
+            "mesh_resource": "step-3-plinth.json",
+            "model_resource": "step-3-plinth.glb",
             "model_public": "model.glb",
-            "manifest": "step-6-manifest.json"
+            "manifest": "step-3-manifest.json"
           },
           "parameters": {
             "plinth_thickness_ratio": 0.05,
@@ -499,8 +507,8 @@
             "face_max_extent_ratio": 0.5
           },
           "messages": {
-            "start": "[Stage 2: Step 6] Fusing the white plinth to the feet of {model}",
-            "completed": "✔ [Stage 2: Step 6] White plinth fused to {loops} feet ({faces} faces) for {model} in {duration}s ($0.00)"
+            "start": "[Stage 3: Step 3] Fusing the white plinth to the feet of {model}",
+            "completed": "✔ [Stage 3: Step 3] White plinth fused to {loops} feet ({faces} faces) for {model} in {duration}s ($0.00)"
           },
           "manifest_contract": {
             "status": "DONE",
@@ -510,32 +518,32 @@
       ]
     },
     {
-      "stage": "Stage 3: Papercraft Unfolding",
+      "stage": "Stage 4: Papercraft Unfolding",
       "steps": [
         {
-          "id": "s3-step-1",
+          "id": "s4-step-1",
           "name": "Unfold Model",
           "label": "UNFOLD",
           "emoji": "📐",
           "expected_seconds": 30,
-          "script": "scripts/stage-3/step-1-unfold.ts",
-          "stage_dir": "stage-3",
+          "script": "scripts/stage-4/step-1-unfold.ts",
+          "stage_dir": "stage-4",
           "depends_on": {
-            "step_id": "s2-step-6",
-            "stage_dir": "stage-2"
+            "step_id": "s3-step-3",
+            "stage_dir": "stage-3"
           },
-          "models_from": "resources/*/stage-2/step-6-plinth.json",
+          "models_from": "resources/*/stage-3/step-3-plinth.json",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
-            "unfold_script": "scripts/stage-3/blender/unfold_model.py",
-            "render_script": "scripts/stage-3/blender/render_steps.py"
+            "unfold_script": "scripts/stage-4/blender/unfold_model.py",
+            "render_script": "scripts/stage-4/blender/render_steps.py"
           },
           "inputs": {
-            "stage_dir": "stage-2",
-            "model_resource": "step-6-plinth.json"
+            "stage_dir": "stage-3",
+            "model_resource": "step-3-plinth.json"
           },
           "outputs": {
-            "stage_dir": "stage-3",
+            "stage_dir": "stage-4",
             "net_resource": "step-1-net.json",
             "manifest": "step-1-manifest.json"
           },
@@ -549,8 +557,8 @@
             "piece_compactness": 0.7
           },
           "messages": {
-            "start": "[Stage 3: Step 1] Unfolding 3D model for {model}",
-            "completed": "✔ [Stage 3: Step 1] Model unfolded into {islands} parts for {model} in {duration}s ($0.00)"
+            "start": "[Stage 4: Step 1] Unfolding 3D model for {model}",
+            "completed": "✔ [Stage 4: Step 1] Model unfolded into {islands} parts for {model} in {duration}s ($0.00)"
           },
           "manifest_contract": {
             "status": "DONE",
@@ -558,31 +566,32 @@
           }
         },
         {
-          "id": "s3-step-2",
+          "id": "s4-step-2",
           "name": "Export Sheets",
           "label": "SHEETS",
           "emoji": "🖨️",
           "expected_seconds": 30,
-          "script": "scripts/stage-3/step-2-sheets.ts",
-          "stage_dir": "stage-3",
+          "script": "scripts/stage-4/step-2-sheets.ts",
+          "stage_dir": "stage-4",
           "depends_on": {
-            "step_id": "s3-step-1",
-            "stage_dir": "stage-3"
+            "step_id": "s4-step-1",
+            "stage_dir": "stage-4"
           },
-          "models_from": "resources/*/stage-3/step-1-net.json",
+          "models_from": "resources/*/stage-4/step-1-net.json",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
-            "unfold_script": "scripts/stage-3/blender/unfold_model.py",
-            "render_script": "scripts/stage-3/blender/render_steps.py",
-            "texture_script": "scripts/stage-3/blender/texture_pages.py"
+            "unfold_script": "scripts/stage-4/blender/unfold_model.py",
+            "render_script": "scripts/stage-4/blender/render_steps.py",
+            "texture_script": "scripts/stage-4/blender/texture_pages.py"
           },
           "inputs": {
+            "stage_dir": "stage-4",
             "net_resource": "step-1-net.json",
-            "texture_stage_dir": "stage-2",
-            "texture_model": "step-6-plinth.glb"
+            "texture_stage_dir": "stage-3",
+            "texture_model": "step-3-plinth.glb"
           },
           "outputs": {
-            "stage_dir": "stage-3",
+            "stage_dir": "stage-4",
             "sheets_resource": "step-2-sheets.pdf",
             "renders_dir": "step-2-renders",
             "sheets_public": "sheets.pdf",
@@ -609,8 +618,8 @@
             "bake_samples": 4
           },
           "messages": {
-            "start": "[Stage 3: Step 2] Building the assembly booklet for {model}",
-            "completed": "✔ [Stage 3: Step 2] {pages} A4 pages ({sheets} template sheets, {pieces} parts) for {model} in {duration}s ($0.00)"
+            "start": "[Stage 4: Step 2] Building the assembly booklet for {model}",
+            "completed": "✔ [Stage 4: Step 2] {pages} A4 pages ({sheets} template sheets, {pieces} parts) for {model} in {duration}s ($0.00)"
           },
           "manifest_contract": {
             "status": "DONE",

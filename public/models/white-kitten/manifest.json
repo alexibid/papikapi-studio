@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-01T13:15:02.076Z",
+      "at": "2026-10-04T11:24:30.846Z",
       "status": "DONE",
-      "seconds": 0.66,
+      "seconds": 3.34,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -72,35 +72,40 @@
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
-          "plinth_min_height_ratio": 0.04,
-          "plinth_cut_lift_ratio": 0.05,
-          "plinth_margin_ratio": 0.03,
-          "plinth_slope_ratio": 0.025
+          "base_cut_margin_ratios": [
+            0.003,
+            0.01,
+            0.02,
+            0.035,
+            0.05
+          ]
         }
       },
       "metrics": {
-        "faces": 989,
+        "faces": 1061,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
-        "removedIslands": 0,
-        "loops": 5,
-        "plinthWidthMm": 505.3,
-        "plinthLengthMm": 232.2,
-        "plinthThicknessMm": 50.1
+        "removedIslands": 2,
+        "loops": 6,
+        "widthMm": 476.7,
+        "lengthMm": 200,
+        "marginRatio": 0.003,
+        "repairedVertices": 0,
+        "repairedTriangles": 0
       }
     },
-    "s2-step-4": {
-      "stageId": "s2-step-4",
-      "at": "2026-10-01T13:15:02.722Z",
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-03T05:54:38.789Z",
       "status": "DONE",
-      "seconds": 0.64,
+      "seconds": 0.87,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/white-kitten/stage-2/step-3-plinth.glb",
-        "lengthMm": 529.1,
-        "faces": 1022,
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/white-kitten/stage-2/step-3-base.glb",
+        "lengthMm": 476.7,
+        "faces": 1106,
         "parameters": {
           "target_faces": 600,
           "weld_distance_ratio": 0.00001,
@@ -111,72 +116,152 @@
         }
       },
       "metrics": {
-        "points": 325,
-        "meshFaces": 469,
-        "quads": 191,
+        "points": 302,
+        "meshFaces": 435,
+        "quads": 165,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
-        "volumeChangePercent": -0.21,
-        "maxDeviationMm": 1.44,
-        "featureLossMm": 2.86
-      }
-    },
-    "s2-step-5": {
-      "stageId": "s2-step-5",
-      "at": "2026-10-01T13:15:05.924Z",
-      "status": "DONE",
-      "seconds": 3.2,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/white-kitten/stage-2/step-2-3d.glb",
-        "parameters": {
-          "atlas_size_px": 4096,
-          "island_padding_px": 8,
-          "bleed_px": 6,
-          "cage_extrusion_ratio": 0.03,
-          "max_ray_distance_ratio": 0.08,
-          "bake_samples": 4,
-          "jpeg_quality": 92
-        }
-      },
-      "metrics": {
-        "faces": 469,
-        "texelsPerMm": 3.376
-      }
-    },
-    "s3-step-1": {
-      "stageId": "s3-step-1",
-      "at": "2026-10-01T11:11:44.822Z",
-      "status": "DONE",
-      "seconds": 0.62,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/white-kitten/stage-2/step-3-reduce.blend",
-        "dimensionsMm": [
-          300,
-          185.6,
-          266.34
-        ],
-        "targetSizeMm": 300
-      },
-      "metrics": {
-        "faceCount": 460,
-        "quadCount": 170,
-        "pieces": 41,
-        "smallestPieceFaces": 1,
-        "shortestCutMm": 3.1,
-        "unpairedEdges": 0,
-        "nonManifoldEdges": 0
+        "volumeChangePercent": -0.42,
+        "maxDeviationMm": 1.74,
+        "featureLossMm": 3.05
       }
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-01T11:12:30.945Z",
+      "at": "2026-10-03T05:55:02.735Z",
       "status": "DONE",
-      "seconds": 46.12,
+      "seconds": 23.94,
+      "costUsd": 0,
+      "costNote": "Local Blender headless and Vectorizer ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/white-kitten/stage-2/step-2-3d.glb",
+        "parameters": {
+          "resolution": 2048,
+          "margin": 0,
+          "min_facing": 0.2,
+          "flat_pattern": "flat_{name}.png"
+        },
+        "palette": [
+          {
+            "index": 0,
+            "hex": "#eeeeee",
+            "share": 0.9292,
+            "kind": "neutral"
+          },
+          {
+            "index": 1,
+            "hex": "#1e1220",
+            "share": 0.0201,
+            "kind": "neutral"
+          },
+          {
+            "index": 2,
+            "hex": "#a69795",
+            "share": 0.0136,
+            "kind": "neutral"
+          },
+          {
+            "index": 3,
+            "hex": "#ab0a0d",
+            "share": 0.0304,
+            "kind": "hue"
+          },
+          {
+            "index": 4,
+            "hex": "#3163b4",
+            "share": 0.0062,
+            "kind": "hue"
+          },
+          {
+            "index": 5,
+            "hex": "#b07680",
+            "share": 0.0004,
+            "kind": "hue"
+          },
+          {
+            "index": 6,
+            "hex": "#765131",
+            "share": 0.0002,
+            "kind": "hue"
+          }
+        ]
+      },
+      "metrics": {
+        "faces": 435,
+        "viewsCount": 6,
+        "resolution": 2048,
+        "familiesCount": 7,
+        "baseHex": "#eeeeee",
+        "totalPaths": 22,
+        "totalNodes": 2748,
+        "hiddenFaces": 41,
+        "viewsUsage": {
+          "front": 66,
+          "back": 69,
+          "right": 84,
+          "left": 52,
+          "top": 51,
+          "bottom": 113
+        },
+        "plinthFound": true,
+        "cleanFaces": 985
+      }
+    },
+    "s3-step-3": {
+      "stageId": "s3-step-3",
+      "at": "2026-10-03T05:55:03.742Z",
+      "status": "DONE",
+      "seconds": 1,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/white-kitten/stage-3/step-2-texturize.glb",
+        "parameters": {
+          "plinth_thickness_ratio": 0.05,
+          "plinth_slope_ratio": 0.02,
+          "plinth_margin_ratio": 0.004,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "faces": 485,
+        "loops": 7,
+        "openEdges": 15,
+        "nonManifoldEdges": 6
+      }
+    },
+    "s4-step-1": {
+      "stageId": "s4-step-1",
+      "at": "2026-10-03T05:55:04.530Z",
+      "status": "DONE",
+      "seconds": 0.79,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/white-kitten/stage-3/step-3-plinth.json",
+        "dimensionsMm": [
+          300,
+          133.69,
+          250.29
+        ],
+        "targetSizeMm": 300
+      },
+      "metrics": {
+        "faceCount": 467,
+        "quadCount": 169,
+        "pieces": 43,
+        "smallestPieceFaces": 1,
+        "shortestCutMm": 2.1,
+        "unpairedEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s4-step-2": {
+      "stageId": "s4-step-2",
+      "at": "2026-10-03T05:55:52.419Z",
+      "status": "DONE",
+      "seconds": 47.89,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -184,14 +269,14 @@
         "pageSize": "210x297mm"
       },
       "metrics": {
-        "pageCount": 22,
-        "sheetCount": 10,
-        "pieceCount": 41,
-        "labelCollisions": 4
+        "pageCount": 20,
+        "sheetCount": 8,
+        "pieceCount": 43,
+        "labelCollisions": 3
       }
     }
   },
-  "totalSeconds": 105.4,
+  "totalSeconds": 131.99,
   "totalCostUsd": 0.0081,
-  "updatedAt": "2026-10-01T13:15:05.926Z"
+  "updatedAt": "2026-10-04T11:24:30.855Z"
 }

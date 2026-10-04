@@ -1,6 +1,7 @@
 import { existsSync, globSync, readFileSync, statSync } from 'node:fs';
 import { isAbsolute, join, resolve } from 'node:path';
 import { CatalogueManager } from './common/catalogue-manager.js';
+import { CliArgsParser } from './common/cli-args-parser.js';
 import { GeminiClient } from './common/gemini-client.js';
 import type {
   InlineImage,
@@ -8,7 +9,6 @@ import type {
   PipelineStep,
   StepExecutionResult,
 } from './common/interfaces/index.js';
-import { CliArgsParser } from './common/cli-args-parser.js';
 import { ModelRow } from './common/model-row.js';
 import { OutputCleaner } from './common/output-cleaner.js';
 import { PipelineConfigLoader } from './common/pipeline-config.js';
@@ -16,17 +16,17 @@ import { QuietConsole } from './common/quiet-console.js';
 import { StageReporter } from './common/stage-reporter.js';
 import { StepInputs } from './common/step-inputs.js';
 import { WorkspacePaths } from './common/workspace-paths.js';
+import type { CliArguments } from './orchestrator.interface.js';
 import { AlternativesGenerator } from './stage-1/step-1-alternatives.js';
 import { AlternativePicker } from './stage-1/step-2-pick.js';
 import { CutoutGenerator } from './stage-2/step-1-cutout.js';
 import { TrellisGenerator } from './stage-2/step-2-trellis.js';
 import { BaseCutGenerator } from './stage-2/step-3-base.js';
-import { SimplifyGenerator } from './stage-2/step-4-simplify.js';
-import { TexturizeGenerator } from './stage-2/step-5-texturize.js';
-import { PlinthGenerator } from './stage-2/step-6-plinth.js';
-import { UnfoldGenerator } from './stage-3/step-1-unfold.js';
-import { SheetsExporter } from './stage-3/step-2-sheets.js';
-import type { CliArguments } from './stage-orchestrator.interface.js';
+import { SimplifyGenerator } from './stage-3/step-1-simplify.js';
+import { TexturizeGenerator } from './stage-3/step-2-texturize.js';
+import { PlinthGenerator } from './stage-3/step-3-plinth.js';
+import { UnfoldGenerator } from './stage-4/step-1-unfold.js';
+import { SheetsExporter } from './stage-4/step-2-sheets.js';
 
 export class StageOrchestrator {
   private static discoverModels(pattern: string): readonly string[] {
@@ -53,10 +53,21 @@ export class StageOrchestrator {
         ? [PipelineConfigLoader.getStage(flags.stage)]
         : PipelineConfigLoader.load().pipeline_stages;
     const allSteps = targetStages.flatMap((s) => s.steps);
-    const activeSteps = flags.step ? allSteps.filter((s) => s.id === flags.step) : allSteps;
+    let activeSteps: readonly PipelineStep[];
+    if (flags.step) {
+      activeSteps = allSteps.filter((s) => s.id === flags.step);
+    } else if (flags.fromStep) {
+      const idx = allSteps.findIndex((s) => s.id === flags.fromStep);
+      if (idx === -1) {
+        throw new Error(`Step '${flags.fromStep}' not found in pipeline`);
+      }
+      activeSteps = allSteps.slice(idx);
+    } else {
+      activeSteps = allSteps;
+    }
 
     if (activeSteps.length === 0) {
-      throw new Error(`No matching steps found for stage ${flags.stage} and step ${flags.step}`);
+      throw new Error(`No matching steps found for stage ${flags.stage} and step ${flags.step ?? flags.fromStep}`);
     }
 
     const stageTitle =
@@ -195,41 +206,41 @@ export class StageOrchestrator {
             console.log(
               `  [s2-step-3] Output Figure Without Base: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
             );
-          } else if (step.id === 's2-step-4') {
+          } else if (step.id === 's3-step-1') {
             const res = await SimplifyGenerator.execute(
               model,
               flags.pick !== null ? flags.pick : undefined,
             );
             const size = statSync(res.meshPath).size;
             console.log(
-              `  [s2-step-4] Output Simplified Mesh: ${res.pointsPath} and ${res.meshPath} (${(size / 1024).toFixed(1)} KB)`,
+              `  [s3-step-1] Output Simplified Mesh: ${res.pointsPath} and ${res.meshPath} (${(size / 1024).toFixed(1)} KB)`,
             );
-          } else if (step.id === 's2-step-5') {
+          } else if (step.id === 's3-step-2') {
             const res = await TexturizeGenerator.execute(
               model,
               flags.pick !== null ? flags.pick : undefined,
             );
             const size = statSync(res.modelPath).size;
             console.log(
-              `  [s2-step-5] Output Textured Model: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
+              `  [s3-step-2] Output Textured Model: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
             );
-          } else if (step.id === 's2-step-6') {
+          } else if (step.id === 's3-step-3') {
             const res = await PlinthGenerator.execute(model);
             const size = statSync(res.modelPath).size;
             console.log(
-              `  [s2-step-6] Output Model With Plinth: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
+              `  [s3-step-3] Output Model With Plinth: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
             );
-          } else if (step.id === 's3-step-1') {
+          } else if (step.id === 's4-step-1') {
             const res = await UnfoldGenerator.execute(model);
             const size = statSync(res.outputPath).size;
             console.log(
-              `  [s3-step-1] Output Net: ${res.outputPath} (${(size / 1024).toFixed(1)} KB)`,
+              `  [s4-step-1] Output Net: ${res.outputPath} (${(size / 1024).toFixed(1)} KB)`,
             );
-          } else if (step.id === 's3-step-2') {
+          } else if (step.id === 's4-step-2') {
             const res = await SheetsExporter.execute(model);
             const size = statSync(res.outputPath).size;
             console.log(
-              `  [s3-step-2] Output Sheets: ${res.outputPath} (${(size / 1024).toFixed(1)} KB)`,
+              `  [s4-step-2] Output Sheets: ${res.outputPath} (${(size / 1024).toFixed(1)} KB)`,
             );
           }
         } catch (err) {

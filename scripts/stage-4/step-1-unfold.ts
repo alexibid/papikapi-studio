@@ -5,26 +5,33 @@ import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { ProgressHub } from '../common/progress-hub.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
 import { BlenderRunner } from '../common/blender-runner.js';
-import type { Stage3Response, UnfoldStatistics, UnfoldStepDefinition } from './interfaces/stage-3.interface.js';
+import type { Stage4Response, UnfoldStatistics, UnfoldStepDefinition } from './interfaces/stage-4.interface.js';
 
 export class UnfoldGenerator {
-  private static readonly stepId = 's3-step-1';
+  private static readonly stepId = 's4-step-1';
 
   private static resolveInputModel(modelName: string, step: UnfoldStepDefinition): string {
-    const candidate = join(WorkspacePaths.resourcePath(modelName), step.inputs.stage_dir, step.inputs.model_resource);
-    if (!existsSync(candidate)) {
-      throw new Error(`Simplified model not found for '${modelName}': ${candidate}`);
+    const candidates = [
+      join(WorkspacePaths.resourcePath(modelName), step.inputs.stage_dir, step.inputs.model_resource),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-3-plinth.json'),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-1-reduce.json'),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-2', 'step-6-plinth.json'),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-2', 'step-4-reduce.json'),
+    ];
+    const found = candidates.find((candidate) => existsSync(candidate));
+    if (!found) {
+      throw new Error(`Simplified model not found for '${modelName}': tried ${candidates.join(', ')}`);
     }
-    return candidate;
+    return found;
   }
 
-  public static async execute(modelName: string): Promise<Stage3Response> {
+  public static async execute(modelName: string): Promise<Stage4Response> {
     const step = PipelineConfigLoader.getStep(this.stepId) as unknown as UnfoldStepDefinition;
-    const stage3Dir = join(WorkspacePaths.resourcePath(modelName), step.stage_dir);
-    mkdirSync(stage3Dir, { recursive: true });
+    const stage4Dir = join(WorkspacePaths.resourcePath(modelName), step.stage_dir);
+    mkdirSync(stage4Dir, { recursive: true });
 
     const inputPath = this.resolveInputModel(modelName, step);
-    const outputPath = join(stage3Dir, step.outputs.net_resource);
+    const outputPath = join(stage4Dir, step.outputs.net_resource);
 
     const startMsg = step.messages.start.replace('{model}', modelName);
     console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);

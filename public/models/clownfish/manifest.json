@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-01T12:57:09.620Z",
+      "at": "2026-10-04T11:22:08.510Z",
       "status": "DONE",
-      "seconds": 0.74,
+      "seconds": 2.97,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -72,35 +72,40 @@
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
-          "plinth_min_height_ratio": 0.04,
-          "plinth_cut_lift_ratio": 0.05,
-          "plinth_margin_ratio": 0.03,
-          "plinth_slope_ratio": 0.025
+          "base_cut_margin_ratios": [
+            0.003,
+            0.01,
+            0.02,
+            0.035,
+            0.05
+          ]
         }
       },
       "metrics": {
-        "faces": 3735,
+        "faces": 3728,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
         "removedIslands": 1,
         "loops": 0,
-        "plinthWidthMm": 314.9,
-        "plinthLengthMm": 833.2,
-        "plinthThicknessMm": 31.4
+        "widthMm": 267.8,
+        "lengthMm": 786,
+        "marginRatio": 0.003,
+        "repairedVertices": 0,
+        "repairedTriangles": 0
       }
     },
-    "s2-step-4": {
-      "stageId": "s2-step-4",
-      "at": "2026-10-01T12:57:10.290Z",
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-03T00:53:59.243Z",
       "status": "DONE",
-      "seconds": 0.67,
+      "seconds": 0.82,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/clownfish/stage-2/step-3-plinth.glb",
-        "lengthMm": 872.5,
-        "faces": 3740,
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/clownfish/stage-2/step-3-base.glb",
+        "lengthMm": 786,
+        "faces": 3728,
         "parameters": {
           "target_faces": 600,
           "weld_distance_ratio": 0.00001,
@@ -111,72 +116,146 @@
         }
       },
       "metrics": {
-        "points": 324,
-        "meshFaces": 464,
-        "quads": 180,
+        "points": 300,
+        "meshFaces": 443,
+        "quads": 157,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
-        "volumeChangePercent": -0.38,
+        "volumeChangePercent": -0.6,
         "maxDeviationMm": 2.68,
-        "featureLossMm": 2.94
+        "featureLossMm": 2.72
       }
     },
-    "s2-step-5": {
-      "stageId": "s2-step-5",
-      "at": "2026-10-01T12:57:14.679Z",
+    "s3-step-2": {
+      "stageId": "s3-step-2",
+      "at": "2026-10-03T00:54:25.507Z",
       "status": "DONE",
-      "seconds": 4.39,
+      "seconds": 26.26,
       "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
+      "costNote": "Local Blender headless and Vectorizer ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/clownfish/stage-2/step-2-3d.glb",
         "parameters": {
-          "atlas_size_px": 4096,
-          "island_padding_px": 8,
-          "bleed_px": 6,
-          "cage_extrusion_ratio": 0.03,
-          "max_ray_distance_ratio": 0.08,
-          "bake_samples": 4,
-          "jpeg_quality": 92
-        }
+          "resolution": 2048,
+          "margin": 0,
+          "min_facing": 0.2,
+          "flat_pattern": "flat_{name}.png"
+        },
+        "palette": [
+          {
+            "index": 0,
+            "hex": "#0b0302",
+            "share": 0.2671,
+            "kind": "neutral"
+          },
+          {
+            "index": 1,
+            "hex": "#efefee",
+            "share": 0.113,
+            "kind": "neutral"
+          },
+          {
+            "index": 2,
+            "hex": "#9a9595",
+            "share": 0.0423,
+            "kind": "neutral"
+          },
+          {
+            "index": 3,
+            "hex": "#cd5d0c",
+            "share": 0.5126,
+            "kind": "hue"
+          },
+          {
+            "index": 4,
+            "hex": "#970a03",
+            "share": 0.0207,
+            "kind": "hue"
+          },
+          {
+            "index": 5,
+            "hex": "#eba424",
+            "share": 0.0444,
+            "kind": "hue"
+          }
+        ]
       },
       "metrics": {
-        "faces": 464,
-        "texelsPerMm": 3.008
+        "faces": 443,
+        "viewsCount": 6,
+        "resolution": 2048,
+        "familiesCount": 6,
+        "baseHex": "#cd5d0c",
+        "totalPaths": 27,
+        "totalNodes": 11232,
+        "hiddenFaces": 8,
+        "viewsUsage": {
+          "front": 43,
+          "back": 17,
+          "right": 119,
+          "left": 130,
+          "top": 52,
+          "bottom": 82
+        },
+        "plinthFound": true,
+        "cleanFaces": 3728
       }
     },
-    "s3-step-1": {
-      "stageId": "s3-step-1",
-      "at": "2026-10-01T11:21:48.848Z",
+    "s3-step-3": {
+      "stageId": "s3-step-3",
+      "at": "2026-10-03T00:54:26.505Z",
       "status": "DONE",
-      "seconds": 0.98,
+      "seconds": 1,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/clownfish/stage-2/step-3-reduce.blend",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/clownfish/stage-3/step-2-texturize.glb",
+        "parameters": {
+          "plinth_thickness_ratio": 0.05,
+          "plinth_slope_ratio": 0.02,
+          "plinth_margin_ratio": 0.004,
+          "face_max_extent_ratio": 0.5
+        }
+      },
+      "metrics": {
+        "faces": 491,
+        "loops": 2,
+        "openEdges": 10,
+        "nonManifoldEdges": 0
+      }
+    },
+    "s4-step-1": {
+      "stageId": "s4-step-1",
+      "at": "2026-10-03T00:54:27.379Z",
+      "status": "DONE",
+      "seconds": 0.87,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/clownfish/stage-3/step-3-plinth.json",
         "dimensionsMm": [
-          104.6,
+          111.36,
           300,
-          157.06
+          147.89
         ],
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 437,
-        "quadCount": 165,
-        "pieces": 22,
+        "faceCount": 473,
+        "quadCount": 177,
+        "pieces": 25,
         "smallestPieceFaces": 1,
         "shortestCutMm": 1.2,
         "unpairedEdges": 0,
         "nonManifoldEdges": 0
       }
     },
-    "s3-step-2": {
-      "stageId": "s3-step-2",
-      "at": "2026-10-01T11:22:25.913Z",
+    "s4-step-2": {
+      "stageId": "s4-step-2",
+      "at": "2026-10-03T00:55:09.213Z",
       "status": "DONE",
-      "seconds": 37.06,
+      "seconds": 41.83,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -184,14 +263,14 @@
         "pageSize": "210x297mm"
       },
       "metrics": {
-        "pageCount": 12,
+        "pageCount": 13,
         "sheetCount": 5,
-        "pieceCount": 22,
-        "labelCollisions": 14
+        "pieceCount": 25,
+        "labelCollisions": 18
       }
     }
   },
-  "totalSeconds": 88.04,
+  "totalSeconds": 117.95,
   "totalCostUsd": 0.0066,
-  "updatedAt": "2026-10-01T12:57:14.681Z"
+  "updatedAt": "2026-10-04T11:22:08.519Z"
 }
