@@ -97,9 +97,9 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-05T12:36:01.584Z",
+      "at": "2026-10-05T17:14:38.298Z",
       "status": "DONE",
-      "seconds": 1.69,
+      "seconds": 0.68,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -113,31 +113,39 @@
           "quad_face_angle_deg": 20,
           "quad_shape_angle_deg": 60,
           "face_max_extent_ratio": 0.5,
-          "mode": "boxes",
+          "mode": "decimate",
+          "box_min_aligned_ratio": 0.74,
           "box_voxel_resolution": 192,
           "box_plane_merge_ratio": 0.02,
           "box_plane_min_area_ratio": 0.03,
           "box_slab_footprint_ratio": 1.6,
-          "box_slab_max_thickness_ratio": 0.03
+          "box_slab_max_thickness_ratio": 0.03,
+          "planar_voxel_ratio": 0.02,
+          "planar_smooth_iterations": 4,
+          "planar_smooth_factor": 0.5,
+          "planar_decimate_faces": 500,
+          "planar_dissolve_angle_deg": 15
         }
       },
       "metrics": {
-        "points": 67,
-        "meshFaces": 70,
-        "quads": 60,
+        "points": 307,
+        "meshFaces": 492,
+        "quads": 118,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
-        "volumeChangePercent": 9.89,
-        "maxDeviationMm": 9.37,
-        "featureLossMm": 13.14
+        "volumeChangePercent": -0.01,
+        "maxDeviationMm": 0.49,
+        "featureLossMm": 0.8,
+        "mode": "decimate",
+        "alignedAreaRatio": 0.984
       }
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-05T12:37:02.976Z",
+      "at": "2026-10-05T17:15:39.202Z",
       "status": "DONE",
-      "seconds": 61.39,
+      "seconds": 60.89,
       "costUsd": 0,
       "costNote": "Local Blender headless and Vectorizer ($0.00)",
       "data": {
@@ -145,59 +153,115 @@
         "parameters": {
           "resolution": 2048,
           "margin": 0,
-          "min_facing": 0.2
+          "min_facing": 0.2,
+          "texture_mode": "legacy",
+          "head_cells": 8,
+          "pixel_min_aligned_ratio": 0.9,
+          "redraw": {
+            "views": [
+              "front",
+              "back",
+              "left",
+              "right",
+              "top"
+            ],
+            "reference_size_px": 512,
+            "columns": 3,
+            "rows": 2,
+            "endpoint_env_key": "RUNPOD_FLUX_ENDPOINT_ID",
+            "prompt": "Restyle this image of a blocky figure into clean flat pixel-block art with perfectly crisp straight-edged blocks and flat solid colours, keeping the colour scheme of every part. Draw eyes only where the image already shows eyes, as clean smooth round shapes with white highlights; never add eyes, faces or any feature that is not already present. Keep the exact same view, pose, silhouette, proportions, framing and every feature where it is. Do not rotate, do not add a base, do not add shadows or gradients. Plain white background."
+          },
+          "organic_group_angle_deg": 30,
+          "organic_group_deviation_ratio": 0.025,
+          "organic_group_extent_ratio": 0.35
         },
         "palette": [
           {
             "index": 0,
-            "hex": "#222d1e",
-            "share": 0.179,
+            "hex": "#222d1d",
+            "share": 0.1889,
             "kind": "neutral"
           },
           {
             "index": 1,
-            "hex": "#77b56d",
-            "share": 0.6673,
-            "kind": "hue"
+            "hex": "#918b85",
+            "share": 0.0185,
+            "kind": "neutral"
           },
           {
             "index": 2,
-            "hex": "#4c9340",
-            "share": 0.1441,
-            "kind": "hue"
+            "hex": "#dfe0db",
+            "share": 0.0002,
+            "kind": "neutral"
           },
           {
             "index": 3,
+            "hex": "#67b15c",
+            "share": 0.5367,
+            "kind": "hue"
+          },
+          {
+            "index": 4,
+            "hex": "#4da241",
+            "share": 0.0994,
+            "kind": "hue"
+          },
+          {
+            "index": 5,
+            "hex": "#9bc38b",
+            "share": 0.1298,
+            "kind": "hue"
+          },
+          {
+            "index": 6,
             "hex": "#a4735e",
-            "share": 0.0095,
+            "share": 0.0094,
+            "kind": "hue"
+          },
+          {
+            "index": 7,
+            "hex": "#623124",
+            "share": 0.0032,
+            "kind": "hue"
+          },
+          {
+            "index": 8,
+            "hex": "#87925f",
+            "share": 0.0135,
+            "kind": "hue"
+          },
+          {
+            "index": 9,
+            "hex": "#5a5e25",
+            "share": 0.0003,
             "kind": "hue"
           }
         ]
       },
       "metrics": {
-        "faces": 70,
+        "faces": 492,
         "viewsCount": 6,
         "resolution": 2048,
-        "familiesCount": 4,
-        "baseHex": "#77b56d",
-        "totalPaths": 211,
-        "totalNodes": 40529,
-        "hiddenFaces": 27,
+        "familiesCount": 10,
+        "baseHex": "#67b15c",
+        "totalPaths": 220,
+        "totalNodes": 40327,
+        "hiddenFaces": 148,
         "viewsUsage": {
-          "front": 12,
-          "back": 11,
-          "right": 11,
-          "left": 12,
-          "top": 9,
-          "bottom": 15
+          "front": 82,
+          "back": 90,
+          "right": 70,
+          "left": 69,
+          "top": 49,
+          "bottom": 132
         }
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-05T12:37:03.977Z",
+      "at": "2026-10-05T17:15:40.130Z",
       "status": "DONE",
-      "seconds": 0.99,
+      "seconds": 0.92,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -206,11 +270,11 @@
           "plinth_thickness_ratio": 0.05,
           "plinth_slope_ratio": 0.02,
           "plinth_margin_ratio": 0.004,
-          "face_max_extent_ratio": 1
+          "face_max_extent_ratio": 0.5
         }
       },
       "metrics": {
-        "faces": 97,
+        "faces": 530,
         "loops": 4,
         "openEdges": 0,
         "nonManifoldEdges": 0
@@ -218,35 +282,35 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-05T12:37:06.271Z",
+      "at": "2026-10-05T17:15:42.155Z",
       "status": "DONE",
-      "seconds": 0.61,
+      "seconds": 0.56,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/creeper/stage-3/step-3-plinth.json",
         "dimensionsMm": [
-          147.75,
-          141.8,
+          146.2,
+          140.74,
           300
         ],
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 96,
-        "quadCount": 62,
-        "pieces": 13,
+        "faceCount": 418,
+        "quadCount": 102,
+        "pieces": 27,
         "smallestPieceFaces": 1,
-        "shortestCutMm": 1.7,
+        "shortestCutMm": 0.5,
         "unpairedEdges": 0,
         "nonManifoldEdges": 0
       }
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-05T12:37:27.776Z",
+      "at": "2026-10-05T17:16:13.918Z",
       "status": "DONE",
-      "seconds": 21.5,
+      "seconds": 31.76,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -254,34 +318,34 @@
         "pageSize": "210x297mm"
       },
       "metrics": {
-        "pageCount": 14,
+        "pageCount": 17,
         "sheetCount": 9,
-        "pieceCount": 13,
-        "labelCollisions": 0
+        "pieceCount": 27,
+        "labelCollisions": 12
       }
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-05T12:37:29.620Z",
+      "at": "2026-10-05T17:16:15.280Z",
       "status": "DONE",
-      "seconds": 0.1,
+      "seconds": 0.12,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
         "source": "stage-4/step-1-net.json"
       },
       "metrics": {
-        "pieces": 13,
-        "faces": 96,
-        "hinges": 83,
-        "maxHingeResidualMm": 0.038,
-        "maxFoldAngleDeg": 111.8,
+        "pieces": 27,
+        "faces": 418,
+        "hinges": 391,
+        "maxHingeResidualMm": 10.892,
+        "maxFoldAngleDeg": 180,
         "mirroredPieces": 0,
         "extraRoots": 0
       }
     }
   },
-  "totalSeconds": 162.94,
+  "totalSeconds": 171.59,
   "totalCostUsd": 0.0109,
-  "updatedAt": "2026-10-05T12:37:29.622Z"
+  "updatedAt": "2026-10-05T17:16:15.283Z"
 }
