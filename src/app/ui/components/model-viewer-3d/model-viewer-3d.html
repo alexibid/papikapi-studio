@@ -1,11 +1,29 @@
 <div class="c-viewer-3d" #container>
   <div class="c-viewer-3d__tools">
-    <button class="c-viewer-3d__tool" type="button" (click)="zoom(1.2)"
-            [attr.aria-label]="i18n.translate('zoomIn')">+</button>
-    <button class="c-viewer-3d__tool" type="button" (click)="zoom(0.8)"
-            [attr.aria-label]="i18n.translate('zoomOut')">−</button>
-    <button class="c-viewer-3d__tool" type="button" (click)="resetView()"
-            [attr.aria-label]="i18n.translate('resetView')">↺</button>
+    <button
+      class="c-viewer-3d__tool"
+      type="button"
+      (click)="zoom(1.2)"
+      [attr.aria-label]="i18n.translate('zoomIn')"
+    >
+      +
+    </button>
+    <button
+      class="c-viewer-3d__tool"
+      type="button"
+      (click)="zoom(0.8)"
+      [attr.aria-label]="i18n.translate('zoomOut')"
+    >
+      −
+    </button>
+    <button
+      class="c-viewer-3d__tool"
+      type="button"
+      (click)="resetView()"
+      [attr.aria-label]="i18n.translate('resetView')"
+    >
+      ↺
+    </button>
   </div>
 
   <canvas

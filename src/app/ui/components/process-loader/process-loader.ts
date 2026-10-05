@@ -41,13 +41,17 @@ export class ProcessLoaderComponent {
     const latest = this.received();
     if (!latest) {
       const elapsed = this.secondsSince(this.origin());
-      return LoaderProgress.format(LoaderProgress.percentAt(elapsed, EXPECTED_SECONDS[this.mode()]));
+      return LoaderProgress.format(
+        LoaderProgress.percentAt(elapsed, EXPECTED_SECONDS[this.mode()]),
+      );
     }
     if (latest.progress.state === 'done') {
       return LoaderProgress.format(100);
     }
     const elapsedSeconds = this.secondsSince(latest.stepStartedAt);
-    return LoaderProgress.format(LoaderProgress.percentAcrossSteps({ ...latest.progress, elapsedSeconds }));
+    return LoaderProgress.format(
+      LoaderProgress.percentAcrossSteps({ ...latest.progress, elapsedSeconds }),
+    );
   });
 
   protected readonly stages = computed(() => {

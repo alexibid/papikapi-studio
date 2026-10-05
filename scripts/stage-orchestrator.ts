@@ -27,6 +27,7 @@ import { TexturizeGenerator } from './stage-3/step-2-texturize.js';
 import { PlinthGenerator } from './stage-3/step-3-plinth.js';
 import { UnfoldGenerator } from './stage-4/step-1-unfold.js';
 import { SheetsExporter } from './stage-4/step-2-sheets.js';
+import { AssemblyGenerator } from './stage-5/step-1-assembly.js';
 
 export class StageOrchestrator {
   private static discoverModels(pattern: string): readonly string[] {
@@ -241,6 +242,12 @@ export class StageOrchestrator {
             const size = statSync(res.outputPath).size;
             console.log(
               `  [s4-step-2] Output Sheets: ${res.outputPath} (${(size / 1024).toFixed(1)} KB)`,
+            );
+          } else if (step.id === 's5-step-1') {
+            const res = await AssemblyGenerator.execute(model);
+            const size = statSync(res.outputPath).size;
+            console.log(
+              `  [s5-step-1] Output Assembly Plan: ${res.outputPath} (${(size / 1024).toFixed(1)} KB)`,
             );
           }
         } catch (err) {

@@ -145,7 +145,7 @@ export class ModelViewer3DComponent implements AfterViewInit, OnDestroy {
       url,
       (gltf) => this.adopt(gltf.scene),
       undefined,
-      () => this.problem.set(this.i18n.translate('modelLoadFailed'))
+      () => this.problem.set(this.i18n.translate('modelLoadFailed')),
     );
   }
 

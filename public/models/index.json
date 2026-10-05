@@ -258,6 +258,12 @@
   "image": "art.jpeg"
  },
  {
+  "id": "submarine",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
   "id": "t-rex",
   "model": "model.glb",
   "preview": "art.jpeg",

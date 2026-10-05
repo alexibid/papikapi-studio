@@ -1,7 +1,7 @@
 import type { BlenderConfig } from '../../common/interfaces/index.js';
 
 export interface TexturizeBlenderConfig extends BlenderConfig {
-  readonly render_views_script: string;
+  readonly facet_views_script: string;
   readonly project_reduce_script: string;
 }
 
@@ -31,8 +31,8 @@ export interface TexturizeStepDefinition {
     readonly stage_dir: string;
     readonly model_resource: string;
     readonly model_public: string;
-    readonly views_dir: string;
     readonly svg_dir: string;
+    readonly facets_dir: string;
     readonly manifest: string;
   };
   readonly parameters: {
@@ -51,12 +51,9 @@ export interface TexturizeStepDefinition {
   };
 }
 
-export interface RenderViewsStatistics {
+export interface FacetViewsStatistics {
+  readonly faces: number;
   readonly viewsCount: number;
-  readonly resolution: number;
-  readonly boundsMin: readonly number[];
-  readonly boundsMax: readonly number[];
-  readonly centre: readonly number[];
 }
 
 export interface VectorizeStatistics {

@@ -61,6 +61,11 @@ export interface PipelineStage {
   readonly steps: readonly PipelineStep[];
 }
 
+export interface ModelProfile {
+  readonly models: readonly string[];
+  readonly step_parameters: Readonly<Record<string, Readonly<Record<string, unknown>>>>;
+}
+
 export interface PipelineConfig {
   readonly system: string;
   readonly workspace: {
@@ -77,5 +82,6 @@ export interface PipelineConfig {
     readonly flux_models?: Record<string, number>;
     readonly [key: string]: unknown;
   };
+  readonly model_profiles?: Readonly<Record<string, ModelProfile>>;
   readonly pipeline_stages: readonly PipelineStage[];
 }

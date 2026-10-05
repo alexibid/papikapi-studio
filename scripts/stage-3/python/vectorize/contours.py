@@ -1,6 +1,4 @@
 import numpy as np
-from config import VectorizeConfig
-from scipy import ndimage
 
 
 def marching_squares(field, level: float = 0.5):
@@ -96,19 +94,3 @@ def resample(points, step: float):
     count = max(8, int(round(total_dist / step)))
     samples = np.linspace(0, total_dist, count, endpoint=False)
     return np.stack([np.interp(samples, distance, closed[:, 0]), np.interp(samples, distance, closed[:, 1])], axis=1)
-
-
-def extract_family_loops(labels, family: int, config: VectorizeConfig):
-    field = ndimage.gaussian_filter((labels == family).astype(np.float32), config.contour_sigma)
-    loops = []
-    raw_loops = marching_squares(np.pad(field, 1), 0.5)
-    for raw in raw_loops:
-        loop = smooth_closed(raw - 1.0, config.loop_smooth_passes)
-        area = polygon_area(loop)
-        peri = perimeter(loop)
-        if area < config.min_shape_px:
-            continue
-        if peri > 0 and (2.0 * area / peri) < config.min_thickness_px:
-            continue
-        loops.append(resample(loop, config.node_step_px))
-    return loops

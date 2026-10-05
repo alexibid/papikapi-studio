@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-04T11:24:21.551Z",
+      "at": "2026-10-04T17:29:48.276Z",
       "status": "DONE",
-      "seconds": 3.19,
+      "seconds": 3.21,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -97,9 +97,9 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-03T05:08:41.971Z",
+      "at": "2026-10-04T19:47:31.792Z",
       "status": "DONE",
-      "seconds": 0.78,
+      "seconds": 0.59,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -129,48 +129,77 @@
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-03T05:09:05.081Z",
+      "at": "2026-10-04T19:48:09.129Z",
       "status": "DONE",
-      "seconds": 23.11,
+      "seconds": 37.32,
       "costUsd": 0,
       "costNote": "Local Blender headless and Vectorizer ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/triceratops/stage-2/step-2-3d.glb",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/triceratops/stage-2/step-3-base.glb",
         "parameters": {
           "resolution": 2048,
           "margin": 0,
-          "min_facing": 0.2,
-          "flat_pattern": "flat_{name}.png"
+          "min_facing": 0.2
         },
         "palette": [
           {
             "index": 0,
-            "hex": "#151016",
-            "share": 0.008,
+            "hex": "#090503",
+            "share": 0.0148,
             "kind": "neutral"
           },
           {
             "index": 1,
-            "hex": "#e1e3de",
+            "hex": "#77777a",
             "share": 0.0041,
             "kind": "neutral"
           },
           {
             "index": 2,
-            "hex": "#d2862b",
-            "share": 0.5611,
+            "hex": "#e09e3c",
+            "share": 0.3529,
             "kind": "hue"
           },
           {
             "index": 3,
-            "hex": "#b63d1f",
-            "share": 0.3995,
+            "hex": "#ce7c24",
+            "share": 0.1178,
             "kind": "hue"
           },
           {
             "index": 4,
-            "hex": "#c9bd7a",
-            "share": 0.0273,
+            "hex": "#d29d54",
+            "share": 0.113,
+            "kind": "hue"
+          },
+          {
+            "index": 5,
+            "hex": "#d36151",
+            "share": 0.1727,
+            "kind": "hue"
+          },
+          {
+            "index": 6,
+            "hex": "#bb3123",
+            "share": 0.094,
+            "kind": "hue"
+          },
+          {
+            "index": 7,
+            "hex": "#b54f14",
+            "share": 0.069,
+            "kind": "hue"
+          },
+          {
+            "index": 8,
+            "hex": "#e2d69c",
+            "share": 0.027,
+            "kind": "hue"
+          },
+          {
+            "index": 9,
+            "hex": "#efc15f",
+            "share": 0.0347,
             "kind": "hue"
           }
         ]
@@ -179,10 +208,10 @@
         "faces": 437,
         "viewsCount": 6,
         "resolution": 2048,
-        "familiesCount": 5,
-        "baseHex": "#d2862b",
-        "totalPaths": 21,
-        "totalNodes": 5698,
+        "familiesCount": 10,
+        "baseHex": "#e09e3c",
+        "totalPaths": 248,
+        "totalNodes": 21614,
         "hiddenFaces": 42,
         "viewsUsage": {
           "front": 86,
@@ -191,16 +220,14 @@
           "left": 65,
           "top": 57,
           "bottom": 73
-        },
-        "plinthFound": true,
-        "cleanFaces": 1411
+        }
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-03T05:09:06.052Z",
+      "at": "2026-10-04T19:48:09.975Z",
       "status": "DONE",
-      "seconds": 0.97,
+      "seconds": 0.83,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -221,9 +248,9 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-03T05:09:06.819Z",
+      "at": "2026-10-04T23:49:02.688Z",
       "status": "DONE",
-      "seconds": 0.77,
+      "seconds": 0.74,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -231,7 +258,7 @@
         "dimensionsMm": [
           300,
           140.92,
-          169.51
+          169.52
         ],
         "targetSizeMm": 300
       },
@@ -240,16 +267,16 @@
         "quadCount": 185,
         "pieces": 40,
         "smallestPieceFaces": 1,
-        "shortestCutMm": 1.8,
+        "shortestCutMm": 1.9,
         "unpairedEdges": 0,
         "nonManifoldEdges": 0
       }
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-03T05:24:46.024Z",
+      "at": "2026-10-04T23:49:41.622Z",
       "status": "DONE",
-      "seconds": 939.2,
+      "seconds": 38.93,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -257,14 +284,34 @@
         "pageSize": "210x297mm"
       },
       "metrics": {
-        "pageCount": 17,
-        "sheetCount": 6,
+        "pageCount": 18,
+        "sheetCount": 7,
         "pieceCount": 40,
         "labelCollisions": 3
       }
+    },
+    "s5-step-1": {
+      "stageId": "s5-step-1",
+      "at": "2026-10-05T11:00:01.485Z",
+      "status": "DONE",
+      "seconds": 0.15,
+      "costUsd": 0,
+      "costNote": "Local CPU geometry ($0.00)",
+      "data": {
+        "source": "stage-4/step-1-net.json"
+      },
+      "metrics": {
+        "pieces": 40,
+        "faces": 503,
+        "hinges": 463,
+        "maxHingeResidualMm": 4.239,
+        "maxFoldAngleDeg": 111.8,
+        "mirroredPieces": 0,
+        "extraRoots": 0
+      }
     }
   },
-  "totalSeconds": 1022.54,
+  "totalSeconds": 136.29,
   "totalCostUsd": 0.0082,
-  "updatedAt": "2026-10-04T11:24:21.561Z"
+  "updatedAt": "2026-10-05T11:00:01.491Z"
 }

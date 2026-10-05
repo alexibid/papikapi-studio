@@ -261,6 +261,38 @@
         "cwd": "apps/papikapi-studio"
       }
     },
+    "stage:5": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 5",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage-5": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 5",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage:5:step:1": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 5 --step s5-step-1",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
+    "stage-5:step-1": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx scripts/stage-orchestrator.ts --stage 5 --step s5-step-1",
+        "cwd": "apps/papikapi-studio"
+      }
+    },
     "stage:3": {
       "cache": false,
       "executor": "nx:run-commands",

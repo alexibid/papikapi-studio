@@ -1,20 +1,38 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { I18nService } from '@ibid/services';
-import { BadgeComponent, ButtonComponent, CardComponent, EmptyStateComponent, ScrimComponent } from 'ibid-ui';
+import {
+  BadgeComponent,
+  ButtonComponent,
+  CardComponent,
+  EmptyStateComponent,
+  ScrimComponent,
+  SegmentOption,
+  SegmentedControlComponent,
+} from 'ibid-ui';
 import { ModelCatalogueService } from '../../../application/services/model-catalogue.service';
+import { ModelCostService } from '../../../application/services/model-cost.service';
 import {
   Active3DGeneration,
   ModelCreatorService,
 } from '../../../application/services/model-creator.service';
+import { formatUsd } from '../../../domain/models/model-cost';
 import { PaperModel } from '../../../domain/models/paper-model';
+import { AssemblyViewerComponent } from '../../components/assembly-viewer/assembly-viewer';
 import { ModelCreatorComponent } from '../../components/model-creator/model-creator';
 import { ModelViewer3DComponent } from '../../components/model-viewer-3d/model-viewer-3d';
 import { ProcessLoaderComponent } from '../../components/process-loader/process-loader';
+
+const COST_STAGE_LABELS: Readonly<Record<string, string>> = {
+  's1-step-1': 'costStageAlternatives',
+  's2-step-2': 'costStageMesh',
+  's3-step-2': 'costStageRedraw',
+};
 
 @Component({
   selector: 'papikapi-studio-page',
   standalone: true,
   imports: [
+    AssemblyViewerComponent,
     BadgeComponent,
     ButtonComponent,
     CardComponent,
@@ -23,6 +41,7 @@ import { ProcessLoaderComponent } from '../../components/process-loader/process-
     ModelViewer3DComponent,
     ProcessLoaderComponent,
     ScrimComponent,
+    SegmentedControlComponent,
   ],
   templateUrl: './studio.page.html',
   styleUrl: './studio.page.scss',
@@ -31,6 +50,8 @@ export class StudioPage implements OnInit {
   protected readonly i18n = inject(I18nService);
   protected readonly catalogue = inject(ModelCatalogueService);
   protected readonly creator = inject(ModelCreatorService);
+  protected readonly modelCost = inject(ModelCostService);
+  protected readonly formatUsd = formatUsd;
 
   protected readonly selected = this.catalogue.selected;
   protected readonly pendingModelId = signal<string>(this.loadInitialSelected());
@@ -59,7 +80,30 @@ export class StudioPage implements OnInit {
     if (!model || this.creator.isGenerating3d(model.id)) return '';
     return `${model.modelPath}?v=${this.previewVersion()}`;
   });
+  protected readonly viewMode = signal<string>('model');
+  protected readonly viewOptions = computed<readonly SegmentOption[]>(() => [
+    { value: 'model', label: this.i18n.translate('viewModel') },
+    { value: 'assembly', label: this.i18n.translate('viewAssembly') },
+  ]);
+  protected readonly assemblySource = computed(() => {
+    const model = this.selected();
+    if (!model) return '';
+    return `/models/${model.id}/assembly.json?v=${this.previewVersion()}`;
+  });
   protected readonly showCreator = signal<boolean>(false);
+
+  constructor() {
+    effect(() => {
+      const id = this.selected()?.id;
+      this.previewVersion();
+      if (id) void this.modelCost.load(id);
+    });
+  }
+
+  protected stageLabel(stageId: string): string {
+    const key = COST_STAGE_LABELS[stageId];
+    return key ? this.i18n.translate(key) : stageId;
+  }
 
   private loadInitialSelected(): string {
     if (typeof window === 'undefined') return '';

@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-04T11:23:32.348Z",
+      "at": "2026-10-04T17:29:01.321Z",
       "status": "DONE",
-      "seconds": 3.94,
+      "seconds": 3.68,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -97,9 +97,9 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-03T03:14:29.423Z",
+      "at": "2026-10-04T18:34:23.504Z",
       "status": "DONE",
-      "seconds": 2.23,
+      "seconds": 0.65,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -129,84 +129,89 @@
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-03T03:15:47.556Z",
+      "at": "2026-10-04T18:35:08.051Z",
       "status": "DONE",
-      "seconds": 78.13,
+      "seconds": 44.53,
       "costUsd": 0,
       "costNote": "Local Blender headless and Vectorizer ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/police-car/stage-2/step-2-3d.glb",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/police-car/stage-2/step-3-base.glb",
         "parameters": {
           "resolution": 2048,
           "margin": 0,
-          "min_facing": 0.2,
-          "flat_pattern": "flat_{name}.png"
+          "min_facing": 0.2
         },
         "palette": [
           {
             "index": 0,
-            "hex": "#110707",
-            "share": 0.2476,
+            "hex": "#181818",
+            "share": 0.2006,
             "kind": "neutral"
           },
           {
             "index": 1,
-            "hex": "#f1f1f1",
-            "share": 0.2979,
+            "hex": "#f0f0f0",
+            "share": 0.3522,
             "kind": "neutral"
           },
           {
             "index": 2,
-            "hex": "#a49fa1",
-            "share": 0.0969,
+            "hex": "#767272",
+            "share": 0.0562,
             "kind": "neutral"
           },
           {
             "index": 3,
-            "hex": "#435bb2",
-            "share": 0.2549,
+            "hex": "#4b66be",
+            "share": 0.2378,
             "kind": "hue"
           },
           {
             "index": 4,
-            "hex": "#94b1c6",
-            "share": 0.0467,
+            "hex": "#9698bb",
+            "share": 0.015,
             "kind": "hue"
           },
           {
             "index": 5,
-            "hex": "#e1de4f",
-            "share": 0.0294,
+            "hex": "#5968bb",
+            "share": 0.0287,
             "kind": "hue"
           },
           {
             "index": 6,
-            "hex": "#ca292c",
-            "share": 0.0225,
+            "hex": "#98b5c8",
+            "share": 0.0563,
             "kind": "hue"
           },
           {
             "index": 7,
-            "hex": "#905125",
-            "share": 0.0029,
+            "hex": "#a57d8a",
+            "share": 0.0157,
             "kind": "hue"
           },
           {
             "index": 8,
-            "hex": "#a36373",
-            "share": 0.0007,
+            "hex": "#9da277",
+            "share": 0.0155,
             "kind": "hue"
           },
           {
             "index": 9,
-            "hex": "#357587",
-            "share": 0.0004,
+            "hex": "#cdc855",
+            "share": 0.0104,
             "kind": "hue"
           },
           {
             "index": 10,
-            "hex": "#73a797",
-            "share": 0.0001,
+            "hex": "#c02b2d",
+            "share": 0.0109,
+            "kind": "hue"
+          },
+          {
+            "index": 11,
+            "hex": "#bd6a72",
+            "share": 0.0005,
             "kind": "hue"
           }
         ]
@@ -215,10 +220,10 @@
         "faces": 564,
         "viewsCount": 6,
         "resolution": 2048,
-        "familiesCount": 11,
-        "baseHex": "#f1f1f1",
-        "totalPaths": 44,
-        "totalNodes": 13571,
+        "familiesCount": 12,
+        "baseHex": "#f0f0f0",
+        "totalPaths": 196,
+        "totalNodes": 18040,
         "hiddenFaces": 10,
         "viewsUsage": {
           "front": 69,
@@ -227,16 +232,14 @@
           "left": 87,
           "top": 120,
           "bottom": 117
-        },
-        "plinthFound": true,
-        "cleanFaces": 1018
+        }
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-03T03:15:49.905Z",
+      "at": "2026-10-04T18:35:08.911Z",
       "status": "DONE",
-      "seconds": 2.34,
+      "seconds": 0.85,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -257,9 +260,9 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-03T03:15:52.259Z",
+      "at": "2026-10-04T22:47:46.480Z",
       "status": "DONE",
-      "seconds": 2.35,
+      "seconds": 4.77,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -267,7 +270,7 @@
         "dimensionsMm": [
           192.27,
           300,
-          179.9
+          179.99
         ],
         "targetSizeMm": 300
       },
@@ -283,9 +286,9 @@
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-03T03:18:08.950Z",
+      "at": "2026-10-04T22:52:39.538Z",
       "status": "DONE",
-      "seconds": 136.68,
+      "seconds": 293.03,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -296,11 +299,31 @@
         "pageCount": 18,
         "sheetCount": 8,
         "pieceCount": 36,
-        "labelCollisions": 5
+        "labelCollisions": 7
+      }
+    },
+    "s5-step-1": {
+      "stageId": "s5-step-1",
+      "at": "2026-10-05T10:59:59.280Z",
+      "status": "DONE",
+      "seconds": 0.16,
+      "costUsd": 0,
+      "costNote": "Local CPU geometry ($0.00)",
+      "data": {
+        "source": "stage-4/step-1-net.json"
+      },
+      "metrics": {
+        "pieces": 36,
+        "faces": 567,
+        "hinges": 531,
+        "maxHingeResidualMm": 3.797,
+        "maxFoldAngleDeg": 132.4,
+        "mirroredPieces": 0,
+        "extraRoots": 0
       }
     }
   },
-  "totalSeconds": 272.58,
+  "totalSeconds": 394.58,
   "totalCostUsd": 0.007,
-  "updatedAt": "2026-10-04T11:23:32.357Z"
+  "updatedAt": "2026-10-05T10:59:59.288Z"
 }

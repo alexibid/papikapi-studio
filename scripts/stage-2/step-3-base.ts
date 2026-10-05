@@ -1,4 +1,4 @@
-import { copyFileSync, cpSync, existsSync, mkdirSync, rmSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { BlenderRunner } from '../common/blender-runner.js';
 import { GlbRepair } from '../common/glb/glb-repair.js';
@@ -54,22 +54,13 @@ export class BaseCutGenerator {
 
     const viewsDirName = step.outputs.views_dir ?? 'step-3-views';
     const viewsDir = join(stageDir, viewsDirName);
-    const viewsScript =
-      step.blender.views_script ?? 'scripts/stage-2/blender/base/render_base_views.py';
+    const viewsScript = step.blender.views_script ?? 'scripts/stage-2/blender/base/render_base_views.py';
     BlenderRunner.run(step.blender, viewsScript, {
       input_glb: outputPath,
       output_dir: viewsDir,
       resolution: 2048,
       margin: 0.0,
     });
-
-    const rootViewsDir = join(WorkspacePaths.resourcePath(modelName), 'step-3-views');
-    if (rootViewsDir !== viewsDir) {
-      if (existsSync(rootViewsDir)) {
-        rmSync(rootViewsDir, { recursive: true, force: true });
-      }
-      cpSync(viewsDir, rootViewsDir, { recursive: true });
-    }
 
     const duration = Math.round(((Date.now() - start) / 1000) * 100) / 100;
 

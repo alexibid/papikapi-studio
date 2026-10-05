@@ -1,6 +1,6 @@
 import numpy as np
 from color_space import (
-    from_hex,
+    srgb_to_linear,
     hue_gap,
     is_neutral,
     lab_to_srgb,
@@ -20,6 +20,18 @@ def mode_seed(values, period, bin_width):
     return (edges[index] + edges[index + 1]) / 2
 
 
+SATURATION_PERIOD = 6.0
+SATURATION_BIN = 0.1
+SATURATION_SPLIT = 0.8  # separacao minima entre saturacoes (-ln(min/max) em luz linear)
+
+
+def saturation_feature(rgb):
+    # -ln(min/max) da luz linear: a sombra multiplica os tres canais e deixa-o inalterado
+    linear = srgb_to_linear(rgb)
+    top = np.maximum(linear.max(axis=1), 1e-4)
+    return -np.log(np.clip(linear.min(axis=1) / top, 0.01, 1.0))
+
+
 class Palette:
     def __init__(self, samples_rgb, config: VectorizeConfig):
         self.config = config
@@ -29,8 +41,30 @@ class Palette:
         span = float(np.percentile(lightness, 99) - np.percentile(lightness, 1)) if len(lightness) else 100.0
         tolerance = float(np.clip(config.neutral_tol_ratio * span, config.neutral_l_tol_min, config.neutral_l_tolerance))
         self.neutral_seeds = self.find_seeds(lightness[neutral], 100.0, 2.0, lambda v, s: np.abs(v - s) <= tolerance)
-        self.chromatic_seeds = self.find_seeds(hue[~neutral], 360.0, 5.0, lambda v, s: hue_gap(v, s) <= config.hue_tolerance)
+        hue_seeds = self.find_seeds(hue[~neutral], 360.0, 5.0, lambda v, s: hue_gap(v, s) <= config.hue_tolerance)
+        self.split_by_saturation(hue_seeds, hue[~neutral], saturation_feature(samples_rgb[~neutral]))
         self.flatten_colours(samples_rgb)
+
+    def split_by_saturation(self, hue_seeds, hue, rel):
+        # a familia cromatica e (tom, saturacao): a sombra muda o brilho mas nao a saturacao,
+        # por isso creme (pouco saturado) e amarelo (muito saturado) separam-se e o amarelo
+        # claro/escuro continua a ser a mesma familia
+        self.chromatic_seeds, self.saturation_seeds = [], []
+        if not len(hue_seeds):
+            self.chromatic_seeds, self.saturation_seeds = np.array([]), np.array([])
+            return
+        owner = np.argmin(hue_gap(hue[:, None], hue_seeds[None, :]), axis=1)
+        for index, seed in enumerate(hue_seeds):
+            logs = rel[owner == index]
+            found = self.find_seeds(logs, SATURATION_PERIOD, SATURATION_BIN,
+                                    lambda v, s: np.abs(v - s) <= SATURATION_SPLIT)
+            if not len(found):
+                found = np.array([np.median(logs)])
+            for centre in found:
+                self.chromatic_seeds.append(seed)
+                self.saturation_seeds.append(centre)
+        self.chromatic_seeds = np.array(self.chromatic_seeds)
+        self.saturation_seeds = np.array(self.saturation_seeds)
 
     def find_seeds(self, values, period, bin_width, near):
         seeds, left, total = [], np.asarray(values), max(len(values), 1)
@@ -57,7 +91,10 @@ class Palette:
             if flag and count:
                 result[mask] = np.argmin(np.abs(lightness[mask, None] - self.neutral_seeds[None, :]), axis=1)
             elif not flag and len(self.chromatic_seeds):
-                result[mask] = count + np.argmin(hue_gap(hue[mask, None], self.chromatic_seeds[None, :]), axis=1)
+                logs = saturation_feature(rgb[mask])
+                distance = hue_gap(hue[mask, None], self.chromatic_seeds[None, :]) / self.config.hue_tolerance \
+                    + np.abs(logs[:, None] - self.saturation_seeds[None, :]) / SATURATION_SPLIT
+                result[mask] = count + np.argmin(distance, axis=1)
         return result
 
     def flatten_colours(self, samples_rgb):
@@ -83,7 +120,8 @@ class Palette:
             if lightness.mean() <= 35:
                 return members[lightness <= np.percentile(lightness, 100 - self.config.flat_percentile)].mean(axis=0)
             return np.median(members, axis=0)
-        return members[chroma >= np.percentile(chroma, self.config.flat_percentile - 20)].mean(axis=0)
+        lit = members[lightness >= np.percentile(lightness, 50)]
+        return lit[np.hypot(lit[:, 1], lit[:, 2]) >= np.percentile(np.hypot(lit[:, 1], lit[:, 2]), 50)].mean(axis=0)
 
     def prune_transitions(self, views):
         while True:

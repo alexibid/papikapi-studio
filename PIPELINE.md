@@ -132,6 +132,16 @@ Every prompt, system instruction, maturity progression, aspect ratio, image dime
      * Language: `workspace.sheet_language` (`pt` or `en`) picks the entry of `scripts/stage-3/sheet-translations.json`, which holds every text of the booklet.
    * The Blender executable, scripts, size, page, margins and every limit above are declared in `pipeline.json`.
 
+4. **Stage 5: Assembly Animation**
+   * **Step 1 (`s5-step-1`, ASSEMBLY)**: `scripts/stage-5/step-1-assembly.ts`, pure TypeScript (no Blender, $0.00, about 0.2 s per model).
+     * Input: `resources/<model>/stage-4/step-1-net.json` (pieces, flat faces and the 3D mesh) and `resources/<model>/stage-3/step-3-plinth.glb` (face colours).
+     * Fold plan: inside each piece, faces that share a mesh edge whose flat positions coincide (`hinge_tolerance_mm`) are hinged. A spanning tree from the largest face gives each face its parent, its depth, the hinge axis (the shared edge in flat coordinates) and the fold angle, taken from the rigid transform flat→3D of the two faces (`FaceFrame`), so no angle is measured by hand. A face with no hinge path becomes a root of its own (`extraRoots`).
+     * Order: pieces are built bottom-up, each one adjacent to what is already built (`AssemblyOrder`); each piece is one step, so `progress` 0..1 is split in equal slices (`progressStart`, `progressEnd`).
+     * Tray: pieces wait flat in rows beside the figure (`tray_gap_mm`, `tray_row_width_mm`).
+     * Colour: every GLB triangle is sampled in its texture and given to the nearest net face (`FaceColourAssigner`).
+     * Output: `step-1-assembly.json`, copied to `public/models/<model>/assembly.json`, and `step-1-manifest.json` with `maxHingeResidualMm`, `maxFoldAngleDeg`, `mirroredPieces`, `extraRoots`. Each face also carries its exact 3D polygon, so the finished piece snaps to the true mesh.
+   * Studio: the `Montagem` tab of the preview (`papikapi-studio-assembly-viewer`) plays the plan with a slider (`ibid-slider`): each piece folds on the tray, then flies to its place. Driving it with a child's points is just setting `progress` from 0 to 1.
+
 ---
 
 ## 🚀 Execution Commands
@@ -162,6 +172,9 @@ nx run papikapi-studio:stage:2:step:5 --model=cheetah
 
 # Run Stage 2 Step 6 (white plinth fused to the feet, Blender headless)
 nx run papikapi-studio:stage:2:step:6 --model=cheetah
+
+# Run Stage 5 (assembly animation plan, no Blender)
+nx run papikapi-studio:stage:5 --model=cheetah
 
 # Run Stage 3 (unfold with Blender and export the A4 PDF)
 nx run papikapi-studio:stage:3 --model=cheetah

@@ -5,6 +5,7 @@ const PITCH_LIMIT = 0.06;
 const ORBIT_SENSITIVITY = 0.008;
 const ZOOM_LIMITS = { min: 0.4, max: 4 } as const;
 const HOME = { yaw: Math.PI * 0.28, pitch: Math.PI * 0.38 } as const;
+const POSTER = { yaw: Math.PI * 1.28, pitch: Math.PI * 0.46 } as const;
 
 export class OrbitCamera {
   readonly camera = new PerspectiveCamera(38, 1, 0.01, 4000);
@@ -14,9 +15,13 @@ export class OrbitCamera {
   private yaw = HOME.yaw;
   private pitch = HOME.pitch;
   private zoom = 1;
+  private posterWeight = 0;
 
   frame(box: Box3): void {
-    const sphere = box.getBoundingSphere(new Sphere());
+    this.frameSphere(box.getBoundingSphere(new Sphere()));
+  }
+
+  frameSphere(sphere: Sphere): void {
     this.target.copy(sphere.center);
     const halfAngle = (this.camera.fov * Math.PI) / 360;
     this.distance = (sphere.radius / Math.sin(halfAngle)) * FIT_MARGIN;
@@ -32,16 +37,17 @@ export class OrbitCamera {
 
   orbit(deltaX: number, deltaY: number): void {
     this.yaw -= deltaX * ORBIT_SENSITIVITY;
-    this.pitch = clamp(
-      this.pitch - deltaY * ORBIT_SENSITIVITY,
-      PITCH_LIMIT,
-      Math.PI - PITCH_LIMIT
-    );
+    this.pitch = clamp(this.pitch - deltaY * ORBIT_SENSITIVITY, PITCH_LIMIT, Math.PI - PITCH_LIMIT);
     this.apply();
   }
 
   scale(factor: number): void {
     this.zoom = clamp(this.zoom * factor, ZOOM_LIMITS.min, ZOOM_LIMITS.max);
+    this.apply();
+  }
+
+  settle(weight: number): void {
+    this.posterWeight = weight;
     this.apply();
   }
 
@@ -54,10 +60,12 @@ export class OrbitCamera {
 
   private apply(): void {
     const radius = this.distance / this.zoom;
+    const yaw = this.yaw + (POSTER.yaw - this.yaw) * this.posterWeight;
+    const pitch = this.pitch + (POSTER.pitch - this.pitch) * this.posterWeight;
     this.camera.position.set(
-      this.target.x + radius * Math.sin(this.pitch) * Math.sin(this.yaw),
-      this.target.y + radius * Math.cos(this.pitch),
-      this.target.z + radius * Math.sin(this.pitch) * Math.cos(this.yaw)
+      this.target.x + radius * Math.sin(pitch) * Math.sin(yaw),
+      this.target.y + radius * Math.cos(pitch),
+      this.target.z + radius * Math.sin(pitch) * Math.cos(yaw),
     );
     this.camera.up.set(0, 1, 0);
     this.camera.lookAt(this.target);

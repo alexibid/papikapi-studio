@@ -60,41 +60,6 @@
         "fileSize": 1140724
       }
     },
-    "s2-step-3": {
-      "stageId": "s2-step-3",
-      "at": "2026-10-03T04:32:05.972Z",
-      "status": "DONE",
-      "seconds": 2.48,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/tractor/stage-2/step-2-3d.glb",
-        "parameters": {
-          "weld_distance_ratio": 0.00001,
-          "contact_height_ratio": 0.02,
-          "base_cut_margin_ratios": [
-            0.003,
-            0.01,
-            0.02,
-            0.035,
-            0.05
-          ]
-        }
-      },
-      "metrics": {
-        "faces": 1611,
-        "openEdges": 4,
-        "nonManifoldEdges": 0,
-        "airtight": false,
-        "removedIslands": 2,
-        "loops": 1,
-        "widthMm": 368.1,
-        "lengthMm": 273.6,
-        "marginRatio": 0.003,
-        "repairedVertices": 0,
-        "repairedTriangles": 0
-      }
-    },
     "s3-step-1": {
       "stageId": "s3-step-1",
       "at": "2026-10-03T04:32:08.769Z",
@@ -239,9 +204,9 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-03T04:33:20.458Z",
+      "at": "2026-10-04T23:46:27.375Z",
       "status": "DONE",
-      "seconds": 2,
+      "seconds": 0.73,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -265,9 +230,9 @@
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-03T04:36:45.044Z",
+      "at": "2026-10-04T23:47:56.736Z",
       "status": "DONE",
-      "seconds": 204.58,
+      "seconds": 89.35,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -280,9 +245,29 @@
         "pieceCount": 63,
         "labelCollisions": 5
       }
+    },
+    "s5-step-1": {
+      "stageId": "s5-step-1",
+      "at": "2026-10-05T11:00:01.203Z",
+      "status": "DONE",
+      "seconds": 0.18,
+      "costUsd": 0,
+      "costNote": "Local CPU geometry ($0.00)",
+      "data": {
+        "source": "stage-4/step-1-net.json"
+      },
+      "metrics": {
+        "pieces": 63,
+        "faces": 608,
+        "hinges": 545,
+        "maxHingeResidualMm": 3.226,
+        "maxFoldAngleDeg": 146.5,
+        "mirroredPieces": 0,
+        "extraRoots": 0
+      }
     }
   },
-  "totalSeconds": 363.36,
+  "totalSeconds": 244.56,
   "totalCostUsd": 0.0123,
-  "updatedAt": "2026-10-03T04:36:45.054Z"
+  "updatedAt": "2026-10-05T11:00:01.211Z"
 }

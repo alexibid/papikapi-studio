@@ -1,4 +1,3 @@
-import sys
 import numpy as np
 from PIL import Image
 from scipy import ndimage
@@ -24,3 +23,18 @@ def zones(lab,m,factor,thr_pct=90.0,density_sigma=9.0,density_thr=0.12,dilate=5.
     lab_z,n=ndimage.label(z); sizes=ndimage.sum(z,lab_z,np.arange(1,n+1))
     keep=np.isin(lab_z,1+np.nonzero(sizes>=min_area*factor*factor)[0])
     return keep,G,T,dens
+
+
+def residual_zones(lab, facet_lab, mask, factor, threshold=13.0, smooth=1.0, dilate=2.0, min_area=40.0):
+    """Zonas onde a vista original difere da cor da faceta: e ai que existe textura (olhos, nariz, manchas)."""
+    difference = np.sqrt(((lab - facet_lab) ** 2).sum(axis=2))
+    difference = ndimage.gaussian_filter(difference, smooth * factor)
+    inner = ndimage.binary_erosion(mask, iterations=max(1, int(1.5 * factor)))
+    zone = (difference > threshold) & inner
+    zone = ndimage.binary_opening(zone, iterations=max(1, int(0.8 * factor)))
+    zone = ndimage.binary_dilation(zone, iterations=max(1, int(dilate * factor))) & mask
+    zone = ndimage.binary_fill_holes(zone) & mask  # reflexos e buracos rodeados de detalhe tambem se desenham
+    labels, count = ndimage.label(zone)
+    sizes = ndimage.sum(zone, labels, np.arange(1, count + 1))
+    keep = np.isin(labels, 1 + np.nonzero(sizes >= min_area * factor * factor)[0])
+    return keep, difference

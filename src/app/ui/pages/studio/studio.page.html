@@ -100,11 +100,38 @@
             }
           </div>
         </ibid-card>
+
+        <ibid-card customClass="p-studio__card">
+          <div class="p-studio__card-header">
+            <h3 class="p-studio__card-title">{{ i18n.translate('modelCost') }}</h3>
+            <ibid-badge size="sm" [label]="formatUsd(modelCost.cost().totalUsd)" />
+          </div>
+          <ul class="p-studio__cost-list">
+            @for (stage of modelCost.cost().stages; track stage.stageId) {
+              <li class="p-studio__cost-item" [title]="stage.note">
+                <span class="p-studio__cost-stage">{{ stageLabel(stage.stageId) }}</span>
+                <span class="p-studio__cost-amount">{{ formatUsd(stage.costUsd) }}</span>
+              </li>
+            }
+          </ul>
+        </ibid-card>
       }
     </section>
 
     <section class="p-studio__preview-col">
-      <papikapi-studio-model-viewer-3d [source]="preview()" />
+      @if (viewMode() === 'assembly') {
+        <papikapi-studio-assembly-viewer [source]="assemblySource()" />
+      } @else {
+        <papikapi-studio-model-viewer-3d [source]="preview()" />
+      }
+
+      <div class="p-studio__view-switch">
+        <ibid-segmented-control
+          [options]="viewOptions()"
+          [value]="viewMode()"
+          (valueChange)="viewMode.set($event)"
+        />
+      </div>
 
       @if (activeCanvasLoader(); as loaderInfo) {
         <div class="p-studio__canvas-loader">

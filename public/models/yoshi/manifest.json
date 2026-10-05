@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-04T11:24:34.614Z",
+      "at": "2026-10-04T17:30:00.757Z",
       "status": "DONE",
-      "seconds": 3.76,
+      "seconds": 3.5,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -97,9 +97,9 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-03T05:55:54.140Z",
+      "at": "2026-10-04T19:50:03.316Z",
       "status": "DONE",
-      "seconds": 0.81,
+      "seconds": 0.67,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -129,65 +129,94 @@
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-03T05:56:26.087Z",
+      "at": "2026-10-04T19:50:52.574Z",
       "status": "DONE",
-      "seconds": 31.95,
+      "seconds": 49.24,
       "costUsd": 0,
       "costNote": "Local Blender headless and Vectorizer ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/yoshi/stage-2/step-2-3d.glb",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/yoshi/stage-2/step-3-base.glb",
         "parameters": {
           "resolution": 2048,
           "margin": 0,
-          "min_facing": 0.2,
-          "flat_pattern": "flat_{name}.png"
+          "min_facing": 0.2
         },
         "palette": [
           {
             "index": 0,
-            "hex": "#e1e2e1",
-            "share": 0.1116,
+            "hex": "#525a52",
+            "share": 0.0558,
             "kind": "neutral"
           },
           {
             "index": 1,
-            "hex": "#000000",
-            "share": 0.0111,
+            "hex": "#d7d9da",
+            "share": 0.158,
             "kind": "neutral"
           },
           {
             "index": 2,
-            "hex": "#9e9db1",
-            "share": 0.0345,
+            "hex": "#1a140e",
+            "share": 0.0109,
             "kind": "neutral"
           },
           {
             "index": 3,
-            "hex": "#62a559",
-            "share": 0.7023,
+            "hex": "#64a65b",
+            "share": 0.6131,
             "kind": "hue"
           },
           {
             "index": 4,
-            "hex": "#d06128",
-            "share": 0.0981,
+            "hex": "#89a686",
+            "share": 0.0395,
             "kind": "hue"
           },
           {
             "index": 5,
-            "hex": "#ab9649",
-            "share": 0.0088,
+            "hex": "#d15f25",
+            "share": 0.0486,
             "kind": "hue"
           },
           {
             "index": 6,
-            "hex": "#c3313a",
-            "share": 0.0311,
+            "hex": "#da6d38",
+            "share": 0.0189,
             "kind": "hue"
           },
           {
             "index": 7,
-            "hex": "#385b8d",
+            "hex": "#a14012",
+            "share": 0.0097,
+            "kind": "hue"
+          },
+          {
+            "index": 8,
+            "hex": "#72503e",
+            "share": 0.0002,
+            "kind": "hue"
+          },
+          {
+            "index": 9,
+            "hex": "#a0a77a",
+            "share": 0.0104,
+            "kind": "hue"
+          },
+          {
+            "index": 10,
+            "hex": "#545c28",
+            "share": 0.0066,
+            "kind": "hue"
+          },
+          {
+            "index": 11,
+            "hex": "#c4313a",
+            "share": 0.0255,
+            "kind": "hue"
+          },
+          {
+            "index": 12,
+            "hex": "#bf7780",
             "share": 0.0026,
             "kind": "hue"
           }
@@ -197,10 +226,10 @@
         "faces": 446,
         "viewsCount": 6,
         "resolution": 2048,
-        "familiesCount": 8,
-        "baseHex": "#62a559",
-        "totalPaths": 37,
-        "totalNodes": 7506,
+        "familiesCount": 13,
+        "baseHex": "#64a65b",
+        "totalPaths": 271,
+        "totalNodes": 21868,
         "hiddenFaces": 29,
         "viewsUsage": {
           "front": 104,
@@ -209,16 +238,14 @@
           "left": 56,
           "top": 66,
           "bottom": 38
-        },
-        "plinthFound": true,
-        "cleanFaces": 1112
+        }
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-03T05:56:27.060Z",
+      "at": "2026-10-04T19:50:53.468Z",
       "status": "DONE",
-      "seconds": 0.97,
+      "seconds": 0.88,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -239,9 +266,9 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-03T05:56:27.859Z",
+      "at": "2026-10-04T23:51:53.451Z",
       "status": "DONE",
-      "seconds": 0.8,
+      "seconds": 0.64,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -249,7 +276,7 @@
         "dimensionsMm": [
           300,
           173.21,
-          295.17
+          295.24
         ],
         "targetSizeMm": 300
       },
@@ -265,9 +292,9 @@
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-03T05:57:48.240Z",
+      "at": "2026-10-04T23:59:07.960Z",
       "status": "DONE",
-      "seconds": 80.38,
+      "seconds": 434.5,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -280,9 +307,29 @@
         "pieceCount": 43,
         "labelCollisions": 6
       }
+    },
+    "s5-step-1": {
+      "stageId": "s5-step-1",
+      "at": "2026-10-05T11:00:02.158Z",
+      "status": "DONE",
+      "seconds": 0.18,
+      "costUsd": 0,
+      "costNote": "Local CPU geometry ($0.00)",
+      "data": {
+        "source": "stage-4/step-1-net.json"
+      },
+      "metrics": {
+        "pieces": 43,
+        "faces": 520,
+        "hinges": 477,
+        "maxHingeResidualMm": 2.491,
+        "maxFoldAngleDeg": 155.8,
+        "mirroredPieces": 0,
+        "extraRoots": 0
+      }
     }
   },
-  "totalSeconds": 163.83,
+  "totalSeconds": 534.77,
   "totalCostUsd": 0.0068,
-  "updatedAt": "2026-10-04T11:24:34.625Z"
+  "updatedAt": "2026-10-05T11:00:02.164Z"
 }

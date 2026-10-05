@@ -2,6 +2,7 @@ import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { BlenderRunner } from '../common/blender-runner.js';
 import { ManifestManager } from '../common/manifest-manager.js';
+import { ModelProfiles } from '../common/model-profiles.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { ProgressHub } from '../common/progress-hub.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
@@ -36,6 +37,8 @@ export class SimplifyGenerator {
     const pointsPath = join(stageDir, step.outputs.points_resource);
     const meshPath = join(stageDir, step.outputs.mesh_resource);
 
+    const parameters = { ...step.parameters, ...ModelProfiles.stepParameters(modelName, this.stepId) };
+
     const startMsg = step.messages.start.replace('{model}', modelName);
     console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
     ProgressHub.report(modelName, this.stepId, startMsg);
@@ -45,7 +48,7 @@ export class SimplifyGenerator {
       input_glb: inputPath,
       output_json: pointsPath,
       output_glb: meshPath,
-      ...step.parameters,
+      ...parameters,
     });
     const duration = Math.round(((Date.now() - start) / 1000) * 100) / 100;
     const publicDir = WorkspacePaths.modelPath(modelName);
@@ -77,12 +80,14 @@ export class SimplifyGenerator {
         volumeChangePercent: statistics.volumeChangePercent,
         maxDeviationMm: statistics.maxDeviationMm,
         featureLossMm: statistics.featureLossMm,
+        mode: statistics.mode,
+        alignedAreaRatio: statistics.alignedAreaRatio,
       },
       data: {
         source: inputPath,
         lengthMm: statistics.lengthMm,
         faces: statistics.faces,
-        parameters: step.parameters,
+        parameters,
       },
     });
 

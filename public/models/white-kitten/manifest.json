@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-04T11:24:30.846Z",
+      "at": "2026-10-04T17:29:57.243Z",
       "status": "DONE",
-      "seconds": 3.34,
+      "seconds": 3.1,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -97,9 +97,9 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-03T05:54:38.789Z",
+      "at": "2026-10-04T19:49:27.351Z",
       "status": "DONE",
-      "seconds": 0.87,
+      "seconds": 0.66,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -129,60 +129,65 @@
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-03T05:55:02.735Z",
+      "at": "2026-10-04T19:50:01.800Z",
       "status": "DONE",
-      "seconds": 23.94,
+      "seconds": 34.44,
       "costUsd": 0,
       "costNote": "Local Blender headless and Vectorizer ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/white-kitten/stage-2/step-2-3d.glb",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/white-kitten/stage-2/step-3-base.glb",
         "parameters": {
           "resolution": 2048,
           "margin": 0,
-          "min_facing": 0.2,
-          "flat_pattern": "flat_{name}.png"
+          "min_facing": 0.2
         },
         "palette": [
           {
             "index": 0,
             "hex": "#eeeeee",
-            "share": 0.9292,
+            "share": 0.9326,
             "kind": "neutral"
           },
           {
             "index": 1,
-            "hex": "#1e1220",
-            "share": 0.0201,
+            "hex": "#4e0102",
+            "share": 0.0127,
             "kind": "neutral"
           },
           {
             "index": 2,
-            "hex": "#a69795",
-            "share": 0.0136,
+            "hex": "#a89995",
+            "share": 0.0212,
             "kind": "neutral"
           },
           {
             "index": 3,
-            "hex": "#ab0a0d",
-            "share": 0.0304,
+            "hex": "#b20d10",
+            "share": 0.0148,
             "kind": "hue"
           },
           {
             "index": 4,
-            "hex": "#3163b4",
-            "share": 0.0062,
+            "hex": "#e3bdb7",
+            "share": 0.0075,
             "kind": "hue"
           },
           {
             "index": 5,
-            "hex": "#b07680",
-            "share": 0.0004,
+            "hex": "#9e1416",
+            "share": 0.0037,
             "kind": "hue"
           },
           {
             "index": 6,
-            "hex": "#765131",
-            "share": 0.0002,
+            "hex": "#9b4f40",
+            "share": 0.0019,
+            "kind": "hue"
+          },
+          {
+            "index": 7,
+            "hex": "#59739a",
+            "share": 0.0056,
             "kind": "hue"
           }
         ]
@@ -191,10 +196,10 @@
         "faces": 435,
         "viewsCount": 6,
         "resolution": 2048,
-        "familiesCount": 7,
+        "familiesCount": 8,
         "baseHex": "#eeeeee",
-        "totalPaths": 22,
-        "totalNodes": 2748,
+        "totalPaths": 181,
+        "totalNodes": 11924,
         "hiddenFaces": 41,
         "viewsUsage": {
           "front": 66,
@@ -203,16 +208,14 @@
           "left": 52,
           "top": 51,
           "bottom": 113
-        },
-        "plinthFound": true,
-        "cleanFaces": 985
+        }
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-03T05:55:03.742Z",
+      "at": "2026-10-04T19:50:02.643Z",
       "status": "DONE",
-      "seconds": 1,
+      "seconds": 0.84,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -225,17 +228,17 @@
         }
       },
       "metrics": {
-        "faces": 485,
+        "faces": 483,
         "loops": 7,
-        "openEdges": 15,
-        "nonManifoldEdges": 6
+        "openEdges": 18,
+        "nonManifoldEdges": 5
       }
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-03T05:55:04.530Z",
+      "at": "2026-10-04T23:51:08.305Z",
       "status": "DONE",
-      "seconds": 0.79,
+      "seconds": 0.66,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -243,25 +246,25 @@
         "dimensionsMm": [
           300,
           133.69,
-          250.29
+          250.43
         ],
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 467,
-        "quadCount": 169,
-        "pieces": 43,
+        "faceCount": 457,
+        "quadCount": 167,
+        "pieces": 42,
         "smallestPieceFaces": 1,
-        "shortestCutMm": 2.1,
+        "shortestCutMm": 3,
         "unpairedEdges": 0,
         "nonManifoldEdges": 0
       }
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-03T05:55:52.419Z",
+      "at": "2026-10-04T23:51:52.807Z",
       "status": "DONE",
-      "seconds": 47.89,
+      "seconds": 44.5,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -271,12 +274,32 @@
       "metrics": {
         "pageCount": 20,
         "sheetCount": 8,
-        "pieceCount": 43,
-        "labelCollisions": 3
+        "pieceCount": 42,
+        "labelCollisions": 4
+      }
+    },
+    "s5-step-1": {
+      "stageId": "s5-step-1",
+      "at": "2026-10-05T11:00:01.973Z",
+      "status": "DONE",
+      "seconds": 0.11,
+      "costUsd": 0,
+      "costNote": "Local CPU geometry ($0.00)",
+      "data": {
+        "source": "stage-4/step-1-net.json"
+      },
+      "metrics": {
+        "pieces": 42,
+        "faces": 457,
+        "hinges": 415,
+        "maxHingeResidualMm": 2.272,
+        "maxFoldAngleDeg": 114.2,
+        "mirroredPieces": 0,
+        "extraRoots": 0
       }
     }
   },
-  "totalSeconds": 131.99,
+  "totalSeconds": 138.47,
   "totalCostUsd": 0.0081,
-  "updatedAt": "2026-10-04T11:24:30.855Z"
+  "updatedAt": "2026-10-05T11:00:01.979Z"
 }

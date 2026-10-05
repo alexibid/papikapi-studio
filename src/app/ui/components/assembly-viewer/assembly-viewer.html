@@ -1,0 +1,42 @@
+<div class="c-assembly-viewer" #container>
+  <div class="c-assembly-viewer__tools">
+    <button
+      class="c-assembly-viewer__tool"
+      type="button"
+      (click)="resetView()"
+      [attr.aria-label]="i18n.translate('resetView')"
+    >
+      ↺
+    </button>
+  </div>
+
+  <canvas
+    #webglCanvas
+    class="c-assembly-viewer__canvas"
+    (pointerdown)="onPointerDown($event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerUp()"
+    (pointercancel)="onPointerUp()"
+    (wheel)="onWheel($event)"
+  ></canvas>
+
+  <div class="c-assembly-viewer__controls">
+    <ibid-button variant="outlined" (clicked)="togglePlayback()">
+      {{ playing() ? '⏸' : '▶' }} {{ i18n.translate(playing() ? 'pauseAssembly' : 'playAssembly') }}
+    </ibid-button>
+    <ibid-slider
+      class="c-assembly-viewer__slider"
+      [value]="percent()"
+      [min]="0"
+      [max]="100"
+      [step]="0.1"
+      [ariaLabel]="i18n.translate('assemblyProgress')"
+      (valueChange)="seek($event)"
+    />
+    <span class="c-assembly-viewer__percent">{{ percent() }}%</span>
+  </div>
+
+  @if (problem()) {
+    <p class="c-assembly-viewer__problem">⚠️ {{ problem() }}</p>
+  }
+</div>

@@ -1,14 +1,17 @@
-import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { BlenderRunner } from '../common/blender-runner.js';
 import { ManifestManager } from '../common/manifest-manager.js';
+import { ModelProfiles } from '../common/model-profiles.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { ProgressHub } from '../common/progress-hub.js';
 import { PythonRunner } from '../common/python-runner.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
+import { ArtTexturizer } from './step-2-art-texturize.js';
+import type { ArtTextureParameters, ArtTextureScripts } from './interfaces/art-texture.interface.js';
 import type {
+  FacetViewsStatistics,
   ProjectReduceStatistics,
-  RenderViewsStatistics,
   TexturizeResponse,
   TexturizeStepDefinition,
   VectorizeStatistics,
@@ -56,13 +59,29 @@ export class TexturizeGenerator {
     ];
     const meshPath = meshCandidates.find((c) => existsSync(c));
     if (!meshPath) {
-      throw new Error(
-        `Simplified mesh not found for '${modelName}': tried ${meshCandidates.join(', ')}`,
-      );
+      throw new Error(`Simplified mesh not found for '${modelName}': tried ${meshCandidates.join(', ')}`);
     }
     const modelPath = join(stageDir, step.outputs.model_resource);
-    const viewsDir = join(stageDir, step.outputs.views_dir);
     const svgDir = join(stageDir, step.outputs.svg_dir);
+    const facetsDir = join(stageDir, step.outputs.facets_dir);
+
+    const merged = { ...step.parameters, ...ModelProfiles.stepParameters(modelName, this.stepId) } as unknown as Partial<ArtTextureParameters>;
+    if (merged.texture_mode === 'art') {
+      const viewsDirectory = join(modelStageDir, step.inputs.views_dir ?? 'step-3-views');
+      const art = await ArtTexturizer.execute({
+        modelName,
+        stageId: this.stepId,
+        stageDir,
+        meshPath,
+        viewsDir: viewsDirectory,
+        modelPath,
+        modelPublicName: step.outputs.model_public,
+        blender: step.blender,
+        scripts: (step as unknown as { art_texture: ArtTextureScripts }).art_texture,
+        parameters: merged as ArtTextureParameters,
+      });
+      return { name: modelName, modelPath: art.modelPath, seconds: art.seconds };
+    }
 
     const startMsg = step.messages.start.replace('{model}', modelName);
     console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
@@ -70,50 +89,30 @@ export class TexturizeGenerator {
 
     const start = Date.now();
 
-    const stage2ViewsDir = join(modelStageDir, step.inputs.views_dir ?? 'step-3-views');
-    let renderStats: RenderViewsStatistics;
-
-    if (existsSync(join(stage2ViewsDir, 'views.json'))) {
-      mkdirSync(viewsDir, { recursive: true });
-      const viewFiles = [
-        'front.png',
-        'back.png',
-        'left.png',
-        'right.png',
-        'top.png',
-        'bottom.png',
-        'views.json',
-      ];
-      for (const file of viewFiles) {
-        const src = join(stage2ViewsDir, file);
-        if (existsSync(src)) {
-          copyFileSync(src, join(viewsDir, file));
-        }
-      }
-      renderStats = {
-        viewsCount: 6,
-        resolution: step.parameters.resolution,
-        boundsMin: [0, 0, 0],
-        boundsMax: [1, 1, 1],
-      };
-    } else {
-      renderStats = BlenderRunner.run<RenderViewsStatistics>(
-        step.blender,
-        step.blender.render_views_script,
-        {
-          input_glb: originalPath,
-          output_dir: viewsDir,
-          resolution: step.parameters.resolution,
-          margin: step.parameters.margin,
-        },
-      );
+    const viewsDir = join(modelStageDir, step.inputs.views_dir ?? 'step-3-views');
+    const viewsFile = join(viewsDir, 'views.json');
+    if (!existsSync(viewsFile)) {
+      throw new Error(`Orthographic views not found for '${modelName}': run the base step first (${viewsFile})`);
     }
+    const viewsDocument = JSON.parse(readFileSync(viewsFile, 'utf8')) as { resolution: number };
+    mkdirSync(svgDir, { recursive: true });
 
-    const vectorStats = PythonRunner.run<VectorizeStatistics>(step.vectorizer_script, {
+    const facetStats = BlenderRunner.run<FacetViewsStatistics>(step.blender, step.blender.facet_views_script, {
+      base_glb: originalPath,
+      reduce_json: meshPath,
       views_dir: viewsDir,
-      output_dir: svgDir,
-      resolution: step.parameters.resolution,
+      output_dir: facetsDir,
     });
+
+    const vectorStats = PythonRunner.run<VectorizeStatistics>(
+      step.vectorizer_script,
+      {
+        views_dir: viewsDir,
+        facets_dir: facetsDir,
+        output_dir: svgDir,
+        resolution: step.parameters.resolution,
+      },
+    );
 
     const projectStats = BlenderRunner.run<ProjectReduceStatistics>(
       step.blender,
@@ -149,16 +148,14 @@ export class TexturizeGenerator {
       costNote: step.manifest_contract.costNote,
       metrics: {
         faces: projectStats.faces,
-        viewsCount: renderStats.viewsCount,
-        resolution: renderStats.resolution,
+        viewsCount: facetStats.viewsCount,
+        resolution: viewsDocument.resolution,
         familiesCount: vectorStats.familiesCount,
         baseHex: vectorStats.baseHex,
         totalPaths: vectorStats.totalPaths,
         totalNodes: vectorStats.totalNodes,
         hiddenFaces: projectStats.hiddenFaces,
         viewsUsage: projectStats.viewsUsage,
-        plinthFound: false,
-        cleanFaces: 0,
       },
       data: {
         source: originalPath,

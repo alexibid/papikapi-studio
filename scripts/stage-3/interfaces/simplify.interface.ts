@@ -49,6 +49,8 @@ export interface SimplifyStatistics {
   readonly volumeChangePercent: number;
   readonly maxDeviationMm: number;
   readonly featureLossMm: number;
+  readonly mode: string;
+  readonly alignedAreaRatio: number;
 }
 
 export interface SimplifyResponse {

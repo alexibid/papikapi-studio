@@ -87,12 +87,18 @@ export class OutputCleaner {
         cleaned.push(basename(manifest));
       }
     } else if (step.id === 's2-step-3') {
-      const stepOutputs = step.outputs as { model_resource: string; manifest: string };
+      const stepOutputs = step.outputs as { model_resource: string; manifest: string; views_dir?: string };
       for (const name of [stepOutputs.model_resource, stepOutputs.manifest]) {
         const target = join(stageDir, name);
         if (existsSync(target)) {
           unlinkSync(target);
           cleaned.push(basename(target));
+        }
+      }
+      for (const folder of [join(stageDir, stepOutputs.views_dir ?? 'step-3-views'), join(resourceDir, 'step-3-views')]) {
+        if (existsSync(folder)) {
+          rmSync(folder, { recursive: true, force: true });
+          cleaned.push(basename(folder));
         }
       }
     } else if (step.id === 's3-step-1') {
@@ -113,7 +119,7 @@ export class OutputCleaner {
         }
       }
     } else if (step.id === 's3-step-2') {
-      const stepOutputs = step.outputs as { model_resource: string; model_public?: string; views_dir?: string; manifest: string };
+      const stepOutputs = step.outputs as { model_resource: string; model_public?: string; svg_dir?: string; facets_dir?: string; manifest: string };
       for (const name of [stepOutputs.model_resource, stepOutputs.manifest]) {
         if (!name) continue;
         const target = join(stageDir, name);
@@ -122,11 +128,12 @@ export class OutputCleaner {
           cleaned.push(basename(target));
         }
       }
-      if (stepOutputs.views_dir) {
-        const vDir = join(stageDir, stepOutputs.views_dir);
-        if (existsSync(vDir)) {
-          rmSync(vDir, { recursive: true, force: true });
-          cleaned.push(basename(vDir));
+      for (const folder of [stepOutputs.svg_dir, stepOutputs.facets_dir, 'step-2-views']) {
+        if (!folder) continue;
+        const target = join(stageDir, folder);
+        if (existsSync(target)) {
+          rmSync(target, { recursive: true, force: true });
+          cleaned.push(basename(target));
         }
       }
       if (stepOutputs.model_public) {

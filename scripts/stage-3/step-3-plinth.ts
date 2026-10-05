@@ -2,6 +2,7 @@ import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { BlenderRunner } from '../common/blender-runner.js';
 import { ManifestManager } from '../common/manifest-manager.js';
+import { ModelProfiles } from '../common/model-profiles.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { ProgressHub } from '../common/progress-hub.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
@@ -10,19 +11,13 @@ import type { PlinthResponse, PlinthStatistics, PlinthStepDefinition } from './i
 export class PlinthGenerator {
   private static readonly stepId = 's3-step-3';
 
-  private static requireFile(path: string, description: string): string {
-    if (!existsSync(path)) {
-      throw new Error(`${description} not found: ${path}`);
-    }
-    return path;
-  }
-
   public static async execute(modelName: string): Promise<PlinthResponse> {
     const step = PipelineConfigLoader.getStep(this.stepId) as unknown as PlinthStepDefinition;
     const inputDir = join(WorkspacePaths.resourcePath(modelName), step.inputs.stage_dir);
     const outputDir = join(WorkspacePaths.resourcePath(modelName), step.outputs.stage_dir);
     mkdirSync(outputDir, { recursive: true });
     const reducedCandidates = [
+      join(inputDir, 'step-2-aligned.json'),
       join(inputDir, step.inputs.mesh_resource),
       join(inputDir, 'step-1-reduce.json'),
       join(inputDir, 'step-4-reduce.json'),
@@ -47,6 +42,8 @@ export class PlinthGenerator {
     const modelPath = join(outputDir, step.outputs.model_resource);
     const meshPath = join(outputDir, step.outputs.mesh_resource);
 
+    const parameters = { ...step.parameters, ...ModelProfiles.stepParameters(modelName, this.stepId) };
+
     const startMsg = step.messages.start.replace('{model}', modelName);
     console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
     ProgressHub.report(modelName, this.stepId, startMsg);
@@ -57,7 +54,7 @@ export class PlinthGenerator {
       input_glb: texturedPath,
       output_glb: modelPath,
       output_json: meshPath,
-      ...step.parameters,
+      ...parameters,
     });
     const duration = Math.round(((Date.now() - start) / 1000) * 100) / 100;
     const publicDir = WorkspacePaths.modelPath(modelName);
@@ -83,7 +80,7 @@ export class PlinthGenerator {
         openEdges: statistics.openEdges,
         nonManifoldEdges: statistics.nonManifoldEdges,
       },
-      data: { source: texturedPath, parameters: step.parameters },
+      data: { source: texturedPath, parameters },
     });
 
     return { name: modelName, modelPath, meshPath, seconds: duration };
