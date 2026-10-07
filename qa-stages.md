@@ -23,7 +23,7 @@
 
 | Area | What was measured | What is still open |
 | :--- | :--- | :--- |
-| Appendage removal (`s2-step-3`) | Whiskers removed with their root on the black tuxedo cat; no visible change on bear, ankylosaurus, alex, creeper. The calico whisker is a 35.5 x 8.1 x 2.8 mm ribbon and was missed by the first rule (section limit 8 mm); the rule now uses width up to 12 mm with aspect at least 2.5, ignores degenerate faces and keeps the rim of wide plates such as ears | Regenerate the base of every model and check the whiskers of calico, cheetah, pug and the kittens in the base view from above |
+| Appendage removal (`s2-step-3`) | Body-contour method on 5 models, viewed: bear unchanged, gray-kitten and calico lose their whiskers, dolphin keeps tail and fins, stegosaurus keeps its plates; volume removed 0 to 0.07 %; feet in the ground zone untouched | Regenerate the base of the other 49 models and check the whiskers and the small root remains (gray-kitten keeps a 1 to 2 face spike at the muzzle seen from above) |
 | Fold cleanup (`s3-step-1`) | alex 499 to 100 faces, bear 413 to 352, black tuxedo 447 to 297, ankylosaurus 464 to 435; the plain decimate is the fallback | Alex real volume change is -0.15 % against -0.04 % of the plain decimate; the guard allows 0.1 percentage points on the triangle mesh, quad joining adds the rest. Decide the accepted limit |
 | Facet colours | cat and ankylosaurus keep black, white and cream facets in `step-1-reduce.glb` | eyes smaller than a facet are lost by design |
 

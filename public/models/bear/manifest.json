@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-07T12:26:08.213Z",
+      "at": "2026-10-07T15:27:36.839Z",
       "status": "DONE",
-      "seconds": 3.59,
+      "seconds": 4.09,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -74,14 +74,17 @@
           "contact_height_ratio": 0.02,
           "target_size_mm": 300,
           "min_feature_mm": 6,
-          "appendage_min_length_mm": 15,
+          "appendage_min_length_mm": 6,
           "appendage_max_section_mm": 12,
           "appendage_min_aspect": 2.5,
           "appendage_max_passes": 5,
-          "appendage_plate_clearance_mm": 10,
           "appendage_crease_deg": 15,
           "appendage_root_section_mm": 12,
           "appendage_max_rings": 40,
+          "envelope_cell_mm": 1,
+          "envelope_tolerance_mm": 3,
+          "envelope_max_area_ratio": 0.03,
+          "appendage_ground_clearance_mm": 10,
           "base_cut_margin_ratios": [
             0.003,
             0.01,
@@ -110,9 +113,9 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-07T12:26:09.433Z",
+      "at": "2026-10-07T15:27:38.192Z",
       "status": "DONE",
-      "seconds": 1.21,
+      "seconds": 1.35,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -149,9 +152,9 @@
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-07T12:26:42.773Z",
+      "at": "2026-10-07T15:28:14.523Z",
       "status": "DONE",
-      "seconds": 33.33,
+      "seconds": 36.32,
       "costUsd": 0,
       "costNote": "Local Blender headless and Vectorizer ($0.00)",
       "data": {
@@ -203,9 +206,9 @@
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-07T12:26:43.572Z",
+      "at": "2026-10-07T15:28:15.457Z",
       "status": "DONE",
-      "seconds": 0.79,
+      "seconds": 0.92,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -226,9 +229,9 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-07T12:26:44.188Z",
+      "at": "2026-10-07T15:28:16.099Z",
       "status": "DONE",
-      "seconds": 0.61,
+      "seconds": 0.64,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -252,9 +255,9 @@
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-07T12:27:26.656Z",
+      "at": "2026-10-07T15:29:14.253Z",
       "status": "DONE",
-      "seconds": 42.47,
+      "seconds": 58.15,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -270,9 +273,9 @@
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-07T12:27:26.777Z",
+      "at": "2026-10-07T15:29:14.382Z",
       "status": "DONE",
-      "seconds": 0.11,
+      "seconds": 0.12,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
@@ -289,7 +292,7 @@
       }
     }
   },
-  "totalSeconds": 145.72,
+  "totalSeconds": 165.2,
   "totalCostUsd": 0.0095,
-  "updatedAt": "2026-10-07T12:27:26.779Z"
+  "updatedAt": "2026-10-07T15:29:14.384Z"
 }

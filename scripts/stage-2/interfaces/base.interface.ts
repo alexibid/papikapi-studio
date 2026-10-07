@@ -14,10 +14,13 @@ export interface BaseParameters {
   readonly appendage_max_section_mm: number;
   readonly appendage_min_aspect: number;
   readonly appendage_max_passes: number;
-  readonly appendage_plate_clearance_mm: number;
   readonly appendage_crease_deg: number;
   readonly appendage_root_section_mm: number;
   readonly appendage_max_rings: number;
+  readonly envelope_cell_mm: number;
+  readonly envelope_tolerance_mm: number;
+  readonly envelope_max_area_ratio: number;
+  readonly appendage_ground_clearance_mm: number;
   readonly base_cut_margin_ratios: readonly number[];
 }
 

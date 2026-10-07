@@ -57,13 +57,14 @@ Every prompt, system instruction, limit, size in millimetres, Blender script and
    * **`s2-step-2` 3D-GLB**: `microsoft/TRELLIS-image-large` on RunPod Serverless (`simplify 0.85`, `target_faces 4000`, `texture_size 1024`, `seed 1`). Output `step-2-3d.glb`. **TRELLIS is the geometric and colour truth of the whole pipeline.**
    * **`s2-step-3` BASE** (`scripts/stage-2/step-3-base.ts`, Blender `blender/base/cut_base.py`):
      * Removes disconnected islands, cuts the TRELLIS plinth away just above its real surface (`base_cut_margin_ratios`: the first margin that gives an airtight mesh wins), caps the feet flat and seats the figure on z=0 centred on x=0, y=0. No plinth exists again until `s3-step-3`.
-     * **Removes thin appendages** such as whiskers (`blender/base/appendages.py`), generic for every model:
-       1. the local thickness of each face is measured with a ray cast inward; faces thinner than `min_feature_mm` (6 mm at print size, the narrowest fold that can be glued) form connected clusters; degenerate faces (narrower than 0.2 mm) are ignored;
-       2. a cluster is an appendage when it is at least `appendage_min_length_mm` long, at most `appendage_max_section_mm` wide and at least `appendage_min_aspect` times longer than wide (rods and ribbons, not plates);
-       3. clusters that rim a wide thin plate (ears) within `appendage_plate_clearance_mm` are kept;
-       4. the removal follows the appendage ring by ring toward the body, stopping at a concave crease (`appendage_crease_deg`) or when the boundary stops being a stalk (`appendage_root_section_mm`, at most `appendage_max_rings`), so the root goes too;
-       5. the faces are deleted and the hole is closed with a fan whose triangles inherit the UVs, hence the colours, of the neighbouring faces;
-       6. the pass repeats up to `appendage_max_passes` times until nothing is left.
+     * **Removes thin appendages** such as whiskers (`blender/base/envelope.py` and `appendages.py`), generic for every model. The rule is the **body contour**, not a size per model:
+       1. the base is rasterised into voxels of `envelope_cell_mm` (1 mm at print size);
+       2. an opening (erode then dilate by half of `min_feature_mm`, 3 mm) removes everything too thin to exist in paper; what survives is the **body envelope**;
+       3. faces more than `envelope_tolerance_mm` (3 mm) outside the envelope are candidates, attached to the body or not; connected candidates form clusters;
+       4. a cluster is an appendage when it is at least `appendage_min_length_mm` (6 mm, the narrowest fold) long, at most `appendage_max_section_mm` wide, at least `appendage_min_aspect` times longer than wide, smaller than `envelope_max_area_ratio` of the surface and **not touching the ground zone** (`appendage_ground_clearance_mm`: the feet are never appendages). Wide plates (fins, plates, ears) are wider than the limit and stay;
+       5. the removal follows the cluster ring by ring toward the body, stopping at a concave crease (`appendage_crease_deg`) or when the boundary stops being a stalk (`appendage_root_section_mm`, at most `appendage_max_rings`), so the root goes too;
+       6. the faces are deleted and the hole is closed with a fan (`hole_fill.py`) whose triangles inherit the UVs, hence the colours, of the neighbouring faces;
+       7. the pass repeats up to `appendage_max_passes` times until nothing is left.
      * Manifest: `removedAppendages`, `appendageFaces`, `appendageVolumePercent`.
      * Output `step-3-base.glb`, `step-3-views/`, `step-3-manifest.json`.
 
@@ -127,13 +128,14 @@ Read-only or temporary-output scripts to validate a change before regenerating a
 | Script | Purpose |
 | --- | --- |
 | `scripts/stage-2/checks/run_base.py <dir> <model…>` | runs `s2-step-3` into `<dir>` and prints the statistics |
-| `scripts/stage-2/checks/appendage_report.py` | (Blender) lists the thin clusters of a base with their extents and whether the rule removes them |
+| `scripts/stage-2/checks/envelope_report.py` | (Blender) lists the clusters outside the body envelope with their extents and surface share |
+| `scripts/stage-2/checks/envelope_contour.py` | (Blender) writes the body envelope as a GLB, to look at the contour |
 | `scripts/stage-2/checks/render_glb.py` | (Blender) renders a GLB from two sides and from above, texture or vertex colours |
 | `scripts/stage-3/checks/run_simplify.py <dir> <model…>` | runs `s3-step-1` into `<dir>` and prints faces, volume, deviation, feature loss |
 | `scripts/stage-3/checks/true_volume.py` | (Blender) volume change of reduced meshes with every polygon triangulated |
 | `scripts/stage-3/checks/render_edges.py` | (Blender) renders a reduced mesh with its edges |
 | `scripts/stage-3/checks/coplanar_pairs.py` | counts edges separating nearly coplanar faces |
-| `scripts/stage-3/checks/thin_parts.py`, `base_settings.py` | thin-cluster listing and the settings JSON for the Blender scripts |
+| `scripts/stage-3/checks/base_settings.py` | prints a step's parameters plus a model's base as the settings JSON of the Blender scripts |
 
 ---
 
