@@ -80,8 +80,7 @@ export class SimplifyGenerator {
         volumeChangePercent: statistics.volumeChangePercent,
         maxDeviationMm: statistics.maxDeviationMm,
         featureLossMm: statistics.featureLossMm,
-        mode: statistics.mode,
-        alignedAreaRatio: statistics.alignedAreaRatio,
+        facetColours: statistics.facetColours,
       },
       data: {
         source: inputPath,

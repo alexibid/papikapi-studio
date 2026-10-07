@@ -1,14 +1,11 @@
-import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { BlenderRunner } from '../common/blender-runner.js';
 import { ManifestManager } from '../common/manifest-manager.js';
-import { ModelProfiles } from '../common/model-profiles.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { ProgressHub } from '../common/progress-hub.js';
 import { PythonRunner } from '../common/python-runner.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
-import { ArtTexturizer } from './step-2-art-texturize.js';
-import type { ArtTextureParameters, ArtTextureScripts } from './interfaces/art-texture.interface.js';
 import type {
   FacetViewsStatistics,
   ProjectReduceStatistics,
@@ -51,39 +48,11 @@ export class TexturizeGenerator {
       step.inputs.model_stage_dir ?? 'stage-2',
     );
     const originalPath = this.resolveOriginal(modelStageDir, step, requestedPick);
-    const meshCandidates = [
-      join(stageDir, step.inputs.mesh_resource),
-      join(stageDir, 'step-1-reduce.json'),
-      join(stageDir, 'step-4-reduce.json'),
-      join(WorkspacePaths.resourcePath(modelName), 'stage-2', 'step-4-reduce.json'),
-    ];
-    const meshPath = meshCandidates.find((c) => existsSync(c));
-    if (!meshPath) {
-      throw new Error(`Simplified mesh not found for '${modelName}': tried ${meshCandidates.join(', ')}`);
-    }
+    const meshPath = this.requireFile(join(stageDir, step.inputs.mesh_resource), 'Simplified mesh');
     const modelPath = join(stageDir, step.outputs.model_resource);
     const svgDir = join(stageDir, step.outputs.svg_dir);
     const facetsDir = join(stageDir, step.outputs.facets_dir);
 
-    const merged = { ...step.parameters, ...ModelProfiles.stepParameters(modelName, this.stepId) } as unknown as Partial<ArtTextureParameters>;
-    if (merged.texture_mode === 'art') {
-      const viewsDirectory = join(modelStageDir, step.inputs.views_dir ?? 'step-3-views');
-      const art = await ArtTexturizer.execute({
-        modelName,
-        stageId: this.stepId,
-        stageDir,
-        meshPath,
-        viewsDir: viewsDirectory,
-        modelPath,
-        modelPublicName: step.outputs.model_public,
-        blender: step.blender,
-        scripts: (step as unknown as { art_texture: ArtTextureScripts }).art_texture,
-        parameters: merged as ArtTextureParameters,
-      });
-      return { name: modelName, modelPath: art.modelPath, seconds: art.seconds };
-    }
-
-    rmSync(join(stageDir, 'step-2-aligned.json'), { force: true });
     const startMsg = step.messages.start.replace('{model}', modelName);
     console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
     ProgressHub.report(modelName, this.stepId, startMsg);

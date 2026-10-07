@@ -18,6 +18,7 @@ export class CliArgsParser {
       stage: null,
       step: null,
       fromStep: null,
+      finish: process.env.npm_config_finish === 'true',
       force: false,
       model: null,
       pick: null,
@@ -34,6 +35,7 @@ export class CliArgsParser {
       else if (a.startsWith('--step=')) flags.step = a.split('=')[1];
       else if (a === '--from-step' && args[i + 1] !== undefined) flags.fromStep = args[++i];
       else if (a.startsWith('--from-step=')) flags.fromStep = a.split('=')[1];
+      else if (a === '--finish') flags.finish = true;
       else if (a === '--force') flags.force = true;
       else if ((a === '--model' ? true : a === '--subject') && args[i + 1] !== undefined)
         flags.model = args[++i];

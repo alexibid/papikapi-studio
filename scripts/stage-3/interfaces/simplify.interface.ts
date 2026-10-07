@@ -26,6 +26,12 @@ export interface SimplifyStepDefinition {
     readonly quad_face_angle_deg: number;
     readonly quad_shape_angle_deg: number;
     readonly face_max_extent_ratio: number;
+    readonly min_fold_length_mm: number;
+    readonly flat_vertex_angle_deg: number;
+    readonly target_size_mm: number;
+    readonly fold_tolerance_ratio: number;
+    readonly fold_max_deviation_ratio: number;
+    readonly fold_max_volume_percent: number;
   };
   readonly messages: {
     readonly start: string;
@@ -49,8 +55,7 @@ export interface SimplifyStatistics {
   readonly volumeChangePercent: number;
   readonly maxDeviationMm: number;
   readonly featureLossMm: number;
-  readonly mode: string;
-  readonly alignedAreaRatio: number;
+  readonly facetColours: number;
 }
 
 export interface SimplifyResponse {

@@ -25,7 +25,6 @@ import { ProcessLoaderComponent } from '../../components/process-loader/process-
 const COST_STAGE_LABELS: Readonly<Record<string, string>> = {
   's1-step-1': 'costStageAlternatives',
   's2-step-2': 'costStageMesh',
-  's3-step-2': 'costStageRedraw',
 };
 
 @Component({

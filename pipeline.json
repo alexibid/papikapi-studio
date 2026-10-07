@@ -382,6 +382,16 @@
           "parameters": {
             "weld_distance_ratio": 1e-05,
             "contact_height_ratio": 0.02,
+            "target_size_mm": 300,
+            "min_feature_mm": 6,
+            "appendage_min_length_mm": 15,
+            "appendage_max_section_mm": 12,
+            "appendage_min_aspect": 2.5,
+            "appendage_max_passes": 5,
+            "appendage_plate_clearance_mm": 10,
+            "appendage_crease_deg": 15,
+            "appendage_root_section_mm": 12,
+            "appendage_max_rings": 40,
             "base_cut_margin_ratios": [
               0.003,
               0.01,
@@ -440,18 +450,12 @@
             "quad_face_angle_deg": 20,
             "quad_shape_angle_deg": 60,
             "face_max_extent_ratio": 0.5,
-            "mode": "decimate",
-            "box_min_aligned_ratio": 0.74,
-            "box_voxel_resolution": 192,
-            "box_plane_merge_ratio": 0.02,
-            "box_plane_min_area_ratio": 0.03,
-            "box_slab_footprint_ratio": 1.6,
-            "box_slab_max_thickness_ratio": 0.03,
-            "planar_voxel_ratio": 0.02,
-            "planar_smooth_iterations": 4,
-            "planar_smooth_factor": 0.5,
-            "planar_decimate_faces": 500,
-            "planar_dissolve_angle_deg": 15
+            "min_fold_length_mm": 6,
+            "flat_vertex_angle_deg": 8,
+            "target_size_mm": 300,
+            "fold_tolerance_ratio": 0.0067,
+            "fold_max_deviation_ratio": 0.01,
+            "fold_max_volume_percent": 0.1
           },
           "messages": {
             "start": "[Stage 3: Step 1] Simplifying 3D mesh into low-poly papercraft for {model}",
@@ -481,11 +485,6 @@
             "project_reduce_script": "scripts/stage-3/blender/texturize/project_reduce.py"
           },
           "vectorizer_script": "scripts/stage-3/python/vectorize/vectorizer.py",
-          "art_texture": {
-            "redraw_script": "scripts/stage-3/python/art_texture/redraw_views.py",
-            "texture_script": "scripts/stage-3/python/art_texture/art_texture.py",
-            "apply_script": "scripts/stage-3/blender/art_texture/apply_art_atlas.py"
-          },
           "inputs": {
             "stage_dir": "stage-3",
             "model_stage_dir": "stage-2",
@@ -506,27 +505,7 @@
           "parameters": {
             "resolution": 2048,
             "margin": 0.0,
-            "min_facing": 0.2,
-            "texture_mode": "legacy",
-            "head_cells": 8,
-            "pixel_min_aligned_ratio": 0.9,
-            "redraw": {
-              "views": [
-                "front",
-                "back",
-                "left",
-                "right",
-                "top"
-              ],
-              "reference_size_px": 512,
-              "columns": 3,
-              "rows": 2,
-              "endpoint_env_key": "RUNPOD_FLUX_ENDPOINT_ID",
-              "prompt": "Restyle this image of a blocky figure into clean flat pixel-block art with perfectly crisp straight-edged blocks and flat solid colours, keeping the colour scheme of every part. Draw eyes only where the image already shows eyes, as clean smooth round shapes with white highlights; never add eyes, faces or any feature that is not already present. Keep the exact same view, pose, silhouette, proportions, framing and every feature where it is. Do not rotate, do not add a base, do not add shadows or gradients. Plain white background."
-            },
-            "organic_group_angle_deg": 30,
-            "organic_group_deviation_ratio": 0.025,
-            "organic_group_extent_ratio": 0.35
+            "min_facing": 0.2
           },
           "messages": {
             "start": "[Stage 3: Step 2] Facet colours from the base plus vector Bezier textures for {model}",

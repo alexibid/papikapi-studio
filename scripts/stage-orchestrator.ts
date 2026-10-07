@@ -49,13 +49,20 @@ export class StageOrchestrator {
 
   public static async run(): Promise<void> {
     const flags = CliArgsParser.parse();
+    const runsToTheEnd = flags.finish && flags.step !== null;
     const targetStages =
-      flags.stage !== null
+      flags.stage !== null && !runsToTheEnd
         ? [PipelineConfigLoader.getStage(flags.stage)]
         : PipelineConfigLoader.load().pipeline_stages;
     const allSteps = targetStages.flatMap((s) => s.steps);
     let activeSteps: readonly PipelineStep[];
-    if (flags.step) {
+    if (runsToTheEnd) {
+      const idx = allSteps.findIndex((s) => s.id === flags.step);
+      if (idx === -1) {
+        throw new Error(`Step '${flags.step}' not found in pipeline`);
+      }
+      activeSteps = allSteps.slice(idx);
+    } else if (flags.step) {
       activeSteps = allSteps.filter((s) => s.id === flags.step);
     } else if (flags.fromStep) {
       const idx = allSteps.findIndex((s) => s.id === flags.fromStep);

@@ -14,4 +14,5 @@ def export_airtight_mesh_glb(path):
         use_selection=True,
         export_apply=True,
         export_materials="NONE",
+        export_vertex_color="ACTIVE",
     )

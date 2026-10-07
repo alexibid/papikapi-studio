@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-04T17:28:51.412Z",
+      "at": "2026-10-07T13:50:24.555Z",
       "status": "DONE",
-      "seconds": 3.42,
+      "seconds": 3.63,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -72,6 +72,16 @@
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
+          "target_size_mm": 300,
+          "min_feature_mm": 6,
+          "appendage_min_length_mm": 15,
+          "appendage_max_section_mm": 12,
+          "appendage_min_aspect": 2.5,
+          "appendage_max_passes": 5,
+          "appendage_plate_clearance_mm": 10,
+          "appendage_crease_deg": 15,
+          "appendage_root_section_mm": 12,
+          "appendage_max_rings": 40,
           "base_cut_margin_ratios": [
             0.003,
             0.01,
@@ -82,11 +92,14 @@
         }
       },
       "metrics": {
-        "faces": 1015,
+        "faces": 1022,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
         "removedIslands": 0,
+        "removedAppendages": 21,
+        "appendageFaces": 71,
+        "appendageVolumePercent": 0.004,
         "loops": 4,
         "widthMm": 187.2,
         "lengthMm": 457.5,
@@ -97,41 +110,48 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-04T18:32:17.453Z",
+      "at": "2026-10-07T13:50:25.878Z",
       "status": "DONE",
-      "seconds": 0.59,
+      "seconds": 1.31,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/pig/stage-2/step-3-base.glb",
-        "lengthMm": 457.5,
-        "faces": 1074,
+        "lengthMm": 457.3,
+        "faces": 1078,
         "parameters": {
           "target_faces": 600,
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
           "quad_face_angle_deg": 20,
           "quad_shape_angle_deg": 60,
-          "face_max_extent_ratio": 0.5
+          "face_max_extent_ratio": 0.5,
+          "min_fold_length_mm": 6,
+          "flat_vertex_angle_deg": 8,
+          "target_size_mm": 300,
+          "fold_tolerance_ratio": 0.0067,
+          "fold_max_deviation_ratio": 0.01,
+          "fold_max_volume_percent": 0.1
         }
       },
       "metrics": {
-        "points": 337,
-        "meshFaces": 556,
-        "quads": 114,
+        "points": 104,
+        "meshFaces": 146,
+        "quads": 58,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
-        "volumeChangePercent": -0.08,
-        "maxDeviationMm": 0.38,
-        "featureLossMm": 0.69
+        "volumeChangePercent": -0.26,
+        "maxDeviationMm": 3.02,
+        "featureLossMm": 3.15,
+        "facetColours": 123
       }
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-04T18:32:46.029Z",
+      "at": "2026-10-07T13:50:59.653Z",
       "status": "DONE",
-      "seconds": 28.56,
+      "seconds": 33.77,
       "costUsd": 0,
       "costNote": "Local Blender headless and Vectorizer ($0.00)",
       "data": {
@@ -144,66 +164,66 @@
         "palette": [
           {
             "index": 0,
-            "hex": "#0d0c0e",
-            "share": 0.042,
+            "hex": "#e4c6d1",
+            "share": 0.0705,
             "kind": "neutral"
           },
           {
             "index": 1,
-            "hex": "#e4c6d1",
-            "share": 0.0669,
+            "hex": "#0d0c0e",
+            "share": 0.0389,
             "kind": "neutral"
           },
           {
             "index": 2,
-            "hex": "#dc91ad",
-            "share": 0.745,
+            "hex": "#db8fab",
+            "share": 0.7526,
             "kind": "hue"
           },
           {
             "index": 3,
-            "hex": "#d16984",
-            "share": 0.0313,
+            "hex": "#841415",
+            "share": 0.0601,
             "kind": "hue"
           },
           {
             "index": 4,
-            "hex": "#841415",
-            "share": 0.0557,
+            "hex": "#c14d5c",
+            "share": 0.0675,
             "kind": "hue"
           },
           {
             "index": 5,
-            "hex": "#c04a59",
-            "share": 0.0591,
+            "hex": "#d87288",
+            "share": 0.0105,
             "kind": "hue"
           }
         ]
       },
       "metrics": {
-        "faces": 556,
+        "faces": 146,
         "viewsCount": 6,
         "resolution": 2048,
         "familiesCount": 6,
-        "baseHex": "#dc91ad",
-        "totalPaths": 131,
-        "totalNodes": 9437,
-        "hiddenFaces": 76,
+        "baseHex": "#db8fab",
+        "totalPaths": 150,
+        "totalNodes": 10772,
+        "hiddenFaces": 25,
         "viewsUsage": {
-          "front": 60,
-          "back": 97,
-          "right": 95,
-          "left": 124,
-          "top": 73,
-          "bottom": 107
+          "front": 20,
+          "back": 25,
+          "right": 29,
+          "left": 27,
+          "top": 20,
+          "bottom": 25
         }
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-04T18:32:46.871Z",
+      "at": "2026-10-07T13:51:00.483Z",
       "status": "DONE",
-      "seconds": 0.84,
+      "seconds": 0.82,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -216,7 +236,7 @@
         }
       },
       "metrics": {
-        "faces": 656,
+        "faces": 249,
         "loops": 4,
         "openEdges": 0,
         "nonManifoldEdges": 0
@@ -224,35 +244,35 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-04T22:38:20.200Z",
+      "at": "2026-10-07T13:51:01.085Z",
       "status": "DONE",
-      "seconds": 0.73,
+      "seconds": 0.6,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/pig/stage-3/step-3-plinth.json",
         "dimensionsMm": [
-          130.85,
+          131.35,
           300,
-          237.23
+          236.59
         ],
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 564,
-        "quadCount": 122,
-        "pieces": 28,
-        "smallestPieceFaces": 1,
-        "shortestCutMm": 0.4,
+        "faceCount": 237,
+        "quadCount": 75,
+        "pieces": 17,
+        "smallestPieceFaces": 4,
+        "shortestCutMm": 3,
         "unpairedEdges": 0,
         "nonManifoldEdges": 0
       }
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-04T22:39:36.284Z",
+      "at": "2026-10-07T13:51:40.129Z",
       "status": "DONE",
-      "seconds": 76.06,
+      "seconds": 39.04,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -260,34 +280,34 @@
         "pageSize": "210x297mm"
       },
       "metrics": {
-        "pageCount": 20,
+        "pageCount": 18,
         "sheetCount": 12,
-        "pieceCount": 28,
-        "labelCollisions": 10
+        "pieceCount": 17,
+        "labelCollisions": 0
       }
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-05T10:59:58.802Z",
+      "at": "2026-10-07T13:51:40.222Z",
       "status": "DONE",
-      "seconds": 0.15,
+      "seconds": 0.08,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
         "source": "stage-4/step-1-net.json"
       },
       "metrics": {
-        "pieces": 28,
-        "faces": 564,
-        "hinges": 536,
-        "maxHingeResidualMm": 12.945,
-        "maxFoldAngleDeg": 135.9,
+        "pieces": 17,
+        "faces": 237,
+        "hinges": 220,
+        "maxHingeResidualMm": 1.916,
+        "maxFoldAngleDeg": 111.8,
         "mirroredPieces": 0,
         "extraRoots": 0
       }
     }
   },
-  "totalSeconds": 159.87,
+  "totalSeconds": 128.77,
   "totalCostUsd": 0.0074,
-  "updatedAt": "2026-10-05T10:59:58.808Z"
+  "updatedAt": "2026-10-07T13:51:40.223Z"
 }

@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-04T17:27:24.466Z",
+      "at": "2026-10-07T12:27:30.125Z",
       "status": "DONE",
-      "seconds": 3.19,
+      "seconds": 3.34,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -72,6 +72,16 @@
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
+          "target_size_mm": 300,
+          "min_feature_mm": 6,
+          "appendage_min_length_mm": 15,
+          "appendage_max_section_mm": 12,
+          "appendage_min_aspect": 2.5,
+          "appendage_max_passes": 5,
+          "appendage_plate_clearance_mm": 10,
+          "appendage_crease_deg": 15,
+          "appendage_root_section_mm": 12,
+          "appendage_max_rings": 40,
           "base_cut_margin_ratios": [
             0.003,
             0.01,
@@ -82,11 +92,14 @@
         }
       },
       "metrics": {
-        "faces": 3058,
+        "faces": 3002,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
         "removedIslands": 0,
+        "removedAppendages": 29,
+        "appendageFaces": 218,
+        "appendageVolumePercent": 0.063,
         "loops": 4,
         "widthMm": 474.6,
         "lengthMm": 225.9,
@@ -97,15 +110,15 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-05T17:10:51.715Z",
+      "at": "2026-10-07T12:27:31.491Z",
       "status": "DONE",
-      "seconds": 0.82,
+      "seconds": 1.36,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/black-tuxedo/stage-2/step-3-base.glb",
         "lengthMm": 474.6,
-        "faces": 3120,
+        "faces": 3060,
         "parameters": {
           "target_faces": 600,
           "weld_distance_ratio": 0.00001,
@@ -113,39 +126,32 @@
           "quad_face_angle_deg": 20,
           "quad_shape_angle_deg": 60,
           "face_max_extent_ratio": 0.5,
-          "mode": "decimate",
-          "box_min_aligned_ratio": 0.74,
-          "box_voxel_resolution": 192,
-          "box_plane_merge_ratio": 0.02,
-          "box_plane_min_area_ratio": 0.03,
-          "box_slab_footprint_ratio": 1.6,
-          "box_slab_max_thickness_ratio": 0.03,
-          "planar_voxel_ratio": 0.02,
-          "planar_smooth_iterations": 4,
-          "planar_smooth_factor": 0.5,
-          "planar_decimate_faces": 500,
-          "planar_dissolve_angle_deg": 15
+          "min_fold_length_mm": 6,
+          "flat_vertex_angle_deg": 8,
+          "target_size_mm": 300,
+          "fold_tolerance_ratio": 0.0067,
+          "fold_max_deviation_ratio": 0.01,
+          "fold_max_volume_percent": 0.1
         }
       },
       "metrics": {
-        "points": 302,
-        "meshFaces": 447,
-        "quads": 153,
+        "points": 214,
+        "meshFaces": 294,
+        "quads": 130,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
-        "volumeChangePercent": -0.53,
-        "maxDeviationMm": 2.05,
-        "featureLossMm": 28.74,
-        "mode": "decimate",
-        "alignedAreaRatio": 0.381
+        "volumeChangePercent": -0.47,
+        "maxDeviationMm": 3.08,
+        "featureLossMm": 4.32,
+        "facetColours": 214
       }
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-05T17:11:24.072Z",
+      "at": "2026-10-07T12:27:58.112Z",
       "status": "DONE",
-      "seconds": 32.35,
+      "seconds": 26.61,
       "costUsd": 0,
       "costNote": "Local Blender headless and Vectorizer ($0.00)",
       "data": {
@@ -153,79 +159,59 @@
         "parameters": {
           "resolution": 2048,
           "margin": 0,
-          "min_facing": 0.2,
-          "texture_mode": "legacy",
-          "head_cells": 8,
-          "pixel_min_aligned_ratio": 0.9,
-          "redraw": {
-            "views": [
-              "front",
-              "back",
-              "left",
-              "right",
-              "top"
-            ],
-            "reference_size_px": 512,
-            "columns": 3,
-            "rows": 2,
-            "endpoint_env_key": "RUNPOD_FLUX_ENDPOINT_ID",
-            "prompt": "Restyle this image of a blocky figure into clean flat pixel-block art with perfectly crisp straight-edged blocks and flat solid colours, keeping the colour scheme of every part. Draw eyes only where the image already shows eyes, as clean smooth round shapes with white highlights; never add eyes, faces or any feature that is not already present. Keep the exact same view, pose, silhouette, proportions, framing and every feature where it is. Do not rotate, do not add a base, do not add shadows or gradients. Plain white background."
-          },
-          "organic_group_angle_deg": 30,
-          "organic_group_deviation_ratio": 0.025,
-          "organic_group_extent_ratio": 0.35
+          "min_facing": 0.2
         },
         "palette": [
           {
             "index": 0,
             "hex": "#060201",
-            "share": 0.9393,
+            "share": 0.9322,
             "kind": "neutral"
           },
           {
             "index": 1,
-            "hex": "#e5e5e5",
-            "share": 0.0528,
+            "hex": "#e6e5e5",
+            "share": 0.0502,
             "kind": "neutral"
           },
           {
             "index": 2,
-            "hex": "#cc9c8c",
-            "share": 0.0057,
+            "hex": "#72684f",
+            "share": 0.0096,
             "kind": "hue"
           },
           {
             "index": 3,
-            "hex": "#7c4332",
-            "share": 0.0022,
+            "hex": "#c89f89",
+            "share": 0.0079,
             "kind": "hue"
           }
         ]
       },
       "metrics": {
-        "faces": 447,
+        "faces": 294,
         "viewsCount": 6,
         "resolution": 2048,
         "familiesCount": 4,
         "baseHex": "#060201",
-        "totalPaths": 156,
-        "totalNodes": 8761,
-        "hiddenFaces": 37,
+        "totalPaths": 144,
+        "totalNodes": 8162,
+        "hiddenFaces": 28,
         "viewsUsage": {
-          "front": 84,
-          "back": 91,
-          "right": 84,
-          "left": 43,
-          "top": 50,
-          "bottom": 95
+          "front": 59,
+          "back": 53,
+          "right": 56,
+          "left": 25,
+          "top": 36,
+          "bottom": 65
         }
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-05T17:11:25.019Z",
+      "at": "2026-10-07T12:27:58.897Z",
       "status": "DONE",
-      "seconds": 0.94,
+      "seconds": 0.78,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -238,7 +224,7 @@
         }
       },
       "metrics": {
-        "faces": 549,
+        "faces": 383,
         "loops": 4,
         "openEdges": 0,
         "nonManifoldEdges": 0
@@ -246,35 +232,35 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-05T17:12:16.825Z",
+      "at": "2026-10-07T12:27:59.500Z",
       "status": "DONE",
-      "seconds": 1.04,
+      "seconds": 0.6,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/black-tuxedo/stage-3/step-3-plinth.json",
         "dimensionsMm": [
           300,
-          139.38,
-          280.76
+          139.35,
+          283.49
         ],
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 543,
-        "quadCount": 189,
-        "pieces": 37,
+        "faceCount": 373,
+        "quadCount": 163,
+        "pieces": 41,
         "smallestPieceFaces": 1,
-        "shortestCutMm": 3.4,
+        "shortestCutMm": 4.5,
         "unpairedEdges": 0,
         "nonManifoldEdges": 0
       }
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-05T17:13:01.659Z",
+      "at": "2026-10-07T12:28:48.615Z",
       "status": "DONE",
-      "seconds": 44.83,
+      "seconds": 49.11,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -283,33 +269,33 @@
       },
       "metrics": {
         "pageCount": 21,
-        "sheetCount": 10,
-        "pieceCount": 37,
-        "labelCollisions": 9
+        "sheetCount": 9,
+        "pieceCount": 41,
+        "labelCollisions": 0
       }
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-05T17:13:03.556Z",
+      "at": "2026-10-07T12:28:48.705Z",
       "status": "DONE",
-      "seconds": 0.11,
+      "seconds": 0.08,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
         "source": "stage-4/step-1-net.json"
       },
       "metrics": {
-        "pieces": 37,
-        "faces": 543,
-        "hinges": 506,
-        "maxHingeResidualMm": 5.149,
-        "maxFoldAngleDeg": 144.4,
+        "pieces": 41,
+        "faces": 373,
+        "hinges": 332,
+        "maxHingeResidualMm": 2.791,
+        "maxFoldAngleDeg": 111.8,
         "mirroredPieces": 0,
         "extraRoots": 0
       }
     }
   },
-  "totalSeconds": 129.44,
+  "totalSeconds": 128.04,
   "totalCostUsd": 0.0069,
-  "updatedAt": "2026-10-05T17:13:03.559Z"
+  "updatedAt": "2026-10-07T12:28:48.707Z"
 }

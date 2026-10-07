@@ -7,8 +7,9 @@ sys.path.insert(0, str(Path(__file__).parent))
 sys.path.insert(0, str(Path(__file__).parents[3] / "stage-3" / "blender" / "key_points"))
 
 import bpy
+from appendages import remove_appendages
 from figure_base import cut_figure_base
-from mesh_quality import open_and_non_manifold_edges
+from mesh_quality import enclosed_volume, open_and_non_manifold_edges
 from model_loader import load_grounded_mesh
 from surface_repair import repair_surface
 
@@ -35,11 +36,14 @@ def export_glb(surface, output_path, materials=None):
 
 
 def build_base(settings, margin):
-    surface, _, _ = load_grounded_mesh(settings)
+    surface, length, _ = load_grounded_mesh(settings)
     materials = list(bpy.data.materials)
     repair_surface(surface)
     statistics = cut_figure_base(surface, margin)
+    volume_before = enclosed_volume(surface)
+    statistics.update(remove_appendages(surface, length, settings))
     repair_surface(surface)
+    statistics["appendage_volume_percent"] = round(100 * (volume_before - enclosed_volume(surface)) / volume_before, 3)
     open_edges, non_manifold = open_and_non_manifold_edges(surface)
     return {
         "surface": surface,
@@ -73,6 +77,9 @@ def describe(attempt):
         "nonManifoldEdges": attempt["nonManifold"],
         "airtight": is_airtight(attempt),
         "removedIslands": statistics["removed_islands"],
+        "removedAppendages": statistics["appendages"],
+        "appendageFaces": statistics["appendageFaces"],
+        "appendageVolumePercent": statistics["appendage_volume_percent"],
         "loops": statistics["loops"],
         "widthMm": round(statistics["width"] * 1000, 1),
         "lengthMm": round(statistics["length"] * 1000, 1),

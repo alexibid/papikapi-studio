@@ -8,6 +8,16 @@ export interface BaseBlenderConfig extends BlenderConfig {
 export interface BaseParameters {
   readonly weld_distance_ratio: number;
   readonly contact_height_ratio: number;
+  readonly target_size_mm: number;
+  readonly min_feature_mm: number;
+  readonly appendage_min_length_mm: number;
+  readonly appendage_max_section_mm: number;
+  readonly appendage_min_aspect: number;
+  readonly appendage_max_passes: number;
+  readonly appendage_plate_clearance_mm: number;
+  readonly appendage_crease_deg: number;
+  readonly appendage_root_section_mm: number;
+  readonly appendage_max_rings: number;
   readonly base_cut_margin_ratios: readonly number[];
 }
 
@@ -17,6 +27,9 @@ export interface BaseStatistics {
   readonly nonManifoldEdges: number;
   readonly airtight: boolean;
   readonly removedIslands: number;
+  readonly removedAppendages: number;
+  readonly appendageFaces: number;
+  readonly appendageVolumePercent: number;
   readonly loops: number;
   readonly widthMm: number;
   readonly lengthMm: number;

@@ -1,126 +1,98 @@
 # Papikapi Studio (`papikapi-studio`)
 
-> **Comprehensive Pipeline Specification:** See [**`PIPELINE.md`**](./PIPELINE.md) for the complete generative architecture, stage configuration, GPU contracts, and manifest schemas.
+> **Comprehensive Pipeline Specification:** See [**`PIPELINE.md`**](./PIPELINE.md) for the complete architecture, stage configuration, quality guards, check scripts and manifest schemas.
 
 ---
 
-##  Origami & 3D Papercraft Generation Platform
+## Origami & 3D Papercraft Generation Platform
 
-**Papikapi Studio** is an interactive web studio and generative AI pipeline that transforms natural language prompts and optional visual reference photos into tactile 3D low-poly papercraft figures (`.glb`).
+**Papikapi Studio** is an interactive web studio and generative pipeline that turns a text prompt and optional reference photos into a printable 3D papercraft figure: a low-poly mesh, coloured A4 sheets with cut, fold and glue marks, and an assembly animation.
 
-The application combines a modern Angular frontend, a local orchestration backend, and dedicated remote serverless GPU workers with scale-to-zero economics.
+The application combines an Angular frontend, a local orchestration backend, Blender headless for the geometry and remote serverless GPU workers with scale-to-zero economics.
 
 ```
-                    ┌────────────────────────────────────────┐
-                    │          Prompt / Photo Refs           │
-                    └───────────────────┬────────────────────┘
-                                        │
-                                        ▼
-             ┌─────────────────────────────────────────────────────┐
-             │       STAGE 0: Axonometric Art & Selection          │
-             │  • Step 1: 3x2 Alternatives Sheet (FLUX.2-klein-4B) │
-             │  • Step 2: High-Resolution Cell Crop (Node Canvas)  │
-             └──────────────────────────┬──────────────────────────┘
-                                        │ 512x512 Orthogonal Image
-                                        ▼
-             ┌─────────────────────────────────────────────────────┐
-             │       STAGE 1: Cutout & 3D Neural Mesh Synthesis    │
-             │  • Step 1: Transparent Cutout (RMBG-1.4, local)     │
-             │  • Step 2: Image-to-3D Reconstruction (TRELLIS)     │
-             │  • Output: Watertight Low-Poly GLB + Manifest       │
-             └──────────────────────────┬──────────────────────────┘
-                                        │
-                                        ▼
-             ┌─────────────────────────────────────────────────────┐
-             │       PAPIKAPI STUDIO: Interactive Web UI           │
-             │  • Three.js WebGL Orbit Canvas & Inspection         │
-             │  • Tactile Origami Process Loader & Stepped Ribbon  │
-             │  • Model Catalogue & Multi-Pick Versioning          │
-             └─────────────────────────────────────────────────────┘
+        Prompt / photo references
+                   │
+                   ▼
+   STAGE 1  Axonometric art: 3x2 alternatives (FLUX.2-klein-4B) and pick
+                   │
+                   ▼
+   STAGE 2  Transparent cutout (RMBG-1.4) → TRELLIS 3D mesh →
+            clean base: feet on z=0, thin appendages (whiskers…) removed
+                   │
+                   ▼
+   STAGE 3  Simplify (decimate + no fold under 6 mm, volume guarded,
+            TRELLIS colours kept per facet) → texture → white plinth
+                   │
+                   ▼
+   STAGE 4  Unfold into pieces → coloured A4 sheets and assembly PDF
+                   │
+                   ▼
+   STAGE 5  Assembly animation plan (played by the Studio "Montagem" tab)
 ```
 
 ---
 
-## 🏛️ Core Features
+## Core Features
 
-- **Interactive 3D Web Studio**: Built with Angular 19 and Three.js, featuring real-time orbit controls, wireframe toggles, tactile papercraft process loaders, and responsive model switching.
-- **Deterministic Pipeline** (Stage 3 unfolds the model into A4 sheets with Blender):
-  - **Stage 1 (Art & Alternatives)**: Generates a 3×2 grid of 6 styled papercraft variations sharing a strict orthogonal axonometric top-left camera angle and zero floor shadows, then crops the chosen pick.
-  - **Stage 2 (Cutout & 3D Synthesis)**: Removes the background locally, then uses Microsoft TRELLIS to reconstruct a watertight 3D mesh with planar low-poly facets and 2D UV texture mapping in ~20 seconds.
-- **Scale-to-Zero GPU Infrastructure**: Deployed on RunPod Serverless workers (`papikapi-flux` and `papikapi-trellis`) billed strictly per second of active compute ($0.00 idle cost).
-- **Single Source of Truth (`pipeline.json`)**: All prompts, system instructions, pricing rates, and GPU parameters live in [`pipeline.json`](./pipeline.json).
-- **Immutable Cost & Audit Manifests**: Every step records exact execution time, compute cost in USD, and device metadata into structured JSON manifests.
+- **Interactive 3D Web Studio**: Angular and Three.js with orbit controls, wireframe toggle, process loader, model catalogue and an assembly animation viewer.
+- **Deterministic pipeline** driven by [`pipeline.json`](./pipeline.json): prompts, physical limits (in millimetres at print size), Blender scripts, pricing and GPU parameters live there.
+- **TRELLIS stays the geometric truth**: every simplification pass is checked against the TRELLIS mesh for airtightness, volume change, deviation and feature loss, and falls back to the previous result when a limit is exceeded.
+- **Foldable by construction**: no fold shorter than 6 mm at print size, no appendage thinner than a glue tab, facet colours inherited from the TRELLIS texture.
+- **Scale-to-Zero GPU**: RunPod Serverless workers (`papikapi-flux`, `papikapi-trellis`) billed per second of use.
+- **Immutable cost and audit manifests** per step.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 apps/papikapi-studio/
-├── README.md                     # Project overview and entry point
-├── PIPELINE.md                   # Full pipeline specifications
-├── pipeline.json                 # Single source of truth configuration
-├── project.json                  # Nx project targets and scripts
-├── src/                          # Angular 19 application
-│   ├── app/                      # Studio UI components, pages, and services
-│   └── styles.scss               # Design system styling & themes
-├── resources/                    # Development working artifacts per model
-│   └── [model]/
-│       ├── stage-1/              # Alternatives sheet & cropped art
-│       └── stage-2/              # Transparent cutout, raw GLB mesh & step manifests
-├── public/                       # Publicly served production models
-│   └── models/
-│       ├── index.json            # Model catalogue index
-│       └── [model]/              # art.jpeg, model.glb, manifest.json
-└── scripts/                      # Pure TypeScript pipeline & backend
-    ├── common/                   # Workspace paths, config, cropper, manifests
-    ├── stage-1/                  # Step 1 (alternatives) & Step 2 (pick)
-    ├── stage-2/                  # Step 1 (cutout) & Step 2 (TRELLIS 3D synthesis)
-    ├── training/                 # Reference library and caption templates
-    ├── server.ts                 # Backend API server (port 4502)
-    └── stage-orchestrator.ts     # Unified CLI orchestrator
+├── README.md, PIPELINE.md, qa-stages.md
+├── pipeline.json                 # single source of truth
+├── project.json, package.json    # Nx targets and npm scripts (stage:N:step:M)
+├── src/                          # Angular application (Studio UI)
+├── resources/                    # working artifacts per model (stage-1 … stage-5)
+├── public/models/                # served models: index.json + [model]/ (art, model.glb, sheets.pdf, assembly.json, manifest.json)
+└── scripts/
+    ├── common/                   # paths, config, manifests, CLI parser, Blender and Python runners
+    ├── stage-1/ … stage-5/       # one folder per stage; Blender scripts under blender/
+    ├── stage-2/checks, stage-3/checks   # validation scripts (see PIPELINE.md)
+    ├── training/                 # reference library and caption templates
+    ├── server.ts                 # backend API server (port 4502)
+    └── stage-orchestrator.ts     # unified CLI orchestrator
 ```
 
 ---
 
-## 🚀 Everyday Commands
-
-### Running the Application
+## Everyday Commands
 
 ```bash
-# 1. Start backend API server on port 4502
+# Backend API (port 4502) and Studio frontend (port 4500)
 npx nx run papikapi-studio:server
-
-# 2. Start Angular Studio frontend on port 4500
 npm start -- papikapi-studio
 ```
 
-### Running Pipeline Stages via CLI
-
 ```bash
-# Generate 3x2 alternatives grid for a model (Stage 1 Step 1)
-npx nx run papikapi-studio:stage:1:step:1 --model=dalmatian
+# Run from apps/papikapi-studio
+npm run stage:1:step:1 -- --model=dalmatian      # alternatives grid
+npm run stage:1:step:2 -- --model=dalmatian --pick=3
+npm run stage:2 -- --model=dalmatian             # cutout, TRELLIS, base
+npm run stage:3 -- --model=dalmatian             # simplify, texture, plinth
+npm run stage:4 -- --model=dalmatian             # unfold and A4 sheets
+npm run stage:5 -- --model=dalmatian             # assembly plan
 
-# Pick an alternative cell from the sheet (Stage 1 Step 2, e.g. pick #3)
-npx nx run papikapi-studio:stage:1:step:2 --model=dalmatian --pick=3
-
-# Transparent cutout of the picked art (Stage 2 Step 1)
-npx nx run papikapi-studio:stage:2:step:1 --model=dalmatian
-
-# Synthesize 3D low-poly model via RunPod GPU (Stage 2 Step 2)
-npx nx run papikapi-studio:stage:2:step:2 --model=dalmatian
-
-# Extract the key points (crossings and corners) of the 3D model (Stage 2 Step 3)
-npx nx run papikapi-studio:stage:2:step:3 --model=dalmatian
-
-# Run complete Stage 1 or Stage 2 for a model
-npx nx run papikapi-studio:stage:1 --model=dalmatian
-npx nx run papikapi-studio:stage:2 --model=dalmatian
+# From one step to the end of the pipeline (every model without --model)
+npm run stage:2:step:3 --finish
+npm run stage:2:step:3 --finish -- --model dalmatian
 ```
+
+Steps are identified by the ids of `pipeline.json` (`s2-step-3`, `s3-step-1`, …). The Nx equivalents are `npx nx run papikapi-studio:stage:2:step:3 --model=dalmatian`.
 
 ---
 
-## 🔗 Related Documentation
+## Related Documentation
 
-- [**`PIPELINE.md`**](./PIPELINE.md) — Detailed pipeline reference, step inputs/outputs, and manifest schemas.
-- [**`pipeline.json`**](./pipeline.json) — Declarative configuration single source of truth.
+- [**`PIPELINE.md`**](./PIPELINE.md): pipeline reference, step inputs and outputs, guards, checks and manifest schemas.
+- [**`qa-stages.md`**](./qa-stages.md): validation status per stage.
+- [**`pipeline.json`**](./pipeline.json): declarative configuration.

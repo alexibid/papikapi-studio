@@ -1,35 +1,48 @@
 # Papikapi Studio — QA Stages & Validation Status
 
-**Aggregated Execution:** `npx tsx scripts/stage-orchestrator.ts --stage <N>` (or `npx tsx scripts/stage-orchestrator.ts --stage <N> --model <name>`)  
+**Run a stage:** `npm run stage:<N> -- --model <name>` (all models without `--model`)  
+**Run from a step to the end:** `npm run stage:<N>:step:<M> --finish` (add `-- --model <name>` for one model)  
 **Pipeline Specification:** [PIPELINE.md](PIPELINE.md)  
 **Configuration Source:** [pipeline.json](pipeline.json)  
 
 ---
 
-## 📋 Stages Matrix & Validation Status
+## Stages Matrix & Validation Status
 
-| Stage | Name | Key Components | Inputs | Outputs | Execution Command | Validation Status |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Stage 1** | **Alternatives & Art Selection** | 3x2 Axonometric grid (6 styles from chibi to mature), cell cropper | Prompt + up to 3 optional photo references | `step-1-alternatives.jpeg`, `step-1-art.jpeg`, `art.jpeg` | `npx tsx scripts/stage-orchestrator.ts --stage 1` | **CLOSED & VERIFIED** ✅ |
-| **Stage 2** | **Cutout & 3D Model Synthesis** | Step 1: local RMBG-1.4 transparent cutout. Step 2: TRELLIS on RunPod Serverless (RTX 4090), glTF binary | `step-1-art.jpeg` | `step-1-art-cutout.png`, `step-2-3d.glb`, `model.glb`, `manifest.json` | `npx tsx scripts/stage-orchestrator.ts --stage 2` | **CLOSED & VERIFIED** ✅ (`bear`, `ankylosaurus` re-run with the two-step flow) |
-| **Stage 3** | **Papercraft Unfolding** | Blender headless + Export Paper Model, A4 sheets | `step-2-3d.glb` | `step-2-sheets.pdf`, `sheets.pdf`, manifests | `npx tsx scripts/stage-orchestrator.ts --stage 3` | **WRITTEN, NOT YET RUN** |
+| Stage | Name | Key Components | Outputs | Validation Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **Stage 1** | Alternatives & Art Selection | 3x2 axonometric grid (6 styles), cell cropper | `step-1-alternatives.jpeg`, `step-1-art.jpeg`, `art.jpeg` | **CLOSED & VERIFIED** |
+| **Stage 2** | Cutout, 3D Model and Base | RMBG-1.4 cutout, TRELLIS on RunPod, base cut, thin-appendage removal | `step-1-art-cutout.png`, `step-2-3d.glb`, `step-3-base.glb` | Steps 1 and 2 **CLOSED & VERIFIED**. `s2-step-3` appendage removal **IN VALIDATION** (see below) |
+| **Stage 3** | Simplify, Texture and Plinth | decimate + fold cleanup (no fold under 6 mm, volume guarded), facet colours, legacy vector texture, white plinth | `step-1-reduce.json/.glb`, `step-2-texturize.glb`, `step-3-plinth.glb/.json` | `s3-step-1` fold cleanup **IN VALIDATION** (see below). Texture and plinth run on every model |
+| **Stage 4** | Unfolding and Sheets | unfold into pieces, baked colour on A4 sheets, assembly PDF | `step-1-net.json`, `step-2-sheets.pdf` | Sheet colour bake fixed (emission-only texture converted to albedo); needs a regeneration of every model to confirm in the PDFs |
+| **Stage 5** | Assembly Animation | fold plan, build order, face colours | `step-1-assembly.json` | Runs on every model |
 
 ---
 
-## 🎯 Model Validation Results (Production Batch)
+## Open Validation Points
 
-Batch of 2026-09-24, run with the previous one-step Stage 2 (`step-1-3d.glb`) on the NVIDIA RTX PRO 4500 Blackwell Server Edition ($0.58/hr). Historical: Stage 2 now runs cutout and TRELLIS as two steps on a RunPod Serverless RTX 4090.
+| Area | What was measured | What is still open |
+| :--- | :--- | :--- |
+| Appendage removal (`s2-step-3`) | Whiskers removed with their root on the black tuxedo cat; no visible change on bear, ankylosaurus, alex, creeper. The calico whisker is a 35.5 x 8.1 x 2.8 mm ribbon and was missed by the first rule (section limit 8 mm); the rule now uses width up to 12 mm with aspect at least 2.5, ignores degenerate faces and keeps the rim of wide plates such as ears | Regenerate the base of every model and check the whiskers of calico, cheetah, pug and the kittens in the base view from above |
+| Fold cleanup (`s3-step-1`) | alex 499 to 100 faces, bear 413 to 352, black tuxedo 447 to 297, ankylosaurus 464 to 435; the plain decimate is the fallback | Alex real volume change is -0.15 % against -0.04 % of the plain decimate; the guard allows 0.1 percentage points on the triangle mesh, quad joining adds the rest. Decide the accepted limit |
+| Facet colours | cat and ankylosaurus keep black, white and cream facets in `step-1-reduce.glb` | eyes smaller than a facet are lost by design |
+
+---
+
+## Model Validation Results (historical batch)
+
+Batch of 2026-09-24, run with the previous one-step Stage 2 on the NVIDIA RTX PRO 4500 Blackwell Server Edition ($0.58/hr). Stage 2 now runs cutout and TRELLIS as two steps on a RunPod Serverless RTX 4090.
 
 | Model | Input Art | Input Size | Processing Time | Cost (USD) | Output 3D Mesh (.glb) | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **bear** | `stage-1/step-1-art.jpeg` | 34.8 KB | 19.34s | $0.0031 | 1.10 MB | **PASS** ✅ |
-| **cheetah** | `stage-1/step-1-art.jpeg` | 221.3 KB | 21.09s | $0.0034 | 1.55 MB | **PASS** ✅ |
-| **dalmatian** | `stage-1/step-1-art.jpeg` | 154.3 KB | 18.41s | $0.0029 | 1.43 MB | **PASS** ✅ |
-| **fox** | `stage-1/step-1-art.jpeg` | 165.2 KB | 22.96s | $0.0037 | 1.56 MB | **PASS** ✅ |
-| **giraffe** | `stage-1/step-1-art.jpeg` | 144.7 KB | 16.45s | $0.0026 | 1.36 MB | **PASS** ✅ |
-| **lion** | `stage-1/step-1-art.jpeg` | 180.3 KB | 25.54s | $0.0041 | 1.76 MB | **PASS** ✅ |
-| **police-car** | `stage-1/step-1-art.jpeg` | 171.0 KB | 19.57s | $0.0031 | 1.37 MB | **PASS** ✅ |
-| **t-rex** | `stage-1/step-1-art.jpeg` | 180.8 KB | 16.67s | $0.0027 | 1.40 MB | **PASS** ✅ |
+| **bear** | `stage-1/step-1-art.jpeg` | 34.8 KB | 19.34s | $0.0031 | 1.10 MB | **PASS** |
+| **cheetah** | `stage-1/step-1-art.jpeg` | 221.3 KB | 21.09s | $0.0034 | 1.55 MB | **PASS** |
+| **dalmatian** | `stage-1/step-1-art.jpeg` | 154.3 KB | 18.41s | $0.0029 | 1.43 MB | **PASS** |
+| **fox** | `stage-1/step-1-art.jpeg` | 165.2 KB | 22.96s | $0.0037 | 1.56 MB | **PASS** |
+| **giraffe** | `stage-1/step-1-art.jpeg` | 144.7 KB | 16.45s | $0.0026 | 1.36 MB | **PASS** |
+| **lion** | `stage-1/step-1-art.jpeg` | 180.3 KB | 25.54s | $0.0041 | 1.76 MB | **PASS** |
+| **police-car** | `stage-1/step-1-art.jpeg` | 171.0 KB | 19.57s | $0.0031 | 1.37 MB | **PASS** |
+| **t-rex** | `stage-1/step-1-art.jpeg` | 180.8 KB | 16.67s | $0.0027 | 1.40 MB | **PASS** |
 
-* **Zero Incidents**: All 8 models generated clean watertight `.glb` meshes with 100% success rate.
-* **Manifests**: Aggregated manifests written to `public/models/<model>/manifest.json` and registered in `public/models/index.json`.
+* All 8 models generated clean watertight `.glb` meshes.
+* Aggregated manifests are written to `public/models/<model>/manifest.json` and registered in `public/models/index.json`.

@@ -14,6 +14,7 @@ from baking import (
     build_cage,
     clear_scene,
     create_image,
+    emissive_to_albedo,
     import_model,
     remove_metal,
     triangulate,
@@ -68,6 +69,7 @@ def main():
     source = import_model(settings["input_glb"])
     source.name = "SourceModel"
     remove_metal(source)
+    emissive_to_albedo(source)
     scale_source(source, net["meshScale"])
     target = build_papercraft(net["mesh"])
     target.name = "TargetPapercraft"

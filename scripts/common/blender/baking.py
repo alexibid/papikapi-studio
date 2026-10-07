@@ -31,6 +31,26 @@ def remove_metal(source):
             bsdf.inputs["Metallic"].default_value = 0.0
 
 
+def emission_texture_source(material):
+    bsdf = material.node_tree.nodes.get("Principled BSDF")
+    if bsdf is None or bsdf.inputs["Base Color"].is_linked:
+        return None
+    emission = bsdf.inputs["Emission Color"]
+    return (bsdf, emission.links[0].from_socket) if emission.is_linked else None
+
+
+def emissive_to_albedo(source):
+    for material in source.data.materials:
+        if not material or not material.node_tree:
+            continue
+        found = emission_texture_source(material)
+        if found is None:
+            continue
+        bsdf, colour = found
+        material.node_tree.links.new(colour, bsdf.inputs["Base Color"])
+        bsdf.inputs["Emission Strength"].default_value = 0.0
+
+
 def link_object(name, mesh):
     item = bpy.data.objects.new(name, mesh)
     bpy.context.scene.collection.objects.link(item)
