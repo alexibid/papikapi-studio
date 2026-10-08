@@ -119,20 +119,12 @@ export class OutputCleaner {
         }
       }
     } else if (step.id === 's3-step-2') {
-      const stepOutputs = step.outputs as { model_resource: string; model_public?: string; svg_dir?: string; facets_dir?: string; manifest: string };
+      const stepOutputs = step.outputs as { model_resource: string; model_public?: string; manifest: string };
       for (const name of [stepOutputs.model_resource, stepOutputs.manifest]) {
         if (!name) continue;
         const target = join(stageDir, name);
         if (existsSync(target)) {
           unlinkSync(target);
-          cleaned.push(basename(target));
-        }
-      }
-      for (const folder of [stepOutputs.svg_dir, stepOutputs.facets_dir, 'step-2-views']) {
-        if (!folder) continue;
-        const target = join(stageDir, folder);
-        if (existsSync(target)) {
-          rmSync(target, { recursive: true, force: true });
           cleaned.push(basename(target));
         }
       }

@@ -113,9 +113,9 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-07T16:41:57.940Z",
+      "at": "2026-10-08T17:02:20.168Z",
       "status": "DONE",
-      "seconds": 1.23,
+      "seconds": 1.14,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -152,105 +152,27 @@
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-07T16:42:46.260Z",
+      "at": "2026-10-08T17:02:31.577Z",
       "status": "DONE",
-      "seconds": 48.31,
+      "seconds": 11.4,
       "costUsd": 0,
-      "costNote": "Local Blender headless and Vectorizer ($0.00)",
+      "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/mario/stage-2/step-3-base.glb",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/mario/stage-2/step-4-optimize.glb",
         "parameters": {
-          "resolution": 2048,
-          "margin": 0,
-          "min_facing": 0.2
-        },
-        "palette": [
-          {
-            "index": 0,
-            "hex": "#28191e",
-            "share": 0.2092,
-            "kind": "neutral"
-          },
-          {
-            "index": 1,
-            "hex": "#e6e6e6",
-            "share": 0.063,
-            "kind": "neutral"
-          },
-          {
-            "index": 2,
-            "hex": "#95898a",
-            "share": 0.0287,
-            "kind": "neutral"
-          },
-          {
-            "index": 3,
-            "hex": "#cd241a",
-            "share": 0.3424,
-            "kind": "hue"
-          },
-          {
-            "index": 4,
-            "hex": "#c66d57",
-            "share": 0.0937,
-            "kind": "hue"
-          },
-          {
-            "index": 5,
-            "hex": "#e14033",
-            "share": 0.1059,
-            "kind": "hue"
-          },
-          {
-            "index": 6,
-            "hex": "#84615b",
-            "share": 0.0112,
-            "kind": "hue"
-          },
-          {
-            "index": 7,
-            "hex": "#2c629b",
-            "share": 0.0573,
-            "kind": "hue"
-          },
-          {
-            "index": 8,
-            "hex": "#a7714a",
-            "share": 0.0413,
-            "kind": "hue"
-          },
-          {
-            "index": 9,
-            "hex": "#d6b891",
-            "share": 0.0474,
-            "kind": "hue"
-          }
-        ]
+          "resolution": 2048
+        }
       },
       "metrics": {
         "faces": 308,
-        "viewsCount": 6,
-        "resolution": 2048,
-        "familiesCount": 10,
-        "baseHex": "#cd241a",
-        "totalPaths": 242,
-        "totalNodes": 23192,
-        "hiddenFaces": 37,
-        "viewsUsage": {
-          "front": 69,
-          "back": 51,
-          "right": 52,
-          "left": 64,
-          "top": 38,
-          "bottom": 34
-        }
+        "resolution": 2048
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-07T16:42:47.126Z",
+      "at": "2026-10-08T17:02:32.190Z",
       "status": "DONE",
-      "seconds": 0.85,
+      "seconds": 0.61,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -271,9 +193,9 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-07T16:42:47.746Z",
+      "at": "2026-10-08T17:02:32.725Z",
       "status": "DONE",
-      "seconds": 0.62,
+      "seconds": 0.53,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -297,9 +219,9 @@
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-07T16:43:37.363Z",
+      "at": "2026-10-08T17:03:20.337Z",
       "status": "DONE",
-      "seconds": 49.62,
+      "seconds": 47.61,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -315,9 +237,9 @@
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-07T16:43:37.484Z",
+      "at": "2026-10-08T17:03:20.381Z",
       "status": "DONE",
-      "seconds": 0.11,
+      "seconds": 0.04,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
@@ -334,7 +256,7 @@
       }
     }
   },
-  "totalSeconds": 156.79,
+  "totalSeconds": 117.38,
   "totalCostUsd": 0.0078,
-  "updatedAt": "2026-10-07T16:43:37.486Z"
+  "updatedAt": "2026-10-08T17:03:20.383Z"
 }

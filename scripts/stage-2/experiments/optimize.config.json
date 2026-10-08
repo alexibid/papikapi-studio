@@ -1,0 +1,23 @@
+{
+  "blender": "/Applications/Blender.app/Contents/MacOS/Blender",
+  "packages": [
+    "torch",
+    "numpy",
+    "pillow",
+    "scipy"
+  ],
+  "limits": {
+    "max_hue_shift": 25,
+    "art_hue_share": 0.08
+  },
+  "panel": {
+    "cell": 640,
+    "view_resolution": 900
+  },
+  "realesrgan": {
+    "variant": "anime6B",
+    "weights": "~/.cache/papikapi/realesrgan/RealESRGAN_x4plus_anime_6B.pth",
+    "tile": 128,
+    "pad": 16
+  }
+}

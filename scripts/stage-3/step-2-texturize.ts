@@ -1,17 +1,14 @@
-import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { BlenderRunner } from '../common/blender-runner.js';
 import { ManifestManager } from '../common/manifest-manager.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { ProgressHub } from '../common/progress-hub.js';
-import { PythonRunner } from '../common/python-runner.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
 import type {
-  FacetViewsStatistics,
-  ProjectReduceStatistics,
+  BakeAtlasStatistics,
   TexturizeResponse,
   TexturizeStepDefinition,
-  VectorizeStatistics,
 } from './interfaces/texturize.interface.js';
 
 export class TexturizeGenerator {
@@ -24,7 +21,7 @@ export class TexturizeGenerator {
     return path;
   }
 
-  private static resolveOriginal(
+  private static resolveOptimizedModel(
     stageDir: string,
     step: TexturizeStepDefinition,
     pick?: number,
@@ -33,7 +30,10 @@ export class TexturizeGenerator {
       ? join(stageDir, step.inputs.model_pick_resource_pattern.replace('{pick}', String(pick)))
       : undefined;
     if (pickCandidate && existsSync(pickCandidate)) return pickCandidate;
-    return this.requireFile(join(stageDir, step.inputs.model_resource), 'Textured 3D model');
+    return this.requireFile(
+      join(stageDir, step.inputs.model_resource),
+      'Optimized 3D model (run stage:2:step:4 first)',
+    );
   }
 
   public static async execute(
@@ -47,66 +47,31 @@ export class TexturizeGenerator {
       WorkspacePaths.resourcePath(modelName),
       step.inputs.model_stage_dir ?? 'stage-2',
     );
-    const originalPath = this.resolveOriginal(modelStageDir, step, requestedPick);
+    const optimizedPath = this.resolveOptimizedModel(modelStageDir, step, requestedPick);
     const meshPath = this.requireFile(join(stageDir, step.inputs.mesh_resource), 'Simplified mesh');
     const modelPath = join(stageDir, step.outputs.model_resource);
-    const svgDir = join(stageDir, step.outputs.svg_dir);
-    const facetsDir = join(stageDir, step.outputs.facets_dir);
 
     const startMsg = step.messages.start.replace('{model}', modelName);
     console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
     ProgressHub.report(modelName, this.stepId, startMsg);
 
     const start = Date.now();
-
-    const viewsDir = join(modelStageDir, step.inputs.views_dir ?? 'step-3-views');
-    const viewsFile = join(viewsDir, 'views.json');
-    if (!existsSync(viewsFile)) {
-      throw new Error(`Orthographic views not found for '${modelName}': run the base step first (${viewsFile})`);
-    }
-    const viewsDocument = JSON.parse(readFileSync(viewsFile, 'utf8')) as { resolution: number };
-    mkdirSync(svgDir, { recursive: true });
-
-    const facetStats = BlenderRunner.run<FacetViewsStatistics>(step.blender, step.blender.facet_views_script, {
-      base_glb: originalPath,
+    const bakeStats = BlenderRunner.run<BakeAtlasStatistics>(step.blender, step.blender.script, {
+      base_glb: optimizedPath,
       reduce_json: meshPath,
-      views_dir: viewsDir,
-      output_dir: facetsDir,
+      output_glb: modelPath,
+      ...step.parameters,
     });
-
-    const vectorStats = PythonRunner.run<VectorizeStatistics>(
-      step.vectorizer_script,
-      {
-        views_dir: viewsDir,
-        facets_dir: facetsDir,
-        output_dir: svgDir,
-        resolution: step.parameters.resolution,
-      },
-    );
-
-    const projectStats = BlenderRunner.run<ProjectReduceStatistics>(
-      step.blender,
-      step.blender.project_reduce_script,
-      {
-        reduce_json: meshPath,
-        views_dir: viewsDir,
-        flat_dir: svgDir,
-        output_glb: modelPath,
-        min_facing: step.parameters.min_facing,
-        flat_pattern: 'flat_{name}.png',
-      },
-    );
-
     const duration = Math.round(((Date.now() - start) / 1000) * 100) / 100;
+
     const publicDir = WorkspacePaths.modelPath(modelName);
     mkdirSync(publicDir, { recursive: true });
     copyFileSync(modelPath, join(publicDir, step.outputs.model_public));
 
     const completedMsg = step.messages.completed
       .replace('{model}', modelName)
-      .replace('{faces}', String(projectStats.faces))
-      .replace('{totalPaths}', String(vectorStats.totalPaths))
-      .replace('{totalNodes}', String(vectorStats.totalNodes))
+      .replace('{faces}', String(bakeStats.faces))
+      .replace('{resolution}', String(bakeStats.resolution))
       .replace('{duration}', String(duration));
     console.log(`  \x1b[32m${completedMsg}\x1b[0m\n`);
     ProgressHub.report(modelName, this.stepId, completedMsg);
@@ -116,22 +81,8 @@ export class TexturizeGenerator {
       seconds: duration,
       costUsd: 0.0,
       costNote: step.manifest_contract.costNote,
-      metrics: {
-        faces: projectStats.faces,
-        viewsCount: facetStats.viewsCount,
-        resolution: viewsDocument.resolution,
-        familiesCount: vectorStats.familiesCount,
-        baseHex: vectorStats.baseHex,
-        totalPaths: vectorStats.totalPaths,
-        totalNodes: vectorStats.totalNodes,
-        hiddenFaces: projectStats.hiddenFaces,
-        viewsUsage: projectStats.viewsUsage,
-      },
-      data: {
-        source: originalPath,
-        parameters: step.parameters,
-        palette: vectorStats.palette,
-      },
+      metrics: { faces: bakeStats.faces, resolution: bakeStats.resolution },
+      data: { source: optimizedPath, parameters: step.parameters },
     });
 
     return { name: modelName, modelPath, seconds: duration };

@@ -484,39 +484,31 @@
           "models_from": "resources/*/stage-3/step-1-reduce.json",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
-            "facet_views_script": "scripts/stage-3/blender/texturize/facet_views.py",
-            "project_reduce_script": "scripts/stage-3/blender/texturize/project_reduce.py"
+            "script": "scripts/stage-3/blender/texturize/bake_atlas.py"
           },
-          "vectorizer_script": "scripts/stage-3/python/vectorize/vectorizer.py",
           "inputs": {
             "stage_dir": "stage-3",
             "model_stage_dir": "stage-2",
-            "model_resource": "step-3-base.glb",
-            "model_pick_resource_pattern": "step-3-base-pick-{pick}.glb",
-            "views_dir": "step-3-views",
+            "model_resource": "step-4-optimize.glb",
+            "model_pick_resource_pattern": "step-4-optimize-pick-{pick}.glb",
             "mesh_resource": "step-1-reduce.json"
           },
           "outputs": {
             "stage_dir": "stage-3",
             "model_resource": "step-2-texturize.glb",
             "model_public": "model.glb",
-            "views_dir": "step-2-views",
-            "svg_dir": "step-2-views/svg",
-            "facets_dir": "step-2-facets",
             "manifest": "step-2-manifest.json"
           },
           "parameters": {
-            "resolution": 2048,
-            "margin": 0.0,
-            "min_facing": 0.2
+            "resolution": 2048
           },
           "messages": {
-            "start": "[Stage 3: Step 2] Facet colours from the base plus vector Bezier textures for {model}",
-            "completed": "✔ [Stage 3: Step 2] {faces} faces textured ({totalPaths} vector paths, {totalNodes} nodes) for {model} in {duration}s ($0.00)"
+            "start": "[Stage 3: Step 2] Baking the optimized step-4 texture onto the reduced mesh for {model}",
+            "completed": "✔ [Stage 3: Step 2] {faces} faces textured at {resolution}px from the step-4 texture for {model} in {duration}s ($0.00)"
           },
           "manifest_contract": {
             "status": "DONE",
-            "costNote": "Local Blender headless and Vectorizer ($0.00)"
+            "costNote": "Local Blender headless ($0.00)"
           }
         },
         {

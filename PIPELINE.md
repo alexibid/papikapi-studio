@@ -6,7 +6,7 @@ Deterministic generative pipeline that turns a text prompt and optional referenc
 
 ## 🏛️ Architecture Overview
 
-The orchestration is strict **TypeScript** under Node 24 with `tsx`; the geometry work runs in Blender headless (Python, `bpy`/`bmesh`) and in the system Python for the vectoriser. Every module follows the **Single Responsibility Principle (SRP)**.
+The orchestration is strict **TypeScript** under Node 24 with `tsx`; the geometry work runs in Blender headless (Python, `bpy`/`bmesh`). Every module follows the **Single Responsibility Principle (SRP)**.
 
 ```text
 apps/papikapi-studio/
@@ -23,7 +23,7 @@ apps/papikapi-studio/
 │       ├── stage-3/
 │       │   ├── step-1-reduce.json           # reduced mesh (+ faceColours)
 │       │   ├── step-1-reduce.glb            # reduced mesh with vertex colours per facet
-│       │   ├── step-2-texturize.glb         # reduced mesh textured with the vector layers
+│       │   ├── step-2-texturize.glb         # reduced mesh with the step-4 texture baked onto it
 │       │   ├── step-3-plinth.glb / .json    # textured figure fused to the white plinth
 │       │   └── step-*-manifest.json
 │       ├── stage-4/               # step-1-net.json, step-2-sheets.pdf, step renders
@@ -75,7 +75,7 @@ Every prompt, system instruction, limit, size in millimetres, Blender script and
      3. Triangles are joined into quads and faces larger than `face_max_extent_ratio` are split.
      4. **Facet colours**: each facet takes the TRELLIS colour sampled from the base texture (the most representative sample of the original triangles it replaces), written as `faceColours` in `step-1-reduce.json` and as vertex colours in `step-1-reduce.glb`, so reduced elements (spikes, paws, muzzles) keep their original colour.
      * Manifest: `meshFaces`, `quads`, `volumeChangePercent`, `maxDeviationMm`, `featureLossMm`, `facetColours`, `airtight`.
-   * **`s3-step-2` TEXTURIZE** (`scripts/stage-3/step-2-texturize.ts`): `facet_views.py` renders the facets in the orthographic views, the vectoriser (`scripts/stage-3/python/vectorize`) turns the views into flat Bezier colour layers, and `project_reduce.py` projects them onto the reduced mesh (`min_facing`). Output `step-2-texturize.glb`, `step-2-facets/`, `step-2-views/svg`.
+   * **`s3-step-2` TEXTURIZE** (`scripts/stage-3/step-2-texturize.ts`, Blender `blender/texturize/bake_atlas.py`): unwraps the reduced mesh (smart UV project) and transfers the colour of `stage-2/step-4-optimize.glb` onto it (nearest point of the optimized surface, sampling its atlas). The texture comes only from the step-4 atlas: no views, no vectoriser, no SVG. Output `step-2-texturize.glb`.
    * **`s3-step-3` PLINTH** (`blender/plinth/build_plinth.py`): deletes the flat foot caps, builds a white trapezoidal plinth with the footprint of the figure (`plinth_margin_ratio`) and fuses it to the feet on both the quad mesh and the textured mesh. Output `step-3-plinth.json`, `step-3-plinth.glb` (copied to `public/models/<model>/model.glb`).
 
 4. **Stage 4: Papercraft Unfolding and Sheets**

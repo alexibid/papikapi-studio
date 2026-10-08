@@ -113,9 +113,9 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-07T17:03:49.247Z",
+      "at": "2026-10-08T17:14:13.611Z",
       "status": "DONE",
-      "seconds": 1.09,
+      "seconds": 1.05,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -152,87 +152,27 @@
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-07T17:04:34.551Z",
+      "at": "2026-10-08T17:14:24.755Z",
       "status": "DONE",
-      "seconds": 45.3,
+      "seconds": 11.14,
       "costUsd": 0,
-      "costNote": "Local Blender headless and Vectorizer ($0.00)",
+      "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/sea-turtle/stage-2/step-3-base.glb",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/sea-turtle/stage-2/step-4-optimize.glb",
         "parameters": {
-          "resolution": 2048,
-          "margin": 0,
-          "min_facing": 0.2
-        },
-        "palette": [
-          {
-            "index": 0,
-            "hex": "#141707",
-            "share": 0.2789,
-            "kind": "neutral"
-          },
-          {
-            "index": 1,
-            "hex": "#c6cebe",
-            "share": 0.0019,
-            "kind": "neutral"
-          },
-          {
-            "index": 2,
-            "hex": "#7a9555",
-            "share": 0.3789,
-            "kind": "hue"
-          },
-          {
-            "index": 3,
-            "hex": "#79865b",
-            "share": 0.0142,
-            "kind": "hue"
-          },
-          {
-            "index": 4,
-            "hex": "#97674d",
-            "share": 0.2716,
-            "kind": "hue"
-          },
-          {
-            "index": 5,
-            "hex": "#858253",
-            "share": 0.028,
-            "kind": "hue"
-          },
-          {
-            "index": 6,
-            "hex": "#786425",
-            "share": 0.0264,
-            "kind": "hue"
-          }
-        ]
+          "resolution": 2048
+        }
       },
       "metrics": {
         "faces": 334,
-        "viewsCount": 6,
-        "resolution": 2048,
-        "familiesCount": 7,
-        "baseHex": "#7a9555",
-        "totalPaths": 256,
-        "totalNodes": 20542,
-        "hiddenFaces": 11,
-        "viewsUsage": {
-          "front": 39,
-          "back": 30,
-          "right": 56,
-          "left": 53,
-          "top": 61,
-          "bottom": 95
-        }
+        "resolution": 2048
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-07T17:04:35.332Z",
+      "at": "2026-10-08T17:14:25.360Z",
       "status": "DONE",
-      "seconds": 0.78,
+      "seconds": 0.6,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -253,9 +193,9 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-07T17:04:35.924Z",
+      "at": "2026-10-08T17:14:25.885Z",
       "status": "DONE",
-      "seconds": 0.59,
+      "seconds": 0.52,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -279,9 +219,9 @@
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-07T17:05:41.592Z",
+      "at": "2026-10-08T17:15:32.918Z",
       "status": "DONE",
-      "seconds": 65.67,
+      "seconds": 67.03,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -297,9 +237,9 @@
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-07T17:05:41.698Z",
+      "at": "2026-10-08T17:15:32.971Z",
       "status": "DONE",
-      "seconds": 0.1,
+      "seconds": 0.04,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
@@ -316,7 +256,7 @@
       }
     }
   },
-  "totalSeconds": 222.01,
+  "totalSeconds": 188.86,
   "totalCostUsd": 0.0158,
-  "updatedAt": "2026-10-07T17:05:41.700Z"
+  "updatedAt": "2026-10-08T17:15:32.973Z"
 }

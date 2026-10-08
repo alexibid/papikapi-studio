@@ -113,9 +113,9 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-07T15:50:33.018Z",
+      "at": "2026-10-08T16:54:07.674Z",
       "status": "DONE",
-      "seconds": 1.51,
+      "seconds": 1.37,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -152,87 +152,27 @@
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-07T15:51:29.682Z",
+      "at": "2026-10-08T16:54:18.319Z",
       "status": "DONE",
-      "seconds": 56.66,
+      "seconds": 10.64,
       "costUsd": 0,
-      "costNote": "Local Blender headless and Vectorizer ($0.00)",
+      "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/fox/stage-2/step-3-base.glb",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/fox/stage-2/step-4-optimize.glb",
         "parameters": {
-          "resolution": 2048,
-          "margin": 0,
-          "min_facing": 0.2
-        },
-        "palette": [
-          {
-            "index": 0,
-            "hex": "#e9e8e8",
-            "share": 0.0967,
-            "kind": "neutral"
-          },
-          {
-            "index": 1,
-            "hex": "#120e0c",
-            "share": 0.0877,
-            "kind": "neutral"
-          },
-          {
-            "index": 2,
-            "hex": "#949191",
-            "share": 0.0871,
-            "kind": "neutral"
-          },
-          {
-            "index": 3,
-            "hex": "#d47338",
-            "share": 0.5366,
-            "kind": "hue"
-          },
-          {
-            "index": 4,
-            "hex": "#ea9952",
-            "share": 0.0801,
-            "kind": "hue"
-          },
-          {
-            "index": 5,
-            "hex": "#a93d19",
-            "share": 0.1008,
-            "kind": "hue"
-          },
-          {
-            "index": 6,
-            "hex": "#c89574",
-            "share": 0.0109,
-            "kind": "hue"
-          }
-        ]
+          "resolution": 2048
+        }
       },
       "metrics": {
         "faces": 330,
-        "viewsCount": 6,
-        "resolution": 2048,
-        "familiesCount": 7,
-        "baseHex": "#d47338",
-        "totalPaths": 272,
-        "totalNodes": 25092,
-        "hiddenFaces": 35,
-        "viewsUsage": {
-          "front": 67,
-          "back": 61,
-          "right": 33,
-          "left": 79,
-          "top": 49,
-          "bottom": 41
-        }
+        "resolution": 2048
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-07T15:51:30.576Z",
+      "at": "2026-10-08T16:54:18.931Z",
       "status": "DONE",
-      "seconds": 0.88,
+      "seconds": 0.61,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -253,9 +193,9 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-07T15:51:31.219Z",
+      "at": "2026-10-08T16:54:19.461Z",
       "status": "DONE",
-      "seconds": 0.64,
+      "seconds": 0.53,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -279,9 +219,9 @@
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-07T15:52:35.589Z",
+      "at": "2026-10-08T16:55:19.422Z",
       "status": "DONE",
-      "seconds": 64.37,
+      "seconds": 59.96,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -297,9 +237,9 @@
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-07T15:52:35.708Z",
+      "at": "2026-10-08T16:55:19.466Z",
       "status": "DONE",
-      "seconds": 0.11,
+      "seconds": 0.04,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
@@ -316,7 +256,7 @@
       }
     }
   },
-  "totalSeconds": 182.35,
+  "totalSeconds": 131.33,
   "totalCostUsd": 0.008,
-  "updatedAt": "2026-10-07T15:52:35.710Z"
+  "updatedAt": "2026-10-08T16:55:19.467Z"
 }

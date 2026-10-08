@@ -113,9 +113,9 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-07T15:34:02.920Z",
+      "at": "2026-10-08T16:44:14.206Z",
       "status": "DONE",
-      "seconds": 1.68,
+      "seconds": 1.51,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -152,69 +152,27 @@
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-07T15:34:44.316Z",
+      "at": "2026-10-08T16:44:25.978Z",
       "status": "DONE",
-      "seconds": 41.39,
+      "seconds": 11.77,
       "costUsd": 0,
-      "costNote": "Local Blender headless and Vectorizer ($0.00)",
+      "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/calico/stage-2/step-3-base.glb",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/calico/stage-2/step-4-optimize.glb",
         "parameters": {
-          "resolution": 2048,
-          "margin": 0,
-          "min_facing": 0.2
-        },
-        "palette": [
-          {
-            "index": 0,
-            "hex": "#d3d2d2",
-            "share": 0.3447,
-            "kind": "neutral"
-          },
-          {
-            "index": 1,
-            "hex": "#161516",
-            "share": 0.2856,
-            "kind": "neutral"
-          },
-          {
-            "index": 2,
-            "hex": "#d7b075",
-            "share": 0.158,
-            "kind": "hue"
-          },
-          {
-            "index": 3,
-            "hex": "#cd9252",
-            "share": 0.2117,
-            "kind": "hue"
-          }
-        ]
+          "resolution": 2048
+        }
       },
       "metrics": {
         "faces": 289,
-        "viewsCount": 6,
-        "resolution": 2048,
-        "familiesCount": 4,
-        "baseHex": "#d3d2d2",
-        "totalPaths": 223,
-        "totalNodes": 16056,
-        "hiddenFaces": 24,
-        "viewsUsage": {
-          "front": 52,
-          "back": 35,
-          "right": 56,
-          "left": 47,
-          "top": 40,
-          "bottom": 59
-        }
+        "resolution": 2048
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-07T15:34:45.211Z",
+      "at": "2026-10-08T16:44:26.624Z",
       "status": "DONE",
-      "seconds": 0.88,
+      "seconds": 0.64,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -235,9 +193,9 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-07T15:34:45.872Z",
+      "at": "2026-10-08T16:44:27.206Z",
       "status": "DONE",
-      "seconds": 0.66,
+      "seconds": 0.58,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -261,9 +219,9 @@
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-07T15:35:24.500Z",
+      "at": "2026-10-08T16:45:05.213Z",
       "status": "DONE",
-      "seconds": 38.63,
+      "seconds": 38,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -279,9 +237,9 @@
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-07T15:35:24.607Z",
+      "at": "2026-10-08T16:45:05.256Z",
       "status": "DONE",
-      "seconds": 0.1,
+      "seconds": 0.04,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
@@ -298,7 +256,7 @@
       }
     }
   },
-  "totalSeconds": 132.67,
+  "totalSeconds": 101.87,
   "totalCostUsd": 0.0068,
-  "updatedAt": "2026-10-07T15:35:24.609Z"
+  "updatedAt": "2026-10-08T16:45:05.257Z"
 }
