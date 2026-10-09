@@ -170,9 +170,9 @@
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-09T11:08:12.897Z",
+      "at": "2026-10-09T12:12:44.278Z",
       "status": "DONE",
-      "seconds": 1.52,
+      "seconds": 1.56,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -193,9 +193,9 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-09T11:09:55.607Z",
+      "at": "2026-10-09T12:15:08.862Z",
       "status": "DONE",
-      "seconds": 1.08,
+      "seconds": 0.74,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -217,27 +217,9 @@
         "nonManifoldEdges": 4
       }
     },
-    "s4-step-2": {
-      "stageId": "s4-step-2",
-      "at": "2026-10-08T16:46:51.349Z",
-      "status": "DONE",
-      "seconds": 37.42,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "format": "application/pdf",
-        "pageSize": "210x297mm"
-      },
-      "metrics": {
-        "pageCount": 10,
-        "sheetCount": 5,
-        "pieceCount": 16,
-        "labelCollisions": 1
-      }
-    },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-09T11:10:07.354Z",
+      "at": "2026-10-09T12:15:52.047Z",
       "status": "DONE",
       "seconds": 0.04,
       "costUsd": 0,
@@ -256,7 +238,7 @@
       }
     }
   },
-  "totalSeconds": 101.71,
+  "totalSeconds": 63.99,
   "totalCostUsd": 0.0066,
-  "updatedAt": "2026-10-09T11:10:07.358Z"
+  "updatedAt": "2026-10-09T12:15:52.051Z"
 }
