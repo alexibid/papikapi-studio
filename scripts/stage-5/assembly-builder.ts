@@ -42,12 +42,17 @@ export class AssemblyBuilder {
       );
     }
 
+    const lastPieceNumber = source.pieces.length;
+    const isPlinthLast = source.pieces.some(
+      (p) => p.number === lastPieceNumber && p.faces.length === 5,
+    );
     const sequence = AssemblyOrder.sequence(
       source.pieces.map((piece) => ({
         number: piece.number,
         centreHeight: VectorMath.centroid(solids.get(piece.number) ?? [])[2],
         neighbours: neighbours.get(piece.number) ?? new Set<number>(),
       })),
+      isPlinthLast ? lastPieceNumber : undefined,
     );
     const ordered = sequence.map(
       (number) => source.pieces.find((piece) => piece.number === number) as AssemblySourcePiece,

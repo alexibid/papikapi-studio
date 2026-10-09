@@ -170,9 +170,9 @@
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-08T17:01:45.044Z",
+      "at": "2026-10-09T12:13:09.184Z",
       "status": "DONE",
-      "seconds": 0.59,
+      "seconds": 1.53,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -185,36 +185,36 @@
         }
       },
       "metrics": {
-        "faces": 447,
-        "loops": 8,
-        "openEdges": 28,
-        "nonManifoldEdges": 8
+        "faces": 399,
+        "loops": 0,
+        "openEdges": 4,
+        "nonManifoldEdges": 0
       }
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-08T17:01:45.544Z",
+      "at": "2026-10-09T12:15:21.070Z",
       "status": "DONE",
-      "seconds": 0.5,
+      "seconds": 0.77,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/lion/stage-3/step-3-plinth.json",
         "dimensionsMm": [
           300,
-          149.29,
+          155.93,
           244.3
         ],
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 225,
-        "quadCount": 71,
-        "pieces": 19,
+        "faceCount": 284,
+        "quadCount": 94,
+        "pieces": 33,
         "smallestPieceFaces": 1,
-        "shortestCutMm": 4.8,
-        "unpairedEdges": 0,
-        "nonManifoldEdges": 0
+        "shortestCutMm": 0.1,
+        "unpairedEdges": 4,
+        "nonManifoldEdges": 4
       }
     },
     "s4-step-2": {
@@ -237,7 +237,7 @@
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-09T10:03:21.197Z",
+      "at": "2026-10-09T12:15:52.893Z",
       "status": "DONE",
       "seconds": 0.05,
       "costUsd": 0,
@@ -246,17 +246,17 @@
         "source": "stage-4/step-1-net.json"
       },
       "metrics": {
-        "pieces": 19,
-        "faces": 225,
-        "hinges": 206,
-        "maxHingeResidualMm": 1.786,
-        "maxFoldAngleDeg": 166.7,
-        "mirroredPieces": 0,
+        "pieces": 33,
+        "faces": 284,
+        "hinges": 251,
+        "maxHingeResidualMm": 329.434,
+        "maxFoldAngleDeg": 142.5,
+        "mirroredPieces": 1,
         "extraRoots": 0
       }
     }
   },
-  "totalSeconds": 112.06,
+  "totalSeconds": 113.27,
   "totalCostUsd": 0.0095,
-  "updatedAt": "2026-10-09T10:03:21.205Z"
+  "updatedAt": "2026-10-09T12:15:52.897Z"
 }

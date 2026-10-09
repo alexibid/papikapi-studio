@@ -170,9 +170,9 @@
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-08T16:48:44.305Z",
+      "at": "2026-10-09T12:12:48.664Z",
       "status": "DONE",
-      "seconds": 0.63,
+      "seconds": 1.44,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -185,17 +185,17 @@
         }
       },
       "metrics": {
-        "faces": 453,
-        "loops": 4,
-        "openEdges": 0,
+        "faces": 355,
+        "loops": 0,
+        "openEdges": 4,
         "nonManifoldEdges": 0
       }
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-08T16:48:44.847Z",
+      "at": "2026-10-09T12:15:11.155Z",
       "status": "DONE",
-      "seconds": 0.54,
+      "seconds": 0.78,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -208,13 +208,13 @@
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 449,
-        "quadCount": 199,
-        "pieces": 47,
+        "faceCount": 355,
+        "quadCount": 157,
+        "pieces": 37,
         "smallestPieceFaces": 1,
         "shortestCutMm": 5.3,
-        "unpairedEdges": 0,
-        "nonManifoldEdges": 0
+        "unpairedEdges": 4,
+        "nonManifoldEdges": 4
       }
     },
     "s4-step-2": {
@@ -237,26 +237,26 @@
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-09T10:03:20.468Z",
+      "at": "2026-10-09T12:15:52.169Z",
       "status": "DONE",
-      "seconds": 0.08,
+      "seconds": 0.04,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
         "source": "stage-4/step-1-net.json"
       },
       "metrics": {
-        "pieces": 47,
-        "faces": 449,
-        "hinges": 402,
-        "maxHingeResidualMm": 7.446,
-        "maxFoldAngleDeg": 164.6,
-        "mirroredPieces": 0,
+        "pieces": 37,
+        "faces": 355,
+        "hinges": 318,
+        "maxHingeResidualMm": 343.195,
+        "maxFoldAngleDeg": 127.4,
+        "mirroredPieces": 1,
         "extraRoots": 0
       }
     }
   },
-  "totalSeconds": 131.58,
+  "totalSeconds": 132.59,
   "totalCostUsd": 0.0081,
-  "updatedAt": "2026-10-09T10:03:20.474Z"
+  "updatedAt": "2026-10-09T12:15:52.174Z"
 }

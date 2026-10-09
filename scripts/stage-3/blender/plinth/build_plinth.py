@@ -15,7 +15,7 @@ from baking import clear_scene, import_model
 from connectivity import face_records, vertex_records
 from face_splitter import split_oversized_faces
 from mesh_quality import open_and_non_manifold_edges
-from white_plinth import add_white_plinth
+from white_plinth import add_white_plinth, footprint
 
 RESULT_MARKER = "PAPERCRAFT_RESULT "
 ERROR_MARKER = "PAPERCRAFT_ERROR "
@@ -38,7 +38,13 @@ def build_reduced_mesh(settings):
         bmesh.ops.translate(surface, vec=(0, 0, -lowest), verts=surface.verts)
         surface.normal_update()
     split_oversized_faces(surface, document["lengthMeters"], settings["face_max_extent_ratio"])
-    statistics = add_white_plinth(surface, settings, document["lengthMeters"], 0)
+
+    thickness = settings["plinth_thickness_ratio"] * document["lengthMeters"]
+    bmesh.ops.translate(surface, vec=(0, 0, thickness), verts=surface.verts)
+    surface.normal_update()
+
+    bounds = footprint(surface, settings["plinth_margin_ratio"] * document["lengthMeters"])
+    statistics = add_white_plinth(surface, settings, document["lengthMeters"], 0, bounds=bounds)
     plinth_face_ids = [face.index for face in statistics["plinth_faces"]]
     document_out = {
         "lengthMeters": document["lengthMeters"],
@@ -72,9 +78,10 @@ def white_material():
     return material
 
 
-def textured_figure(settings, length):
+def textured_models(settings, length):
     clear_scene()
     figure = import_model(settings["input_glb"])
+    figure.name = "Figure"
     surface = bmesh.new()
     surface.from_mesh(figure.data)
     bmesh.ops.remove_doubles(surface, verts=surface.verts, dist=WELD_DISTANCE)
@@ -82,26 +89,51 @@ def textured_figure(settings, length):
     if abs(lowest) > 1e-5:
         bmesh.ops.translate(surface, vec=(0, 0, -lowest), verts=surface.verts)
         surface.normal_update()
-    add_white_plinth(surface, settings, length, len(figure.data.materials))
+
+    thickness = settings["plinth_thickness_ratio"] * length
+    bmesh.ops.translate(surface, vec=(0, 0, thickness), verts=surface.verts)
+    surface.normal_update()
     surface.to_mesh(figure.data)
     surface.free()
-    figure.data.materials.append(white_material())
+    figure.data.update()
     for polygon in figure.data.polygons:
         polygon.use_smooth = False
-    return figure
+
+    plinth_bmesh = bmesh.new()
+    bounds = footprint(figure.data, settings["plinth_margin_ratio"] * length)
+    add_white_plinth(plinth_bmesh, settings, length, 0, bounds=bounds)
+    plinth_mesh = bpy.data.meshes.new("Plinth")
+    plinth_bmesh.to_mesh(plinth_mesh)
+    plinth_bmesh.free()
+    plinth_obj = bpy.data.objects.new("Plinth", plinth_mesh)
+    plinth_obj.data.materials.append(white_material())
+    for polygon in plinth_obj.data.polygons:
+        polygon.use_smooth = False
+    bpy.context.scene.collection.objects.link(plinth_obj)
+
+    return figure, plinth_obj
 
 
-def export_glb(figure, path):
+def export_glb(figure, plinth_obj, path):
     bpy.ops.object.select_all(action="DESELECT")
     figure.select_set(True)
+    plinth_obj.select_set(True)
     bpy.context.view_layer.objects.active = figure
-    bpy.ops.export_scene.gltf(filepath=path, export_format="GLB", use_selection=True, export_apply=True, export_materials="EXPORT", export_image_format="AUTO")
+    bpy.ops.export_scene.gltf(
+        filepath=path,
+        export_format="GLB",
+        use_selection=True,
+        export_apply=True,
+        export_materials="EXPORT",
+        export_image_format="AUTO",
+    )
 
 
 def main():
     settings = read_settings()
     result, length = build_reduced_mesh(settings)
-    export_glb(textured_figure(settings, length), settings["output_glb"])
+    figure, plinth_obj = textured_models(settings, length)
+    export_glb(figure, plinth_obj, settings["output_glb"])
     print(RESULT_MARKER + json.dumps(result))
 
 

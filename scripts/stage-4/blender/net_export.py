@@ -44,7 +44,7 @@ def export_net(target, settings, scale):
         figure_faces = [face for face in mesh_builder.faces if face not in plinth_set]
         figure_pieces = [build_piece(piece) for piece in unfold_pieces(mesh_builder, limits, faces=figure_faces)]
         plinth_piece = build_piece(create_plinth_piece(plinth_faces))
-        raw_pieces = [plinth_piece] + figure_pieces
+        raw_pieces = figure_pieces + [plinth_piece]
         pieces = order_and_number(raw_pieces, has_plinth=True)
     else:
         raw_pieces = [build_piece(piece) for piece in unfold_pieces(mesh_builder, limits)]

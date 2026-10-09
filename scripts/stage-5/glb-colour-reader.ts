@@ -25,7 +25,10 @@ export class GlbColourReader {
       const positions = this.floats(document, binary, primitive.attributes.POSITION, 3);
       const uvs = this.floats(document, binary, primitive.attributes.TEXCOORD_0, 2);
       const indices = this.indices(document, binary, primitive.indices);
-      const textureIndex = document.materials[primitive.material].emissiveTexture?.index;
+      const material = document.materials[primitive.material];
+      const textureIndex =
+        material?.emissiveTexture?.index ??
+        material?.pbrMetallicRoughness?.baseColorTexture?.index;
       const sampler = textureIndex === undefined ? undefined : samplers.get(textureIndex);
       for (let corner = 0; corner + 2 < indices.length; corner += 3) {
         const trio = [indices[corner], indices[corner + 1], indices[corner + 2]];

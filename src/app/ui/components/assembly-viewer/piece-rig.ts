@@ -1,4 +1,4 @@
-import { Box3, Group, Material, Matrix4, Mesh, Object3D, Quaternion, Sphere, Vector3 } from 'three';
+import { Box3, Group, LineSegments, Material, Matrix4, Mesh, Object3D, Quaternion, Sphere, Vector3 } from 'three';
 import {
   AssemblyFace,
   AssemblyPiece,
@@ -6,7 +6,7 @@ import {
   PlacedPose,
 } from '../../../domain/assembly/assembly-plan';
 import { faceFold, pieceMotion } from '../../../domain/assembly/assembly-timeline';
-import { flatGeometry, solidGeometry } from './face-geometry';
+import { FigureBounds, flatGeometry, pieceWireframeGeometry, solidGeometry } from './face-geometry';
 
 const LIFT_MM = 110;
 const ARC_MM = 70;
@@ -16,33 +16,45 @@ interface FaceNode {
   readonly node: Object3D;
 }
 
+export interface PieceMaterials {
+  readonly solid: Material;
+  readonly wireframe: Material;
+}
+
 export class PieceRig {
   readonly group = new Group();
 
   private readonly folding = new Group();
   private readonly finished = new Group();
+  private readonly wireframe = new Group();
   private readonly nodes: readonly FaceNode[];
   private readonly maxDepth: number;
 
   constructor(
     private readonly piece: AssemblyPiece,
-    material: Material,
+    materials: PieceMaterials,
+    bounds: FigureBounds,
   ) {
     this.nodes = piece.faces.map((face) => ({ face, node: new Object3D() }));
     this.maxDepth = Math.max(...piece.faces.map((face) => face.depth));
     this.nodes.forEach(({ face, node }) => {
       node.matrixAutoUpdate = false;
-      node.add(new Mesh(flatGeometry(face), material));
+      node.add(new Mesh(flatGeometry(face), materials.solid));
       (face.parent < 0 ? this.folding : this.nodes[face.parent].node).add(node);
-      this.finished.add(new Mesh(solidGeometry(face), material));
+      const solid = solidGeometry(face);
+      this.finished.add(new Mesh(solid, materials.solid));
     });
-    this.group.add(this.folding, this.finished);
+    this.wireframe.add(
+      new LineSegments(pieceWireframeGeometry(piece.faces, bounds), materials.wireframe),
+    );
+    this.group.add(this.folding, this.finished, this.wireframe);
   }
 
   update(progress: number): void {
     const motion = pieceMotion(this.piece, progress);
     this.finished.visible = motion.arrived;
     this.folding.visible = !motion.arrived;
+    this.wireframe.visible = !motion.arrived;
     if (motion.arrived) {
       return;
     }
@@ -88,7 +100,7 @@ export class PieceRig {
 
   dispose(): void {
     this.group.traverse((node) => {
-      if (node instanceof Mesh) {
+      if (node instanceof Mesh || node instanceof LineSegments) {
         node.geometry.dispose();
       }
     });

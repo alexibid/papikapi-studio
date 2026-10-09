@@ -182,9 +182,9 @@
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-08T16:47:06.845Z",
+      "at": "2026-10-09T12:12:45.998Z",
       "status": "DONE",
-      "seconds": 0.69,
+      "seconds": 1.71,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -197,17 +197,17 @@
         }
       },
       "metrics": {
-        "faces": 254,
-        "loops": 2,
-        "openEdges": 0,
+        "faces": 220,
+        "loops": 0,
+        "openEdges": 4,
         "nonManifoldEdges": 0
       }
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-08T16:47:07.493Z",
+      "at": "2026-10-09T12:15:09.600Z",
       "status": "DONE",
-      "seconds": 0.65,
+      "seconds": 0.73,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -220,20 +220,20 @@
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 251,
-        "quadCount": 105,
-        "pieces": 25,
+        "faceCount": 220,
+        "quadCount": 96,
+        "pieces": 21,
         "smallestPieceFaces": 1,
         "shortestCutMm": 3.7,
-        "unpairedEdges": 0,
-        "nonManifoldEdges": 0
+        "unpairedEdges": 4,
+        "nonManifoldEdges": 4
       }
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-08T16:47:48.206Z",
+      "at": "2026-10-09T12:09:53.401Z",
       "status": "DONE",
-      "seconds": 40.71,
+      "seconds": 25.02,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -241,34 +241,34 @@
         "pageSize": "210x297mm"
       },
       "metrics": {
-        "pageCount": 18,
-        "sheetCount": 10,
-        "pieceCount": 25,
+        "pageCount": 15,
+        "sheetCount": 8,
+        "pieceCount": 21,
         "labelCollisions": 0
       }
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-09T10:03:20.304Z",
+      "at": "2026-10-09T12:15:52.086Z",
       "status": "DONE",
-      "seconds": 0.05,
+      "seconds": 0.04,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
         "source": "stage-4/step-1-net.json"
       },
       "metrics": {
-        "pieces": 25,
-        "faces": 251,
-        "hinges": 226,
-        "maxHingeResidualMm": 2.355,
+        "pieces": 21,
+        "faces": 220,
+        "hinges": 199,
+        "maxHingeResidualMm": 255.074,
         "maxFoldAngleDeg": 155.4,
-        "mirroredPieces": 0,
+        "mirroredPieces": 1,
         "extraRoots": 0
       }
     }
   },
-  "totalSeconds": 1291.98,
+  "totalSeconds": 1277.38,
   "totalCostUsd": 0.2964,
-  "updatedAt": "2026-10-09T10:03:20.312Z"
+  "updatedAt": "2026-10-09T12:15:52.089Z"
 }

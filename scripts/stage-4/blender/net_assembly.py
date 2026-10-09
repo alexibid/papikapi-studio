@@ -21,18 +21,34 @@ def shared_lengths(pieces, owners):
 
 
 def assembly_order(pieces, has_plinth=False):
-    owners = edge_owners(pieces)
-    lengths = shared_lengths(pieces, owners)
-    order = [0] if has_plinth else [max(range(len(pieces)), key=lambda index: pieces[index]["areaMm2"])]
-    remaining = set(range(len(pieces))) - set(order)
-    while remaining:
-        def attachment(candidate):
-            return sum(lengths.get((candidate, placed), 0.0) for placed in order)
+    if has_plinth:
+        figure_count = len(pieces) - 1
+        owners = edge_owners(pieces[:figure_count])
+        lengths = shared_lengths(pieces[:figure_count], owners)
+        order = [max(range(figure_count), key=lambda index: pieces[index]["areaMm2"])]
+        remaining = set(range(figure_count)) - set(order)
+        while remaining:
+            def attachment(candidate):
+                return sum(lengths.get((candidate, placed), 0.0) for placed in order)
 
-        following = max(remaining, key=lambda candidate: (attachment(candidate), pieces[candidate]["areaMm2"]))
-        order.append(following)
-        remaining.discard(following)
-    return order
+            following = max(remaining, key=lambda candidate: (attachment(candidate), pieces[candidate]["areaMm2"]))
+            order.append(following)
+            remaining.discard(following)
+        order.append(figure_count)
+        return order
+    else:
+        owners = edge_owners(pieces)
+        lengths = shared_lengths(pieces, owners)
+        order = [max(range(len(pieces)), key=lambda index: pieces[index]["areaMm2"])]
+        remaining = set(range(len(pieces))) - set(order)
+        while remaining:
+            def attachment(candidate):
+                return sum(lengths.get((candidate, placed), 0.0) for placed in order)
+
+            following = max(remaining, key=lambda candidate: (attachment(candidate), pieces[candidate]["areaMm2"]))
+            order.append(following)
+            remaining.discard(following)
+        return order
 
 
 def number_edges(ordered):
