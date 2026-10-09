@@ -37,12 +37,28 @@ def build_reduced_mesh(settings):
     if abs(lowest) > 1e-5:
         bmesh.ops.translate(surface, vec=(0, 0, -lowest), verts=surface.verts)
         surface.normal_update()
-    statistics = add_white_plinth(surface, settings, document["lengthMeters"], 0)
     split_oversized_faces(surface, document["lengthMeters"], settings["face_max_extent_ratio"])
-    document_out = {"lengthMeters": document["lengthMeters"], "vertices": vertex_records(surface), "faces": face_records(surface)}
+    statistics = add_white_plinth(surface, settings, document["lengthMeters"], 0)
+    plinth_face_ids = [face.index for face in statistics["plinth_faces"]]
+    document_out = {
+        "lengthMeters": document["lengthMeters"],
+        "vertices": vertex_records(surface),
+        "faces": face_records(surface),
+        "plinthFaceIds": plinth_face_ids,
+        "plinth": {
+            "bounds": list(statistics["bounds"]),
+            "thickness": statistics["thickness"],
+        },
+    }
     Path(settings["output_json"]).write_text(json.dumps(document_out, indent=2))
     open_edges, non_manifold = open_and_non_manifold_edges(surface)
-    result = {"faces": len(surface.faces), "openEdges": open_edges, "nonManifoldEdges": non_manifold, "thickness": statistics["thickness"], "loops": statistics["loops"]}
+    result = {
+        "faces": len(surface.faces),
+        "openEdges": open_edges,
+        "nonManifoldEdges": non_manifold,
+        "thickness": statistics["thickness"],
+        "loops": statistics["loops"],
+    }
     surface.free()
     return result, document["lengthMeters"]
 

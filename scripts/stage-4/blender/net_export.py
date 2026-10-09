@@ -6,6 +6,7 @@ import bmesh
 
 from net_assembly import order_and_number
 from net_document import build_piece
+from net_plinth import create_plinth_piece, find_plinth_faces
 from net_unfolding import unfold_pieces
 from papercraft_mesh import mesh_to_document
 
@@ -36,7 +37,18 @@ def export_net(target, settings, scale):
         "page": (settings["piece_max_width_mm"] / MILLIMETRES_PER_METRE, settings["piece_max_height_mm"] / MILLIMETRES_PER_METRE),
         "compactness": settings["piece_compactness"],
     }
-    pieces = order_and_number([build_piece(piece) for piece in unfold_pieces(mesh_builder, limits)])
+
+    plinth_faces = find_plinth_faces(mesh_builder)
+    if plinth_faces:
+        plinth_set = set(plinth_faces)
+        figure_faces = [face for face in mesh_builder.faces if face not in plinth_set]
+        figure_pieces = [build_piece(piece) for piece in unfold_pieces(mesh_builder, limits, faces=figure_faces)]
+        plinth_piece = build_piece(create_plinth_piece(plinth_faces))
+        raw_pieces = [plinth_piece] + figure_pieces
+        pieces = order_and_number(raw_pieces, has_plinth=True)
+    else:
+        raw_pieces = [build_piece(piece) for piece in unfold_pieces(mesh_builder, limits)]
+        pieces = order_and_number(raw_pieces, has_plinth=False)
     mesh_builder.free()
     checks = validation(pieces)
     document = {

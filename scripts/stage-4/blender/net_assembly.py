@@ -20,10 +20,10 @@ def shared_lengths(pieces, owners):
     return lengths
 
 
-def assembly_order(pieces):
+def assembly_order(pieces, has_plinth=False):
     owners = edge_owners(pieces)
     lengths = shared_lengths(pieces, owners)
-    order = [max(range(len(pieces)), key=lambda index: pieces[index]["areaMm2"])]
+    order = [0] if has_plinth else [max(range(len(pieces)), key=lambda index: pieces[index]["areaMm2"])]
     remaining = set(range(len(pieces))) - set(order)
     while remaining:
         def attachment(candidate):
@@ -44,6 +44,8 @@ def number_edges(ordered):
     for position, piece in enumerate(ordered, start=1):
         for cut in sorted(piece["cuts"], key=lambda item: (item["a"][1], item["a"][0])):
             partners = piece_of_edge[cut["edge"]]
+            if len(partners) < 2:
+                continue
             if cut["edge"] not in numbers and max(partners) <= position:
                 numbers[cut["edge"]] = len(numbers) + 1
                 tab_side[cut["edge"]] = (position, cut["face"])
@@ -56,14 +58,18 @@ def attach(ordered):
         piece["number"] = position
         joins = {}
         for cut in piece["cuts"]:
-            cut["number"] = numbers[cut["edge"]]
-            cut["tab"] = tab_side[cut["edge"]] == (position, cut["face"])
-            partners = [other for other in piece_of_edge[cut["edge"]] if other != position] or [position]
-            if cut["tab"]:
-                joins.setdefault(partners[0], []).append(cut["number"])
+            if cut["edge"] in numbers:
+                cut["number"] = numbers[cut["edge"]]
+                cut["tab"] = tab_side[cut["edge"]] == (position, cut["face"])
+                partners = [other for other in piece_of_edge[cut["edge"]] if other != position] or [position]
+                if cut["tab"]:
+                    joins.setdefault(partners[0], []).append(cut["number"])
+            else:
+                cut["number"] = 0
+                cut["tab"] = False
         piece["joins"] = [{"piece": other, "edges": sorted(edges)} for other, edges in sorted(joins.items())]
     return ordered
 
 
-def order_and_number(pieces):
-    return attach([pieces[index] for index in assembly_order(pieces)])
+def order_and_number(pieces, has_plinth=False):
+    return attach([pieces[index] for index in assembly_order(pieces, has_plinth)])

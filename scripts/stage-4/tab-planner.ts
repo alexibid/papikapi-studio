@@ -68,6 +68,7 @@ export class TabPlanner {
       ),
     );
     for (const pair of occurrences.values()) {
+      if (pair.length < 2) continue;
       const ordered = [...pair].sort(
         (first, second) => Number(second.cut.tab) - Number(first.cut.tab),
       );

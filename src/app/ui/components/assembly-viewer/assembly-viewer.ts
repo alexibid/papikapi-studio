@@ -15,9 +15,11 @@ import {
 import { I18nService } from '@ibid/services';
 import { ButtonComponent, SliderComponent } from 'ibid-ui';
 import { AmbientLight, DirectionalLight, HemisphereLight, Scene, WebGLRenderer } from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { AssemblyPlanService } from '../../../application/services/assembly-plan.service';
 import { OrbitCamera } from '../model-viewer-3d/orbit-camera';
 import { AssemblyRig } from './assembly-rig';
+import { FinalModel } from './final-model';
 
 const MAX_PIXEL_RATIO = 2;
 const STEP_MS = 3600;
@@ -32,6 +34,7 @@ const PERCENT = 100;
 })
 export class AssemblyViewerComponent implements AfterViewInit, OnDestroy {
   readonly source = input.required<string>();
+  readonly modelSource = input<string>('');
   readonly progress = model<number>(0);
 
   protected readonly i18n = inject(I18nService);
@@ -48,6 +51,7 @@ export class AssemblyViewerComponent implements AfterViewInit, OnDestroy {
   private readonly camera = new OrbitCamera();
   private renderer?: WebGLRenderer;
   private rig?: AssemblyRig;
+  private finalModel?: FinalModel;
   private playbackMs = STEP_MS;
   private resizeObserver?: ResizeObserver;
   private frameId?: number;
@@ -64,6 +68,11 @@ export class AssemblyViewerComponent implements AfterViewInit, OnDestroy {
     });
     effect(() => {
       const progress = this.progress();
+      const isComplete = progress >= 1;
+      if (this.finalModel && this.rig) {
+        this.finalModel.show(isComplete);
+        this.rig.root.visible = !isComplete;
+      }
       this.rig?.update(progress);
       this.followShot(progress);
       this.draw();
@@ -163,10 +172,37 @@ export class AssemblyViewerComponent implements AfterViewInit, OnDestroy {
       rig.update(this.progress());
       this.scene.add(rig.root);
       this.rig = rig;
+      const glbUrl = this.modelSource() || url.replace(/assembly\.json(\?.*)?$/, 'model.glb$1');
+      void this.loadFinalModel(rig, glbUrl);
       this.followShot(this.progress());
       this.fitViewport();
     } catch {
       this.problem.set(this.i18n.translate('assemblyLoadFailed'));
+    }
+  }
+
+  private async loadFinalModel(rig: AssemblyRig, glbUrl: string): Promise<void> {
+    if (!glbUrl) {
+      return;
+    }
+    try {
+      const loader = new GLTFLoader();
+      const gltf = await loader.loadAsync(glbUrl);
+      if (this.rig !== rig) {
+        return;
+      }
+      const finalModel = new FinalModel(gltf.scene);
+      finalModel.alignTo(rig.figureShot());
+      const isComplete = this.progress() >= 1;
+      finalModel.show(isComplete);
+      if (isComplete) {
+        rig.root.visible = false;
+      }
+      this.scene.add(finalModel.root);
+      this.finalModel = finalModel;
+      this.draw();
+    } catch {
+      // Non-fatal fallback if GLB is unavailable
     }
   }
 
@@ -179,6 +215,11 @@ export class AssemblyViewerComponent implements AfterViewInit, OnDestroy {
   }
 
   private discardRig(): void {
+    if (this.finalModel) {
+      this.scene.remove(this.finalModel.root);
+      this.finalModel.dispose();
+      this.finalModel = undefined;
+    }
     if (this.rig) {
       this.scene.remove(this.rig.root);
       this.rig.dispose();

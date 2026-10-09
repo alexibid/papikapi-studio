@@ -1,6 +1,7 @@
-import { Box3, DoubleSide, Group, MeshLambertMaterial, Sphere, Vector3 } from 'three';
+import { Box3, DoubleSide, Group, LineBasicMaterial, MeshLambertMaterial, Sphere, Vector3 } from 'three';
 import { AssemblyPlan } from '../../../domain/assembly/assembly-plan';
 import { entryBlend, exitBlend, stepPosition } from '../../../domain/assembly/assembly-timeline';
+import { figureBounds } from './face-geometry';
 import { PieceRig } from './piece-rig';
 
 const MM_TO_SCENE = 0.001;
@@ -10,17 +11,27 @@ const FINALE_SHARE = 0.8;
 export class AssemblyRig {
   readonly root = new Group();
 
-  private readonly material = new MeshLambertMaterial({
+  private readonly solid = new MeshLambertMaterial({
     vertexColors: true,
     side: DoubleSide,
     flatShading: true,
+  });
+  private readonly wireframe = new LineBasicMaterial({
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.9,
+    depthWrite: false,
   });
   private readonly pieces: readonly PieceRig[];
   private overview = new Sphere();
   private placed: readonly Sphere[] = [];
 
   constructor(plan: AssemblyPlan) {
-    this.pieces = plan.pieces.map((piece) => new PieceRig(piece, this.material));
+    const bounds = figureBounds(plan.pieces.flatMap((piece) => piece.faces));
+    const materials = { solid: this.solid, wireframe: this.wireframe };
+    this.pieces = plan.pieces.map(
+      (piece) => new PieceRig(piece, materials, bounds),
+    );
     const stage = new Group();
     stage.rotation.x = -Math.PI / 2;
     stage.scale.setScalar(MM_TO_SCENE);
@@ -48,6 +59,10 @@ export class AssemblyRig {
       new Vector3().setScalar(this.overview.radius * 2),
     );
     return waiting.union(figure);
+  }
+
+  figureShot(): Sphere {
+    return this.overview.clone();
   }
 
   shot(progress: number): Sphere {
@@ -84,6 +99,7 @@ export class AssemblyRig {
 
   dispose(): void {
     this.pieces.forEach((piece) => piece.dispose());
-    this.material.dispose();
+    this.solid.dispose();
+    this.wireframe.dispose();
   }
 }

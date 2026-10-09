@@ -120,7 +120,7 @@
 
     <section class="p-studio__preview-col">
       @if (viewMode() === 'assembly') {
-        <papikapi-studio-assembly-viewer [source]="assemblySource()" />
+        <papikapi-studio-assembly-viewer [source]="assemblySource()" [modelSource]="preview()" />
       } @else {
         <papikapi-studio-model-viewer-3d [source]="preview()" />
       }

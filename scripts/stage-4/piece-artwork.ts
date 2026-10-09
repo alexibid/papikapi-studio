@@ -72,7 +72,7 @@ class ArtworkBuilder {
     } else {
       const outward = tabShape(this.faces[this.piece.faceIds.indexOf(cut.face)], cut, 0).outward;
       this.cuts.push({ a: cut.a, b: cut.b });
-      if (!this.isDartSide(cut)) {
+      if (!this.isDartSide(cut) && cut.number > 0) {
         const spots = INSET_STEPS.flatMap((inset) =>
           ALONG_EDGE.map((share) => subtract(along(cut, share), scale(outward, size * inset))),
         );

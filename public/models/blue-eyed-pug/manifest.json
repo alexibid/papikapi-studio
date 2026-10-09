@@ -113,9 +113,9 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-08T16:42:12.830Z",
+      "at": "2026-10-09T10:36:18.619Z",
       "status": "DONE",
-      "seconds": 1.39,
+      "seconds": 1.99,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -152,9 +152,9 @@
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-08T16:42:24.059Z",
+      "at": "2026-10-09T10:36:31.005Z",
       "status": "DONE",
-      "seconds": 11.22,
+      "seconds": 12.38,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -170,9 +170,9 @@
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-08T16:42:24.682Z",
+      "at": "2026-10-09T10:36:32.071Z",
       "status": "DONE",
-      "seconds": 0.62,
+      "seconds": 1.06,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -193,9 +193,9 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-08T16:42:25.230Z",
+      "at": "2026-10-09T10:36:33.478Z",
       "status": "DONE",
-      "seconds": 0.55,
+      "seconds": 1.4,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -219,9 +219,9 @@
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-08T16:43:32.708Z",
+      "at": "2026-10-09T10:37:49.800Z",
       "status": "DONE",
-      "seconds": 67.47,
+      "seconds": 76.31,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -237,9 +237,9 @@
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-08T16:43:32.767Z",
+      "at": "2026-10-09T10:37:49.874Z",
       "status": "DONE",
-      "seconds": 0.05,
+      "seconds": 0.06,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
@@ -256,7 +256,7 @@
       }
     }
   },
-  "totalSeconds": 133.32,
+  "totalSeconds": 145.22,
   "totalCostUsd": 0.0071,
-  "updatedAt": "2026-10-08T16:43:32.769Z"
+  "updatedAt": "2026-10-09T10:37:49.876Z"
 }

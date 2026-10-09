@@ -49,9 +49,11 @@ def try_join(edge, host, guest, limits):
     return True
 
 
-def unfold_pieces(mesh_builder, limits):
-    piece_of = {face: Piece(face) for face in mesh_builder.faces}
-    joinable = [edge for edge in mesh_builder.edges if len(edge.link_faces) == 2]
+def unfold_pieces(mesh_builder, limits, faces=None):
+    target_faces = list(faces) if faces is not None else list(mesh_builder.faces)
+    target_set = set(target_faces)
+    piece_of = {face: Piece(face) for face in target_faces}
+    joinable = [edge for edge in mesh_builder.edges if len(edge.link_faces) == 2 and all(face in target_set for face in edge.link_faces)]
     for edge in sorted(joinable, key=dihedral_priority):
         host, guest = (piece_of[face] for face in edge.link_faces)
         if host is guest:

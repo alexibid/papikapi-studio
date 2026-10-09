@@ -140,7 +140,12 @@ export interface GltfColourDocument {
   }[];
   readonly images: readonly { readonly bufferView: number }[];
   readonly textures: readonly { readonly source: number }[];
-  readonly materials: readonly { readonly emissiveTexture?: { readonly index: number } }[];
+  readonly materials: readonly {
+    readonly emissiveTexture?: { readonly index: number };
+    readonly pbrMetallicRoughness?: {
+      readonly baseColorTexture?: { readonly index: number };
+    };
+  }[];
   readonly meshes: readonly { readonly primitives: readonly GltfColourPrimitive[] }[];
 }
 

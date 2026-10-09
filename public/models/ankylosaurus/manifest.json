@@ -113,9 +113,9 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-08T16:39:18.603Z",
+      "at": "2026-10-09T10:33:06.487Z",
       "status": "DONE",
-      "seconds": 1.43,
+      "seconds": 2,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -152,9 +152,9 @@
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-08T16:39:26.891Z",
+      "at": "2026-10-09T10:33:16.018Z",
       "status": "DONE",
-      "seconds": 8.28,
+      "seconds": 9.52,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -170,9 +170,9 @@
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-08T16:39:27.492Z",
+      "at": "2026-10-09T10:33:16.898Z",
       "status": "DONE",
-      "seconds": 0.6,
+      "seconds": 0.88,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -193,9 +193,9 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-08T16:39:28.018Z",
+      "at": "2026-10-09T10:33:17.681Z",
       "status": "DONE",
-      "seconds": 0.52,
+      "seconds": 0.78,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -219,9 +219,9 @@
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-08T16:40:00.475Z",
+      "at": "2026-10-09T10:33:52.689Z",
       "status": "DONE",
-      "seconds": 32.45,
+      "seconds": 35,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -237,9 +237,9 @@
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-08T16:40:00.528Z",
+      "at": "2026-10-09T10:33:52.758Z",
       "status": "DONE",
-      "seconds": 0.05,
+      "seconds": 0.06,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
@@ -256,7 +256,7 @@
       }
     }
   },
-  "totalSeconds": 93.57,
+  "totalSeconds": 98.48,
   "totalCostUsd": 0.0069,
-  "updatedAt": "2026-10-08T16:40:00.530Z"
+  "updatedAt": "2026-10-09T10:33:52.761Z"
 }

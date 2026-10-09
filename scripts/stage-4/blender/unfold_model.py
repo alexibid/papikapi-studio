@@ -10,6 +10,7 @@ import bpy
 
 from manifold_repair import repair_manifold
 from net_export import export_net
+from net_plinth import find_plinth_faces
 from papercraft_mesh import build_papercraft, rebuild_canonically
 from quad_flattening import flatten_quads, triangulate_twisted
 
@@ -102,15 +103,71 @@ def main():
     clear_scene()
     papercraft = import_simplified_mesh(settings["input_mesh"])
     factor = scale_longest_side(papercraft, settings["target_size_mm"])
-    weld_and_clean(papercraft, settings)
-    papercraft = rebuild_canonically(papercraft)
+
+    mesh_builder = bmesh.new()
+    mesh_builder.from_mesh(papercraft.data)
+    plinth_faces = find_plinth_faces(mesh_builder)
+
+    if plinth_faces:
+        plinth_set = set(plinth_faces)
+        fig_bmesh = bmesh.new()
+        v_map = {}
+        for f in mesh_builder.faces:
+            if f not in plinth_set:
+                for v in f.verts:
+                    if v not in v_map:
+                        v_map[v] = fig_bmesh.verts.new(v.co)
+                fig_bmesh.faces.new([v_map[v] for v in f.verts])
+        fig_bmesh.normal_update()
+
+        plinth_bmesh = bmesh.new()
+        pv_map = {}
+        for f in plinth_faces:
+            for v in f.verts:
+                if v not in pv_map:
+                    pv_map[v] = plinth_bmesh.verts.new(v.co)
+            plinth_bmesh.faces.new([pv_map[v] for v in f.verts])
+        plinth_bmesh.normal_update()
+        mesh_builder.free()
+
+        orig_mesh = papercraft.data
+        bpy.data.objects.remove(papercraft, do_unlink=True)
+        bpy.data.meshes.remove(orig_mesh)
+
+        fig_mesh = bpy.data.meshes.new("Figure")
+        fig_bmesh.to_mesh(fig_mesh)
+        fig_bmesh.free()
+        fig_obj = bpy.data.objects.new("Figure", fig_mesh)
+        bpy.context.scene.collection.objects.link(fig_obj)
+
+        weld_and_clean(fig_obj, settings)
+        fig_obj = rebuild_canonically(fig_obj)
+
+        plinth_mesh = bpy.data.meshes.new("Plinth")
+        plinth_bmesh.to_mesh(plinth_mesh)
+        plinth_bmesh.free()
+        plinth_obj = bpy.data.objects.new("Plinth", plinth_mesh)
+        bpy.context.scene.collection.objects.link(plinth_obj)
+
+        bpy.ops.object.select_all(action="DESELECT")
+        fig_obj.select_set(True)
+        plinth_obj.select_set(True)
+        bpy.context.view_layer.objects.active = fig_obj
+        bpy.ops.object.join()
+        papercraft = fig_obj
+    else:
+        mesh_builder.free()
+        weld_and_clean(papercraft, settings)
+        papercraft = rebuild_canonically(papercraft)
+
     statistics = {**build_statistics(papercraft, settings), **export_net(papercraft, settings, factor)}
     print(RESULT_MARKER + json.dumps(statistics))
 
 
-try:
-    main()
-except Exception as failure:
-    traceback.print_exc()
-    print(ERROR_MARKER + json.dumps(str(failure)))
-    sys.exit(1)
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as failure:
+        traceback.print_exc()
+        print(ERROR_MARKER + json.dumps(str(failure)))
+        sys.exit(1)
