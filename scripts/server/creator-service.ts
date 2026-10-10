@@ -2,6 +2,7 @@ import { existsSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import type { InlineImage } from '../common/interfaces/index.js';
 import { CatalogueManager } from '../common/catalogue-manager.js';
+import { FigurePublisher } from '../common/figure-publisher.js';
 import { GeminiClient } from '../common/gemini-client.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { ProgressHub } from '../common/progress-hub.js';
@@ -69,6 +70,7 @@ export class CreatorService {
       await CutoutGenerator.execute(cleanName, pick);
       const trellisResult = await TrellisGenerator.execute(cleanName, pick);
       CatalogueManager.sync();
+      FigurePublisher.publishQuietly(cleanName);
       ProgressHub.finish(cleanName);
       return { cropResult, trellisResult };
     } catch (err) {

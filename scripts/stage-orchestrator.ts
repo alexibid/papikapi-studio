@@ -1,6 +1,7 @@
 import { existsSync, globSync, readFileSync, statSync } from 'node:fs';
 import { isAbsolute, join, resolve } from 'node:path';
 import { CatalogueManager } from './common/catalogue-manager.js';
+import { FigurePublisher } from './common/figure-publisher.js';
 import { CliArgsParser } from './common/cli-args-parser.js';
 import { GeminiClient } from './common/gemini-client.js';
 import type {
@@ -276,6 +277,7 @@ export class StageOrchestrator {
 
       const totalDuration = (Date.now() - modelStart) / 1000;
       row.end(totalDuration, modelPassed, failureLines);
+      if (modelPassed) FigurePublisher.publishQuietly(model);
       reports.push({
         modelName: model,
         stepResults,
