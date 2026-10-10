@@ -1,3 +1,14 @@
+## 0.1.4 (2026-10-10)
+
+### 🐛 Bug Fixes
+
+- **papikapi-studio:** restore original decimate simplification and legacy texture, regenerate six models (48b95df)
+- **texturize:** vector texture layer with real colours, projection from vector views and obsolete scripts removed (517b62b)
+
+### 🚀 Features
+
+- **papikapi-studio:** decouple stage 2 pipeline, isolate interfaces and add single-line cli reporter (d85127b)
+
 ## 0.1.2 (2026-09-28)
 
 ### 🐛 Bug Fixes
