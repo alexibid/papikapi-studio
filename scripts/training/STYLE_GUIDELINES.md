@@ -22,11 +22,15 @@ This document serves as the **single source of truth** and authoritative specifi
   - **Markings**: Spots (dalmatian, cheetah), stripes (zebra, tiger, tabby), patches (calico, cows), and masks (pug, raccoon) are printed flat onto closed facets.
   - **Mechanical Details**: Headlights, grills, portholes, cockpit windows, and dials are illustrated flat onto vehicle hull facets.
 
-### 4. Expressive Studio Eyes
+### 4. Zero Whiskers & Ultra-Thin Protrusions (Papercraft Assembleability)
+- **Whiskers Strictly Prohibited**: Animals (cats, dogs, lions, etc.) must NEVER have whiskers drawn, painted, or modeled. Muzzles, chins, and cheeks are completely smooth, solid planar cardstock facets.
+- **Physical Feasibility**: Whiskers and hairline antennae create needle-thin geometry or floating disconnected fragments in 3D reconstruction, and are physically impossible for children to fold and glue in papercraft.
+
+### 5. Expressive Studio Eyes
 - For all living characters and animals, there are **EXACTLY TWO** eyes (never three, never one, never floating).
 - Eyes are stylized, large, cute, round decals with a prominent circular white catchlight reflection printed flat onto head facets.
 
-### 5. Universal Perspective & Stance
+### 6. Universal Perspective & Stance
 - **Strict 3/4 Isometric Perspective**: Every figure is viewed from an isometric angle from the top-left corner, simultaneously revealing:
   - Top plane (back, roof, dorsal ridge)
   - Front plane (face, chest, grille)
@@ -84,17 +88,18 @@ The evaluating agent must run through this checklist before approving any genera
 | **G3** | **3/4 Isometric Perspective** | Uniform top-left 3/4 axonometric viewpoint across all cells. | ❌ Eye-level, flat front, side profile, or high top-down views. |
 | **G4** | **True Progression (No Clones)**| Clear visual progression: Baby (Left) $\rightarrow$ Youth (Center) $\rightarrow$ Mature Signature (Right). | ❌ The 6 cells are identical or near-identical clones with same proportions. |
 | **G5** | **Zero Floor Shadows** | Plain `#E5E5E5` ground with zero dark cast shadows or contact patches. | ❌ Any dark drop shadow or floor ambient occlusion beneath figures. |
-| **G6** | **Decal Micro-Details** | Teeth, spots, whiskers, markings are flat 2D surface decals. | ❌ 3D spikes, jagged tooth extrusions, or open mouth cavities. |
+| **G6** | **Decal Micro-Details** | Teeth, spots, markings are flat 2D surface decals. | ❌ 3D spikes, jagged tooth extrusions, or open mouth cavities. |
+| **G7** | **Zero Whiskers** | Cheeks and muzzles are completely smooth and whiskerless. | ❌ Any whiskers, hair needles, or facial wire extrusions. |
 
 ### Scoring Rubric (1 to 5)
 
 - **Score 5 (Perfect - Approved for LoRA)**:
-  - Passes all 6 Gate Checks.
+  - Passes all 7 Gate Checks.
   - Cell 3 (Pick #3) is an authentic, clean replica of the training reference.
   - Columns 1 and 2 show delightful, distinct baby and youthful variations.
-  - Crisp planar facets with pure solid papercraft colors and cute expressive eyes.
+  - Crisp planar facets with pure solid papercraft colors, clean smooth muzzles, and cute expressive eyes.
 - **Score 4 (Good - Approved for LoRA with minor notes)**:
-  - Passes all 6 Gate Checks. Minor styling differences in secondary cells, but Pick #3 and progression are solid.
+  - Passes all 7 Gate Checks. Minor styling differences in secondary cells, but Pick #3 and progression are solid.
 - **Score 3 or lower (Rejected - Retrying Required)**:
   - Fails any Gate Check (e.g. clone repetition, cropped limb, black fold line, or incorrect perspective).
   - Must trigger prompt recalibration and regeneration.

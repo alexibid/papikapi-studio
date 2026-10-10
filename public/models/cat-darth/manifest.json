@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "subject": "cat-darth",
+  "stages": {
+    "s1-step-1": {
+      "stageId": "s1-step-1",
+      "at": "2026-10-10T10:14:16.425Z",
+      "status": "DONE",
+      "seconds": 47.78,
+      "costUsd": 0.0072,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0072)",
+      "data": {
+        "prompt": "cute sitting black and white bicolor domestic cat, solid black ears and forehead, asymmetric white blaze climbing only beside the inner left eye up to mid-forehead from viewer perspective, right eye surrounded by black, white cheeks and muzzle, distinct black patch on lower chin, solid white chest bib and belly, viewer-left front leg all white, viewer-right front leg has black sleeve down forearm to white paw with black toe spot, white hind paws, round amber eyes, clean smooth muzzle with zero whiskers, no collar, no bowtie, no clothes",
+        "referenceCount": 1,
+        "alternativesCount": 6,
+        "format": "image/jpeg"
+      }
+    },
+    "s1-step-2": {
+      "stageId": "s1-step-2",
+      "at": "2026-10-10T10:26:00.254Z",
+      "status": "DONE",
+      "seconds": 0.04,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "chosenPick": 2,
+        "artSize": 40234
+      }
+    },
+    "s2-step-1": {
+      "stageId": "s2-step-1",
+      "at": "2026-10-10T10:26:01.442Z",
+      "status": "DONE",
+      "seconds": 1.17,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "cached": false,
+        "chosenPick": 2,
+        "format": "image/png"
+      },
+      "metrics": {
+        "fileSize": 184974
+      }
+    },
+    "s2-step-2": {
+      "stageId": "s2-step-2",
+      "at": "2026-10-10T10:27:48.773Z",
+      "status": "DONE",
+      "seconds": 107.17,
+      "costUsd": 0.0332,
+      "costNote": "RunPod Serverless ($0.00031/s)",
+      "data": {
+        "fileSize": 1176868,
+        "faceCount": 3990,
+        "format": "model/gltf-binary",
+        "chosenPick": 2,
+        "cached": false,
+        "device": "NVIDIA RTX 4090 Serverless Worker",
+        "parameters": {
+          "seed": 1,
+          "simplify": 0.85,
+          "target_faces": 4000,
+          "texture_size": 1024
+        }
+      },
+      "metrics": {
+        "fileSize": 1176868,
+        "faceCount": 3990,
+        "openEdges": 0,
+        "nonManifoldEdges": 0
+      }
+    }
+  },
+  "totalSeconds": 156.16,
+  "totalCostUsd": 0.0404,
+  "updatedAt": "2026-10-10T10:27:48.775Z"
+}

@@ -17,7 +17,7 @@ export class CreatorApiServer {
 
   private setCors(res: ServerResponse): void {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   }
 
@@ -32,7 +32,7 @@ export class CreatorApiServer {
       let body = '';
       req.on('data', (chunk) => {
         body += chunk;
-        if (body.length > 50 * 1024 * 1024) {
+        if (body.length > 100 * 1024 * 1024) {
           req.destroy();
           reject(new Error('Payload too large'));
         }
@@ -88,7 +88,7 @@ export class CreatorApiServer {
         return;
       }
 
-      if (req.method === 'GET' && url.pathname === '/api/creator/sheet') {
+      if (['GET', 'HEAD'].includes(req.method ?? '') && url.pathname === '/api/creator/sheet') {
         const name = url.searchParams.get('name');
         if (!name) {
           this.sendJson(res, 400, { error: 'Name is required' });
@@ -107,11 +107,15 @@ export class CreatorApiServer {
           'Content-Length': sheet.bytes.length,
           'Cache-Control': 'no-cache, no-store, must-revalidate',
         });
+        if (req.method === 'HEAD') {
+          res.end();
+          return;
+        }
         res.end(sheet.bytes);
         return;
       }
 
-      if (req.method === 'GET' && url.pathname === '/api/creator/info') {
+      if (['GET', 'HEAD'].includes(req.method ?? '') && url.pathname === '/api/creator/info') {
         const name = url.searchParams.get('name');
         if (!name) {
           this.sendJson(res, 400, { error: 'Name is required' });
@@ -119,6 +123,12 @@ export class CreatorApiServer {
         }
 
         const info = CreatorService.getModelInfo(name);
+        if (req.method === 'HEAD') {
+          this.setCors(res);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end();
+          return;
+        }
         this.sendJson(res, 200, info);
         return;
       }

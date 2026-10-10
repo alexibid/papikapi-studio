@@ -115,7 +115,9 @@ export class AlternativesGenerator {
     composition: ReferenceComposition;
   } {
     const subjectImages = (request.referenceImages ?? []).slice(0, maxSubjectImages);
-    const style = TrainingReferences.findStyleImage(request.name, request.prompt);
+    const style = subjectImages.length > 0
+      ? null
+      : TrainingReferences.findStyleImage(request.name, request.prompt);
     if (style) {
       const styleMessage = `🎨 Style Reference: ${style.item.file} (${style.item.name} in ${style.item.group})`;
       console.log(`  [s1-step-1] ${styleMessage}`);
@@ -130,14 +132,22 @@ export class AlternativesGenerator {
     };
   }
 
-  public static buildCellPrompts(name: string, subject: string): string[] {
+  public static buildCellPrompts(name: string, subject: string, hasSubjectPhotos = false): string[] {
     const params = this.loadParameters();
     const trainingPrompt = this.getTrainingReferencePrompt(name);
-    const details = trainingPrompt ? trainingPrompt : subject;
+    let details = trainingPrompt ? trainingPrompt : subject;
+
+    if (hasSubjectPhotos && !details.includes('facial markings')) {
+      details = `${details}, faithfully replicating the real subject from the attached reference photo with all unique facial markings, chin patch, nose color, eye color, and fur patterns, clean smooth muzzle with zero whiskers, natural fur without bowtie or clothing`;
+    }
+
+    const subjectNoun = subject.length > 50
+      ? (subject.toLowerCase().includes('cat') ? 'cat' : subject.toLowerCase().includes('dog') ? 'dog' : 'figure')
+      : subject;
 
     return params.cell_prompt_templates.map((template) =>
       template
-        .replaceAll('{subject}', subject)
+        .replaceAll('{subject}', subjectNoun)
         .replaceAll('{details}', details)
         .replaceAll('{view}', params.view_clause)
         .replaceAll('{base}', params.base_clause),
@@ -149,7 +159,15 @@ export class AlternativesGenerator {
     const step = PipelineConfigLoader.getStep(this.stepId) as unknown as AlternativesStepDefinition;
     const params = step.parameters;
     const { images: referenceImages, composition } = this.composeReferenceImages(request, params.max_reference_images);
-    const { system, prompt: fullPrompt, aspectRatio, model: defaultModel } = this.composePrompt(prompt, composition, name);
+
+    const effectivePrompt = await GeminiClient.refinePromptForDiffusion(prompt, (request.referenceImages?.length ?? 0) > 0);
+    if (effectivePrompt !== prompt) {
+      const promptLog = `  [s1-step-1] 🌐 English Refined Prompt: "${effectivePrompt}"`;
+      console.log(promptLog);
+      ProgressHub.report(name, this.stepId, promptLog);
+    }
+
+    const { system, prompt: fullPrompt, aspectRatio, model: defaultModel } = this.composePrompt(effectivePrompt, composition, name);
 
     const engine = engineOverride ? engineOverride : defaultModel;
     const isGemini = engine.toLowerCase().includes('gemini');
@@ -185,8 +203,17 @@ export class AlternativesGenerator {
 
       const payload = {
         prompt: fullPrompt,
-        cell_prompts: this.buildCellPrompts(name, prompt),
-        negative_prompt: params.negative_prompt,
+        cell_prompts: this.buildCellPrompts(name, effectivePrompt, composition.subjectCount > 0),
+        negative_prompt: [
+          params.negative_prompt,
+          'whiskers, cat whiskers, facial whiskers, thin whiskers, protruding whiskers, whisker spikes, thin wires, thin hair strands, needle spikes',
+          'bowtie, tie, clothes, costume, collar, suit, tuxedo suit, jacket',
+          composition.subjectCount > 0
+            ? 'cartoon pink inner ears, white forehead, white blaze reaching top of head, white forehead stripe'
+            : '',
+        ]
+          .filter(Boolean)
+          .join(', '),
         reference_images: referenceImages.map((img) => img.bytes.toString('base64')),
         columns: params.columns,
         rows: params.rows,
@@ -200,8 +227,9 @@ export class AlternativesGenerator {
         endpointId,
         payload,
         {
-          onProgress: (elapsed) => {
-            const progressMsg = `⟳ [RunPod Serverless] Generating alternatives on FLUX.2 Serverless Worker... (${elapsed}s elapsed)`;
+          onProgress: (update) => {
+            const runnerState = update.status === 'IN_QUEUE' ? 'Na fila de espera' : 'FLUX.2 Serverless Worker';
+            const progressMsg = `⟳ [RunPod Serverless] Generating alternatives on ${runnerState}... (${update.elapsedSeconds}s elapsed)`;
             process.stdout.write(`\r  \x1b[36m${progressMsg}\x1b[0m`);
             ProgressHub.report(name, this.stepId, progressMsg);
           },

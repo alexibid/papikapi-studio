@@ -39,7 +39,7 @@ export class ModelCreatorComponent {
   protected readonly prompt = signal<string>('');
   protected readonly modelName = signal<string>('');
   protected readonly references = signal<readonly ReferenceFile[]>([]);
-  protected readonly selectedPick = signal<number | null>(3);
+  protected readonly selectedPick = signal<number | null>(null);
   protected readonly mathFloor = Math.floor;
 
   protected readonly cellLabels: readonly string[] = [

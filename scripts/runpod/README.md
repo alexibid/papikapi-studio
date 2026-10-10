@@ -63,7 +63,7 @@ token with the `read:packages` scope.
 ### Endpoint 1: TRELLIS Image-to-3D
 - **Endpoint Name**: `papikapi-trellis`
 - **Container Image**: `ghcr.io/alexibid/papikapi-trellis:latest`
-- **GPU Type**: 24 GB class (`RTX A5000`, `L4`, `RTX 3090`)
+- **GPU Type**: `ADA_24,AMPERE_24,-NVIDIA RTX PRO 6000 Blackwell Server Edition MIG 1g.24gb` (`RTX 4090`, `RTX A5000`, `L4`, `RTX 3090`)
 - **Min Workers**: `0` (Zero cost when idle)
 - **Max Workers**: `1`
 - **Idle Timeout**: `5` seconds
@@ -72,12 +72,14 @@ token with the `read:packages` scope.
 ### Endpoint 2: FLUX.2 Alternatives Sheet
 - **Endpoint Name**: `papikapi-flux`
 - **Container Image**: `ghcr.io/alexibid/papikapi-flux:latest`
-- **GPU Type**: `RTX 4090 (24GB)` or `RTX 4000 Ada (20GB)`
+- **GPU Type**: `ADA_24,AMPERE_24,-NVIDIA RTX PRO 6000 Blackwell Server Edition MIG 1g.24gb` (`RTX 4090`, `RTX 3090`, `RTX A5000`)
 - **Min Workers**: `0` (Zero cost when idle)
 - **Max Workers**: `1`
 - **Idle Timeout**: `5` seconds
 - **Execution Timeout**: `180` seconds
 - **Container Disk**: `25 GB`
+
+> **Note on Blackwell GPUs (`sm_120`)**: PyTorch 2.4/2.5 with CUDA 12.4 only compiles kernels up to `sm_90`. RunPod's `AMPERE_24` pool may route workers to Blackwell MIG (`RTX PRO 6000 Blackwell MIG 1g.24gb`), causing `CUDA error: no kernel image is available`. Blackwell must be excluded by appending `,-NVIDIA RTX PRO 6000 Blackwell Server Edition MIG 1g.24gb` to `gpuIds`.
 - **Environment**:
 
 | Variable | Required | Meaning |

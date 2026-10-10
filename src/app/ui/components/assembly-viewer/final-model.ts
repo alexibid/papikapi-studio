@@ -1,7 +1,24 @@
 import { Box3, BufferGeometry, Group, Material, Mesh, Sphere, Texture, Vector3 } from 'three';
 
 export class FinalModel {
-  constructor(readonly root: Group) {}
+  constructor(readonly root: Group) {
+    this.tuneMaterials();
+  }
+
+  private tuneMaterials(): void {
+    this.root.traverse((node) => {
+      if (!(node instanceof Mesh) || !node.material) return;
+      const materials: Material[] = Array.isArray(node.material) ? node.material : [node.material];
+      materials.forEach((mat) => {
+        if ('roughness' in mat && typeof mat.roughness === 'number') {
+          mat.roughness = Math.min(mat.roughness, 0.65);
+        }
+        if ('metalness' in mat && typeof mat.metalness === 'number') {
+          mat.metalness = Math.min(mat.metalness, 0.1);
+        }
+      });
+    });
+  }
 
   alignTo(target: Sphere): void {
     this.root.position.set(0, 0, 0);

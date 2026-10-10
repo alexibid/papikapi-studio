@@ -154,4 +154,56 @@ export class GeminiClient {
 
     return json.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
   }
+
+  public static async refinePromptForDiffusion(
+    userPrompt: string,
+    hasPhotos = false,
+  ): Promise<string> {
+    const key = this.readApiKey();
+    const instruction = `The user describes a subject to be generated for a physical 3D papercraft model (unfolded, cut, and assembled by children).
+User input: "${userPrompt}"
+Subject photo attached: ${hasPhotos ? 'yes' : 'no'}
+
+Tasks:
+1. Translate any non-English description into precise, authoritative English for the FLUX diffusion model.
+2. If the user mentions specific markings (such as a blaze stopping halfway up between the eyes, solid black forehead, black chin goatee, pure white chest, eye color), describe every marking with extreme visual precision in English.
+3. STRICT PROHIBITION: ABSOLUTELY ZERO WHISKERS. Never include whiskers, cat whiskers, or facial whisker strands (whiskers are micro-elements that cannot be folded or assembled in papercraft). Always explicitly state: "clean smooth muzzle with zero whiskers, no facial whiskers".
+4. Explicitly specify: natural fur only, zero clothes, zero collar, zero bowtie, zero tuxedo suit.
+5. Return ONLY a concise visual description of the subject's breed, markings, colors and physical features (e.g. "a sleek black cat with bright golden-yellow eyes, solid obsidian-black coat, white chest bib, clean smooth muzzle with zero whiskers, natural fur without clothes, bowtie or collar"). Do not include style preamble, quotes or markdown.`;
+
+    const payload = {
+      contents: [{ parts: [{ text: instruction }] }],
+    };
+
+    const models = ['gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-flash-latest'];
+    for (const model of models) {
+      const url = `${this.endpoint}/${model}:generateContent?key=${key}`;
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 6000);
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          signal: controller.signal,
+        });
+
+        if (response.ok) {
+          const json = await response.json() as {
+            candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+          };
+          const refined = json.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+          if (refined) return refined;
+        }
+      } catch {
+        // Continue to fallback model on failure
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    return userPrompt;
+  }
 }
+

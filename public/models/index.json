@@ -42,6 +42,12 @@
   "image": "art.jpeg"
  },
  {
+  "id": "cat-darth",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
   "id": "cheetah",
   "model": "model.glb",
   "preview": "art.jpeg",
