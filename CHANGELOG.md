@@ -1,3 +1,9 @@
+## 0.1.5 (2026-10-10)
+
+### 🚀 Features
+
+- **papikapi-studio:** publish finished figures to the google drive assets folder (0c97f8f)
+
 ## 0.1.4 (2026-10-10)
 
 ### 🐛 Bug Fixes
