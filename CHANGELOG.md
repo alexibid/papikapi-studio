@@ -1,3 +1,9 @@
+## 0.1.6 (2026-10-10)
+
+### 🚀 Features
+
+- **papikapi-studio:** index published figures with their drive file ids and revisions (92d97b0)
+
 ## 0.1.5 (2026-10-10)
 
 ### 🚀 Features
