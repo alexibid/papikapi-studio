@@ -6,44 +6,49 @@ import type { CatalogueModelEntry } from './interfaces/index.js';
 import { CatalogueManager } from './catalogue-manager.js';
 import { WorkspacePaths } from './workspace-paths.js';
 
-const PUBLISHED_FILES: readonly string[] = ['assembly.json', 'model.glb', 'sheets.pdf', 'art.jpeg'];
+const SITE_FILES: readonly string[] = ['assembly.json', 'model.glb', 'art.jpeg'];
+const PDF_FILE = 'sheets.pdf';
 const REQUIRED_FILE = 'model.glb';
 const INDEX_FILE = 'index.json';
-const TARGET_OVERRIDE = 'IBID_FIGURES_DIR';
+const SITE_SUBPATH: readonly string[] = ['dist', 'assets-site', 'papikapi', 'figures'];
 const DRIVE_FOLDER_PARTS: readonly string[] = ['My Drive', 'ibid-assets', 'papikapi'];
-const MTIME_TOLERANCE_MS = 2000;
-
+const DRIVE_OVERRIDE = 'IBID_FIGURES_DIR';
 const DRIVE_ID_ATTRIBUTE = 'com.google.drivefs.item-id#S';
+const FIREBASE_PROJECT = 'ibid-32cbe';
+const MTIME_TOLERANCE_MS = 2000;
 const SYNC_POLL_MS = 5000;
 const SYNC_TIMEOUT_MS = 20 * 60 * 1000;
 
-export interface PublishedFile {
-  readonly id: string;
-  readonly rev: string;
-}
-
 export interface PublishedEntry extends CatalogueModelEntry {
-  readonly files: Readonly<Record<string, PublishedFile>>;
+  readonly files: Readonly<Record<string, { readonly rev: string }>>;
+  readonly pdf?: { readonly id: string };
 }
 
 export interface PublishReport {
-  readonly targetDir: string;
-  readonly copied: readonly string[];
+  readonly siteDir: string;
+  readonly staged: readonly string[];
+  readonly pdfsCopied: readonly string[];
   readonly indexed: number;
   readonly awaitingSync: number;
 }
 
 export class FigurePublisher {
   public static publish(modelIds: readonly string[]): PublishReport {
-    const targetDir = FigurePublisher.requireTargetDir();
-    const copied = modelIds.flatMap((id) => FigurePublisher.copyModel(id, targetDir));
-    const { indexed, awaitingSync } = FigurePublisher.writeIndex(targetDir);
-    return { targetDir, copied, indexed, awaitingSync };
+    const siteDir = FigurePublisher.siteDir();
+    const staged = modelIds.flatMap((id) => FigurePublisher.stageModel(id, siteDir));
+    const driveDir = FigurePublisher.locateDriveDir();
+    const pdfsCopied = driveDir ? modelIds.flatMap((id) => FigurePublisher.copyPdf(id, driveDir)) : [];
+    return { siteDir, staged, pdfsCopied, ...FigurePublisher.writeIndex(siteDir, driveDir) };
+  }
+
+  public static publishAll(): PublishReport {
+    return FigurePublisher.publish(FigurePublisher.localModelIds());
   }
 
   public static refreshIndex(): PublishReport {
-    const targetDir = FigurePublisher.requireTargetDir();
-    return { targetDir, copied: [], ...FigurePublisher.writeIndex(targetDir) };
+    const siteDir = FigurePublisher.siteDir();
+    const driveDir = FigurePublisher.locateDriveDir();
+    return { siteDir, staged: [], pdfsCopied: [], ...FigurePublisher.writeIndex(siteDir, driveDir) };
   }
 
   public static async waitForSync(): Promise<PublishReport> {
@@ -56,50 +61,48 @@ export class FigurePublisher {
     return report;
   }
 
-  public static publishAll(): PublishReport {
-    return FigurePublisher.publish(FigurePublisher.localModelIds());
+  public static deploy(): void {
+    const args = ['firebase', 'deploy', '--only', 'hosting:assets', '--project', FIREBASE_PROJECT];
+    execFileSync('npx', args, { cwd: WorkspacePaths.workspaceRoot, stdio: 'inherit' });
   }
 
   public static publishQuietly(modelId: string): void {
     try {
       const report = FigurePublisher.publish([modelId]);
-      console.log(`[publish] ${modelId}: ${report.copied.length} file(s) -> ${report.targetDir}`);
-      void FigurePublisher.indexWhenSynced(modelId);
+      console.log(`[publish] ${modelId}: ${report.staged.length} file(s) staged in ${report.siteDir}`);
+      void FigurePublisher.deployWhenSynced(modelId, report.awaitingSync > 0);
     } catch (error) {
       console.warn(`[publish] ${modelId} not published: ${(error as Error).message}`);
     }
   }
 
-  private static async indexWhenSynced(modelId: string): Promise<void> {
+  private static async deployWhenSynced(modelId: string, mustWait: boolean): Promise<void> {
     try {
-      const report = await FigurePublisher.waitForSync();
-      const state = report.awaitingSync === 0 ? 'indexed' : 'still syncing';
-      console.log(`[publish] ${modelId}: Drive ${state} (${report.indexed} figure(s))`);
+      FigurePublisher.deploy();
+      if (!mustWait) return;
+      const settled = await FigurePublisher.waitForSync();
+      if (settled.awaitingSync === 0) FigurePublisher.deploy();
     } catch (error) {
-      console.warn(`[publish] ${modelId} index not refreshed: ${(error as Error).message}`);
+      console.warn(`[publish] ${modelId} not deployed: ${(error as Error).message}`);
     }
   }
 
-  public static locateTargetDir(): string | null {
-    const override = process.env[TARGET_OVERRIDE];
+  private static siteDir(): string {
+    const dir = join(WorkspacePaths.workspaceRoot, ...SITE_SUBPATH);
+    mkdirSync(dir, { recursive: true });
+    return dir;
+  }
+
+  public static locateDriveDir(): string | null {
+    const override = process.env[DRIVE_OVERRIDE];
     if (override) return override;
     const cloud = join(homedir(), 'Library', 'CloudStorage');
     if (!existsSync(cloud)) return null;
     const accounts = readdirSync(cloud).filter((name) => name.startsWith('GoogleDrive-'));
-    const base = accounts.map((name) => join(cloud, name, ...DRIVE_FOLDER_PARTS));
-    const found = base.find((candidate) => existsSync(candidate));
+    const found = accounts
+      .map((name) => join(cloud, name, ...DRIVE_FOLDER_PARTS))
+      .find((candidate) => existsSync(candidate));
     return found ? join(found, 'figures') : null;
-  }
-
-  private static requireTargetDir(): string {
-    const target = FigurePublisher.locateTargetDir();
-    if (!target) {
-      throw new Error(
-        `Google Drive folder ibid-assets/papikapi not found. Sync it or set ${TARGET_OVERRIDE}.`,
-      );
-    }
-    mkdirSync(target, { recursive: true });
-    return target;
   }
 
   private static localModelIds(): readonly string[] {
@@ -108,14 +111,21 @@ export class FigurePublisher {
       .map((entry) => entry.name);
   }
 
-  private static copyModel(modelId: string, targetDir: string): readonly string[] {
+  private static stageModel(modelId: string, siteDir: string): readonly string[] {
     const source = WorkspacePaths.modelPath(modelId);
     if (!existsSync(join(source, REQUIRED_FILE))) return [];
-    const destination = join(targetDir, modelId);
-    mkdirSync(destination, { recursive: true });
-    return PUBLISHED_FILES.filter((file) => existsSync(join(source, file)))
-      .filter((file) => FigurePublisher.copyIfChanged(join(source, file), join(destination, file)))
+    mkdirSync(join(siteDir, modelId), { recursive: true });
+    return SITE_FILES.filter((file) => existsSync(join(source, file)))
+      .filter((file) => FigurePublisher.copyIfChanged(join(source, file), join(siteDir, modelId, file)))
       .map((file) => `${modelId}/${file}`);
+  }
+
+  private static copyPdf(modelId: string, driveDir: string): readonly string[] {
+    const from = join(WorkspacePaths.modelPath(modelId), PDF_FILE);
+    if (!existsSync(from)) return [];
+    mkdirSync(join(driveDir, modelId), { recursive: true });
+    const to = join(driveDir, modelId, PDF_FILE);
+    return FigurePublisher.copyIfChanged(from, to) ? [`${modelId}/${PDF_FILE}`] : [];
   }
 
   private static copyIfChanged(from: string, to: string): boolean {
@@ -130,53 +140,50 @@ export class FigurePublisher {
     return source.size !== published.size || source.mtimeMs > published.mtimeMs + MTIME_TOLERANCE_MS;
   }
 
-  private static writeIndex(targetDir: string): { indexed: number; awaitingSync: number } {
-    const published = FigurePublisher.publishedIds(targetDir);
+  private static writeIndex(
+    siteDir: string,
+    driveDir: string | null,
+  ): { indexed: number; awaitingSync: number } {
+    const staged = FigurePublisher.stagedIds(siteDir);
     const entries = CatalogueManager.sync()
-      .filter((entry) => published.has(entry.id))
-      .map((entry) => FigurePublisher.entryWithDriveIds(entry, targetDir));
-    writeFileSync(join(targetDir, INDEX_FILE), `${JSON.stringify(entries, null, 1)}\n`, 'utf8');
-    return { indexed: entries.length, awaitingSync: FigurePublisher.countUnsynced(entries, targetDir) };
+      .filter((entry) => staged.has(entry.id))
+      .map((entry) => FigurePublisher.entryOf(entry, driveDir));
+    writeFileSync(join(siteDir, INDEX_FILE), `${JSON.stringify(entries, null, 1)}\n`, 'utf8');
+    return { indexed: entries.length, awaitingSync: FigurePublisher.countAwaiting(entries) };
   }
 
-  private static publishedIds(targetDir: string): ReadonlySet<string> {
+  private static stagedIds(siteDir: string): ReadonlySet<string> {
     return new Set(
-      readdirSync(targetDir, { withFileTypes: true })
-        .filter((entry) => entry.isDirectory() && existsSync(join(targetDir, entry.name, REQUIRED_FILE)))
+      readdirSync(siteDir, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory() && existsSync(join(siteDir, entry.name, REQUIRED_FILE)))
         .map((entry) => entry.name),
     );
   }
 
-  private static entryWithDriveIds(entry: CatalogueModelEntry, targetDir: string): PublishedEntry {
+  private static entryOf(entry: CatalogueModelEntry, driveDir: string | null): PublishedEntry {
+    const source = WorkspacePaths.modelPath(entry.id);
     const files = Object.fromEntries(
-      PUBLISHED_FILES.flatMap((file) => {
-        const published = FigurePublisher.publishedFile(join(targetDir, entry.id, file));
-        return published ? [[file, published] as const] : [];
+      SITE_FILES.filter((file) => existsSync(join(source, file))).map((file) => {
+        const stats = statSync(join(source, file));
+        return [file, { rev: `${stats.size}-${Math.floor(stats.mtimeMs)}` }] as const;
       }),
     );
-    return { ...entry, files };
+    const pdfId = driveDir ? FigurePublisher.driveId(join(driveDir, entry.id, PDF_FILE)) : null;
+    return pdfId ? { ...entry, files, pdf: { id: pdfId } } : { ...entry, files };
   }
 
-  private static publishedFile(path: string): PublishedFile | null {
-    if (!existsSync(path)) return null;
-    const id = FigurePublisher.driveId(path);
-    if (!id) return null;
-    const stats = statSync(path);
-    return { id, rev: `${stats.size}-${Math.floor(stats.mtimeMs)}` };
+  private static countAwaiting(entries: readonly PublishedEntry[]): number {
+    return entries.filter(
+      (entry) => existsSync(join(WorkspacePaths.modelPath(entry.id), PDF_FILE)) && !entry.pdf,
+    ).length;
   }
 
   private static driveId(path: string): string | null {
+    if (!existsSync(path)) return null;
     try {
       return execFileSync('xattr', ['-p', DRIVE_ID_ATTRIBUTE, path], { encoding: 'utf8' }).trim() || null;
     } catch {
       return null;
     }
-  }
-
-  private static countUnsynced(entries: readonly PublishedEntry[], targetDir: string): number {
-    return entries.reduce((total, entry) => {
-      const present = PUBLISHED_FILES.filter((file) => existsSync(join(targetDir, entry.id, file)));
-      return total + present.filter((file) => !entry.files[file]).length;
-    }, 0);
   }
 }
