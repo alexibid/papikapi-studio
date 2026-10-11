@@ -1,3 +1,9 @@
+## 0.1.7 (2026-10-11)
+
+### 🚀 Features
+
+- **papikapi-studio:** publish figures to the assets hosting site and pdfs to drive (9ca61b2)
+
 ## 0.1.6 (2026-10-10)
 
 ### 🚀 Features
