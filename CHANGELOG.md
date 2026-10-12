@@ -1,3 +1,9 @@
+## 0.1.8 (2026-10-12)
+
+### 🐛 Bug Fixes
+
+- **papikapi-studio:** separate white plinth from figure and fix texture baking (711f119)
+
 ## 0.1.7 (2026-10-11)
 
 ### 🚀 Features
