@@ -12,9 +12,8 @@ import { countCollisions, labelBox } from './label-collisions.js';
 import {
   add,
   boundsOf,
-  centroid,
   length,
-  polygonArea,
+  pointInPolygon,
   rotate,
   scale,
   subtract,
@@ -23,7 +22,6 @@ import {
   uprightAngle,
 } from './net-geometry.js';
 import { cutKey, tabShape } from './tab-planner.js';
-import { pointInPolygon } from './net-geometry.js';
 
 const DIGIT_WIDTH = 0.56;
 const DART_TOUCH_MM = 0.5;
