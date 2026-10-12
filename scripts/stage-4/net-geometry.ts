@@ -112,3 +112,18 @@ export function uprightAngle(direction: Point): number {
   if (angle < -Math.PI / 2) return angle + Math.PI;
   return angle;
 }
+
+export function pointInPolygon(point: Point, polygon: readonly Point[]): boolean {
+  let crossings = false;
+  for (let index = 0, previous = polygon.length - 1; index < polygon.length; previous = index++) {
+    const [xi, yi] = polygon[index];
+    const [xj, yj] = polygon[previous];
+    if (
+      yi > point[1] !== yj > point[1] &&
+      point[0] < ((xj - xi) * (point[1] - yi)) / (yj - yi) + xi
+    ) {
+      crossings = !crossings;
+    }
+  }
+  return crossings;
+}

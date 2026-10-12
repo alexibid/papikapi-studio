@@ -23,11 +23,12 @@ import {
   uprightAngle,
 } from './net-geometry.js';
 import { cutKey, tabShape } from './tab-planner.js';
+import { pointInPolygon } from './net-geometry.js';
 
 const DIGIT_WIDTH = 0.56;
 const DART_TOUCH_MM = 0.5;
 const ALONG_EDGE = [0.5, 0.36, 0.64, 0.25, 0.75];
-const INSET_STEPS = [0.85, 1.6];
+const OUTSET_STEPS = [0.9, 1.5];
 
 const along = (cut: NetCut, share: number): Point =>
   add(cut.a, scale(subtract(cut.b, cut.a), share));
@@ -72,9 +73,9 @@ class ArtworkBuilder {
     } else {
       const outward = tabShape(this.faces[this.piece.faceIds.indexOf(cut.face)], cut, 0).outward;
       this.cuts.push({ a: cut.a, b: cut.b });
-      if (!this.isDartSide(cut)) {
-        const spots = INSET_STEPS.flatMap((inset) =>
-          ALONG_EDGE.map((share) => subtract(along(cut, share), scale(outward, size * inset))),
+      if (!this.isDartSide(cut) && cut.number > 0) {
+        const spots = OUTSET_STEPS.flatMap((outset) =>
+          ALONG_EDGE.map((share) => add(along(cut, share), scale(outward, size * outset))),
         );
         this.addNumber(String(cut.number), spots, direction, size);
       }
@@ -93,21 +94,57 @@ class ArtworkBuilder {
   }
 
   addLabel(text: string): void {
-    const largest = this.faces.reduce((best, face) =>
-      polygonArea(face) > polygonArea(best) ? face : best,
+    const labelSize = this.settings.piece_label_mm;
+    const width = text.length * DIGIT_WIDTH * labelSize;
+    const placed = this.texts.map((other) =>
+      labelBox(other.at, other.text.length * DIGIT_WIDTH * other.sizeMm, other.sizeMm, other.angle),
     );
+
+    const candidateSpots: Point[] = [];
+    const sortedCuts = [...this.piece.cuts].sort(
+      (first, second) =>
+        length(subtract(second.b, second.a)) - length(subtract(first.b, first.a)),
+    );
+
+    for (const cut of sortedCuts) {
+      const faceIndex = this.piece.faceIds.indexOf(cut.face);
+      if (faceIndex < 0) continue;
+      const outward = tabShape(this.faces[faceIndex], cut, 0).outward;
+      for (const offset of [1.2, 1.8, 2.4]) {
+        const spot = add(along(cut, 0.5), scale(outward, labelSize * offset));
+        if (
+          !this.faces.some((face) => pointInPolygon(spot, face)) &&
+          !this.tabs.some((tab) => pointInPolygon(spot, tab))
+        ) {
+          candidateSpots.push(spot);
+        }
+      }
+    }
+
+    const allPoints = [...this.faces.flat(), ...this.tabs.flat()];
+    const box = boundsOf(allPoints);
+    candidateSpots.push([(box.minX + box.maxX) / 2, box.minY - labelSize * 1.5]);
+
+    const free = candidateSpots.find((spot) =>
+      placed.every(
+        (otherBox) => countCollisions([otherBox, labelBox(spot, width, labelSize, 0)]) === 0,
+      ),
+    );
+
     this.texts.push({
       text,
-      at: centroid(largest),
+      at: free ?? candidateSpots[0],
       angle: 0,
-      sizeMm: this.settings.piece_label_mm,
+      sizeMm: labelSize,
       bold: true,
     });
   }
 
   normalised(number: number, printable: readonly [number, number]): PieceArtwork {
-    const everything = [...this.faces.flat(), ...this.tabs.flat()];
-    const angle = tightestRotation(everything, printable);
+    const meshPoints = [...this.faces.flat(), ...this.tabs.flat()];
+    const angle = tightestRotation(meshPoints, printable);
+    const textPoints = this.texts.map((item) => item.at);
+    const everything = [...meshPoints, ...textPoints];
     const turned = everything.map((point) => rotate(point, angle));
     const box = boundsOf(turned);
     const shift: Point = [-box.minX, -box.minY];
@@ -126,6 +163,7 @@ class ArtworkBuilder {
     });
     return {
       number,
+      isPlinth: this.piece.isPlinth ?? false,
       faceIds: this.piece.faceIds,
       faces: this.faces.map((face) => face.map(move)),
       tabs: this.tabs.map((tab) => tab.map(move)),
@@ -151,15 +189,20 @@ class ArtworkBuilder {
     const placed = this.texts.map((other) =>
       labelBox(other.at, other.text.length * DIGIT_WIDTH * other.sizeMm, other.sizeMm, other.angle),
     );
-    const free = spots.find((spot) =>
+    const outsideFaces = spots.filter(
+      (spot) => !this.faces.some((face) => pointInPolygon(spot, face)),
+    );
+    const candidates = outsideFaces.length > 0 ? outsideFaces : spots;
+    const free = candidates.find((spot) =>
       placed.every((box) => countCollisions([box, labelBox(spot, width, sizeMm, angle)]) === 0),
     );
     this.texts.push({
       text,
-      at: free ?? spots[0],
+      at: free ?? candidates[0],
       angle,
       sizeMm: free ? sizeMm : this.settings.min_edge_number_mm,
       bold: false,
     });
   }
 }
+

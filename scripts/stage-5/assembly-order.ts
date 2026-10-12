@@ -2,7 +2,9 @@ import type { OrderedPiece } from './interfaces/assembly.interface.js';
 
 export class AssemblyOrder {
   public static sequence(pieces: readonly OrderedPiece[]): readonly number[] {
-    const remaining = new Map(pieces.map((piece) => [piece.number, piece]));
+    const plinthPieces = pieces.filter((piece) => Boolean(piece.isPlinth));
+    const figurePieces = pieces.filter((piece) => !piece.isPlinth);
+    const remaining = new Map(figurePieces.map((piece) => [piece.number, piece]));
     const built = new Set<number>();
     const sequence: number[] = [];
 
@@ -19,6 +21,11 @@ export class AssemblyOrder {
       built.add(next.number);
       sequence.push(next.number);
     }
+
+    for (const plinth of plinthPieces) {
+      sequence.push(plinth.number);
+    }
+
     return sequence;
   }
 }

@@ -59,8 +59,14 @@ export class PagePacker {
   }
 
   private shapes(artwork: PieceArtwork): { turns: QuarterTurns; bitmap: Bitmap }[] {
+    const textShapes = artwork.texts.map((t) => [
+      [t.at[0] - 1, t.at[1] - 1] as Point,
+      [t.at[0] + 1, t.at[1] - 1] as Point,
+      [t.at[0] + 1, t.at[1] + 1] as Point,
+      [t.at[0] - 1, t.at[1] + 1] as Point,
+    ]);
     return TURNS.map((turns) => {
-      const polygons = [...artwork.faces, ...artwork.tabs].map((polygon) =>
+      const polygons = [...artwork.faces, ...artwork.tabs, ...textShapes].map((polygon) =>
         polygon.map((point) => turnPoint(point, turns, artwork.width, artwork.height)),
       );
       return { turns, bitmap: rasterise(polygons, this.cell, this.gapCells) };

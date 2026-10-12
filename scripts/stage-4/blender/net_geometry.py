@@ -62,12 +62,56 @@ def boxes_touch(first, second):
     return not (first[2] < second[0] or second[2] < first[0] or first[3] < second[1] or second[3] < first[1])
 
 
+def segments_cross(a, b, c, d, eps=1e-5):
+    if (a - c).length < eps or (a - d).length < eps or (b - c).length < eps or (b - d).length < eps:
+        return False
+    cp1 = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x)
+    cp2 = (b.x - a.x) * (d.y - a.y) - (b.y - a.y) * (d.x - a.x)
+    cp3 = (d.x - c.x) * (a.y - c.y) - (d.y - c.y) * (a.x - c.x)
+    cp4 = (d.x - c.x) * (b.y - c.y) - (d.y - c.y) * (b.x - c.x)
+    return ((cp1 > 0 and cp2 < 0) or (cp1 < 0 and cp2 > 0)) and ((cp3 > 0 and cp4 < 0) or (cp3 < 0 and cp4 > 0))
+
+
+def point_in_convex_polygon(point, polygon, eps=1e-5):
+    n = len(polygon)
+    for index in range(n):
+        a, b = polygon[index], polygon[(index + 1) % n]
+        cross = (b.x - a.x) * (point.y - a.y) - (b.y - a.y) * (point.x - a.x)
+        if cross <= eps:
+            return False
+    return True
+
+
+def make_ccw(polygon):
+    area = sum(
+        polygon[index].x * polygon[(index + 1) % len(polygon)].y
+        - polygon[(index + 1) % len(polygon)].x * polygon[index].y
+        for index in range(len(polygon))
+    )
+    return polygon if area > 0 else list(reversed(polygon))
+
+
 def polygons_overlap(group, others):
-    boxed = [(bounds(polygon), shrunk(polygon)) for polygon in others]
+    boxed_others = [(bounds(polygon), polygon, make_ccw(polygon), shrunk(polygon)) for polygon in others]
     for polygon in group:
-        box, inner = bounds(polygon), shrunk(polygon)
-        if any(boxes_touch(box, other_box) and convex_overlap(inner, other) for other_box, other in boxed):
-            return True
+        box = bounds(polygon)
+        ccw_poly = make_ccw(polygon)
+        inner = shrunk(polygon)
+        for other_box, other, other_ccw, other_inner in boxed_others:
+            if not boxes_touch(box, other_box):
+                continue
+            for index in range(len(polygon)):
+                a, b = polygon[index], polygon[(index + 1) % len(polygon)]
+                for other_index in range(len(other)):
+                    c, d = other[other_index], other[(other_index + 1) % len(other)]
+                    if segments_cross(a, b, c, d):
+                        return True
+            if any(point_in_convex_polygon(pt, other_ccw) for pt in polygon):
+                return True
+            if any(point_in_convex_polygon(pt, ccw_poly) for pt in other):
+                return True
+            if convex_overlap(inner, other_inner):
+                return True
     return False
 
 

@@ -34,12 +34,37 @@ def import_simplified_mesh(mesh_path):
     return build_papercraft({"vertices": [vertex["position"] for vertex in document["vertices"]], "faces": document["faces"]})
 
 
-def scale_longest_side(target, target_size_mm):
-    factor = (target_size_mm / MILLIMETRES_PER_METRE) / max(target.dimensions)
-    target.scale = (factor, factor, factor)
+from net_plinth import create_plinth_pieces, find_plinth_faces
+
+
+def scale_model(papercraft, settings):
+    mesh_builder = bmesh.new()
+    mesh_builder.from_mesh(papercraft.data)
+    plinth_faces = find_plinth_faces(mesh_builder)
+    if plinth_faces:
+        pieces = create_plinth_pieces(plinth_faces)
+        mesh_builder.free()
+        max_piece_min = 0.0
+        max_piece_max = 0.0
+        for piece in pieces:
+            all_pts = [pt for v_dict in piece.placement.values() for pt in v_dict.values()]
+            w = max(pt.x for pt in all_pts) - min(pt.x for pt in all_pts)
+            h = max(pt.y for pt in all_pts) - min(pt.y for pt in all_pts)
+            max_piece_min = max(max_piece_min, min(w, h))
+            max_piece_max = max(max_piece_max, max(w, h))
+        max_w = settings.get("plinth_max_width_mm", 165) / MILLIMETRES_PER_METRE
+        max_h = settings.get("plinth_max_height_mm", 230) / MILLIMETRES_PER_METRE
+        limit_min = min(max_w, max_h)
+        limit_max = max(max_w, max_h)
+        factor = min(limit_min / max_piece_min, limit_max / max_piece_max)
+    else:
+        mesh_builder.free()
+        factor = (settings["target_size_mm"] / MILLIMETRES_PER_METRE) / max(papercraft.dimensions)
+
+    papercraft.scale = (factor, factor, factor)
     bpy.ops.object.select_all(action="DESELECT")
-    target.select_set(True)
-    bpy.context.view_layer.objects.active = target
+    papercraft.select_set(True)
+    bpy.context.view_layer.objects.active = papercraft
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
     return factor
 
@@ -101,16 +126,72 @@ def main():
     settings = read_settings()
     clear_scene()
     papercraft = import_simplified_mesh(settings["input_mesh"])
-    factor = scale_longest_side(papercraft, settings["target_size_mm"])
-    weld_and_clean(papercraft, settings)
-    papercraft = rebuild_canonically(papercraft)
+    factor = scale_model(papercraft, settings)
+
+    mesh_builder = bmesh.new()
+    mesh_builder.from_mesh(papercraft.data)
+    plinth_faces = find_plinth_faces(mesh_builder)
+
+    if plinth_faces:
+        plinth_set = set(plinth_faces)
+        fig_bmesh = bmesh.new()
+        v_map = {}
+        for f in mesh_builder.faces:
+            if f not in plinth_set:
+                for v in f.verts:
+                    if v not in v_map:
+                        v_map[v] = fig_bmesh.verts.new(v.co)
+                fig_bmesh.faces.new([v_map[v] for v in f.verts])
+        fig_bmesh.normal_update()
+
+        plinth_bmesh = bmesh.new()
+        pv_map = {}
+        for f in plinth_faces:
+            for v in f.verts:
+                if v not in pv_map:
+                    pv_map[v] = plinth_bmesh.verts.new(v.co)
+            plinth_bmesh.faces.new([pv_map[v] for v in f.verts])
+        plinth_bmesh.normal_update()
+        mesh_builder.free()
+
+        orig_mesh = papercraft.data
+        bpy.data.objects.remove(papercraft, do_unlink=True)
+        bpy.data.meshes.remove(orig_mesh)
+
+        fig_mesh = bpy.data.meshes.new("Figure")
+        fig_bmesh.to_mesh(fig_mesh)
+        fig_bmesh.free()
+        fig_obj = bpy.data.objects.new("Figure", fig_mesh)
+        bpy.context.scene.collection.objects.link(fig_obj)
+
+        weld_and_clean(fig_obj, settings)
+        fig_obj = rebuild_canonically(fig_obj)
+
+        plinth_mesh = bpy.data.meshes.new("Plinth")
+        plinth_bmesh.to_mesh(plinth_mesh)
+        plinth_bmesh.free()
+        plinth_obj = bpy.data.objects.new("Plinth", plinth_mesh)
+        bpy.context.scene.collection.objects.link(plinth_obj)
+
+        bpy.ops.object.select_all(action="DESELECT")
+        fig_obj.select_set(True)
+        plinth_obj.select_set(True)
+        bpy.context.view_layer.objects.active = fig_obj
+        bpy.ops.object.join()
+        papercraft = fig_obj
+    else:
+        mesh_builder.free()
+        weld_and_clean(papercraft, settings)
+        papercraft = rebuild_canonically(papercraft)
+
     statistics = {**build_statistics(papercraft, settings), **export_net(papercraft, settings, factor)}
     print(RESULT_MARKER + json.dumps(statistics))
 
 
-try:
-    main()
-except Exception as failure:
-    traceback.print_exc()
-    print(ERROR_MARKER + json.dumps(str(failure)))
-    sys.exit(1)
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as failure:
+        traceback.print_exc()
+        print(ERROR_MARKER + json.dumps(str(failure)))
+        sys.exit(1)

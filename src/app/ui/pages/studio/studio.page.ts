@@ -90,7 +90,17 @@ export class StudioPage implements OnInit {
     if (!model) return '';
     return `/models/${model.id}/assembly.json?v=${this.previewVersion()}`;
   });
+  protected readonly pdfUrl = computed(() => {
+    const model = this.selected();
+    if (!model) return '';
+    return `/models/${model.id}/sheets.pdf?v=${this.previewVersion()}`;
+  });
   protected readonly showCreator = signal<boolean>(false);
+
+  protected openPdf(): void {
+    const url = this.pdfUrl();
+    if (url) window.open(url, '_blank');
+  }
 
   constructor() {
     effect(() => {

@@ -20,11 +20,14 @@ export interface BookletTexts {
   readonly steps_heading: string;
   readonly step_title: string;
   readonly step_sheet: string;
+  readonly step_cut?: string;
   readonly step_first: string;
   readonly step_fold: string;
   readonly step_join: string;
   readonly step_close: string;
   readonly sheet_heading: string;
+  readonly sheet_plinth_heading?: string;
+  readonly steps_plinth_heading?: string;
   readonly sheet_pieces: string;
   readonly page_label: string;
 }

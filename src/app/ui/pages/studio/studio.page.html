@@ -6,6 +6,11 @@
     </div>
 
     <div class="p-studio__header-actions">
+      @if (selected()) {
+        <ibid-button variant="outlined" (clicked)="openPdf()">
+          📄 {{ i18n.translate('viewPdf', 'Ver PDF') }}
+        </ibid-button>
+      }
       <ibid-button variant="primary" (clicked)="openCreator()">
         + {{ i18n.translate('createModel') }}
       </ibid-button>

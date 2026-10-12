@@ -29,6 +29,7 @@ export interface NetPiece {
   readonly folds: readonly NetFold[];
   readonly joins: readonly NetJoin[];
   readonly areaMm2: number;
+  readonly isPlinth?: boolean;
 }
 
 export interface NetDocument {

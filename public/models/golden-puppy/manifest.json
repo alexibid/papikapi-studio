@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-04T17:28:16.422Z",
+      "at": "2026-10-07T15:55:19.922Z",
       "status": "DONE",
-      "seconds": 3.5,
+      "seconds": 4.26,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -72,6 +72,19 @@
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
+          "target_size_mm": 300,
+          "min_feature_mm": 6,
+          "appendage_min_length_mm": 6,
+          "appendage_max_section_mm": 12,
+          "appendage_min_aspect": 2.5,
+          "appendage_max_passes": 5,
+          "appendage_crease_deg": 15,
+          "appendage_root_section_mm": 12,
+          "appendage_max_rings": 40,
+          "envelope_cell_mm": 1,
+          "envelope_tolerance_mm": 3,
+          "envelope_max_area_ratio": 0.03,
+          "appendage_ground_clearance_mm": 10,
           "base_cut_margin_ratios": [
             0.003,
             0.01,
@@ -82,11 +95,14 @@
         }
       },
       "metrics": {
-        "faces": 1535,
+        "faces": 1541,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
         "removedIslands": 2,
+        "removedAppendages": 15,
+        "appendageFaces": 39,
+        "appendageVolumePercent": 5.728,
         "loops": 4,
         "widthMm": 270,
         "lengthMm": 573.7,
@@ -97,117 +113,64 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-04T18:24:07.101Z",
+      "at": "2026-10-08T16:56:47.515Z",
       "status": "DONE",
-      "seconds": 0.68,
+      "seconds": 1.4,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/golden-puppy/stage-2/step-3-base.glb",
         "lengthMm": 573.7,
-        "faces": 1586,
+        "faces": 1592,
         "parameters": {
           "target_faces": 600,
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
           "quad_face_angle_deg": 20,
           "quad_shape_angle_deg": 60,
-          "face_max_extent_ratio": 0.5
+          "face_max_extent_ratio": 0.5,
+          "min_fold_length_mm": 6,
+          "flat_vertex_angle_deg": 8,
+          "target_size_mm": 300,
+          "fold_tolerance_ratio": 0.0067,
+          "fold_max_deviation_ratio": 0.01,
+          "fold_max_volume_percent": 0.1
         }
       },
       "metrics": {
-        "points": 304,
-        "meshFaces": 479,
-        "quads": 145,
+        "points": 267,
+        "meshFaces": 419,
+        "quads": 131,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
-        "volumeChangePercent": 0.23,
+        "volumeChangePercent": 0,
         "maxDeviationMm": 4.68,
-        "featureLossMm": 22.21
+        "featureLossMm": 22.21,
+        "facetColours": 357
       }
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-04T18:24:56.790Z",
+      "at": "2026-10-08T16:56:56.598Z",
       "status": "DONE",
-      "seconds": 49.68,
+      "seconds": 9.07,
       "costUsd": 0,
-      "costNote": "Local Blender headless and Vectorizer ($0.00)",
+      "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/golden-puppy/stage-2/step-3-base.glb",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/golden-puppy/stage-2/step-4-optimize.glb",
         "parameters": {
-          "resolution": 2048,
-          "margin": 0,
-          "min_facing": 0.2
-        },
-        "palette": [
-          {
-            "index": 0,
-            "hex": "#eae9e5",
-            "share": 0.0761,
-            "kind": "neutral"
-          },
-          {
-            "index": 1,
-            "hex": "#938777",
-            "share": 0.0186,
-            "kind": "neutral"
-          },
-          {
-            "index": 2,
-            "hex": "#131416",
-            "share": 0.0036,
-            "kind": "neutral"
-          },
-          {
-            "index": 3,
-            "hex": "#dec185",
-            "share": 0.6064,
-            "kind": "hue"
-          },
-          {
-            "index": 4,
-            "hex": "#c59248",
-            "share": 0.0084,
-            "kind": "hue"
-          },
-          {
-            "index": 5,
-            "hex": "#ad754b",
-            "share": 0.2642,
-            "kind": "hue"
-          },
-          {
-            "index": 6,
-            "hex": "#9f5b1c",
-            "share": 0.0228,
-            "kind": "hue"
-          }
-        ]
+          "resolution": 2048
+        }
       },
       "metrics": {
-        "faces": 479,
-        "viewsCount": 6,
-        "resolution": 2048,
-        "familiesCount": 7,
-        "baseHex": "#dec185",
-        "totalPaths": 266,
-        "totalNodes": 27915,
-        "hiddenFaces": 133,
-        "viewsUsage": {
-          "front": 88,
-          "back": 94,
-          "right": 69,
-          "left": 77,
-          "top": 79,
-          "bottom": 72
-        }
+        "faces": 419,
+        "resolution": 2048
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-04T18:24:57.701Z",
+      "at": "2026-10-12T00:05:06.868Z",
       "status": "DONE",
       "seconds": 0.9,
       "costUsd": 0,
@@ -222,43 +185,43 @@
         }
       },
       "metrics": {
-        "faces": 570,
-        "loops": 7,
-        "openEdges": 27,
-        "nonManifoldEdges": 8
+        "faces": 427,
+        "loops": 0,
+        "openEdges": 6,
+        "nonManifoldEdges": 0
       }
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-04T22:28:35.503Z",
+      "at": "2026-10-12T14:04:25.733Z",
       "status": "DONE",
-      "seconds": 0.77,
+      "seconds": 0.71,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/golden-puppy/stage-3/step-3-plinth.json",
         "dimensionsMm": [
-          148.39,
-          300,
-          230.51
+          142.46,
+          300.2,
+          240.88
         ],
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 446,
-        "quadCount": 140,
-        "pieces": 41,
+        "faceCount": 327,
+        "quadCount": 129,
+        "pieces": 39,
         "smallestPieceFaces": 1,
-        "shortestCutMm": 1.3,
-        "unpairedEdges": 0,
-        "nonManifoldEdges": 0
+        "shortestCutMm": 5,
+        "unpairedEdges": 6,
+        "nonManifoldEdges": 6
       }
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-04T22:29:20.361Z",
+      "at": "2026-10-12T14:39:59.636Z",
       "status": "DONE",
-      "seconds": 44.85,
+      "seconds": 355.09,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -268,32 +231,32 @@
       "metrics": {
         "pageCount": 20,
         "sheetCount": 8,
-        "pieceCount": 41,
-        "labelCollisions": 3
+        "pieceCount": 39,
+        "labelCollisions": 10
       }
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-05T10:59:57.217Z",
+      "at": "2026-10-12T17:20:42.391Z",
       "status": "DONE",
-      "seconds": 0.13,
+      "seconds": 0.05,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
         "source": "stage-4/step-1-net.json"
       },
       "metrics": {
-        "pieces": 41,
-        "faces": 446,
-        "hinges": 405,
-        "maxHingeResidualMm": 6.23,
-        "maxFoldAngleDeg": 153.2,
+        "pieces": 37,
+        "faces": 319,
+        "hinges": 281,
+        "maxHingeResidualMm": 2.893,
+        "maxFoldAngleDeg": 119.1,
         "mirroredPieces": 0,
-        "extraRoots": 0
+        "extraRoots": 1
       }
     }
   },
-  "totalSeconds": 146.64,
+  "totalSeconds": 417.61,
   "totalCostUsd": 0.0069,
-  "updatedAt": "2026-10-05T10:59:57.223Z"
+  "updatedAt": "2026-10-12T17:20:42.395Z"
 }

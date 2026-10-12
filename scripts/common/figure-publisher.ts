@@ -66,11 +66,13 @@ export class FigurePublisher {
     execFileSync('npx', args, { cwd: WorkspacePaths.workspaceRoot, stdio: 'inherit' });
   }
 
-  public static publishQuietly(modelId: string): void {
+  public static publishQuietly(modelId: string, autoDeploy = true): void {
     try {
       const report = FigurePublisher.publish([modelId]);
       console.log(`[publish] ${modelId}: ${report.staged.length} file(s) staged in ${report.siteDir}`);
-      void FigurePublisher.deployWhenSynced(modelId, report.awaitingSync > 0);
+      if (autoDeploy && (report.staged.length > 0 || report.pdfsCopied.length > 0)) {
+        void FigurePublisher.deployWhenSynced(modelId, report.awaitingSync > 0);
+      }
     } catch (error) {
       console.warn(`[publish] ${modelId} not published: ${(error as Error).message}`);
     }

@@ -6,6 +6,7 @@ import bmesh
 
 from net_assembly import order_and_number
 from net_document import build_piece
+from net_plinth import create_plinth_pieces, find_plinth_faces
 from net_unfolding import unfold_pieces
 from papercraft_mesh import mesh_to_document
 
@@ -21,7 +22,7 @@ def validation(pieces):
     return {
         "pieces": len(pieces),
         "smallestPieceFaces": min(len(piece["faceIds"]) for piece in pieces),
-        "shortestCutMm": round(min(lengths), 1),
+        "shortestCutMm": round(min(lengths), 1) if lengths else 0.0,
         "unpairedEdges": sum(1 for count in occurrences.values() if count != 2),
     }
 
@@ -36,7 +37,20 @@ def export_net(target, settings, scale):
         "page": (settings["piece_max_width_mm"] / MILLIMETRES_PER_METRE, settings["piece_max_height_mm"] / MILLIMETRES_PER_METRE),
         "compactness": settings["piece_compactness"],
     }
-    pieces = order_and_number([build_piece(piece) for piece in unfold_pieces(mesh_builder, limits)])
+    plinth_faces = find_plinth_faces(mesh_builder)
+    if plinth_faces:
+        plinth_set = set(plinth_faces)
+        figure_faces = [face for face in mesh_builder.faces if face not in plinth_set]
+        figure_pieces = [build_piece(piece) for piece in unfold_pieces(mesh_builder, limits, faces=figure_faces)]
+        plinth_pieces = [build_piece(piece) for piece in create_plinth_pieces(plinth_faces)]
+        for piece in plinth_pieces:
+            piece["isPlinth"] = True
+        raw_pieces = figure_pieces + plinth_pieces
+        pieces = order_and_number(raw_pieces, plinth_count=len(plinth_pieces))
+    else:
+        raw_pieces = [build_piece(piece) for piece in unfold_pieces(mesh_builder, limits)]
+        pieces = order_and_number(raw_pieces)
+
     mesh_builder.free()
     checks = validation(pieces)
     document = {

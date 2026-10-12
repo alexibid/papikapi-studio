@@ -42,6 +42,7 @@ export interface PieceArtwork {
   readonly texts: readonly ArtText[];
   readonly width: number;
   readonly height: number;
+  readonly isPlinth?: boolean;
 }
 
 export interface ArtworkContext {

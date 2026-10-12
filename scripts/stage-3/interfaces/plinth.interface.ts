@@ -42,6 +42,7 @@ export interface PlinthStatistics {
   readonly nonManifoldEdges: number;
   readonly thickness: number;
   readonly loops: number;
+  readonly isSplit?: boolean;
 }
 
 export interface PlinthResponse {

@@ -10,27 +10,31 @@
       ],
       "legend_title": "Como ler os moldes",
       "legend": [
-        { "kind": "cut", "label": "Linha contínua: cortar." },
+        { "kind": "cut", "label": "Linha contínua: recortar pela linha exterior (os números de referência ficam de fora do recorte)." },
         { "kind": "mountain", "label": "Traço-ponto: dobra em monte (a linha fica por fora, em aresta)." },
         { "kind": "valley", "label": "Tracejado: dobra em vale (a linha fica por dentro)." },
-        { "kind": "tab", "label": "Aba cinzenta: dobra-a para dentro, passa cola e cola-a por baixo da aresta com o mesmo número." }
+        { "kind": "tab", "label": "Aba cinzenta: dobra para dentro, passa cola e une à aresta com o mesmo número." }
       ],
       "method_title": "Como montar",
       "method": [
-        "Segue os passos pela ordem: cada passo mostra a parte nova a laranja, no sítio onde encaixa.",
-        "Recorta a parte, vinca todas as dobras com a régua e dobra-as antes de colar.",
-        "Cola uma aba de cada vez, apertando alguns segundos. Os números iguais encaixam um no outro.",
-        "As partes P são numeradas pela ordem de montagem; a mesma etiqueta está no molde e no passo."
+        "A montagem segue a ordem dos passos, de baixo para cima (do plinto/base até ao topo).",
+        "Cada passo indica a parte de referência a recortar da respectiva folha.",
+        "Recorta a peça pela linha contínua exterior (os números ficam de fora do recorte para manter as faces limpas).",
+        "Vinca todas as linhas de dobra com a régua e dobra-as antes de colar.",
+        "Cola uma aba de cada vez, alinhando as abas numeradas com as arestas correspondentes."
       ]
     },
     "steps_heading": "Montagem passo a passo",
     "step_title": "Passo {step} · Parte {piece}",
     "step_sheet": "Molde na folha {sheet}.",
-    "step_first": "Começa por esta parte: recorta-a, vinca e dobra todas as linhas.",
-    "step_fold": "Recorta, vinca e dobra todas as linhas antes de colar.",
-    "step_join": "Une as arestas {edges} à parte {piece}.",
-    "step_close": "Fecha a própria parte unindo as arestas {edges}.",
+    "step_cut": "1. Recorta a parte {piece} na Folha {sheet} pela linha exterior (os números ficam de fora do recorte).",
+    "step_first": "2. Peça inicial: vinca e dobra todas as linhas antes de começar a colar.",
+    "step_fold": "2. Vinca com régua e dobra todas as linhas antes de colar.",
+    "step_join": "3. Cola as abas {edges} na respectiva aresta da parte {piece}.",
+    "step_close": "3. Fecha a própria parte colando as abas {edges}.",
     "sheet_heading": "Moldes",
+    "sheet_plinth_heading": "Moldes · Plinto",
+    "steps_plinth_heading": "Montagem passo a passo · Plinto",
     "sheet_pieces": "Partes nesta folha: {pieces}",
     "page_label": "Folha {page} de {total}"
   },
@@ -45,27 +49,31 @@
       ],
       "legend_title": "How to read the templates",
       "legend": [
-        { "kind": "cut", "label": "Solid line: cut." },
+        { "kind": "cut", "label": "Solid line: cut along outer perimeter (reference numbers remain outside the cutout)." },
         { "kind": "mountain", "label": "Dash-dot line: mountain fold (the line ends up outside, on a ridge)." },
         { "kind": "valley", "label": "Dashed line: valley fold (the line ends up inside)." },
-        { "kind": "tab", "label": "Grey tab: fold it inwards, apply glue and stick it under the edge with the same number." }
+        { "kind": "tab", "label": "Grey tab: fold inwards, apply glue and stick under matching numbered edge." }
       ],
       "method_title": "How to assemble",
       "method": [
-        "Follow the steps in order: each step shows the new part in orange, where it fits.",
-        "Cut out the part, score every fold with the ruler and fold before gluing.",
-        "Glue one tab at a time and hold it for a few seconds. Equal numbers go together.",
-        "Parts P are numbered in assembly order; the same label is on the template and in the step."
+        "Assembly follows the step order, progressing from bottom to top (plinth/base to the top).",
+        "Each step indicates the reference part to cut from its respective sheet.",
+        "Cut out along the outer solid line (numbers remain outside the cutout to keep visible facets clean).",
+        "Score all fold lines with a ruler and fold before gluing.",
+        "Glue one tab at a time, aligning numbered tabs with corresponding edges."
       ]
     },
     "steps_heading": "Step-by-step assembly",
     "step_title": "Step {step} · Part {piece}",
     "step_sheet": "Template on sheet {sheet}.",
-    "step_first": "Start with this part: cut it out, score and fold every line.",
-    "step_fold": "Cut out, score and fold every line before gluing.",
-    "step_join": "Join edges {edges} to part {piece}.",
-    "step_close": "Close the part itself by joining edges {edges}.",
+    "step_cut": "1. Cut out part {piece} from Sheet {sheet} along outer line (numbers remain outside the cutout).",
+    "step_first": "2. Initial part: score and fold all lines before starting to glue.",
+    "step_fold": "2. Score with ruler and fold all lines before gluing.",
+    "step_join": "3. Glue tabs {edges} to the matching edges of part {piece}.",
+    "step_close": "3. Close the part itself by gluing tabs {edges}.",
     "sheet_heading": "Templates",
+    "sheet_plinth_heading": "Templates · Plinth",
+    "steps_plinth_heading": "Step-by-step assembly · Plinth",
     "sheet_pieces": "Parts on this sheet: {pieces}",
     "page_label": "Sheet {page} of {total}"
   }

@@ -148,6 +148,7 @@ export interface OrderedPiece {
   readonly number: number;
   readonly centreHeight: number;
   readonly neighbours: ReadonlySet<number>;
+  readonly isPlinth?: boolean;
 }
 
 export interface TrayItem {
@@ -160,6 +161,7 @@ export interface AssemblySourcePiece {
   readonly faceIds: readonly number[];
   readonly faces: readonly (readonly Vec2[])[];
   readonly areaMm2: number;
+  readonly isPlinth?: boolean;
 }
 
 export interface AssemblySource {

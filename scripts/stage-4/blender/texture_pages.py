@@ -60,6 +60,21 @@ def save_images(images, settings):
     return paths
 
 
+def remove_unused_faces(target, layout):
+    import bmesh
+    used_face_ids = {face["id"] for face in layout["faces"]}
+    mesh_builder = bmesh.new()
+    mesh_builder.from_mesh(target.data)
+    unused = [f for f in mesh_builder.faces if f.index not in used_face_ids]
+    if unused:
+        bmesh.ops.delete(mesh_builder, geom=unused, context="FACES")
+        loose = [v for v in mesh_builder.verts if not v.link_faces]
+        bmesh.ops.delete(mesh_builder, geom=loose, context="VERTS")
+        mesh_builder.to_mesh(target.data)
+        target.data.update()
+    mesh_builder.free()
+
+
 def main():
     settings = read_settings()
     net = json.loads(Path(settings["input_net"]).read_text())
@@ -73,6 +88,7 @@ def main():
     target.name = "TargetPapercraft"
     images = page_images(layout, settings, target)
     assign_page_uv(target.data, layout)
+    remove_unused_faces(target, layout)
     triangulate(target)
     length = max(target.dimensions)
     cage = build_cage(target, settings["cage_extrusion_ratio"] * length)

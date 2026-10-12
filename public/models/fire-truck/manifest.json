@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-04T17:28:03.835Z",
+      "at": "2026-10-07T15:48:06.751Z",
       "status": "DONE",
-      "seconds": 3.96,
+      "seconds": 5.17,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -72,6 +72,19 @@
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
+          "target_size_mm": 300,
+          "min_feature_mm": 6,
+          "appendage_min_length_mm": 6,
+          "appendage_max_section_mm": 12,
+          "appendage_min_aspect": 2.5,
+          "appendage_max_passes": 5,
+          "appendage_crease_deg": 15,
+          "appendage_root_section_mm": 12,
+          "appendage_max_rings": 40,
+          "envelope_cell_mm": 1,
+          "envelope_tolerance_mm": 3,
+          "envelope_max_area_ratio": 0.03,
+          "appendage_ground_clearance_mm": 10,
           "base_cut_margin_ratios": [
             0.003,
             0.01,
@@ -82,11 +95,14 @@
         }
       },
       "metrics": {
-        "faces": 2880,
+        "faces": 2892,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
         "removedIslands": 1,
+        "removedAppendages": 51,
+        "appendageFaces": 224,
+        "appendageVolumePercent": 0.205,
         "loops": 0,
         "widthMm": 214.2,
         "lengthMm": 384.2,
@@ -97,129 +113,64 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-04T18:20:45.478Z",
+      "at": "2026-10-08T16:52:42.271Z",
       "status": "DONE",
-      "seconds": 0.78,
+      "seconds": 1.67,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/fire-truck/stage-2/step-3-base.glb",
         "lengthMm": 384.2,
-        "faces": 2880,
+        "faces": 2892,
         "parameters": {
           "target_faces": 600,
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
           "quad_face_angle_deg": 20,
           "quad_shape_angle_deg": 60,
-          "face_max_extent_ratio": 0.5
+          "face_max_extent_ratio": 0.5,
+          "min_fold_length_mm": 6,
+          "flat_vertex_angle_deg": 8,
+          "target_size_mm": 300,
+          "fold_tolerance_ratio": 0.0067,
+          "fold_max_deviation_ratio": 0.01,
+          "fold_max_volume_percent": 0.1
         }
       },
       "metrics": {
-        "points": 333,
-        "meshFaces": 497,
-        "quads": 193,
+        "points": 312,
+        "meshFaces": 464,
+        "quads": 184,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
-        "volumeChangePercent": 4.93,
-        "maxDeviationMm": 3.76,
-        "featureLossMm": 8.73
+        "volumeChangePercent": 4.18,
+        "maxDeviationMm": 3.84,
+        "featureLossMm": 11.19,
+        "facetColours": 420
       }
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-04T18:21:42.820Z",
+      "at": "2026-10-08T16:52:54.899Z",
       "status": "DONE",
-      "seconds": 57.33,
+      "seconds": 12.62,
       "costUsd": 0,
-      "costNote": "Local Blender headless and Vectorizer ($0.00)",
+      "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/fire-truck/stage-2/step-3-base.glb",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/fire-truck/stage-2/step-4-optimize.glb",
         "parameters": {
-          "resolution": 2048,
-          "margin": 0,
-          "min_facing": 0.2
-        },
-        "palette": [
-          {
-            "index": 0,
-            "hex": "#080403",
-            "share": 0.2272,
-            "kind": "neutral"
-          },
-          {
-            "index": 1,
-            "hex": "#838181",
-            "share": 0.3421,
-            "kind": "neutral"
-          },
-          {
-            "index": 2,
-            "hex": "#d52417",
-            "share": 0.165,
-            "kind": "hue"
-          },
-          {
-            "index": 3,
-            "hex": "#a27573",
-            "share": 0.0505,
-            "kind": "hue"
-          },
-          {
-            "index": 4,
-            "hex": "#c54439",
-            "share": 0.0545,
-            "kind": "hue"
-          },
-          {
-            "index": 5,
-            "hex": "#de2b1d",
-            "share": 0.0703,
-            "kind": "hue"
-          },
-          {
-            "index": 6,
-            "hex": "#b84e47",
-            "share": 0.0088,
-            "kind": "hue"
-          },
-          {
-            "index": 7,
-            "hex": "#749ab4",
-            "share": 0.0772,
-            "kind": "hue"
-          },
-          {
-            "index": 8,
-            "hex": "#d9b515",
-            "share": 0.0044,
-            "kind": "hue"
-          }
-        ]
+          "resolution": 2048
+        }
       },
       "metrics": {
-        "faces": 497,
-        "viewsCount": 6,
-        "resolution": 2048,
-        "familiesCount": 9,
-        "baseHex": "#838181",
-        "totalPaths": 259,
-        "totalNodes": 36777,
-        "hiddenFaces": 221,
-        "viewsUsage": {
-          "front": 51,
-          "back": 59,
-          "right": 98,
-          "left": 110,
-          "top": 98,
-          "bottom": 81
-        }
+        "faces": 464,
+        "resolution": 2048
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-04T18:21:43.740Z",
+      "at": "2026-10-12T00:04:14.467Z",
       "status": "DONE",
       "seconds": 0.92,
       "costUsd": 0,
@@ -234,43 +185,43 @@
         }
       },
       "metrics": {
-        "faces": 570,
-        "loops": 3,
-        "openEdges": 0,
+        "faces": 472,
+        "loops": 0,
+        "openEdges": 6,
         "nonManifoldEdges": 0
       }
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-04T22:24:50.445Z",
+      "at": "2026-10-12T14:04:22.716Z",
       "status": "DONE",
-      "seconds": 0.71,
+      "seconds": 0.8,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/fire-truck/stage-3/step-3-plinth.json",
         "dimensionsMm": [
-          173.94,
-          300,
-          222.44
+          169.01,
+          300.16,
+          231.43
         ],
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 568,
-        "quadCount": 236,
-        "pieces": 49,
+        "faceCount": 472,
+        "quadCount": 192,
+        "pieces": 58,
         "smallestPieceFaces": 1,
-        "shortestCutMm": 3,
-        "unpairedEdges": 0,
-        "nonManifoldEdges": 0
+        "shortestCutMm": 6,
+        "unpairedEdges": 6,
+        "nonManifoldEdges": 6
       }
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-04T22:26:06.986Z",
+      "at": "2026-10-12T14:30:59.903Z",
       "status": "DONE",
-      "seconds": 76.53,
+      "seconds": 101.21,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -278,34 +229,34 @@
         "pageSize": "210x297mm"
       },
       "metrics": {
-        "pageCount": 31,
+        "pageCount": 33,
         "sheetCount": 17,
-        "pieceCount": 49,
-        "labelCollisions": 4
+        "pieceCount": 58,
+        "labelCollisions": 9
       }
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-05T10:59:56.606Z",
+      "at": "2026-10-12T17:20:42.167Z",
       "status": "DONE",
-      "seconds": 0.16,
+      "seconds": 0.07,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
         "source": "stage-4/step-1-net.json"
       },
       "metrics": {
-        "pieces": 49,
-        "faces": 568,
-        "hinges": 519,
-        "maxHingeResidualMm": 3.969,
+        "pieces": 56,
+        "faces": 464,
+        "hinges": 408,
+        "maxHingeResidualMm": 3.019,
         "maxFoldAngleDeg": 150.6,
         "mirroredPieces": 0,
         "extraRoots": 0
       }
     }
   },
-  "totalSeconds": 183.17,
+  "totalSeconds": 165.24,
   "totalCostUsd": 0.0064,
-  "updatedAt": "2026-10-05T10:59:56.613Z"
+  "updatedAt": "2026-10-12T17:20:42.178Z"
 }

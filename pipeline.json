@@ -573,8 +573,8 @@
             "face_max_extent_ratio": 0.5
           },
           "messages": {
-            "start": "[Stage 3: Step 3] Fusing the white plinth to the feet of {model}",
-            "completed": "✔ [Stage 3: Step 3] White plinth fused to {loops} feet ({faces} faces) for {model} in {duration}s ($0.00)"
+            "start": "[Stage 3: Step 3] Generating the white plinth for {model}",
+            "completed": "✔ [Stage 3: Step 3] White plinth generated ({faces} faces) for {model} in {duration}s ($0.00)"
           },
           "manifest_contract": {
             "status": "DONE",

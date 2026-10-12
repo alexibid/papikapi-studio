@@ -49,6 +49,7 @@ export class SheetsExporter {
     }
 
     const textureCandidates = [
+      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-3-figure.glb'),
       join(
         WorkspacePaths.resourcePath(modelName),
         step.inputs.texture_stage_dir,

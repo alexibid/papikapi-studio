@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs';
-import { PDFDocument, StandardFonts } from 'pdf-lib';
+import { PDFDocument, type PDFImage, StandardFonts } from 'pdf-lib';
 import type {
   BookletModel,
   BookletSettings,
@@ -7,7 +7,7 @@ import type {
   PageFrame,
 } from './interfaces/booklet.interface.js';
 import { CoverPage } from './cover-page.js';
-import type { PageBaker } from './interfaces/layout.interface.js';
+import type { PageBaker, Placement } from './interfaces/layout.interface.js';
 import type { NetDocument, RenderSet } from './interfaces/net.interface.js';
 import { NetSheets } from './net-sheets.js';
 import { PagePacker } from './page-packer.js';
@@ -38,8 +38,11 @@ export class Booklet {
     ];
     const tabs = new TabPlanner(net.pieces, settings.tab_height_mm).build();
     const gapCells = Math.ceil(settings.piece_gap_mm / 2 / settings.nesting_cell_mm);
-    const clearance = 2 * gapCells * settings.nesting_cell_mm;
-    const pieceFrame: [number, number] = [printable[0] - clearance, printable[1] - clearance];
+    const baseClearance = 2 * gapCells * settings.nesting_cell_mm;
+    const pieceFrame: [number, number] = [
+      printable[0] - baseClearance,
+      printable[1] - baseClearance - 12,
+    ];
     const artworks = net.pieces.map((piece) =>
       buildArtwork(piece, {
         settings,
@@ -48,8 +51,30 @@ export class Booklet {
         tabs,
       }),
     );
-    const packer = new PagePacker(printable[0], printable[1], settings.nesting_cell_mm, gapCells);
-    const placements = packer.pack(artworks);
+    const figureArtworks = artworks.filter((artwork) => !artwork.isPlinth);
+    const plinthArtworks = artworks.filter((artwork) => Boolean(artwork.isPlinth));
+
+    let plinthPlacements: Placement[] = [];
+    let plinthSheets = 0;
+    if (plinthArtworks.length > 0) {
+      const plinthPacker = new PagePacker(
+        printable[0],
+        printable[1],
+        settings.nesting_cell_mm,
+        gapCells,
+      );
+      plinthPlacements = plinthPacker.pack(plinthArtworks);
+      plinthSheets = Math.max(...plinthPlacements.map((placement) => placement.page)) + 1;
+    }
+
+    const figurePacker = new PagePacker(printable[0], printable[1], settings.nesting_cell_mm, gapCells);
+    const rawFigure = figureArtworks.length > 0 ? figurePacker.pack(figureArtworks) : [];
+    const figurePlacements = rawFigure.map((placement) => ({
+      ...placement,
+      page: placement.page + plinthSheets,
+    }));
+
+    const placements = [...plinthPlacements, ...figurePlacements];
     const sheets = Math.max(...placements.map((placement) => placement.page)) + 1;
 
     const document = await PDFDocument.create();
@@ -71,9 +96,16 @@ export class Booklet {
           1,
       })),
     );
-    const pageImages = await Promise.all(
-      bakePages(placements, frame).map((path) => document.embedJpg(readFileSync(path))),
-    );
+    const pageImages: (PDFImage | null)[] = [];
+    for (let index = 0; index < plinthSheets; index++) {
+      pageImages.push(null);
+    }
+    if (rawFigure.length > 0) {
+      const bakedPaths = bakePages(rawFigure, frame);
+      for (const bakedPath of bakedPaths) {
+        pageImages.push(await document.embedJpg(readFileSync(bakedPath)));
+      }
+    }
     const labelCollisions = new NetSheets(document, fonts, frame, texts, pageImages).render(
       placements,
       model.name,

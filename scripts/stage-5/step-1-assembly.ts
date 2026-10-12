@@ -31,9 +31,13 @@ export class AssemblyGenerator {
     ProgressHub.report(modelName, this.stepId, startMessage);
 
     const start = Date.now();
-    const source = JSON.parse(
+    const rawSource = JSON.parse(
       readFileSync(join(resourceDir, step.inputs.stage_dir, step.inputs.net_resource), 'utf8'),
     ) as AssemblySource;
+    const source: AssemblySource = {
+      ...rawSource,
+      pieces: rawSource.pieces.filter((piece) => !piece.isPlinth),
+    };
     const triangles = await GlbColourReader.read(
       join(resourceDir, step.inputs.texture_stage_dir, step.inputs.texture_model),
       source.meshScale * MM_PER_METRE,

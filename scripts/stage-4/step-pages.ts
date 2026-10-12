@@ -37,13 +37,25 @@ export class StepPages {
   ) {}
 
   async render(entries: readonly StepEntry[]): Promise<void> {
+    const figureEntries = entries.filter((entry) => !entry.artwork.isPlinth);
+    const plinthEntries = entries.filter((entry) => Boolean(entry.artwork.isPlinth));
+
+    if (plinthEntries.length > 0) {
+      const plinthHeading =
+        this.texts.steps_plinth_heading ?? `${this.texts.steps_heading} · Plinto`;
+      await this.renderGroup(plinthEntries, plinthHeading);
+    }
+    await this.renderGroup(figureEntries, this.texts.steps_heading);
+  }
+
+  private async renderGroup(entries: readonly StepEntry[], headingTitle: string): Promise<void> {
     const perPage = COLUMNS * ROWS;
     for (let start = 0; start < entries.length; start += perPage) {
       const page = this.document.addPage([
         this.frame.width * POINTS_PER_MM,
         this.frame.height * POINTS_PER_MM,
       ]);
-      this.heading(page);
+      this.heading(page, headingTitle);
       const slice = entries.slice(start, start + perPage);
       for (const [index, entry] of slice.entries()) {
         await this.cell(page, entry, this.cellOrigin(index));
@@ -66,9 +78,9 @@ export class StepPages {
     return [this.frame.margin + column * this.cellWidth, top];
   }
 
-  private heading(page: PDFPage): void {
+  private heading(page: PDFPage, text = this.texts.steps_heading): void {
     const top = this.frame.height - this.frame.margin - 4;
-    page.drawText(this.texts.steps_heading, {
+    page.drawText(text, {
       x: this.frame.margin * POINTS_PER_MM,
       y: top * POINTS_PER_MM,
       size: 5 * POINTS_PER_MM,
@@ -147,18 +159,20 @@ export class StepPages {
 
   private instructions(page: PDFPage, entry: StepEntry, top: Point, bottom: number): void {
     const prefix = this.texts.piece_prefix;
-    const lines = [
-      fillTemplate(this.texts.step_sheet, { sheet: entry.sheet }),
-      entry.piece.number === 1 ? this.texts.step_first : this.texts.step_fold,
-      ...entry.piece.joins.map((join: NetJoin) =>
-        join.piece === entry.piece.number
-          ? fillTemplate(this.texts.step_close, { edges: join.edges.join(', ') })
-          : fillTemplate(this.texts.step_join, {
-              edges: join.edges.join(', '),
-              piece: `${prefix}${join.piece}`,
-            }),
-      ),
-    ];
+    const pieceRef = `${prefix}${entry.piece.number}`;
+    const cutLine = this.texts.step_cut
+      ? fillTemplate(this.texts.step_cut, { piece: pieceRef, sheet: entry.sheet })
+      : fillTemplate(this.texts.step_sheet, { sheet: entry.sheet });
+    const foldLine = entry.piece.number === 1 ? this.texts.step_first : this.texts.step_fold;
+    const joinLines = entry.piece.joins.map((join: NetJoin) =>
+      join.piece === entry.piece.number
+        ? fillTemplate(this.texts.step_close, { edges: join.edges.join(', ') })
+        : fillTemplate(this.texts.step_join, {
+            edges: join.edges.join(', '),
+            piece: `${prefix}${join.piece}`,
+          }),
+    );
+    const lines = [cutLine, foldLine, ...joinLines];
     const available = top[1] - bottom - CELL_PADDING_MM;
     const size = this.fittingSize(lines, available);
     let cursor = top[1];

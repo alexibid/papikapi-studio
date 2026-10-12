@@ -47,6 +47,7 @@ export class AssemblyBuilder {
         number: piece.number,
         centreHeight: VectorMath.centroid(solids.get(piece.number) ?? [])[2],
         neighbours: neighbours.get(piece.number) ?? new Set<number>(),
+        isPlinth: piece.isPlinth,
       })),
     );
     const ordered = sequence.map(

@@ -62,7 +62,7 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-04T17:29:15.044Z",
+      "at": "2026-10-07T17:03:48.151Z",
       "status": "DONE",
       "seconds": 3.39,
       "costUsd": 0,
@@ -72,6 +72,19 @@
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
+          "target_size_mm": 300,
+          "min_feature_mm": 6,
+          "appendage_min_length_mm": 6,
+          "appendage_max_section_mm": 12,
+          "appendage_min_aspect": 2.5,
+          "appendage_max_passes": 5,
+          "appendage_crease_deg": 15,
+          "appendage_root_section_mm": 12,
+          "appendage_max_rings": 40,
+          "envelope_cell_mm": 1,
+          "envelope_tolerance_mm": 3,
+          "envelope_max_area_ratio": 0.03,
+          "appendage_ground_clearance_mm": 10,
           "base_cut_margin_ratios": [
             0.003,
             0.01,
@@ -82,11 +95,14 @@
         }
       },
       "metrics": {
-        "faces": 1472,
+        "faces": 1474,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
         "removedIslands": 0,
+        "removedAppendages": 3,
+        "appendageFaces": 9,
+        "appendageVolumePercent": 0.03,
         "loops": 2,
         "widthMm": 547.4,
         "lengthMm": 524.3,
@@ -97,119 +113,66 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-04T19:10:12.658Z",
+      "at": "2026-10-08T17:14:13.611Z",
       "status": "DONE",
-      "seconds": 0.59,
+      "seconds": 1.05,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/sea-turtle/stage-2/step-3-base.glb",
         "lengthMm": 547.4,
-        "faces": 1500,
+        "faces": 1502,
         "parameters": {
           "target_faces": 600,
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
           "quad_face_angle_deg": 20,
           "quad_shape_angle_deg": 60,
-          "face_max_extent_ratio": 0.5
+          "face_max_extent_ratio": 0.5,
+          "min_fold_length_mm": 6,
+          "flat_vertex_angle_deg": 8,
+          "target_size_mm": 300,
+          "fold_tolerance_ratio": 0.0067,
+          "fold_max_deviation_ratio": 0.01,
+          "fold_max_volume_percent": 0.1
         }
       },
       "metrics": {
-        "points": 302,
-        "meshFaces": 424,
-        "quads": 176,
+        "points": 245,
+        "meshFaces": 334,
+        "quads": 152,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
-        "volumeChangePercent": -0.57,
-        "maxDeviationMm": 2.54,
-        "featureLossMm": 6.47
+        "volumeChangePercent": -0.43,
+        "maxDeviationMm": 3.43,
+        "featureLossMm": 8.16,
+        "facetColours": 312
       }
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-04T19:26:45.426Z",
+      "at": "2026-10-08T17:14:24.755Z",
       "status": "DONE",
-      "seconds": 992.75,
+      "seconds": 11.14,
       "costUsd": 0,
-      "costNote": "Local Blender headless and Vectorizer ($0.00)",
+      "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/sea-turtle/stage-2/step-3-base.glb",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/sea-turtle/stage-2/step-4-optimize.glb",
         "parameters": {
-          "resolution": 2048,
-          "margin": 0,
-          "min_facing": 0.2
-        },
-        "palette": [
-          {
-            "index": 0,
-            "hex": "#131707",
-            "share": 0.2757,
-            "kind": "neutral"
-          },
-          {
-            "index": 1,
-            "hex": "#c6cebe",
-            "share": 0.0019,
-            "kind": "neutral"
-          },
-          {
-            "index": 2,
-            "hex": "#7a9554",
-            "share": 0.3858,
-            "kind": "hue"
-          },
-          {
-            "index": 3,
-            "hex": "#76845d",
-            "share": 0.0127,
-            "kind": "hue"
-          },
-          {
-            "index": 4,
-            "hex": "#97674d",
-            "share": 0.2709,
-            "kind": "hue"
-          },
-          {
-            "index": 5,
-            "hex": "#868253",
-            "share": 0.0263,
-            "kind": "hue"
-          },
-          {
-            "index": 6,
-            "hex": "#776324",
-            "share": 0.0266,
-            "kind": "hue"
-          }
-        ]
+          "resolution": 2048
+        }
       },
       "metrics": {
-        "faces": 424,
-        "viewsCount": 6,
-        "resolution": 2048,
-        "familiesCount": 7,
-        "baseHex": "#7a9554",
-        "totalPaths": 253,
-        "totalNodes": 21291,
-        "hiddenFaces": 16,
-        "viewsUsage": {
-          "front": 52,
-          "back": 46,
-          "right": 73,
-          "left": 72,
-          "top": 62,
-          "bottom": 119
-        }
+        "faces": 334,
+        "resolution": 2048
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-04T19:26:46.293Z",
+      "at": "2026-10-12T00:08:51.656Z",
       "status": "DONE",
-      "seconds": 0.85,
+      "seconds": 0.84,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -222,43 +185,43 @@
         }
       },
       "metrics": {
-        "faces": 517,
-        "loops": 2,
-        "openEdges": 0,
+        "faces": 342,
+        "loops": 0,
+        "openEdges": 6,
         "nonManifoldEdges": 0
       }
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-04T23:10:00.516Z",
+      "at": "2026-10-12T14:04:37.730Z",
       "status": "DONE",
-      "seconds": 5.67,
+      "seconds": 0.7,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/sea-turtle/stage-3/step-3-plinth.json",
         "dimensionsMm": [
-          300,
-          288.08,
-          153.01
+          216.72,
+          208.47,
+          115.76
         ],
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 517,
-        "quadCount": 223,
-        "pieces": 46,
+        "faceCount": 342,
+        "quadCount": 160,
+        "pieces": 30,
         "smallestPieceFaces": 1,
-        "shortestCutMm": 2.6,
-        "unpairedEdges": 0,
-        "nonManifoldEdges": 0
+        "shortestCutMm": 3.3,
+        "unpairedEdges": 6,
+        "nonManifoldEdges": 6
       }
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-04T23:16:42.884Z",
+      "at": "2026-10-12T15:12:56.824Z",
       "status": "DONE",
-      "seconds": 402.32,
+      "seconds": 47.22,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -266,34 +229,34 @@
         "pageSize": "210x297mm"
       },
       "metrics": {
-        "pageCount": 25,
-        "sheetCount": 12,
-        "pieceCount": 46,
-        "labelCollisions": 8
+        "pageCount": 14,
+        "sheetCount": 5,
+        "pieceCount": 30,
+        "labelCollisions": 6
       }
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-05T10:59:59.908Z",
+      "at": "2026-10-12T17:20:43.150Z",
       "status": "DONE",
-      "seconds": 0.15,
+      "seconds": 0.04,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
         "source": "stage-4/step-1-net.json"
       },
       "metrics": {
-        "pieces": 46,
-        "faces": 517,
-        "hinges": 471,
-        "maxHingeResidualMm": 2.65,
-        "maxFoldAngleDeg": 111.8,
+        "pieces": 28,
+        "faces": 334,
+        "hinges": 306,
+        "maxHingeResidualMm": 4.23,
+        "maxFoldAngleDeg": 140.1,
         "mirroredPieces": 0,
         "extraRoots": 0
       }
     }
   },
-  "totalSeconds": 1510.81,
+  "totalSeconds": 169.47,
   "totalCostUsd": 0.0158,
-  "updatedAt": "2026-10-05T10:59:59.915Z"
+  "updatedAt": "2026-10-12T17:20:43.155Z"
 }

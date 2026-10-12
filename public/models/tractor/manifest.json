@@ -181,9 +181,9 @@
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-03T04:33:18.451Z",
+      "at": "2026-10-12T00:10:47.260Z",
       "status": "DONE",
-      "seconds": 2.11,
+      "seconds": 1.05,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -196,43 +196,43 @@
         }
       },
       "metrics": {
-        "faces": 778,
-        "loops": 1,
-        "openEdges": 0,
+        "faces": 680,
+        "loops": 0,
+        "openEdges": 6,
         "nonManifoldEdges": 0
       }
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-04T23:46:27.375Z",
+      "at": "2026-10-12T14:04:43.768Z",
       "status": "DONE",
-      "seconds": 0.73,
+      "seconds": 0.72,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/tractor/stage-3/step-3-plinth.json",
         "dimensionsMm": [
-          300,
-          226.85,
-          255.48
+          271.92,
+          202.98,
+          240.76
         ],
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 608,
-        "quadCount": 183,
-        "pieces": 63,
+        "faceCount": 522,
+        "quadCount": 166,
+        "pieces": 67,
         "smallestPieceFaces": 1,
-        "shortestCutMm": 0.3,
-        "unpairedEdges": 0,
-        "nonManifoldEdges": 0
+        "shortestCutMm": 0.4,
+        "unpairedEdges": 6,
+        "nonManifoldEdges": 6
       }
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-04T23:47:56.736Z",
+      "at": "2026-10-12T15:30:33.419Z",
       "status": "DONE",
-      "seconds": 89.35,
+      "seconds": 112.68,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -240,34 +240,34 @@
         "pageSize": "210x297mm"
       },
       "metrics": {
-        "pageCount": 38,
-        "sheetCount": 21,
-        "pieceCount": 63,
-        "labelCollisions": 5
+        "pageCount": 34,
+        "sheetCount": 15,
+        "pieceCount": 67,
+        "labelCollisions": 21
       }
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-05T11:00:01.203Z",
+      "at": "2026-10-12T17:20:43.577Z",
       "status": "DONE",
-      "seconds": 0.18,
+      "seconds": 0.07,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
         "source": "stage-4/step-1-net.json"
       },
       "metrics": {
-        "pieces": 63,
-        "faces": 608,
-        "hinges": 545,
-        "maxHingeResidualMm": 3.226,
-        "maxFoldAngleDeg": 146.5,
+        "pieces": 65,
+        "faces": 514,
+        "hinges": 449,
+        "maxHingeResidualMm": 4.008,
+        "maxFoldAngleDeg": 180,
         "mirroredPieces": 0,
         "extraRoots": 0
       }
     }
   },
-  "totalSeconds": 244.56,
+  "totalSeconds": 266.71,
   "totalCostUsd": 0.0123,
-  "updatedAt": "2026-10-05T11:00:01.211Z"
+  "updatedAt": "2026-10-12T17:20:43.584Z"
 }

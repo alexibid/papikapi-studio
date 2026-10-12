@@ -41,6 +41,8 @@ export class PlinthGenerator {
 
     const modelPath = join(outputDir, step.outputs.model_resource);
     const meshPath = join(outputDir, step.outputs.mesh_resource);
+    const figurePath = join(outputDir, 'step-3-figure.glb');
+    const plinthPath = join(outputDir, 'step-3-plinth-only.glb');
 
     const parameters = { ...step.parameters, ...ModelProfiles.stepParameters(modelName, this.stepId) };
 
@@ -53,13 +55,15 @@ export class PlinthGenerator {
       input_mesh: reducedPath,
       input_glb: texturedPath,
       output_glb: modelPath,
+      output_figure_glb: figurePath,
+      output_plinth_glb: plinthPath,
       output_json: meshPath,
       ...parameters,
     });
     const duration = Math.round(((Date.now() - start) / 1000) * 100) / 100;
     const publicDir = WorkspacePaths.modelPath(modelName);
     mkdirSync(publicDir, { recursive: true });
-    copyFileSync(modelPath, join(publicDir, step.outputs.model_public));
+    copyFileSync(figurePath, join(publicDir, step.outputs.model_public));
 
     const completedMsg = step.messages.completed
       .replace('{model}', modelName)

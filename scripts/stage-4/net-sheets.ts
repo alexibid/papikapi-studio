@@ -22,7 +22,7 @@ export class NetSheets {
     private readonly fonts: BookletFonts,
     private readonly frame: PageFrame,
     private readonly texts: BookletTexts,
-    private readonly pageImages: readonly PDFImage[],
+    private readonly pageImages: readonly (PDFImage | null)[],
   ) {}
 
   render(placements: readonly Placement[], model: string): number {
@@ -34,12 +34,15 @@ export class NetSheets {
         this.frame.width * POINTS_PER_MM,
         this.frame.height * POINTS_PER_MM,
       ]);
-      page.drawImage(this.pageImages[index], {
-        x: 0,
-        y: 0,
-        width: this.frame.width * POINTS_PER_MM,
-        height: this.frame.height * POINTS_PER_MM,
-      });
+      const pageImage = this.pageImages[index];
+      if (pageImage) {
+        page.drawImage(pageImage, {
+          x: 0,
+          y: 0,
+          width: this.frame.width * POINTS_PER_MM,
+          height: this.frame.height * POINTS_PER_MM,
+        });
+      }
       this.header(page, model, onPage, { page: index + 1, total: pageCount });
       const boxes = onPage.flatMap((placement) => this.drawPiece(page, placement));
       collisions += countCollisions(boxes);
@@ -55,7 +58,11 @@ export class NetSheets {
   ): void {
     const top = this.frame.height - this.frame.margin + 2;
     const size = 3.2;
-    const title = `${model} · ${this.texts.sheet_heading}`;
+    const isPlinthPage = onPage.length > 0 && onPage.every((placement) => placement.artwork.isPlinth);
+    const heading = isPlinthPage
+      ? (this.texts.sheet_plinth_heading ?? `${this.texts.sheet_heading} · Plinto`)
+      : this.texts.sheet_heading;
+    const title = `${model} · ${heading}`;
     const pieces = fillTemplate(this.texts.sheet_pieces, {
       pieces: [...onPage]
         .sort((first, second) => first.artwork.number - second.artwork.number)

@@ -2,8 +2,8 @@ import type { TabPlan, TabShape } from './interfaces/artwork.interface.js';
 import type { NetCut, NetPiece, Point } from './interfaces/net.interface.js';
 import { add, centroid, leftNormal, length, scale, subtract, unit } from './net-geometry.js';
 
-const SHRINK = 0.96;
-const HEIGHT_STEPS = [1, 0.7, 0.45];
+const SHRINK = 0.98;
+const HEIGHT_STEPS = [1, 0.7, 0.45, 0.3];
 const MIN_HEIGHT_MM = 2;
 
 export const cutKey = (piece: number, cut: NetCut): string => `${piece}:${cut.edge}:${cut.face}`;
@@ -20,7 +20,7 @@ export function tabShape(face: readonly Point[], cut: NetCut, maxHeight: number)
   const outward = outwardNormal(face, cut);
   const edgeLength = length(subtract(cut.b, cut.a));
   const height = Math.max(MIN_HEIGHT_MM, Math.min(maxHeight, edgeLength * 0.4));
-  const inset = Math.min(height, edgeLength * 0.3);
+  const inset = Math.min(height, edgeLength * 0.35);
   const topA = add(add(cut.a, scale(outward, height)), scale(direction, inset));
   const topB = add(subtract(cut.b, scale(direction, inset)), scale(outward, height));
   return { polygon: [cut.a, topA, topB, cut.b], height, outward };
@@ -68,6 +68,7 @@ export class TabPlanner {
       ),
     );
     for (const pair of occurrences.values()) {
+      if (pair.length < 2) continue;
       const ordered = [...pair].sort(
         (first, second) => Number(second.cut.tab) - Number(first.cut.tab),
       );
@@ -82,7 +83,6 @@ export class TabPlanner {
         if (this.tryPlace(side.piece, side.cut, this.maxHeight * factor)) return;
       }
     }
-    this.force(sides[0].piece, sides[0].cut);
   }
 
   private shapeFor(piece: NetPiece, cut: NetCut, height: number): TabShape {
@@ -96,11 +96,6 @@ export class TabPlanner {
     if (!blockers.every((blocker) => separated(candidate, blocker))) return false;
     this.accept(piece, cut, shape, candidate);
     return true;
-  }
-
-  private force(piece: NetPiece, cut: NetCut): void {
-    const shape = this.shapeFor(piece, cut, MIN_HEIGHT_MM);
-    this.accept(piece, cut, shape, shrunk(shape.polygon));
   }
 
   private accept(piece: NetPiece, cut: NetCut, shape: TabShape, footprint: Point[]): void {
