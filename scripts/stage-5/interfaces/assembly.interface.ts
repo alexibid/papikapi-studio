@@ -126,9 +126,26 @@ export interface GltfColourAccessor {
 }
 
 export interface GltfColourPrimitive {
-  readonly attributes: { readonly POSITION: number; readonly TEXCOORD_0: number };
+  readonly attributes: {
+    readonly POSITION: number;
+    readonly TEXCOORD_0?: number;
+  };
   readonly indices: number;
-  readonly material: number;
+  readonly material?: number;
+}
+
+export interface GltfColourMaterial {
+  readonly name?: string;
+  readonly emissiveTexture?: { readonly index: number };
+  readonly pbrMetallicRoughness?: {
+    readonly baseColorTexture?: { readonly index: number };
+    readonly baseColorFactor?: readonly [number, number, number, number];
+  };
+}
+
+export interface GltfColourMesh {
+  readonly name?: string;
+  readonly primitives: readonly GltfColourPrimitive[];
 }
 
 export interface GltfColourDocument {
@@ -138,10 +155,10 @@ export interface GltfColourDocument {
     readonly byteLength: number;
     readonly byteStride?: number;
   }[];
-  readonly images: readonly { readonly bufferView: number }[];
-  readonly textures: readonly { readonly source: number }[];
-  readonly materials: readonly { readonly emissiveTexture?: { readonly index: number } }[];
-  readonly meshes: readonly { readonly primitives: readonly GltfColourPrimitive[] }[];
+  readonly images?: readonly { readonly bufferView: number }[];
+  readonly textures?: readonly { readonly source: number }[];
+  readonly materials?: readonly GltfColourMaterial[];
+  readonly meshes: readonly GltfColourMesh[];
 }
 
 export interface OrderedPiece {

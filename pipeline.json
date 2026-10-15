@@ -714,7 +714,7 @@
             "stage_dir": "stage-4",
             "net_resource": "step-1-net.json",
             "texture_stage_dir": "stage-3",
-            "texture_model": "step-3-plinth.glb"
+            "texture_model": "step-3-figure.glb"
           },
           "outputs": {
             "stage_dir": "stage-5",

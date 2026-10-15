@@ -21,22 +21,39 @@ export class GlbColourReader {
     const samplers = await this.loadSamplers(document, binary);
     const triangles: ColouredTriangle[] = [];
 
-    for (const primitive of document.meshes[0].primitives) {
-      const positions = this.floats(document, binary, primitive.attributes.POSITION, 3);
-      const uvs = this.floats(document, binary, primitive.attributes.TEXCOORD_0, 2);
-      const indices = this.indices(document, binary, primitive.indices);
-      const textureIndex = document.materials[primitive.material].emissiveTexture?.index;
-      const sampler = textureIndex === undefined ? undefined : samplers.get(textureIndex);
-      for (let corner = 0; corner + 2 < indices.length; corner += 3) {
-        const trio = [indices[corner], indices[corner + 1], indices[corner + 2]];
-        triangles.push({
-          corners: trio.map((vertex) => this.toSolidSpace(positions, vertex, scale)) as [
-            Vec3,
-            Vec3,
-            Vec3,
-          ],
-          colour: sampler === undefined ? WHITE : this.average(sampler, uvs, trio),
-        });
+    for (const mesh of document.meshes) {
+      if (mesh.name === 'Plinth') continue;
+      for (const primitive of mesh.primitives) {
+        const positions = this.floats(document, binary, primitive.attributes.POSITION, 3);
+        const hasUvs = primitive.attributes.TEXCOORD_0 !== undefined;
+        const uvs = hasUvs ? this.floats(document, binary, primitive.attributes.TEXCOORD_0, 2) : undefined;
+        const indices = this.indices(document, binary, primitive.indices);
+        const material =
+          primitive.material !== undefined ? document.materials?.[primitive.material] : undefined;
+        const textureIndex =
+          material?.pbrMetallicRoughness?.baseColorTexture?.index ??
+          material?.emissiveTexture?.index;
+        const sampler = textureIndex === undefined ? undefined : samplers.get(textureIndex);
+        const baseColorFactor = material?.pbrMetallicRoughness?.baseColorFactor;
+        const defaultColour: readonly [number, number, number] = baseColorFactor
+          ? [
+              Math.round(baseColorFactor[0] * 255),
+              Math.round(baseColorFactor[1] * 255),
+              Math.round(baseColorFactor[2] * 255),
+            ]
+          : WHITE;
+
+        for (let corner = 0; corner + 2 < indices.length; corner += 3) {
+          const trio = [indices[corner], indices[corner + 1], indices[corner + 2]];
+          triangles.push({
+            corners: trio.map((vertex) => this.toSolidSpace(positions, vertex, scale)) as [
+              Vec3,
+              Vec3,
+              Vec3,
+            ],
+            colour: sampler === undefined || !uvs ? defaultColour : this.average(sampler, uvs, trio),
+          });
+        }
       }
     }
     return triangles;
@@ -47,8 +64,11 @@ export class GlbColourReader {
     binary: Buffer,
   ): Promise<ReadonlyMap<number, TextureSampler>> {
     const samplers = new Map<number, TextureSampler>();
+    if (!document.textures || !document.images) return samplers;
     for (const [index, texture] of document.textures.entries()) {
-      const view = document.bufferViews[document.images[texture.source].bufferView];
+      const image = document.images[texture.source];
+      if (image?.bufferView === undefined) continue;
+      const view = document.bufferViews[image.bufferView];
       const start = view.byteOffset ?? 0;
       samplers.set(
         index,

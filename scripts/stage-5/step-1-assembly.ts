@@ -1,4 +1,4 @@
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ManifestManager } from '../common/manifest-manager.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
@@ -38,8 +38,12 @@ export class AssemblyGenerator {
       ...rawSource,
       pieces: rawSource.pieces.filter((piece) => !piece.isPlinth),
     };
+    const figureModelPath = join(resourceDir, step.inputs.texture_stage_dir, 'step-3-figure.glb');
+    const texturePath = existsSync(figureModelPath)
+      ? figureModelPath
+      : join(resourceDir, step.inputs.texture_stage_dir, step.inputs.texture_model);
     const triangles = await GlbColourReader.read(
-      join(resourceDir, step.inputs.texture_stage_dir, step.inputs.texture_model),
+      texturePath,
       source.meshScale * MM_PER_METRE,
     );
     const colours = FaceColourAssigner.assign(AssemblyBuilder.faceGeometries(source), triangles);
