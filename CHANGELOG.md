@@ -1,3 +1,9 @@
+## 0.1.9 (2026-10-15)
+
+### 🐛 Bug Fixes
+
+- **papikapi-studio:** sample base color textures in assembly and regenerate models (d7235d1)
+
 ## 0.1.8 (2026-10-12)
 
 ### 🐛 Bug Fixes
