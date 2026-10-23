@@ -14,6 +14,8 @@ export interface RunPodExecuteOptions {
   readonly onProgress?: (update: RunPodProgressUpdate) => void;
   readonly pollIntervalMs?: number;
   readonly timeoutMs?: number;
+  readonly maxRetries?: number;
+  readonly purgeBeforeRun?: boolean;
 }
 
 export interface RunPodApiResponse<T> {

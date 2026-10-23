@@ -22,12 +22,44 @@ export class ImageCutout {
   private static modelPromise: Promise<LoadedModel> | null = null;
 
   public static async extractCutout(options: CutoutOptions): Promise<Buffer> {
-    const image = (await RawImage.fromBlob(new Blob([new Uint8Array(options.imageBuffer)]))).rgb();
-    const mask = await this.segmentMask(image);
-    const alpha = this.alphaFromMask(mask.data);
-    this.addColouredSolids(alpha, image);
-    this.removeSmallIslands(alpha, image.width, image.height);
-    return this.encodePng(image, alpha);
+    try {
+      const image = (await RawImage.fromBlob(new Blob([new Uint8Array(options.imageBuffer)]))).rgb();
+      const mask = await this.segmentMask(image);
+      const alpha = this.alphaFromMask(mask.data);
+      this.addColouredSolids(alpha, image);
+      this.removeSmallIslands(alpha, image.width, image.height);
+      return await this.encodePng(image, alpha);
+    } catch (err) {
+      console.warn('  [ImageCutout] RMBG model extraction unavailable, activating chroma key fallback:', (err as Error).message);
+      return this.chromaKeyFallback(options.imageBuffer);
+    }
+  }
+
+  private static async chromaKeyFallback(imageBuffer: Buffer): Promise<Buffer> {
+    const { data, info } = await sharp(imageBuffer)
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const dist = Math.hypot(r - 229, g - 229, b - 229);
+      if (dist < 30) {
+        data[i + 3] = 0;
+      }
+    }
+
+    return sharp(data, {
+      raw: {
+        width: info.width,
+        height: info.height,
+        channels: 4,
+      },
+    })
+      .png()
+      .toBuffer();
   }
 
   private static async getModel(): Promise<LoadedModel> {

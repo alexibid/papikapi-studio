@@ -4,6 +4,7 @@ import { ImageCutout } from '../common/image-cutout.js';
 import { ManifestManager } from '../common/manifest-manager.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { ProgressHub } from '../common/progress-hub.js';
+import { WhiskerCleaner } from '../common/whisker-cleaner.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
 import type { CutoutResponse, CutoutStepInputs } from './interfaces/cutout.interface.js';
 
@@ -54,8 +55,10 @@ export class CutoutGenerator {
     const cachedResCutout = pick ? join(stage1Dir, step.outputs.cutout_pick_resource_pattern.replace('{pick}', String(pick))) : null;
     const cachedPubCutout = pick ? join(publicDir, step.outputs.cutout_pick_public_pattern.replace('{pick}', String(pick))) : null;
 
-    const resCached = Boolean(cachedResCutout && existsSync(cachedResCutout) && statSync(cachedResCutout).size > 500);
-    const pubCached = Boolean(cachedPubCutout && existsSync(cachedPubCutout) && statSync(cachedPubCutout).size > 500);
+    const isFeline = WhiskerCleaner.isFeline(modelName);
+
+    const resCached = !isFeline && Boolean(cachedResCutout && existsSync(cachedResCutout) && statSync(cachedResCutout).size > 500);
+    const pubCached = !isFeline && Boolean(cachedPubCutout && existsSync(cachedPubCutout) && statSync(cachedPubCutout).size > 500);
 
     const cachedCutout = resCached ? cachedResCutout : pubCached ? cachedPubCutout : null;
 
@@ -95,6 +98,9 @@ export class CutoutGenerator {
     }
 
     const inputPath = this.findInputArt(modelName, step.inputs, pick);
+    if (isFeline) {
+      WhiskerCleaner.cleanImage(inputPath);
+    }
     const startMsg = step.messages.start.replace('{model}', modelName);
     console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
     ProgressHub.report(modelName, this.stepId, startMsg);

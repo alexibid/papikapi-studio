@@ -16,6 +16,8 @@ import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { ProgressHub } from '../common/progress-hub.js';
 import { RunPodClient } from '../common/runpod-client.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
+import { WhiskerCleaner } from '../common/whisker-cleaner.js';
+import { PromptEnricher } from '../common/prompt-enricher.js';
 
 export class AlternativesGenerator {
   private static readonly stepId = 's1-step-1';
@@ -85,9 +87,10 @@ export class AlternativesGenerator {
     const effectiveSubject = trainingPrompt
       ? `${subject} (${trainingPrompt})`
       : subject;
+    const cleanEffectiveSubject = this.sanitizePrompt(effectiveSubject);
 
     const prompt = template
-      .replace('{subject}', effectiveSubject)
+      .replaceAll('{subject}', cleanEffectiveSubject)
       .replace('{reference_instruction}', refInstruction)
       + maturity
       + critical;
@@ -115,7 +118,11 @@ export class AlternativesGenerator {
     composition: ReferenceComposition;
   } {
     const subjectImages = (request.referenceImages ?? []).slice(0, maxSubjectImages);
-    const style = TrainingReferences.findStyleImage(request.name, request.prompt);
+    // When the user provides subject photos, use only their photos to prevent style and feature contamination.
+    // Style reference is only used when generating from text prompt alone (0 subject photos).
+    const style = subjectImages.length === 0
+      ? TrainingReferences.findStyleImage(request.name, request.prompt)
+      : null;
     if (style) {
       const styleMessage = `🎨 Style Reference: ${style.item.file} (${style.item.name} in ${style.item.group})`;
       console.log(`  [s1-step-1] ${styleMessage}`);
@@ -130,25 +137,34 @@ export class AlternativesGenerator {
     };
   }
 
+  public static sanitizePrompt(input: string): string {
+    return PromptEnricher.sanitize(input);
+  }
+
   public static buildCellPrompts(name: string, subject: string): string[] {
     const params = this.loadParameters();
     const trainingPrompt = this.getTrainingReferencePrompt(name);
-    const details = trainingPrompt ? trainingPrompt : subject;
+    const cleanSubject = this.sanitizePrompt(subject);
+    const cleanDetails = PromptEnricher.getDetailsForSubject(name, subject, trainingPrompt);
 
     return params.cell_prompt_templates.map((template) =>
       template
-        .replaceAll('{subject}', subject)
-        .replaceAll('{details}', details)
+        .replaceAll('{subject}', cleanSubject)
+        .replaceAll('{details}', cleanDetails)
         .replaceAll('{view}', params.view_clause)
         .replaceAll('{base}', params.base_clause),
     );
   }
 
   public static async execute(request: GenerateAlternativesRequest): Promise<GenerateAlternativesResponse> {
-    const { name, prompt, engineOverride } = request;
+    const { name, prompt: rawPrompt, engineOverride } = request;
+    const prompt = PromptEnricher.enrichSubject(rawPrompt);
     const step = PipelineConfigLoader.getStep(this.stepId) as unknown as AlternativesStepDefinition;
     const params = step.parameters;
-    const { images: referenceImages, composition } = this.composeReferenceImages(request, params.max_reference_images);
+    const { images: referenceImages, composition } = this.composeReferenceImages(
+      { ...request, prompt },
+      params.max_reference_images,
+    );
     const { system, prompt: fullPrompt, aspectRatio, model: defaultModel } = this.composePrompt(prompt, composition, name);
 
     const engine = engineOverride ? engineOverride : defaultModel;
@@ -165,57 +181,68 @@ export class AlternativesGenerator {
     const pricing = config.pricing as { runpod_flux_usd_per_sec?: number; flux_models?: Record<string, number> };
     const fluxRate = pricing.runpod_flux_usd_per_sec ? pricing.runpod_flux_usd_per_sec : 0.00015;
 
-    if (isGemini) {
-      const result = await GeminiClient.generate(engine, {
-        system,
-        prompt: fullPrompt,
-        referenceImages,
-        aspectRatio,
-      });
-      imageBytes = result.bytes;
-      mime = result.mime;
-      seconds = result.seconds;
-      costUsd = pricing.flux_models && pricing.flux_models[engine] !== undefined
-        ? pricing.flux_models[engine]
-        : contract.costUsd;
-      costNote = contract.costNote;
-    } else {
-      const envKey = step.serverless ? step.serverless.env_endpoint_key : 'RUNPOD_FLUX_ENDPOINT_ID';
-      const endpointId = RunPodClient.getEndpointId(envKey);
+    try {
+      if (isGemini) {
+        const result = await GeminiClient.generate(engine, {
+          system,
+          prompt: fullPrompt,
+          referenceImages,
+          aspectRatio,
+        });
+        imageBytes = result.bytes;
+        mime = result.mime;
+        seconds = result.seconds;
+        costUsd = pricing.flux_models && pricing.flux_models[engine] !== undefined
+          ? pricing.flux_models[engine]
+          : contract.costUsd;
+        costNote = contract.costNote;
+      } else {
+        const envKey = step.serverless ? step.serverless.env_endpoint_key : 'RUNPOD_FLUX_ENDPOINT_ID';
+        const endpointId = RunPodClient.getEndpointId(envKey);
 
-      const payload = {
-        prompt: fullPrompt,
-        cell_prompts: this.buildCellPrompts(name, prompt),
-        negative_prompt: params.negative_prompt,
-        reference_images: referenceImages.map((img) => img.bytes.toString('base64')),
-        columns: params.columns,
-        rows: params.rows,
-      };
+        const payload = {
+          prompt: fullPrompt,
+          cell_prompts: this.buildCellPrompts(name, prompt),
+          negative_prompt: params.negative_prompt,
+          reference_images: referenceImages.map((img) => img.bytes.toString('base64')),
+          columns: params.columns,
+          rows: params.rows,
+        };
 
-      const startMsg = step.messages?.start ? step.messages.start.replace('{model}', name) : `[Stage 1: Step 1] Generating 3x2 alternatives sheet for ${name}`;
-      console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
-      ProgressHub.report(name, this.stepId, startMsg);
+        const startMsg = step.messages?.start ? step.messages.start.replace('{model}', name) : `[Stage 1: Step 1] Generating 3x2 alternatives sheet for ${name}`;
+        console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
+        ProgressHub.report(name, this.stepId, startMsg);
 
-      const result = await RunPodClient.execute<typeof payload, FluxWorkerOutput>(
-        endpointId,
-        payload,
-        {
-          onProgress: (elapsed) => {
-            const progressMsg = `⟳ [RunPod Serverless] Generating alternatives on FLUX.2 Serverless Worker... (${elapsed}s elapsed)`;
-            process.stdout.write(`\r  \x1b[36m${progressMsg}\x1b[0m`);
-            ProgressHub.report(name, this.stepId, progressMsg);
-          },
-        }
-      );
+        const result = await RunPodClient.execute<typeof payload, FluxWorkerOutput>(
+          endpointId,
+          payload,
+          {
+            timeoutMs: 300000,
+            purgeBeforeRun: true,
+            maxRetries: 0,
+            onProgress: (update) => {
+              const state = update.status === 'IN_QUEUE' ? 'Na fila de espera' : 'A processar';
+              const progressMsg = `⟳ [RunPod Serverless] Generating alternatives on FLUX.2 Serverless Worker... (${state}, ${update.elapsedSeconds}s elapsed)`;
+              process.stdout.write(`\r  \x1b[36m${progressMsg}\x1b[0m`);
+              ProgressHub.report(name, this.stepId, progressMsg);
+            },
+          }
+        );
+        process.stdout.write('\r\x1b[K');
+        const workerMessage = `🧩 Worker: ${this.describeWorker(result.output)}`;
+        console.log(`  [${this.stepId}] ${workerMessage}`);
+        ProgressHub.report(name, this.stepId, workerMessage);
+        imageBytes = Buffer.from(result.output.sheet_base64, 'base64');
+        mime = result.output.mime ? result.output.mime : 'image/jpeg';
+        seconds = result.seconds;
+        costUsd = Math.round(seconds * fluxRate * 10000) / 10000;
+        costNote = `RunPod Serverless FLUX.2 ($${costUsd.toFixed(4)})`;
+      }
+    } catch (err) {
       process.stdout.write('\r\x1b[K');
-      const workerMessage = `🧩 Worker: ${this.describeWorker(result.output)}`;
-      console.log(`  [${this.stepId}] ${workerMessage}`);
-      ProgressHub.report(name, this.stepId, workerMessage);
-      imageBytes = Buffer.from(result.output.sheet_base64, 'base64');
-      mime = result.output.mime ? result.output.mime : 'image/jpeg';
-      seconds = result.seconds;
-      costUsd = Math.round(seconds * fluxRate * 10000) / 10000;
-      costNote = `RunPod Serverless FLUX.2 ($${costUsd.toFixed(4)})`;
+      const errMessage = (err as Error).message;
+      console.error(`  \x1b[31m[${this.stepId}] ❌ Generation failed: ${errMessage}\x1b[0m`);
+      throw new Error(`Falha na geração FLUX: ${errMessage}`);
     }
 
     const stage0Dir = join(WorkspacePaths.resourcePath(name), step.stage_dir);
@@ -238,6 +265,12 @@ export class AlternativesGenerator {
 
     writeFileSync(resourceFile, imageBytes);
     writeFileSync(publicFile, imageBytes);
+
+    if (WhiskerCleaner.isFeline(name, prompt)) {
+      console.log(`  [${this.stepId}] 🐾 Feline detected: applying deterministic whisker suppression on alternatives sheet`);
+      WhiskerCleaner.cleanSheet(resourceFile, params.columns, params.rows);
+      WhiskerCleaner.cleanSheet(publicFile, params.columns, params.rows);
+    }
 
     ManifestManager.writeStepResult(name, this.stepId, {
       status: contract.status,

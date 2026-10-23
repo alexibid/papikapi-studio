@@ -9,6 +9,7 @@ import { ImageCropper } from '../common/image-cropper.js';
 import { ManifestManager } from '../common/manifest-manager.js';
 import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { ProgressHub } from '../common/progress-hub.js';
+import { WhiskerCleaner } from '../common/whisker-cleaner.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
 
 export class AlternativePicker {
@@ -70,18 +71,27 @@ export class AlternativePicker {
       if (existsSync(oldPub)) unlinkSync(oldPub);
     }
 
+    const isFeline = WhiskerCleaner.isFeline(name);
+
     writeFileSync(resourceArt, croppedBuffer);
     writeFileSync(publicArt, croppedBuffer);
+
+    if (isFeline) {
+      console.log(`  [${this.stepId}] 🐾 Feline detected: cleaning whiskers on selected art pick`);
+      WhiskerCleaner.cleanImage(resourceArt);
+      WhiskerCleaner.cleanImage(publicArt);
+    }
 
     const pickResCutout = join(stage0Dir, `step-1-art-pick-${pick}-cutout.png`);
     const activeResCutout = join(stage0Dir, 'step-1-art-cutout.png');
     const activePubCutout = join(publicDir, 'art-cutout.png');
-    if (existsSync(pickResCutout)) {
+    if (!isFeline && existsSync(pickResCutout)) {
       copyFileSync(pickResCutout, activeResCutout);
       copyFileSync(pickResCutout, activePubCutout);
     } else {
       if (existsSync(activeResCutout)) unlinkSync(activeResCutout);
       if (existsSync(activePubCutout)) unlinkSync(activePubCutout);
+      if (isFeline && existsSync(pickResCutout)) unlinkSync(pickResCutout);
     }
 
     const totalPicks = columns * rows;
@@ -93,6 +103,10 @@ export class AlternativePicker {
       const pBuffer = p === pick ? croppedBuffer : await ImageCropper.cropCell({ imageBuffer: sheetBuffer, columns, rows, pickIndex: p, quality });
       writeFileSync(pResPath, pBuffer);
       writeFileSync(pPubPath, pBuffer);
+      if (isFeline) {
+        WhiskerCleaner.cleanImage(pResPath);
+        WhiskerCleaner.cleanImage(pPubPath);
+      }
     }
 
     const duration = Math.round(((Date.now() - start) / 1000) * 100) / 100;

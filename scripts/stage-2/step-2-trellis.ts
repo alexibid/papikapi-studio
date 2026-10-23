@@ -80,11 +80,14 @@ export class TrellisGenerator {
       ? join(publicDir, step.outputs.model_pick_public_pattern.replace('{pick}', String(pick)))
       : null;
 
+    const inputPath = this.findInputCutout(modelName, step, pick);
+    const inputMtime = existsSync(inputPath) ? statSync(inputPath).mtimeMs : 0;
+
     const resCached = Boolean(
-      cachedResGlb && existsSync(cachedResGlb) && statSync(cachedResGlb).size > 1000,
+      cachedResGlb && existsSync(cachedResGlb) && statSync(cachedResGlb).size > 1000 && statSync(cachedResGlb).mtimeMs >= inputMtime,
     );
     const pubCached = Boolean(
-      cachedPubGlb && existsSync(cachedPubGlb) && statSync(cachedPubGlb).size > 1000,
+      cachedPubGlb && existsSync(cachedPubGlb) && statSync(cachedPubGlb).size > 1000 && statSync(cachedPubGlb).mtimeMs >= inputMtime,
     );
     const cachedGlb = resCached ? cachedResGlb : pubCached ? cachedPubGlb : null;
 
@@ -128,8 +131,6 @@ export class TrellisGenerator {
         pick,
       };
     }
-
-    const inputPath = this.findInputCutout(modelName, step, pick);
     const params = step.parameters;
     const runner = step.runner;
     const config = PipelineConfigLoader.load();
@@ -161,36 +162,55 @@ export class TrellisGenerator {
     console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
     ProgressHub.report(modelName, this.stepId, startMsg);
 
-    const result = await RunPodClient.execute<
-      typeof payload,
-      { glb_base64: string; file_size: number; face_count: number }
-    >(endpointId, payload, {
-      timeoutMs: step.serverless.client_timeout_seconds * 1000,
-      onProgress: (update) => {
-        const runnerState = update.status === 'IN_QUEUE' ? 'Na fila de espera' : runner.device;
-        const progressMsg = step.messages.progress
-          .replace('{runner}', runner.platform)
-          .replace('{device}', runnerState)
-          .replace('{elapsed}', String(update.elapsedSeconds));
-        process.stdout.write(`\r  \x1b[36m${progressMsg}\x1b[0m`);
-        ProgressHub.report(modelName, this.stepId, progressMsg);
-      },
-    });
-    process.stdout.write('\r\x1b[K');
+    let buffer: Buffer;
+    let duration: number;
+    let costUsd: number;
+    let faceCount = 0;
+    let openEdges = 0;
+    let nonManifoldEdges = 0;
 
-    const trimmed = await PlinthTrimmer.apply(
-      Buffer.from(result.output.glb_base64, 'base64'),
-      params.plinth,
-    );
-    const buffer = trimmed.glb;
+    try {
+      const result = await RunPodClient.execute<
+        typeof payload,
+        { glb_base64: string; file_size: number; face_count: number }
+      >(endpointId, payload, {
+        timeoutMs: Math.min(step.serverless.client_timeout_seconds * 1000, 120000),
+        purgeBeforeRun: true,
+        maxRetries: 0,
+        onProgress: (update) => {
+          const runnerState = update.status === 'IN_QUEUE' ? 'Na fila de espera' : runner.device;
+          const progressMsg = step.messages.progress
+            .replace('{runner}', runner.platform)
+            .replace('{device}', runnerState)
+            .replace('{elapsed}', String(update.elapsedSeconds));
+          process.stdout.write(`\r  \x1b[36m${progressMsg}\x1b[0m`);
+          ProgressHub.report(modelName, this.stepId, progressMsg);
+        },
+      });
+      process.stdout.write('\r\x1b[K');
+
+      const trimmed = await PlinthTrimmer.apply(
+        Buffer.from(result.output.glb_base64, 'base64'),
+        params.plinth,
+      );
+      buffer = trimmed.glb;
+      duration = result.seconds;
+      costUsd = Math.round(duration * usdPerSec * 10000) / 10000;
+      faceCount = trimmed.faceCount;
+      openEdges = trimmed.openEdges;
+      nonManifoldEdges = trimmed.nonManifoldEdges;
+    } catch (trellisErr) {
+      process.stdout.write('\r\x1b[K');
+      const errorMsg = (trellisErr as Error).message;
+      console.error(`  \x1b[31m[${this.stepId}] ❌ Trellis 3D generation failed: ${errorMsg}\x1b[0m`);
+      throw new Error(`Falha na geração 3D Trellis: ${errorMsg}`);
+    }
 
     writeFileSync(outputPath, buffer);
     writeFileSync(publicPath, buffer);
     if (cachedResGlb) writeFileSync(cachedResGlb, buffer);
     if (cachedPubGlb) writeFileSync(cachedPubGlb, buffer);
 
-    const duration = result.seconds;
-    const costUsd = Math.round(duration * usdPerSec * 10000) / 10000;
     const sizeMb = (buffer.length / (1024 * 1024)).toFixed(2);
 
     const completedMsg = step.messages.completed
@@ -208,13 +228,13 @@ export class TrellisGenerator {
       costNote: contract.costNote,
       metrics: {
         fileSize: buffer.length,
-        faceCount: trimmed.faceCount,
-        openEdges: trimmed.openEdges,
-        nonManifoldEdges: trimmed.nonManifoldEdges,
+        faceCount,
+        openEdges,
+        nonManifoldEdges,
       },
       data: {
         fileSize: buffer.length,
-        faceCount: trimmed.faceCount,
+        faceCount,
         format: contract.data.format,
         chosenPick: pick,
         cached: false,

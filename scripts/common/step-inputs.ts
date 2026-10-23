@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 import { extname, join } from 'node:path';
 import type { CliArguments } from '../orchestrator.interface.js';
 import type { PipelineStep } from './interfaces/index.js';
@@ -14,8 +14,11 @@ export class StepInputs {
   ): readonly string[] {
     const absent = this.missing(model, step, flags.pick);
     if (absent.length > 0) return [`missing input: ${absent.join(', ')}`];
-    if (this.skipsExisting(step, flags) && this.outputsPresent(model, step))
-      return ['outputs already exist'];
+    if (this.skipsExisting(step, flags) && this.outputsPresent(model, step)) {
+      if (!this.isStale(model, step, flags.pick)) {
+        return ['outputs already exist'];
+      }
+    }
     return [];
   }
 
@@ -104,8 +107,69 @@ export class StepInputs {
   }
 
   private static present(directory: string, name: string, extensions: readonly string[]): boolean {
+    return this.findExistingPath(directory, name, extensions) !== null;
+  }
+
+  private static findExistingPath(
+    directory: string,
+    name: string,
+    extensions: readonly string[],
+  ): string | null {
     const base = name.slice(0, name.length - extname(name).length);
     const names = [name, ...extensions.map((extension) => `${base}${extension}`)];
-    return names.some((candidate) => existsSync(join(directory, candidate)));
+    for (const cand of names) {
+      const p = join(directory, cand);
+      if (existsSync(p)) return p;
+    }
+    return null;
+  }
+
+  public static isStale(
+    model: string,
+    step: PipelineStep,
+    pick: number | null,
+  ): boolean {
+    const inputs: Record<string, unknown> = step.inputs ?? {};
+    const outputs: Record<string, unknown> = step.outputs ?? {};
+    const defaultDirectory = this.directoryOf(model, step, inputs);
+    const outputDirectory = this.directoryOf(model, step, outputs);
+    const inExtensions = this.allowedExtensions(inputs);
+    const outExtensions = this.allowedExtensions(outputs);
+
+    let newestInputMtime = 0;
+    for (const { key, name } of this.resourceNames(inputs)) {
+      const directory = this.directoryForResource(model, step, inputs, key);
+      const candidates = [name, ...this.pickVariant(inputs, key, pick)];
+      for (const cand of candidates) {
+        const found =
+          this.findExistingPath(directory, cand, inExtensions) ??
+          this.findExistingPath(defaultDirectory, cand, inExtensions) ??
+          this.findExistingPath(WorkspacePaths.stageResourceDir(model, 'stage-2'), cand, inExtensions) ??
+          this.findExistingPath(WorkspacePaths.stageResourceDir(model, 'stage-3'), cand, inExtensions);
+        if (found) {
+          try {
+            const mtime = statSync(found).mtimeMs;
+            if (mtime > newestInputMtime) newestInputMtime = mtime;
+          } catch {}
+        }
+      }
+    }
+
+    if (newestInputMtime === 0) return false;
+
+    let oldestOutputMtime = Infinity;
+    const outputNames = this.resourceNames(outputs);
+    for (const { name } of outputNames) {
+      const found = this.findExistingPath(outputDirectory, name, outExtensions);
+      if (!found) return true;
+      try {
+        const mtime = statSync(found).mtimeMs;
+        if (mtime < oldestOutputMtime) oldestOutputMtime = mtime;
+      } catch {
+        return true;
+      }
+    }
+
+    return newestInputMtime > oldestOutputMtime;
   }
 }

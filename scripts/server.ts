@@ -88,7 +88,7 @@ export class CreatorApiServer {
         return;
       }
 
-      if (req.method === 'GET' && url.pathname === '/api/creator/sheet') {
+      if ((req.method === 'GET' || req.method === 'HEAD') && url.pathname === '/api/creator/sheet') {
         const name = url.searchParams.get('name');
         if (!name) {
           this.sendJson(res, 400, { error: 'Name is required' });
@@ -107,6 +107,10 @@ export class CreatorApiServer {
           'Content-Length': sheet.bytes.length,
           'Cache-Control': 'no-cache, no-store, must-revalidate',
         });
+        if (req.method === 'HEAD') {
+          res.end();
+          return;
+        }
         res.end(sheet.bytes);
         return;
       }

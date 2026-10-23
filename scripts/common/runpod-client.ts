@@ -63,16 +63,63 @@ export class RunPodClient {
     throw new Error(`RunPod serverless endpoint ID environment variable '${envKeyName}' is missing. Please define it in apps/papikapi-studio/.env or the environment.`);
   }
 
+  public static async purgeQueue(endpointId: string): Promise<boolean> {
+    try {
+      const apiKey = this.getApiKey();
+      const cleanEndpoint = endpointId.trim();
+      const response = await fetch(`https://api.runpod.ai/v2/${cleanEndpoint}/purge-queue`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
+  }
+
   public static async execute<TInput extends Record<string, unknown>, TOutput>(
+    endpointId: string,
+    input: TInput,
+    options?: RunPodExecuteOptions
+  ): Promise<RunPodJobResult<TOutput>> {
+    const maxRetries = options?.maxRetries !== undefined ? options.maxRetries : 1;
+    const maxAttempts = maxRetries + 1;
+    let lastError: Error | null = null;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        if (attempt === 1 && options?.purgeBeforeRun) {
+          await this.purgeQueue(endpointId);
+        }
+        return await this.executeSingleAttempt<TInput, TOutput>(endpointId, input, options);
+      } catch (err) {
+        lastError = err as Error;
+        console.warn(`  [RunPodClient] Attempt ${attempt}/${maxAttempts} failed: ${lastError.message}`);
+
+        if (attempt < maxAttempts) {
+          console.log(`  [RunPodClient] Purging endpoint queue and retrying in 2s...`);
+          await this.purgeQueue(endpointId);
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+        }
+      }
+    }
+
+    throw lastError ? lastError : new Error('RunPod serverless execution failed after retries');
+  }
+
+  private static async executeSingleAttempt<TInput extends Record<string, unknown>, TOutput>(
     endpointId: string,
     input: TInput,
     options?: RunPodExecuteOptions
   ): Promise<RunPodJobResult<TOutput>> {
     const apiKey = this.getApiKey();
     const cleanEndpoint = endpointId.trim();
-    const runsyncUrl = `https://api.runpod.ai/v2/${cleanEndpoint}/runsync`;
+    const runUrl = `https://api.runpod.ai/v2/${cleanEndpoint}/run`;
     const pollInterval = options?.pollIntervalMs !== undefined ? options.pollIntervalMs : 2000;
-    const timeout = options?.timeoutMs !== undefined ? options.timeoutMs : 600000;
+    const timeout = options?.timeoutMs !== undefined ? options.timeoutMs : 120000;
 
     const resolveOutput = (raw: TOutput): TOutput => {
       if (typeof raw === 'object' && raw !== null && 'output' in raw) {
@@ -82,7 +129,7 @@ export class RunPodClient {
     };
 
     const startTime = Date.now();
-    const initialResponse = await fetch(runsyncUrl, {
+    const initialResponse = await fetch(runUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -93,7 +140,7 @@ export class RunPodClient {
 
     if (!initialResponse.ok) {
       const errText = await initialResponse.text().catch(() => 'Unknown network error');
-      throw new Error(`RunPod serverless runsync error (${initialResponse.status}): ${errText}`);
+      throw new Error(`RunPod serverless run error (${initialResponse.status}): ${errText}`);
     }
 
     const initialData = (await initialResponse.json()) as RunPodApiResponse<TOutput>;
@@ -155,6 +202,16 @@ export class RunPodClient {
       }
     }
 
+    try {
+      await fetch(`https://api.runpod.ai/v2/${cleanEndpoint}/cancel/${jobId}`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${apiKey}` },
+      });
+    } catch {
+      // Ignore cancellation network errors
+    }
+
     throw new Error(`RunPod serverless job ${jobId} timed out after ${timeout / 1000}s`);
   }
 }
+
