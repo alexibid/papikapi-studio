@@ -72,6 +72,12 @@
   "image": "art.jpeg"
  },
  {
+  "id": "darth",
+  "model": "model.glb",
+  "preview": "art.jpeg",
+  "image": "art.jpeg"
+ },
+ {
   "id": "dolphin",
   "model": "model.glb",
   "preview": "art.jpeg",

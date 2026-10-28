@@ -13,10 +13,8 @@ export class UnfoldGenerator {
   private static resolveInputModel(modelName: string, step: UnfoldStepDefinition): string {
     const candidates = [
       join(WorkspacePaths.resourcePath(modelName), step.inputs.stage_dir, step.inputs.model_resource),
-      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-3-plinth.json'),
-      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-1-reduce.json'),
-      join(WorkspacePaths.resourcePath(modelName), 'stage-2', 'step-6-plinth.json'),
-      join(WorkspacePaths.resourcePath(modelName), 'stage-2', 'step-4-reduce.json'),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-4-plinth.json'),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-1-simplify.json'),
     ];
     const found = candidates.find((candidate) => existsSync(candidate));
     if (!found) {

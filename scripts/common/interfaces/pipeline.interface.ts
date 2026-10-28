@@ -1,8 +1,3 @@
-export interface PromptTemplates {
-  readonly specific_subject: string;
-  readonly generic_category: string;
-}
-
 export interface StepParameters {
   readonly default_model?: string;
   readonly fallback_model?: string;
@@ -14,12 +9,6 @@ export interface StepParameters {
   readonly default_pick?: number;
   readonly max_reference_images?: number;
   readonly system_prompt?: string;
-  readonly negative_prompt?: string;
-  readonly prompt_templates?: PromptTemplates;
-  readonly reference_note_template?: string;
-  readonly maturity_descriptions?: readonly string[];
-  readonly critical_rules?: readonly string[];
-  readonly self_check?: readonly string[];
   readonly jpeg_quality?: number;
   readonly endpoint?: string;
   readonly seed?: number;

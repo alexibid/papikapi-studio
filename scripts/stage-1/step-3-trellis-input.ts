@@ -1,0 +1,85 @@
+import { spawnSync } from 'node:child_process';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import type {
+  TrellisInputRequest,
+  TrellisInputResponse,
+  TrellisInputStepDefinition,
+} from './stage-1.interface.js';
+import { ImageCutout } from '../common/image-cutout.js';
+import { ManifestManager } from '../common/manifest-manager.js';
+import { PipelineConfigLoader } from '../common/pipeline-config.js';
+import { ProgressHub } from '../common/progress-hub.js';
+import { WorkspacePaths } from '../common/workspace-paths.js';
+
+export class TrellisInputGenerator {
+  private static readonly stepId = 's1-step-3';
+
+  private static runPython(step: TrellisInputStepDefinition, mode: string, args: readonly string[]): Record<string, unknown> {
+    const script = join(WorkspacePaths.appRoot, step.parameters.python_script);
+    const outcome = spawnSync('python3', [script, mode, ...args], { encoding: 'utf8' });
+    if (outcome.status !== 0) {
+      throw new Error(`TRELLIS input ${mode} failed: ${outcome.stderr}`);
+    }
+    return JSON.parse(outcome.stdout.trim()) as Record<string, unknown>;
+  }
+
+  private static async enlargedCutout(
+    step: TrellisInputStepDefinition,
+    cutoutPath: string,
+    work: string,
+  ): Promise<{ path: string; report: Record<string, unknown> }> {
+    const { super_resolution } = step.parameters;
+    const enlargedColour = join(work, 'enlarged.png');
+    const report = this.runPython(step, 'prepare', [
+      '--cutout', cutoutPath, '--out', enlargedColour,
+      '--sr-binary', super_resolution.binary, '--sr-model', super_resolution.model,
+      '--sr-scale', String(super_resolution.scale),
+    ]);
+    const enlargedCutoutPath = join(work, 'enlarged-cutout.png');
+    writeFileSync(enlargedCutoutPath, await ImageCutout.extractCutout({ imageBuffer: readFileSync(enlargedColour) }));
+    return { path: enlargedCutoutPath, report };
+  }
+
+  public static async execute(request: TrellisInputRequest): Promise<TrellisInputResponse> {
+    const { name } = request;
+    const step = PipelineConfigLoader.getStep(this.stepId) as unknown as TrellisInputStepDefinition;
+    const stageDir = join(WorkspacePaths.resourcePath(name), step.stage_dir);
+    mkdirSync(stageDir, { recursive: true });
+
+    const startMsg = step.messages.start.replace('{model}', name);
+    console.log(`\n  \x1b[35m${startMsg}\x1b[0m`);
+    ProgressHub.report(name, this.stepId, startMsg);
+
+    const start = Date.now();
+    const cutoutPath = join(stageDir, step.outputs.cutout_resource);
+    const trellisInputPath = join(stageDir, step.outputs.trellis_input_resource);
+    writeFileSync(cutoutPath, await ImageCutout.extractCutout({ imageBuffer: readFileSync(join(stageDir, step.inputs.art_resource)) }));
+
+    const work = mkdtempSync(join(tmpdir(), 'papikapi-trellis-input-'));
+    let report: Record<string, unknown>;
+    try {
+      const enlarged = await this.enlargedCutout(step, cutoutPath, work);
+      const size = String(step.parameters.image_size);
+      const composed = this.runPython(step, 'compose', ['--cutout', enlarged.path, '--out', trellisInputPath, '--size', size]);
+      report = { ...enlarged.report, ...composed };
+    } finally {
+      rmSync(work, { recursive: true, force: true });
+    }
+
+    const duration = Math.round(((Date.now() - start) / 1000) * 100) / 100;
+    const completedMsg = step.messages.completed.replace('{model}', name).replace('{duration}', String(duration));
+    console.log(`  \x1b[32m${completedMsg}\x1b[0m`);
+    ProgressHub.report(name, this.stepId, completedMsg);
+
+    ManifestManager.writeStepResult(name, this.stepId, {
+      status: step.manifest_contract.status,
+      seconds: duration,
+      costUsd: step.manifest_contract.costUsd,
+      costNote: step.manifest_contract.costNote,
+      data: report,
+    });
+    return { name, cutoutPath, trellisInputPath };
+  }
+}

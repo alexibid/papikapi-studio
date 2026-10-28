@@ -39,7 +39,8 @@ def build_reduced_mesh(settings):
         surface.normal_update()
     split_oversized_faces(surface, document["lengthMeters"], settings["face_max_extent_ratio"])
 
-    bounds = footprint(surface, settings["plinth_margin_ratio"] * document["lengthMeters"])
+    square = settings.get("plinth_square", False)
+    bounds = footprint(surface, settings["plinth_margin_ratio"] * document["lengthMeters"], square=square)
     statistics = add_white_plinth(surface, settings, document["lengthMeters"], 0, bounds=bounds)
     plinth_face_ids = [face.index for face in statistics["plinth_faces"]]
 
@@ -75,6 +76,7 @@ def white_material():
     bsdf = material.node_tree.nodes["Principled BSDF"]
     bsdf.inputs["Base Color"].default_value = WHITE
     bsdf.inputs["Metallic"].default_value = 0.0
+    bsdf.inputs["Roughness"].default_value = 0.8
     return material
 
 
@@ -97,7 +99,8 @@ def textured_models(settings, length):
         polygon.use_smooth = False
 
     plinth_bmesh = bmesh.new()
-    bounds = footprint(figure.data, settings["plinth_margin_ratio"] * length)
+    square = settings.get("plinth_square", False)
+    bounds = footprint(figure.data, settings["plinth_margin_ratio"] * length, square=square)
     add_white_plinth(plinth_bmesh, settings, length, 0, bounds=bounds)
     plinth_mesh = bpy.data.meshes.new("Plinth")
     plinth_bmesh.to_mesh(plinth_mesh)
@@ -145,11 +148,13 @@ def main():
     result, length = build_reduced_mesh(settings)
     figure, plinth_obj = textured_models(settings, length)
 
-    output_figure = settings.get("output_figure_glb", str(Path(settings["output_glb"]).with_name("step-3-figure.glb")))
-    output_plinth = settings.get("output_plinth_glb", str(Path(settings["output_glb"]).with_name("step-3-plinth-only.glb")))
+    output_figure = settings.get("output_figure_glb")
+    output_plinth = settings.get("output_plinth_glb")
 
-    export_single_glb(figure, output_figure)
-    export_single_glb(plinth_obj, output_plinth)
+    if output_figure:
+        export_single_glb(figure, output_figure)
+    if output_plinth:
+        export_single_glb(plinth_obj, output_plinth)
     export_combined_glb(figure, plinth_obj, settings["output_glb"])
 
     print(RESULT_MARKER + json.dumps(result))

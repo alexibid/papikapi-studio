@@ -5,6 +5,7 @@ import type { PipelineStep } from './interfaces/index.js';
 import { WorkspacePaths } from './workspace-paths.js';
 
 const RESOURCE_SUFFIX = /_resource$/;
+const FALLBACK_PREFIX = 'fallback_';
 
 export class StepInputs {
   public static skipReasons(
@@ -36,7 +37,7 @@ export class StepInputs {
     return this.resourceNames(inputs)
       .filter(({ key, name }) => {
         const directory = this.directoryForResource(model, step, inputs, key);
-        const candidates = [name, ...this.pickVariant(inputs, key, pick)];
+        const candidates = [name, ...this.pickVariant(inputs, key, pick), ...this.fallbackOf(inputs, key)];
         if (candidates.some((candidate) => this.present(directory, candidate, extensions))) {
           return false;
         }
@@ -85,8 +86,14 @@ export class StepInputs {
     section: Record<string, unknown>,
   ): readonly { key: string; name: string }[] {
     return Object.keys(section)
-      .filter((key) => RESOURCE_SUFFIX.test(key))
+      .filter((key) => RESOURCE_SUFFIX.test(key) && !key.startsWith(FALLBACK_PREFIX))
       .map((key) => ({ key, name: String(section[key]) }));
+  }
+
+  /** `fallback_<x>_resource` is accepted when `<x>_resource` does not exist (older figures). */
+  private static fallbackOf(inputs: Record<string, unknown>, key: string): readonly string[] {
+    const fallback = inputs[`${FALLBACK_PREFIX}${key}`];
+    return typeof fallback === 'string' ? [fallback] : [];
   }
 
   private static allowedExtensions(section: Record<string, unknown>): readonly string[] {
@@ -139,7 +146,7 @@ export class StepInputs {
     let newestInputMtime = 0;
     for (const { key, name } of this.resourceNames(inputs)) {
       const directory = this.directoryForResource(model, step, inputs, key);
-      const candidates = [name, ...this.pickVariant(inputs, key, pick)];
+      const candidates = [name, ...this.pickVariant(inputs, key, pick), ...this.fallbackOf(inputs, key)];
       for (const cand of candidates) {
         const found =
           this.findExistingPath(directory, cand, inExtensions) ??

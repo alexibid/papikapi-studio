@@ -25,3 +25,14 @@ export interface RunPodApiResponse<T> {
   readonly error?: string;
   readonly executionTime?: number;
 }
+
+export interface RunPodStreamResponse<T> {
+  readonly status: RunPodJobStatus;
+  readonly stream?: readonly { readonly output: T }[];
+  readonly error?: string;
+}
+
+export interface RunPodStreamResult<T> {
+  readonly chunks: readonly T[];
+  readonly seconds: number;
+}

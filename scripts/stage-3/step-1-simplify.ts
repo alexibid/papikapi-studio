@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { BlenderRunner } from '../common/blender-runner.js';
 import { ManifestManager } from '../common/manifest-manager.js';
@@ -7,6 +7,7 @@ import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { ProgressHub } from '../common/progress-hub.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
 import type {
+  SimplifyOutputs,
   SimplifyResponse,
   SimplifyStatistics,
   SimplifyStepDefinition,
@@ -17,15 +18,23 @@ export class SimplifyGenerator {
 
   private static resolveInputModel(modelName: string, step: SimplifyStepDefinition, pick?: number): string {
     const stageDir = join(WorkspacePaths.resourcePath(modelName), step.inputs.stage_dir);
-    const pickCandidate = pick
+    const pickCandidate = pick && step.inputs.model_pick_resource_pattern
       ? join(stageDir, step.inputs.model_pick_resource_pattern.replace('{pick}', String(pick)))
       : null;
     if (pickCandidate && existsSync(pickCandidate)) return pickCandidate;
-    const candidate = join(stageDir, step.inputs.model_resource);
-    if (!existsSync(candidate)) {
-      throw new Error(`3D model not found for '${modelName}': ${candidate}`);
+    const candidates = [step.inputs.model_resource, step.inputs.fallback_model_resource]
+      .filter((name): name is string => typeof name === 'string')
+      .map((name) => join(stageDir, name));
+    const found = candidates.find((candidate) => existsSync(candidate));
+    if (!found) {
+      throw new Error(`3D model not found for '${modelName}': ${candidates.join(' or ')}`);
     }
-    return candidate;
+    return found;
+  }
+
+  private static outputPaths(stageDir: string, outputs: SimplifyOutputs): Record<keyof SimplifyOutputs, string> {
+    const entries = Object.entries(outputs).map(([key, name]) => [key, join(stageDir, name)]);
+    return Object.fromEntries(entries) as Record<keyof SimplifyOutputs, string>;
   }
 
   public static async execute(modelName: string, requestedPick?: number): Promise<SimplifyResponse> {
@@ -34,9 +43,7 @@ export class SimplifyGenerator {
     mkdirSync(stageDir, { recursive: true });
 
     const inputPath = this.resolveInputModel(modelName, step, requestedPick);
-    const pointsPath = join(stageDir, step.outputs.points_resource);
-    const meshPath = join(stageDir, step.outputs.mesh_resource);
-
+    const paths = this.outputPaths(stageDir, step.outputs);
     const parameters = { ...step.parameters, ...ModelProfiles.stepParameters(modelName, this.stepId) };
 
     const startMsg = step.messages.start.replace('{model}', modelName);
@@ -44,23 +51,19 @@ export class SimplifyGenerator {
     ProgressHub.report(modelName, this.stepId, startMsg);
 
     const start = Date.now();
-    const statistics = BlenderRunner.run<SimplifyStatistics>(step.blender, step.blender.script, {
+    const shape = BlenderRunner.run<SimplifyStatistics>(step.blender, step.blender.script, {
       input_glb: inputPath,
-      output_json: pointsPath,
-      output_glb: meshPath,
+      output_json: paths.points_resource,
+      output_glb: paths.model_resource,
       ...parameters,
     });
     const duration = Math.round(((Date.now() - start) / 1000) * 100) / 100;
-    const publicDir = WorkspacePaths.modelPath(modelName);
-    mkdirSync(publicDir, { recursive: true });
-    copyFileSync(meshPath, join(publicDir, step.outputs.mesh_public));
 
     const completedMsg = step.messages.completed
       .replace('{model}', modelName)
-      .replace('{points}', String(statistics.points))
-      .replace('{meshFaces}', String(statistics.meshFaces))
-      .replace('{quads}', String(statistics.quads))
-      .replace('{deviation}', String(statistics.maxDeviationMm))
+      .replace('{meshFaces}', String(shape.meshFaces))
+      .replace('{quads}', String(shape.quads))
+      .replace('{volume}', String(shape.volumeChangePercent))
       .replace('{duration}', String(duration));
     console.log(`  \x1b[32m${completedMsg}\x1b[0m\n`);
     ProgressHub.report(modelName, this.stepId, completedMsg);
@@ -71,26 +74,27 @@ export class SimplifyGenerator {
       costUsd: 0.0,
       costNote: step.manifest_contract.costNote,
       metrics: {
-        points: statistics.points,
-        meshFaces: statistics.meshFaces,
-        quads: statistics.quads,
-        openEdges: statistics.openEdges,
-        nonManifoldEdges: statistics.nonManifoldEdges,
-        airtight: statistics.airtight,
-        volumeChangePercent: statistics.volumeChangePercent,
-        maxDeviationMm: statistics.maxDeviationMm,
-        featureLossMm: statistics.featureLossMm,
-        mode: statistics.mode,
-        alignedAreaRatio: statistics.alignedAreaRatio,
+        points: shape.points,
+        meshFaces: shape.meshFaces,
+        quads: shape.quads,
+        airtight: shape.airtight,
+        volumeChangePercent: shape.volumeChangePercent,
+        dimensionChangePercent: shape.dimensionChangePercent,
+        featureLossMm: shape.featureLossMm,
+        maxDeviationMm: shape.maxDeviationMm,
+        closingDeviationMm: shape.closingDeviationMm,
+        innerWallShare: shape.innerWallShare,
+        mode: shape.mode,
       },
       data: {
         source: inputPath,
-        lengthMm: statistics.lengthMm,
-        faces: statistics.faces,
+        lengthMm: shape.lengthMm,
+        faces: shape.faces,
+        attempts: shape.attempts,
         parameters,
       },
     });
 
-    return { name: modelName, meshPath, pointsPath, seconds: duration };
+    return { name: modelName, modelPath: paths.model_resource, pointsPath: paths.points_resource, seconds: duration };
   }
 }

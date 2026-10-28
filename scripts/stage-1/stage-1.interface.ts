@@ -32,19 +32,9 @@ export interface AlternativesStepParameters {
   readonly alternatives_count: number;
   readonly max_reference_images: number;
   readonly system_prompt: string;
-  readonly negative_prompt: string;
-  readonly prompt_templates: {
-    readonly specific_subject: string;
-    readonly generic_category: string;
-  };
-  readonly style_reference_note: string;
-  readonly reference_note_template: string;
-  readonly view_clause: string;
-  readonly base_clause: string;
-  readonly training_caption_view_phrase: string;
-  readonly cell_prompt_templates: readonly string[];
-  readonly maturity_descriptions: readonly string[];
-  readonly critical_rules: readonly string[];
+  readonly reference_rule: string;
+  readonly default_pose: string;
+  readonly plane_colours: readonly string[];
 }
 
 export interface AlternativesStepDefinition {
@@ -58,11 +48,6 @@ export interface AlternativesStepDefinition {
   readonly parameters: AlternativesStepParameters;
   readonly outputs: AlternativesStepOutputs;
   readonly manifest_contract: AlternativesManifestContract;
-}
-
-export interface ReferenceComposition {
-  readonly hasStyle: boolean;
-  readonly subjectCount: number;
 }
 
 export interface GenerateAlternativesRequest {
@@ -143,3 +128,32 @@ export interface FluxWorkerOutput {
   readonly reference_images_used?: number;
 }
 
+
+export interface TrellisInputStepDefinition {
+  readonly id: string;
+  readonly stage_dir: string;
+  readonly inputs: { readonly stage_dir: string; readonly art_resource: string };
+  readonly outputs: {
+    readonly stage_dir: string;
+    readonly cutout_resource: string;
+    readonly trellis_input_resource: string;
+    readonly manifest: string;
+  };
+  readonly parameters: {
+    readonly python_script: string;
+    readonly image_size: number;
+    readonly super_resolution: { readonly binary: string; readonly model: string; readonly scale: number };
+  };
+  readonly manifest_contract: { readonly status: string; readonly costUsd: number; readonly costNote: string };
+  readonly messages: { readonly start: string; readonly completed: string };
+}
+
+export interface TrellisInputRequest {
+  readonly name: string;
+}
+
+export interface TrellisInputResponse {
+  readonly name: string;
+  readonly cutoutPath: string;
+  readonly trellisInputPath: string;
+}

@@ -192,6 +192,10 @@ export class RunPodClient {
         options.onProgress({ elapsedSeconds, status: pollData.status });
       }
 
+      if (pollData.status === 'COMPLETED') {
+        throw new Error(`RunPod job ${jobId} completed without output: the result exceeds RunPod's payload limit`);
+      }
+
       if (pollData.status === 'FAILED') {
         const failMsg = pollData.error !== undefined ? pollData.error : 'Job failed on serverless worker';
         throw new Error(`RunPod serverless execution failed: ${failMsg}`);

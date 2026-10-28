@@ -6,7 +6,7 @@ env.allowLocalModels = false;
 env.logLevel = LogLevel.ERROR;
 
 export class ImageCutout {
-  private static readonly modelId = 'briaai/RMBG-1.4';
+  private static readonly modelId = 'onnx-community/BiRefNet_lite-ONNX';
   private static readonly opaqueThreshold = 128;
   private static readonly transparentThreshold = 20;
   private static readonly minIslandPixels = 200;
@@ -30,7 +30,7 @@ export class ImageCutout {
       this.removeSmallIslands(alpha, image.width, image.height);
       return await this.encodePng(image, alpha);
     } catch (err) {
-      console.warn('  [ImageCutout] RMBG model extraction unavailable, activating chroma key fallback:', (err as Error).message);
+      console.warn('  [ImageCutout] segmentation model unavailable, activating chroma key fallback:', (err as Error).message);
       return this.chromaKeyFallback(options.imageBuffer);
     }
   }
@@ -65,7 +65,7 @@ export class ImageCutout {
   private static async getModel(): Promise<LoadedModel> {
     if (!this.modelPromise) {
       this.modelPromise = (async () => {
-        const model = (await AutoModel.from_pretrained(this.modelId)) as unknown as LoadedModel['model'];
+        const model = (await AutoModel.from_pretrained(this.modelId, { dtype: 'fp32' })) as unknown as LoadedModel['model'];
         const processor = (await AutoProcessor.from_pretrained(this.modelId)) as unknown as LoadedModel['processor'];
         return { model, processor };
       })();
@@ -76,8 +76,8 @@ export class ImageCutout {
   private static async segmentMask(image: RawImage): Promise<RawImage> {
     const { model, processor } = await this.getModel();
     const { pixel_values } = await processor(image);
-    const { output } = await model({ input: pixel_values });
-    const maskTensor = output[0].mul(255).to('uint8');
+    const { output_image } = await model({ input_image: pixel_values });
+    const maskTensor = output_image[0].sigmoid().mul(255).to('uint8');
     return RawImage.fromTensor(maskTensor).resize(image.width, image.height);
   }
 

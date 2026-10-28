@@ -4,16 +4,14 @@ export interface CutoutResponse {
   readonly publicPath: string;
   readonly seconds: number;
   readonly costUsd: number;
-  readonly cached: boolean;
-  readonly pick?: number;
 }
 
 export interface CutoutStepInputs {
   readonly stage_dir: string;
   readonly art_resource: string;
   readonly art_public: string;
-  readonly allowed_extensions: readonly string[];
   readonly art_pick_resource_pattern: string;
+  readonly allowed_extensions: readonly string[];
 }
 
 export interface CutoutStepOutputs {

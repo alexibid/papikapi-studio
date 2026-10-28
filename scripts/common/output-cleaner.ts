@@ -87,7 +87,7 @@ export class OutputCleaner {
         cleaned.push(basename(manifest));
       }
     } else if (step.id === 's2-step-3') {
-      const stepOutputs = step.outputs as { model_resource: string; manifest: string; views_dir?: string };
+      const stepOutputs = step.outputs as { model_resource: string; manifest: string };
       for (const name of [stepOutputs.model_resource, stepOutputs.manifest]) {
         const target = join(stageDir, name);
         if (existsSync(target)) {
@@ -95,44 +95,42 @@ export class OutputCleaner {
           cleaned.push(basename(target));
         }
       }
-      for (const folder of [join(stageDir, stepOutputs.views_dir ?? 'step-3-views'), join(resourceDir, 'step-3-views')]) {
-        if (existsSync(folder)) {
-          rmSync(folder, { recursive: true, force: true });
-          cleaned.push(basename(folder));
+    } else if (step.id === 's2-step-4') {
+      const stepOutputs = step.outputs as { model_resource: string; manifest: string };
+      for (const name of [stepOutputs.model_resource, stepOutputs.manifest]) {
+        const target = join(stageDir, name);
+        if (existsSync(target)) {
+          unlinkSync(target);
+          cleaned.push(basename(target));
         }
       }
     } else if (step.id === 's3-step-1') {
-      const stepOutputs = step.outputs as { points_resource: string; mesh_resource: string; mesh_public?: string; manifest: string };
-      for (const name of [stepOutputs.points_resource, stepOutputs.mesh_resource, stepOutputs.manifest]) {
-        if (!name) continue;
+      const stepOutputs = step.outputs as Record<string, string>;
+      for (const [key, name] of Object.entries(stepOutputs)) {
+        if (key === 'stage_dir' || key === 'mesh_public') continue;
+        const target = join(stageDir, name);
+        if (existsSync(target)) {
+          rmSync(target, { recursive: true, force: true });
+          cleaned.push(basename(target));
+        }
+      }
+    } else if (step.id === 's3-step-2') {
+      const stepOutputs = step.outputs as Record<string, string>;
+      for (const [key, name] of Object.entries(stepOutputs)) {
+        if (key === 'stage_dir') continue;
         const target = join(stageDir, name);
         if (existsSync(target)) {
           unlinkSync(target);
           cleaned.push(basename(target));
         }
       }
-      if (stepOutputs.mesh_public) {
-        const pubMesh = join(publicDir, stepOutputs.mesh_public);
-        if (existsSync(pubMesh)) {
-          unlinkSync(pubMesh);
-          cleaned.push(`public/${basename(pubMesh)}`);
-        }
-      }
-    } else if (step.id === 's3-step-2') {
-      const stepOutputs = step.outputs as { model_resource: string; model_public?: string; svg_dir?: string; facets_dir?: string; manifest: string };
+    } else if (step.id === 's3-step-3') {
+      const stepOutputs = step.outputs as { model_resource: string; model_public?: string; manifest: string };
       for (const name of [stepOutputs.model_resource, stepOutputs.manifest]) {
         if (!name) continue;
         const target = join(stageDir, name);
         if (existsSync(target)) {
           unlinkSync(target);
-          cleaned.push(basename(target));
-        }
-      }
-      for (const folder of [stepOutputs.svg_dir, stepOutputs.facets_dir, 'step-2-views']) {
-        if (!folder) continue;
-        const target = join(stageDir, folder);
-        if (existsSync(target)) {
-          rmSync(target, { recursive: true, force: true });
           cleaned.push(basename(target));
         }
       }
@@ -143,7 +141,7 @@ export class OutputCleaner {
           cleaned.push(`public/${basename(pubModel)}`);
         }
       }
-    } else if (step.id === 's3-step-3') {
+    } else if (step.id === 's3-step-4') {
       const stepOutputs = step.outputs as { model_resource: string; mesh_resource: string; model_public: string; manifest: string };
       for (const name of [stepOutputs.model_resource, stepOutputs.mesh_resource, stepOutputs.manifest]) {
         if (!name) continue;

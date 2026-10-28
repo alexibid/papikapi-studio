@@ -22,12 +22,21 @@ def lost_feature_distance(surface, reference):
     return farthest
 
 
+def dimensions(surface):
+    return [max(v.co[axis] for v in surface.verts) - min(v.co[axis] for v in surface.verts) for axis in range(3)]
+
+
+def dimension_change_percent(surface, reference):
+    return max(100.0 * abs(low - high) / high for low, high in zip(dimensions(surface), dimensions(reference)))
+
+
 def measure_quality(surface, reference):
     tree = BVHTree.FromBMesh(reference)
     deviations = [tree.find_nearest(vertex.co)[3] for vertex in surface.verts]
     reference_volume = enclosed_volume(reference)
     open_edges, non_manifold = open_and_non_manifold_edges(surface)
     return {
+        "dimensionChangePercent": round(dimension_change_percent(surface, reference), 2),
         "meshFaces": len(surface.faces),
         "quads": sum(1 for face in surface.faces if len(face.verts) == 4),
         "openEdges": open_edges,

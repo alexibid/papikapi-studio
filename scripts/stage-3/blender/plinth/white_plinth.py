@@ -4,11 +4,18 @@ A4_PRINTABLE_WIDTH_M = 0.170
 A4_PRINTABLE_HEIGHT_M = 0.245
 
 
-def footprint(surface, margin):
+def footprint(surface, margin, square=False):
     verts = surface.verts if hasattr(surface, "verts") else surface.vertices
     xs = [vertex.co.x for vertex in verts]
     ys = [vertex.co.y for vertex in verts]
-    return min(xs) - margin, max(xs) + margin, min(ys) - margin, max(ys) + margin
+    min_x, max_x = min(xs), max(xs)
+    min_y, max_y = min(ys), max(ys)
+    if square:
+        cx = (min_x + max_x) / 2.0
+        cy = (min_y + max_y) / 2.0
+        half_span = max(max_x - min_x, max_y - min_y) / 2.0 + margin
+        return cx - half_span, cx + half_span, cy - half_span, cy + half_span
+    return min_x - margin, max_x + margin, min_y - margin, max_y + margin
 
 
 def new_face(surface, corners, material_index):
@@ -124,7 +131,8 @@ def build_plinth_box(plinth_surface, bounds, thickness, slope=0.0, material_inde
 
 def add_white_plinth(surface, settings, length, material_index, bounds=None):
     if bounds is None:
-        bounds = footprint(surface, settings["plinth_margin_ratio"] * length)
+        square = settings.get("plinth_square", False)
+        bounds = footprint(surface, settings["plinth_margin_ratio"] * length, square=square)
     thickness = settings["plinth_thickness_ratio"] * length
     slope = settings.get("plinth_slope_ratio", 0.0) * length
     return build_plinth_box(surface, bounds, thickness, slope, material_index)

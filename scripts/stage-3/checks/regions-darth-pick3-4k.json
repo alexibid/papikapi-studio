@@ -1,0 +1,159 @@
+{
+ "regions": [
+  {
+   "name": "eye_left",
+   "kind": "eye",
+   "box": [
+    1300,
+    770,
+    180,
+    190
+   ],
+   "mandatory": true
+  },
+  {
+   "name": "eye_right",
+   "kind": "eye",
+   "box": [
+    1690,
+    780,
+    250,
+    200
+   ],
+   "mandatory": true
+  },
+  {
+   "name": "nose_mouth",
+   "kind": "mark",
+   "box": [
+    1380,
+    1040,
+    340,
+    350
+   ],
+   "mandatory": true
+  },
+  {
+   "name": "blaze",
+   "kind": "mark",
+   "box": [
+    1480,
+    560,
+    380,
+    500
+   ],
+   "mandatory": true
+  },
+  {
+   "name": "ear_left",
+   "kind": "ear",
+   "box": [
+    1230,
+    110,
+    370,
+    470
+   ],
+   "mandatory": true
+  },
+  {
+   "name": "ear_right",
+   "kind": "ear",
+   "box": [
+    1900,
+    110,
+    460,
+    530
+   ],
+   "mandatory": true
+  },
+  {
+   "name": "bib_chest",
+   "kind": "mark",
+   "box": [
+    1250,
+    1450,
+    1000,
+    780
+   ],
+   "mandatory": true
+  },
+  {
+   "name": "paw_front_left",
+   "kind": "paw",
+   "box": [
+    1280,
+    3170,
+    520,
+    420
+   ],
+   "mandatory": true
+  },
+  {
+   "name": "paw_front_right",
+   "kind": "paw",
+   "box": [
+    1880,
+    3120,
+    420,
+    470
+   ],
+   "mandatory": true
+  },
+  {
+   "name": "paw_back",
+   "kind": "paw",
+   "box": [
+    2390,
+    3200,
+    380,
+    250
+   ],
+   "mandatory": true
+  },
+  {
+   "name": "tail",
+   "kind": "tail",
+   "box": [
+    2690,
+    2250,
+    400,
+    470
+   ],
+   "mandatory": true,
+   "visibility": "hidden"
+  },
+  {
+   "name": "flank_black",
+   "kind": "mark",
+   "box": [
+    2400,
+    1650,
+    500,
+    700
+   ],
+   "mandatory": true
+  },
+  {
+   "name": "haunch",
+   "kind": "mark",
+   "box": [
+    2330,
+    2400,
+    520,
+    620
+   ],
+   "mandatory": true
+  },
+  {
+   "name": "lower_belly",
+   "kind": "mark",
+   "box": [
+    1700,
+    2650,
+    300,
+    350
+   ],
+   "mandatory": true
+  }
+ ]
+}

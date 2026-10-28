@@ -15,11 +15,7 @@ import type {
 export class BaseCutGenerator {
   private static readonly stepId = 's2-step-3';
 
-  private static resolveInputModel(
-    modelName: string,
-    step: BaseStepDefinition,
-    pick?: number,
-  ): string {
+  private static resolveInputModel(modelName: string, step: BaseStepDefinition, pick?: number): string {
     const stageDir = join(WorkspacePaths.resourcePath(modelName), step.inputs.stage_dir);
     const pickCandidate = pick
       ? join(stageDir, step.inputs.model_pick_resource_pattern.replace('{pick}', String(pick)))
@@ -52,26 +48,10 @@ export class BaseCutGenerator {
       ...step.parameters,
     });
 
-    const viewsDirName = step.outputs.views_dir ?? 'step-3-views';
-    const viewsDir = join(stageDir, viewsDirName);
-    const viewsScript = step.blender.views_script ?? 'scripts/stage-2/blender/base/render_base_views.py';
-    BlenderRunner.run(step.blender, viewsScript, {
-      input_glb: outputPath,
-      output_dir: viewsDir,
-      resolution: 2048,
-      margin: 0.0,
-    });
-
     const duration = Math.round(((Date.now() - start) / 1000) * 100) / 100;
 
     if (requestedPick) {
-      copyFileSync(
-        outputPath,
-        join(
-          stageDir,
-          step.outputs.model_pick_resource_pattern.replace('{pick}', String(requestedPick)),
-        ),
-      );
+      copyFileSync(outputPath, join(stageDir, step.outputs.model_pick_resource_pattern.replace('{pick}', String(requestedPick))));
     }
 
     const completedMsg = step.messages.completed

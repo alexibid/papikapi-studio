@@ -4,13 +4,14 @@
   "stages": {
     "s1-step-1": {
       "stageId": "s1-step-1",
-      "at": "2026-10-22T22:25:58.210Z",
+      "at": "2026-10-27T11:27:25.015Z",
       "status": "DONE",
-      "seconds": 47.53,
-      "costUsd": 0.0071,
-      "costNote": "RunPod Serverless FLUX.2 ($0.0071)",
+      "seconds": 46.39,
+      "costUsd": 0.007,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0070)",
       "data": {
-        "prompt": "a cute standing bicolor black and white cat, black fur covering the top of the head and ears, asymmetrical vertical white blaze on the nose bridge extending between the eyes towards its left eye, solid white muzzle and cheeks with a distinct black nose tip, distinct closed mouth line, white chin with a small black spot beneath the lower lip, large solid white chest bib extending down the belly, jet-black back and body, white socks on all four paws, pale yellow-green eyes with round white catchlights, standing on all four legs with belly elevated above the ground plane, quadruped posture with exactly four distinct legs and four paws flat on the ground plane, full body profile in eye-level three-quarter view showing front and side, zero extra limbs, never sitting, never seated on hind legs, never bipedal, pure low-poly papercraft cardstock facets with clean planar folds, closed solid volumes with fine details painted flat as 2D UV texture decals, smooth bare paper cardstock cheeks, plain muzzle with a distinct cute closed mouth line decal, exactly two large expressive eyes with white catchlights, zero floor shadow",
+        "prompt": "a cute bicolor black and white cat, jet-black head with pointed upright ears with pale grey inner fur, a black nose, a black patch on the chin directly below the mouth, the rest of the chin white, a narrow white vertical blaze starting between the eyes that covers only one half of the forehead, the half on the side of the cat's right eye, while the other half between the eyes stays solid black, the blaze widening down the nose bridge into a white muzzle, large pale yellow-green eyes with vertical slit pupils, white cheek on the cat's left side with a thin black stripe under the eye, white throat and large white chest bib, jet-black back, sides, haunches and tail, white front paws and white back paws",
+        "fluxPrompt": "Use the reference photo only for the subject's colours and markings, never for its pose or camera angle. Standing on all its legs with every foot, paw or wheel flat on the plane and the belly raised off the plane, never sitting, crouching or lying down. a cute bicolor black and white cat, jet-black head with pointed upright ears with pale grey inner fur, a black nose, a black patch on the chin directly below the mouth, the rest of the chin white, a narrow white vertical blaze starting between the eyes that covers only one half of the forehead, the half on the side of the cat's right eye, while the other half between the eyes stays solid black, the blaze widening down the nose bridge into a white muzzle, large pale yellow-green eyes with vertical slit pupils, white cheek on the cat's left side with a thin black stripe under the eye, white throat and large white chest bib, jet-black back, sides, haunches and tail, white front paws and white back paws. The figure stands on one single flat plane of zero thickness, a plain sheet of solid saturated blue paper that contrasts strongly with every part of the figure touching it, only slightly wider than the figure, never a slab, box or pedestal. Low-poly faceted 3D papercraft model of the subject described above, built from simple closed geometric volumes of matte cardstock with clean planar folds and no black crease lines. Every fine detail (eyes, nose, mouth, markings) is painted flat on the facets as a 2D decal, never sculpted. Exactly the anatomy of the subject: no extra or missing legs, tails or eyes, no clothing or accessories. Cute expressive eyes with round white catchlights. No thin protruding parts: no strands, antennae or spikes. Eye-level three-quarter view with the camera at body height, the whole figure in frame and upright. Seamless flat light grey #E5E5E5 background. Zero shadows. No text, letters or watermark.",
         "referenceCount": 1,
         "alternativesCount": 6,
         "format": "image/jpeg"
@@ -18,69 +19,87 @@
     },
     "s1-step-2": {
       "stageId": "s1-step-2",
-      "at": "2026-10-22T22:26:14.162Z",
+      "at": "2026-10-26T18:30:20.365Z",
       "status": "DONE",
-      "seconds": 0.04,
+      "seconds": 0.02,
       "costUsd": 0,
       "costNote": "Local CPU Image Processing ($0.00)",
       "data": {
-        "chosenPick": 3,
-        "artSize": 41462
+        "chosenPick": 2,
+        "artSize": 36305
+      }
+    },
+    "s1-step-3": {
+      "stageId": "s1-step-3",
+      "at": "2026-10-27T09:27:41.998Z",
+      "status": "DONE",
+      "seconds": 22.52,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "sourceSize": [
+          486,
+          486
+        ],
+        "enlargedSize": [
+          1944,
+          1944
+        ],
+        "plinthPixels": 0,
+        "whiskerPixels": 902,
+        "size": 1024
       }
     },
     "s2-step-1": {
       "stageId": "s2-step-1",
-      "at": "2026-10-22T22:26:15.635Z",
+      "at": "2026-10-27T15:17:14.727Z",
       "status": "DONE",
-      "seconds": 1.45,
+      "seconds": 11.7,
       "costUsd": 0,
       "costNote": "Local CPU Image Processing ($0.00)",
       "data": {
-        "cached": false,
-        "chosenPick": 3,
-        "format": "image/png"
+        "format": "image/png",
+        "chosenPick": 2
       },
       "metrics": {
-        "fileSize": 202031
+        "fileSize": 143773
       }
     },
     "s2-step-2": {
       "stageId": "s2-step-2",
-      "at": "2026-10-22T22:27:53.083Z",
+      "at": "2026-10-27T15:19:50.725Z",
       "status": "DONE",
-      "seconds": 97.11,
-      "costUsd": 0.0301,
+      "seconds": 155.64,
+      "costUsd": 0.0482,
       "costNote": "RunPod Serverless ($0.00031/s)",
       "data": {
-        "fileSize": 1236116,
-        "faceCount": 4000,
+        "fileSize": 16846940,
+        "faceCount": 491717,
         "format": "model/gltf-binary",
-        "chosenPick": 3,
         "cached": false,
+        "chosenPick": 2,
         "device": "NVIDIA RTX 4090 Serverless Worker",
         "parameters": {
-          "seed": 1,
-          "simplify": 0.85,
-          "target_faces": 4000,
-          "texture_size": 1024
+          "seed": 67108501,
+          "resolution": "1024",
+          "decimation_target": 500000,
+          "texture_size": 2048
         }
       },
       "metrics": {
-        "fileSize": 1236116,
-        "faceCount": 4000,
-        "openEdges": 0,
-        "nonManifoldEdges": 0
+        "fileSize": 16846940,
+        "faceCount": 491717
       }
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-22T22:27:59.053Z",
+      "at": "2026-10-27T15:24:42.705Z",
       "status": "DONE",
-      "seconds": 5.95,
+      "seconds": 291.86,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/darth/stage-2/step-2-3d-pick-3.glb",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/darth/stage-2/step-2-3d.glb",
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
@@ -94,32 +113,117 @@
         }
       },
       "metrics": {
-        "faces": 3943,
-        "openEdges": 0,
-        "nonManifoldEdges": 0,
-        "airtight": true,
-        "removedIslands": 0,
-        "loops": 4,
-        "widthMm": 274.7,
-        "lengthMm": 612.6,
-        "marginRatio": 0.003,
+        "faces": 475950,
+        "openEdges": 16,
+        "nonManifoldEdges": 60,
+        "airtight": false,
+        "removedIslands": 11,
+        "loops": 8,
+        "widthMm": 439.4,
+        "lengthMm": 869.6,
+        "marginRatio": 0.01,
         "repairedVertices": 0,
         "repairedTriangles": 0
       }
     },
-    "s3-step-1": {
-      "stageId": "s3-step-1",
-      "at": "2026-10-22T22:28:00.197Z",
+    "s2-step-4": {
+      "stageId": "s2-step-4",
+      "at": "2026-10-27T16:08:20.681Z",
       "status": "DONE",
-      "seconds": 1.12,
+      "seconds": 7.91,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/darth/stage-2/step-3-base-pick-3.glb",
-        "lengthMm": 612.6,
-        "faces": 4052,
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/darth/stage-2/step-3-base.glb",
+        "art": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/darth/stage-1/step-3-trellis-input.png",
         "parameters": {
-          "target_faces": 600,
+          "saturation_min": 0.2,
+          "value_min": 0.35,
+          "stale_saturation_min": 0.12,
+          "stale_value_min": 0.15,
+          "hue_tolerance_deg": 35,
+          "eye_area_min_ratio": 0.0003,
+          "eye_area_max_ratio": 0.03,
+          "eye_fill_min": 0.45,
+          "pair_size_ratio_min": 0.3,
+          "outline_ratio": 0.12,
+          "cluster_cell_ratio": 0.006,
+          "pair_distance_max_ratio": 0.35,
+          "paint_radius_ratio": 1.6,
+          "facing_min": 0.2
+        },
+        "painted": [
+          {
+            "texels": 13713,
+            "eyeTexels": 2924,
+            "staleTexels": 4753,
+            "fur": [
+              0.027,
+              0.02,
+              0.024
+            ]
+          },
+          {
+            "texels": 15934,
+            "eyeTexels": 3574,
+            "staleTexels": 5477,
+            "fur": [
+              0.027,
+              0.02,
+              0.024
+            ]
+          }
+        ]
+      },
+      "metrics": {
+        "details": 2,
+        "texels": 29647,
+        "eyeHeightToFigure": 0.0519,
+        "modelEyeSize": [
+          0.0593,
+          0.0513
+        ],
+        "artEyeSizesPx": [
+          [
+            59,
+            51
+          ],
+          [
+            41,
+            52
+          ]
+        ]
+      }
+    },
+    "s3-step-1": {
+      "stageId": "s3-step-1",
+      "at": "2026-10-28T18:41:49.569Z",
+      "status": "DONE",
+      "seconds": 17.85,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/darth/stage-2/step-4-details.glb",
+        "lengthMm": 987,
+        "faces": 715128,
+        "attempts": [
+          {
+            "targetFaces": 430,
+            "meshFaces": 307,
+            "volumeChangePercent": -0.29,
+            "featureLossMm": 27.57,
+            "failures": []
+          }
+        ],
+        "parameters": {
+          "target_faces": 430,
+          "max_faces": 6000,
+          "face_growth": 1.25,
+          "max_volume_change_percent": 1,
+          "max_dimension_change_percent": 1,
+          "min_inner_wall_share": 0.3,
+          "remesh_voxel_ratio": 0.0025,
+          "max_closing_deviation_ratio": 0.02,
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
           "quad_face_angle_deg": 20,
@@ -140,129 +244,112 @@
         }
       },
       "metrics": {
-        "points": 302,
-        "meshFaces": 435,
-        "quads": 165,
-        "openEdges": 0,
-        "nonManifoldEdges": 0,
+        "points": 217,
+        "meshFaces": 307,
+        "quads": 123,
         "airtight": true,
-        "volumeChangePercent": -1.38,
-        "maxDeviationMm": 4.02,
-        "featureLossMm": 7.99,
-        "mode": "decimate",
-        "alignedAreaRatio": 0.171
+        "volumeChangePercent": -0.29,
+        "dimensionChangePercent": 0.92,
+        "featureLossMm": 27.57,
+        "maxDeviationMm": 13.76,
+        "closingDeviationMm": 11.11,
+        "innerWallShare": 0.505,
+        "mode": "decimate"
       }
     },
     "s3-step-2": {
       "stageId": "s3-step-2",
-      "at": "2026-10-22T22:28:41.361Z",
+      "at": "2026-10-28T18:42:24.440Z",
       "status": "DONE",
-      "seconds": 41.14,
+      "seconds": 34.13,
       "costUsd": 0,
-      "costNote": "Local Blender headless and Vectorizer ($0.00)",
+      "costNote": "Local Blender headless and Python ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/darth/stage-2/step-3-base-pick-3.glb",
-        "parameters": {
-          "resolution": 2048,
-          "margin": 0,
-          "min_facing": 0.2,
-          "texture_mode": "legacy",
-          "head_cells": 8,
-          "pixel_min_aligned_ratio": 0.9,
-          "redraw": {
-            "views": [
-              "front",
-              "back",
-              "left",
-              "right",
-              "top"
-            ],
-            "reference_size_px": 512,
-            "columns": 3,
-            "rows": 2,
-            "endpoint_env_key": "RUNPOD_FLUX_ENDPOINT_ID",
-            "prompt": "Restyle this image of a blocky figure into clean flat pixel-block art with perfectly crisp straight-edged blocks and flat solid colours, keeping the colour scheme of every part. Draw eyes only where the image already shows eyes, as clean smooth round shapes with white highlights; never add eyes, faces or any feature that is not already present. Keep the exact same view, pose, silhouette, proportions, framing and every feature where it is. Do not rotate, do not add a base, do not add shadows or gradients. Plain white background."
-          },
-          "organic_group_angle_deg": 30,
-          "organic_group_deviation_ratio": 0.025,
-          "organic_group_extent_ratio": 0.35
-        },
-        "palette": [
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/darth/stage-2/step-4-details.glb",
+        "families": [
           {
-            "index": 0,
-            "hex": "#070608",
-            "share": 0.6446,
-            "kind": "neutral"
+            "hex": "#080607",
+            "share": 0.6545
           },
           {
-            "index": 1,
-            "hex": "#e6e6e7",
-            "share": 0.2799,
-            "kind": "neutral"
+            "hex": "#faf9f9",
+            "share": 0.3335
           },
           {
-            "index": 2,
-            "hex": "#6f6a6d",
-            "share": 0.0341,
-            "kind": "neutral"
+            "hex": "#c7b3bd",
+            "share": 0.0112
           },
           {
-            "index": 3,
-            "hex": "#825e57",
-            "share": 0.0265,
-            "kind": "hue"
+            "hex": "#f6eeb4",
+            "share": 0.0006
           },
           {
-            "index": 4,
-            "hex": "#b092a8",
-            "share": 0.0121,
-            "kind": "hue"
-          },
-          {
-            "index": 5,
-            "hex": "#798557",
-            "share": 0.0028,
-            "kind": "hue"
+            "hex": "#f3ec96",
+            "share": 0.0002
           }
-        ]
+        ],
+        "detailFamilies": [
+          "#f6eeb4",
+          "#f3ec96"
+        ],
+        "bake": {
+          "transfer": "nearest",
+          "resolution": 2048,
+          "uv_angle_limit_rad": 1.15,
+          "uv_island_margin": 0.004,
+          "bake_margin_px": 8,
+          "cage_extrusion_ratio": 0.012
+        },
+        "atlas": {
+          "neutral_chroma": 5,
+          "neutral_lightness_tolerance": 18,
+          "border_smooth_sigma_px": 3,
+          "speck_area_ratio": 0.00003,
+          "detail_contrast": 40,
+          "detail_share_max": 0.005,
+          "detail_margin_px": 6,
+          "detail_denoise_px": 1,
+          "border_soften_px": 0.5,
+          "bleed_px": 8
+        }
       },
       "metrics": {
-        "faces": 435,
-        "viewsCount": 6,
-        "resolution": 2048,
-        "familiesCount": 6,
-        "baseHex": "#070608",
-        "totalPaths": 170,
-        "totalNodes": 10179,
-        "hiddenFaces": 30,
-        "viewsUsage": {
-          "front": 98,
-          "back": 40,
-          "right": 106,
-          "left": 87,
-          "top": 46,
-          "bottom": 58
-        }
+        "colourFamilies": 5,
+        "specksAbsorbed": 33,
+        "detailTexels": 7579,
+        "missedTexels": 36922
       }
     },
     "s3-step-3": {
       "stageId": "s3-step-3",
-      "at": "2026-10-22T22:28:42.813Z",
+      "at": "2026-10-28T18:42:25.940Z",
       "status": "DONE",
-      "seconds": 1.42,
+      "seconds": 0.82,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/darth/stage-3/step-2-texturize.glb",
+        "sourceMesh": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/darth/stage-3/step-1-simplify.glb",
+        "atlasImage": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/darth/stage-3/step-2-atlas.png"
+      }
+    },
+    "s3-step-4": {
+      "stageId": "s3-step-4",
+      "at": "2026-10-28T18:42:28.212Z",
+      "status": "DONE",
+      "seconds": 1.6,
+      "costUsd": 0,
+      "costNote": "Local Blender headless ($0.00)",
+      "data": {
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/darth/stage-3/step-3-texturize.glb",
         "parameters": {
           "plinth_thickness_ratio": 0.05,
           "plinth_slope_ratio": 0.02,
-          "plinth_margin_ratio": 0.004,
+          "plinth_margin_ratio": 0.008,
           "face_max_extent_ratio": 0.5
         }
       },
       "metrics": {
-        "faces": 443,
+        "faces": 315,
         "loops": 0,
         "openEdges": 6,
         "nonManifoldEdges": 0
@@ -270,35 +357,35 @@
     },
     "s4-step-1": {
       "stageId": "s4-step-1",
-      "at": "2026-10-22T22:28:43.919Z",
+      "at": "2026-10-28T18:22:58.331Z",
       "status": "DONE",
-      "seconds": 1.09,
+      "seconds": 1.27,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/darth/stage-3/step-3-plinth.json",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/darth/stage-3/step-4-plinth.json",
         "dimensionsMm": [
-          136.42,
-          300.21,
-          311.91
+          153.22,
+          296.8,
+          351.34
         ],
         "targetSizeMm": 300
       },
       "metrics": {
-        "faceCount": 443,
-        "quadCount": 173,
-        "pieces": 43,
+        "faceCount": 315,
+        "quadCount": 131,
+        "pieces": 42,
         "smallestPieceFaces": 1,
-        "shortestCutMm": 3.9,
+        "shortestCutMm": 9.4,
         "unpairedEdges": 6,
         "nonManifoldEdges": 6
       }
     },
     "s4-step-2": {
       "stageId": "s4-step-2",
-      "at": "2026-10-22T22:29:49.740Z",
+      "at": "2026-10-28T18:23:47.825Z",
       "status": "DONE",
-      "seconds": 65.79,
+      "seconds": 49.49,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -307,33 +394,33 @@
       },
       "metrics": {
         "pageCount": 21,
-        "sheetCount": 8,
-        "pieceCount": 43,
-        "labelCollisions": 18
+        "sheetCount": 9,
+        "pieceCount": 42,
+        "labelCollisions": 7
       }
     },
     "s5-step-1": {
       "stageId": "s5-step-1",
-      "at": "2026-10-22T22:29:49.848Z",
+      "at": "2026-10-28T18:23:47.881Z",
       "status": "DONE",
-      "seconds": 0.1,
+      "seconds": 0.04,
       "costUsd": 0,
       "costNote": "Local CPU geometry ($0.00)",
       "data": {
         "source": "stage-4/step-1-net.json"
       },
       "metrics": {
-        "pieces": 41,
-        "faces": 435,
-        "hinges": 394,
-        "maxHingeResidualMm": 2.365,
-        "maxFoldAngleDeg": 116.4,
+        "pieces": 40,
+        "faces": 307,
+        "hinges": 267,
+        "maxHingeResidualMm": 1.594,
+        "maxFoldAngleDeg": 144.1,
         "mirroredPieces": 0,
         "extraRoots": 0
       }
     }
   },
-  "totalSeconds": 262.74,
-  "totalCostUsd": 0.0372,
-  "updatedAt": "2026-10-22T22:29:49.850Z"
+  "totalSeconds": 641.24,
+  "totalCostUsd": 0.0552,
+  "updatedAt": "2026-10-28T18:42:28.216Z"
 }

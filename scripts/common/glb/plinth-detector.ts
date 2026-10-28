@@ -61,6 +61,9 @@ export class PlinthDetector {
       [...figureVertices].map((vertexIndex) => vertices[vertexIndex]).filter((vertex) => vertex.y >= band),
     );
     const outline = this.intersect(colourBox, this.grow(footprint, parameters.margin_ratio));
+    const outlineArea = (outline.maxX - outline.minX) * (outline.maxZ - outline.minZ);
+    const footprintArea = (footprint.maxX - footprint.minX) * (footprint.maxZ - footprint.minZ);
+    if (footprintArea > 0 && outlineArea < 0.15 * footprintArea) return null;
     if (!this.exceeds(plateBox, outline)) return null;
 
     const topLevel = this.median(

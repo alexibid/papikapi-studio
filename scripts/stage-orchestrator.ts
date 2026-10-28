@@ -19,12 +19,15 @@ import { WorkspacePaths } from './common/workspace-paths.js';
 import type { CliArguments } from './orchestrator.interface.js';
 import { AlternativesGenerator } from './stage-1/step-1-alternatives.js';
 import { AlternativePicker } from './stage-1/step-2-pick.js';
+import { TrellisInputGenerator } from './stage-1/step-3-trellis-input.js';
 import { CutoutGenerator } from './stage-2/step-1-cutout.js';
 import { TrellisGenerator } from './stage-2/step-2-trellis.js';
 import { BaseCutGenerator } from './stage-2/step-3-base.js';
+import { DetailsGenerator } from './stage-2/step-4-details.js';
 import { SimplifyGenerator } from './stage-3/step-1-simplify.js';
-import { TexturizeGenerator } from './stage-3/step-2-texturize.js';
-import { PlinthGenerator } from './stage-3/step-3-plinth.js';
+import { AtlasGenerator } from './stage-3/step-2-atlas.js';
+import { TexturizeGenerator } from './stage-3/step-3-texturize.js';
+import { PlinthGenerator } from './stage-3/step-4-plinth.js';
 import { UnfoldGenerator } from './stage-4/step-1-unfold.js';
 import { SheetsExporter } from './stage-4/step-2-sheets.js';
 import { AssemblyGenerator } from './stage-5/step-1-assembly.js';
@@ -157,6 +160,12 @@ export class StageOrchestrator {
             console.log(
               `  [s1-step-2] Output Art: ${res.resourceArtPath} (${(size / 1024).toFixed(1)} KB)`,
             );
+          } else if (step.id === 's1-step-3') {
+            const res = await TrellisInputGenerator.execute({ name: model });
+            const size = statSync(res.trellisInputPath).size;
+            console.log(
+              `  [s1-step-3] Output TRELLIS input: ${res.trellisInputPath} (${(size / 1024).toFixed(1)} KB)`,
+            );
           } else if (step.id === 's2-step-1') {
             const cutoutStep = PipelineConfigLoader.getStep('s2-step-1') as unknown as {
               inputs: { stage_dir: string; art_resource: string };
@@ -178,12 +187,12 @@ export class StageOrchestrator {
             );
           } else if (step.id === 's2-step-2') {
             const trellisStep = PipelineConfigLoader.getStep('s2-step-2') as unknown as {
-              inputs: { stage_dir: string; cutout_resource: string };
+              inputs: { stage_dir: string; trellis_input_resource: string };
             };
             const cutoutPath = join(
               WorkspacePaths.resourcePath(model),
               trellisStep.inputs.stage_dir,
-              trellisStep.inputs.cutout_resource,
+              trellisStep.inputs.trellis_input_resource,
             );
             const cutoutSize = existsSync(cutoutPath) ? statSync(cutoutPath).size : 0;
             console.log(
@@ -207,29 +216,38 @@ export class StageOrchestrator {
             console.log(
               `  [s2-step-3] Output Figure Without Base: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
             );
+          } else if (step.id === 's2-step-4') {
+            const res = await DetailsGenerator.execute(model);
+            const size = statSync(res.modelPath).size;
+            console.log(
+              `  [s2-step-4] Output Figure With Details: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
+            );
           } else if (step.id === 's3-step-1') {
             const res = await SimplifyGenerator.execute(
               model,
               flags.pick !== null ? flags.pick : undefined,
             );
-            const size = statSync(res.meshPath).size;
-            console.log(
-              `  [s3-step-1] Output Simplified Mesh: ${res.pointsPath} and ${res.meshPath} (${(size / 1024).toFixed(1)} KB)`,
-            );
-          } else if (step.id === 's3-step-2') {
-            const res = await TexturizeGenerator.execute(
-              model,
-              flags.pick !== null ? flags.pick : undefined,
-            );
             const size = statSync(res.modelPath).size;
             console.log(
-              `  [s3-step-2] Output Textured Model: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
+              `  [s3-step-1] Output Simplified Mesh: ${res.pointsPath} and ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
+            );
+          } else if (step.id === 's3-step-2') {
+            const res = await AtlasGenerator.execute(model);
+            const size = statSync(res.atlasPath).size;
+            console.log(
+              `  [s3-step-2] Output Texture Atlas: ${res.atlasPath} (${(size / 1024).toFixed(1)} KB)`,
             );
           } else if (step.id === 's3-step-3') {
+            const res = await TexturizeGenerator.execute(model);
+            const size = statSync(res.modelPath).size;
+            console.log(
+              `  [s3-step-3] Output Textured Model: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
+            );
+          } else if (step.id === 's3-step-4') {
             const res = await PlinthGenerator.execute(model);
             const size = statSync(res.modelPath).size;
             console.log(
-              `  [s3-step-3] Output Model With Plinth: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
+              `  [s3-step-4] Output Model With Plinth: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
             );
           } else if (step.id === 's4-step-1') {
             const res = await UnfoldGenerator.execute(model);

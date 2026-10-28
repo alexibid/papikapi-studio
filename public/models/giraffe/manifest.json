@@ -62,9 +62,9 @@
     },
     "s2-step-3": {
       "stageId": "s2-step-3",
-      "at": "2026-10-07T15:54:06.326Z",
+      "at": "2026-10-28T13:29:18.348Z",
       "status": "DONE",
-      "seconds": 3.1,
+      "seconds": 3.89,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
@@ -72,19 +72,6 @@
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
-          "target_size_mm": 300,
-          "min_feature_mm": 6,
-          "appendage_min_length_mm": 6,
-          "appendage_max_section_mm": 12,
-          "appendage_min_aspect": 2.5,
-          "appendage_max_passes": 5,
-          "appendage_crease_deg": 15,
-          "appendage_root_section_mm": 12,
-          "appendage_max_rings": 40,
-          "envelope_cell_mm": 1,
-          "envelope_tolerance_mm": 3,
-          "envelope_max_area_ratio": 0.03,
-          "appendage_ground_clearance_mm": 10,
           "base_cut_margin_ratios": [
             0.003,
             0.01,
@@ -95,14 +82,11 @@
         }
       },
       "metrics": {
-        "faces": 3505,
+        "faces": 3649,
         "openEdges": 0,
         "nonManifoldEdges": 0,
         "airtight": true,
         "removedIslands": 0,
-        "removedAppendages": 3,
-        "appendageFaces": 167,
-        "appendageVolumePercent": 0.549,
         "loops": 4,
         "widthMm": 173.3,
         "lengthMm": 454.6,
@@ -113,82 +97,142 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-08T16:56:13.342Z",
+      "at": "2026-10-28T14:14:53.862Z",
       "status": "DONE",
-      "seconds": 1.62,
+      "seconds": 43.53,
       "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
+      "costNote": "Local Blender headless and Python ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/giraffe/stage-2/step-3-base.glb",
         "lengthMm": 595.7,
-        "faces": 3564,
+        "faces": 348968,
+        "attempts": [
+          {
+            "targetFaces": 430,
+            "meshFaces": 304,
+            "volumeChangePercent": -0.38,
+            "featureLossMm": 6.14,
+            "failures": [
+              "dimensions 1.16% > 1%"
+            ]
+          },
+          {
+            "targetFaces": 538,
+            "meshFaces": 373,
+            "volumeChangePercent": -0.43,
+            "featureLossMm": 3.74,
+            "failures": []
+          }
+        ],
+        "families": [
+          {
+            "hex": "#53291e",
+            "share": 0.0633
+          },
+          {
+            "hex": "#b29128",
+            "share": 0.2694
+          },
+          {
+            "hex": "#bea53d",
+            "share": 0.2064
+          },
+          {
+            "hex": "#ccb177",
+            "share": 0.0284
+          },
+          {
+            "hex": "#ad7c1c",
+            "share": 0.0298
+          },
+          {
+            "hex": "#734934",
+            "share": 0.3302
+          },
+          {
+            "hex": "#9d651a",
+            "share": 0.042
+          },
+          {
+            "hex": "#764922",
+            "share": 0.0299
+          },
+          {
+            "hex": "#55433d",
+            "share": 0.0001
+          },
+          {
+            "hex": "#8b9a9b",
+            "share": 0.0005
+          }
+        ],
+        "detailFamilies": [
+          "#55433d",
+          "#8b9a9b"
+        ],
         "parameters": {
-          "target_faces": 600,
+          "target_faces": 430,
+          "max_faces": 6000,
+          "face_growth": 1.25,
+          "max_volume_change_percent": 1,
+          "max_dimension_change_percent": 1,
+          "min_inner_wall_share": 0.3,
+          "remesh_voxel_ratio": 0.0025,
+          "max_closing_deviation_ratio": 0.02,
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
           "quad_face_angle_deg": 20,
           "quad_shape_angle_deg": 60,
           "face_max_extent_ratio": 0.5,
-          "min_fold_length_mm": 6,
-          "flat_vertex_angle_deg": 8,
-          "target_size_mm": 300,
-          "fold_tolerance_ratio": 0.0067,
-          "fold_max_deviation_ratio": 0.01,
-          "fold_max_volume_percent": 0.1
+          "mode": "decimate",
+          "box_min_aligned_ratio": 0.74,
+          "box_voxel_resolution": 192,
+          "box_plane_merge_ratio": 0.02,
+          "box_plane_min_area_ratio": 0.03,
+          "box_slab_footprint_ratio": 1.6,
+          "box_slab_max_thickness_ratio": 0.03,
+          "planar_voxel_ratio": 0.02,
+          "planar_smooth_iterations": 4,
+          "planar_smooth_factor": 0.5,
+          "planar_decimate_faces": 500,
+          "planar_dissolve_angle_deg": 15
+        },
+        "bake": {
+          "transfer": "nearest",
+          "resolution": 2048,
+          "uv_angle_limit_rad": 1.15,
+          "uv_island_margin": 0.004,
+          "bake_margin_px": 8,
+          "cage_extrusion_ratio": 0.012
+        },
+        "atlas": {
+          "neutral_chroma": 5,
+          "neutral_lightness_tolerance": 18,
+          "border_smooth_sigma_px": 3,
+          "speck_area_ratio": 0.00003,
+          "detail_contrast": 40,
+          "detail_share_max": 0.005,
+          "detail_margin_px": 6,
+          "detail_denoise_px": 1,
+          "border_soften_px": 0.5,
+          "bleed_px": 8
         }
       },
       "metrics": {
-        "points": 187,
-        "meshFaces": 253,
-        "quads": 117,
-        "openEdges": 0,
-        "nonManifoldEdges": 0,
+        "points": 271,
+        "meshFaces": 373,
+        "quads": 165,
         "airtight": true,
-        "volumeChangePercent": -1.14,
-        "maxDeviationMm": 3.71,
-        "featureLossMm": 6.69,
-        "facetColours": 246
-      }
-    },
-    "s3-step-2": {
-      "stageId": "s3-step-2",
-      "at": "2026-10-08T16:56:22.689Z",
-      "status": "DONE",
-      "seconds": 9.34,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/giraffe/stage-2/step-4-optimize.glb",
-        "parameters": {
-          "resolution": 2048
-        }
-      },
-      "metrics": {
-        "faces": 253,
-        "resolution": 2048
-      }
-    },
-    "s3-step-3": {
-      "stageId": "s3-step-3",
-      "at": "2026-10-12T00:04:54.793Z",
-      "status": "DONE",
-      "seconds": 0.84,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/giraffe/stage-3/step-2-texturize.glb",
-        "parameters": {
-          "plinth_thickness_ratio": 0.05,
-          "plinth_slope_ratio": 0.02,
-          "plinth_margin_ratio": 0.004,
-          "face_max_extent_ratio": 0.5
-        }
-      },
-      "metrics": {
-        "faces": 261,
-        "loops": 0,
-        "openEdges": 6,
-        "nonManifoldEdges": 0
+        "volumeChangePercent": -0.43,
+        "dimensionChangePercent": 0.96,
+        "featureLossMm": 3.74,
+        "maxDeviationMm": 2.85,
+        "closingDeviationMm": 2.46,
+        "innerWallShare": 0,
+        "mode": "decimate",
+        "colourFamilies": 10,
+        "specksAbsorbed": 557,
+        "detailTexels": 111312
       }
     },
     "s4-step-1": {
@@ -256,7 +300,7 @@
       }
     }
   },
-  "totalSeconds": 116.37,
+  "totalSeconds": 148.89,
   "totalCostUsd": 0.008,
-  "updatedAt": "2026-10-13T07:33:02.129Z"
+  "updatedAt": "2026-10-28T14:14:53.868Z"
 }

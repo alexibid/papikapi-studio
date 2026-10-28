@@ -4,6 +4,13 @@ export interface SimplifyBlenderConfig extends BlenderConfig {
   readonly script: string;
 }
 
+export interface SimplifyOutputs {
+  readonly stage_dir: string;
+  readonly model_resource: string;
+  readonly points_resource: string;
+  readonly manifest: string;
+}
+
 export interface SimplifyStepDefinition {
   readonly id: string;
   readonly stage_dir: string;
@@ -11,22 +18,11 @@ export interface SimplifyStepDefinition {
   readonly inputs: {
     readonly stage_dir: string;
     readonly model_resource: string;
-    readonly model_pick_resource_pattern: string;
+    readonly fallback_model_resource?: string;
+    readonly model_pick_resource_pattern?: string;
   };
-  readonly outputs: {
-    readonly points_resource: string;
-    readonly mesh_resource: string;
-    readonly mesh_public: string;
-    readonly manifest: string;
-  };
-  readonly parameters: {
-    readonly target_faces: number;
-    readonly weld_distance_ratio: number;
-    readonly contact_height_ratio: number;
-    readonly quad_face_angle_deg: number;
-    readonly quad_shape_angle_deg: number;
-    readonly face_max_extent_ratio: number;
-  };
+  readonly outputs: SimplifyOutputs;
+  readonly parameters: Readonly<Record<string, number | string>>;
   readonly messages: {
     readonly start: string;
     readonly completed: string;
@@ -35,6 +31,14 @@ export interface SimplifyStepDefinition {
     readonly status: string;
     readonly costNote: string;
   };
+}
+
+export interface ReductionAttempt {
+  readonly targetFaces: number;
+  readonly meshFaces: number;
+  readonly volumeChangePercent: number;
+  readonly featureLossMm: number;
+  readonly failures: readonly string[];
 }
 
 export interface SimplifyStatistics {
@@ -47,15 +51,18 @@ export interface SimplifyStatistics {
   readonly nonManifoldEdges: number;
   readonly airtight: boolean;
   readonly volumeChangePercent: number;
+  readonly dimensionChangePercent: number;
   readonly maxDeviationMm: number;
   readonly featureLossMm: number;
+  readonly closingDeviationMm: number;
+  readonly innerWallShare: number;
   readonly mode: string;
-  readonly alignedAreaRatio: number;
+  readonly attempts: readonly ReductionAttempt[];
 }
 
 export interface SimplifyResponse {
   readonly name: string;
-  readonly meshPath: string;
+  readonly modelPath: string;
   readonly pointsPath: string;
   readonly seconds: number;
 }

@@ -3,7 +3,7 @@
   "workspace": {
     "models_dir": "public/models",
     "resources_dir": "resources",
-    "models_from": "resources/*/stage-1/step-1-art.jpeg",
+    "models_from": "resources/*/stage-1/step-2-art.jpeg",
     "sheet_language": "pt",
     "sheet_translations": "scripts/stage-4/sheet-translations.json"
   },
@@ -26,7 +26,7 @@
           "emoji": "🎨",
           "expected_seconds": 20,
           "script": "scripts/stage-1/step-1-alternatives.ts",
-          "models_from": "resources/*/stage-1/step-1-art.jpeg",
+          "models_from": "resources/*/stage-1/step-2-art.jpeg",
           "skip_if_outputs_exist": true,
           "serverless": {
             "env_endpoint_key": "RUNPOD_FLUX_ENDPOINT_ID",
@@ -48,53 +48,15 @@
             "rows": 2,
             "alternatives_count": 6,
             "max_reference_images": 3,
-            "system_prompt": "You are an expert 3D low-poly papercraft designer, origami artist, and 3D unfold engineer. You design foldable low-poly figures made of simple primary geometric volumes where micro-details are illustrated flat on the paper surface. All figures are designed for child papercraft physical assembly: standing naturally on all four legs flat on the ground plane with belly elevated and exactly four distinct legs and four paws and strictly one single tail attached at base of spine for quadrupeds (or exactly two legs for bipeds), smooth continuous back without dorsal fins or duplicate tails, never sitting, never seated on hind legs, never crouching, zero floor shadow, zero cast shadow, completely seamless flat neutral light grey #E5E5E5 background, smooth bare clean cardstock cheeks and plain muzzle with a distinct cute closed mouth line decal painted flat (zero open mouth cavities), zero thin antennae, zero needle spikes, and zero thin protruding strands. You follow the studio signature aesthetic: cute expressive eyes with circular white catchlights and vibrant paper colors. You generate exactly one image that follows all instructions. Never write any text, letters, watermark or labels. Every rule is mandatory and none may be broken.",
-            "negative_prompt": "two tails, double tail, duplicate tail, extra tail, multiple tails, split tail, dorsal fin, dorsal spike, back hump, back protrusion, sitting, seated, sitting on hind legs, seated cat, sitting upright, seated pose, crouching, lying down, kneeling, curled up, hiding legs, tucked paws, hidden hind legs, hat, cap, baseball cap, beanie, headwear, helmet, bonnet, head accessory, extra legs, five legs, six legs, three legs, deformed legs, extra paws, extra limbs, mutated limbs, missing limbs, fused legs, severed legs, deformed anatomy, anatomical defect, malformed body, mutated anatomy, whiskers, cat whiskers, facial whiskers, cheek whiskers, whisker lines, whiskers protruding, thin whiskers, bristles, whisker strands, thin wires, suit, tuxedo jacket, bowtie, necktie, clothes, human clothes, bipedal, standing upright, humanoid, mascot, standing on two legs, two-legged, dinosaur arms, t-rex pose, kangaroo pose, bust, headshot, portrait, close-up, cropped, truncated torso, severed neck, partial figure, wireframe, crease lines, black fold lines, black outline lines, blueprint markings, dark edge seams, shadow, floor shadow, ground shadow, drop shadow, contact shadow, ambient occlusion beneath model, cast shadow, dark ground, 3D extruded teeth, jagged 3D spikes, open mouth cavity, top-down view, high angle view, isometric view, tilted body, leaning body, floating feet, front view, side profile view, extra eyes, three eyes, one eye, floating eyes, gradients, text, watermark, labels, cell divider borders, CGI, clay, plastic, smooth rounded cartoon",
-            "prompt_templates": {
-              "specific_subject": "low-poly faceted 3D papercraft model of {subject}. Seen in an EYE-LEVEL THREE-QUARTER VIEW, camera at the height of the subject's body (showing front and left-side facets), with all feet, paws or wheels resting on one flat horizontal ground plane.\n\nSubject: {subject}.\n\n{reference_instruction}\n\nSTUDIO INVARIANTS (MANDATORY):\n- COMPLETE ENTIRE OBJECT: The entire complete {subject} must be 100% visible from end to end, fully centered with generous margin inside the cell. NEVER a bust, NEVER just a head, NEVER a close-up, NEVER cropped.\n- EYE-LEVEL THREE-QUARTER VIEW: Every figure is seen from a three-quarter view with the camera level with the body, no top-down tilt, standing upright and level with all feet on one flat horizontal ground plane, never leaning or tilted.\n- ABSOLUTELY ZERO SHADOWS: Completely plain, seamless flat neutral light grey #E5E5E5 background. ZERO floor shadows, ZERO cast shadows, ZERO contact shadows under base, ZERO ambient occlusion.\n- CLEAN LOW-POLY PAPERCRAFT FACETS: Crisp planar polygon facets made of solid matte paper cardstock colors with directional flat-shading only. ABSOLUTELY ZERO BLACK OUTLINE STROKES, ZERO BLACK CREASE LINES, ZERO WIREFRAME, ZERO BLUEPRINT MARKS, ZERO FOLD GUIDE LINES. Facets meet cleanly without dark lines.\n- 100% CLOSED GEOMETRIC VOLUMES: All primary forms are closed solid low-poly polyhedra suitable for papercraft folding.\n- FLAT 2D UV TEXTURE DECALS: Fine surface details (spots, stripes, headlights, teeth decals) are 100% flat 2D decals printed directly on the facet surfaces, never protruding 3D physical spikes or open cavities.\n- BARE CLEAN CARDSTOCK CHEEKS (MANDATORY): Cheeks and muzzle must be completely bare, smooth plain cardstock. A distinct cute closed mouth line decal is painted flat directly beneath the nose (zero open mouth cavities, zero thin protruding elements).\n- EYES: For living creatures, exactly two large cute expressive round eyes with circular white catchlights painted flat onto head facets. Never three eyes, never floating eyes.\n- No shadows, no gradients, no text, no labels, no cell dividers, no grid lines.",
-              "generic_category": "low-poly faceted 3D papercraft model for {subject}. Seen in an EYE-LEVEL THREE-QUARTER VIEW, camera at the height of the subject's body (showing front and left-side facets), with all feet, paws or wheels resting on one flat horizontal ground plane.\n\nCategory/Theme: {subject}.\n\nSTUDIO INVARIANTS (MANDATORY):\n- COMPLETE ENTIRE OBJECT: The entire complete {subject} must be 100% visible from end to end, fully centered with generous margin inside the cell. NEVER a bust, NEVER just a head, NEVER a close-up, NEVER cropped.\n- EYE-LEVEL THREE-QUARTER VIEW: Every figure is seen from a three-quarter view with the camera level with the body, no top-down tilt, standing upright and level with all feet on one flat horizontal ground plane, never leaning or tilted.\n- ABSOLUTELY ZERO SHADOWS: Completely plain, seamless flat neutral light grey #E5E5E5 background. ZERO floor shadows, ZERO cast shadows, ZERO contact shadows under base, ZERO ambient occlusion.\n- CLEAN LOW-POLY PAPERCRAFT FACETS: Crisp planar polygon facets made of solid matte paper cardstock colors with directional flat-shading only. ABSOLUTELY ZERO BLACK OUTLINE STROKES, ZERO BLACK CREASE LINES, ZERO WIREFRAME, ZERO BLUEPRINT MARKS, ZERO FOLD GUIDE LINES. Facets meet cleanly without dark lines.\n- 100% CLOSED GEOMETRIC VOLUMES: All primary forms are closed solid low-poly polyhedra suitable for papercraft folding.\n- FLAT 2D UV TEXTURE DECALS: Fine surface details (spots, stripes, headlights, teeth decals) are 100% flat 2D decals printed directly on the facet surfaces, never protruding 3D physical spikes or open cavities.\n- BARE CLEAN CARDSTOCK CHEEKS (MANDATORY): Cheeks and muzzle must be completely bare, smooth plain cardstock. A distinct cute closed mouth line decal is painted flat directly beneath the nose (zero open mouth cavities, zero thin protruding elements).\n- EYES: For living creatures, exactly two large cute expressive round eyes with circular white catchlights painted flat onto head facets. Never three eyes, never floating eyes.\n- No shadows, no gradients, no text, no labels, no cell dividers, no grid lines."
-            },
-            "style_reference_note": "STYLE REFERENCE (attached image 1): copy ONLY its papercraft rendering style: low-poly folded cardstock, crisp planar facets, flat colors, cute round eyes with white catchlights, seamless light background. Never copy its subject, species, markings or colors.",
-            "reference_note_template": "SUBJECT PHOTOS (attached images {first} onward, {count} photo(s) of the real subject): Extract and preserve ONLY the subject's identity, fur colors, facial patterns, and the EXACT placement and size of every marking shown in these photos, rendered in authentic low-poly folded papercraft cardstock style with crisp polygon facets. DO NOT copy any sitting pose, seated posture, or front-facing angle from the photos. The figure MUST be rendered standing naturally on all four legs with belly elevated and all four paws flat on the ground plane with strictly one single tail attached at base of spine (never sitting, never seated on hind legs, never bipedal, zero duplicate tails), viewed from a strict eye-level three-quarter perspective showing both front and side facets, complete entire figure without cropping, closed solid volumes, bare smooth paper cardstock cheeks and plain muzzle with a distinct cute closed mouth line decal, flat 2D UV texture decals for teeth and spots, exactly two eyes, and ABSOLUTELY ZERO FLOOR SHADOWS.",
-            "view_clause": "eye-level three-quarter view with the camera at body height, standing naturally and level with all feet, paws or wheels flat on one horizontal ground plane, body upright and never tilted",
-            "base_clause": "the whole figure stands on a very simple low plinth: a thin flat rectangular slab of solid saturated warm terracotta-brown cardstock, clearly different from the grey background, only slightly wider than the figure, with a perfectly flat horizontal top and bottom, so the feet, paws or wheels rest on the slab",
-            "training_caption_view_phrase": "seen in an isometric three-quarter view from the top left corner",
-            "cell_prompt_templates": [
-              "low-poly faceted 3D papercraft model of {subject}, cute compact proportions, {details}, {view}, {base}, clean planar facets without black crease lines, seamless light grey #E5E5E5 background, zero shadows.",
-              "low-poly faceted 3D papercraft model of {subject}, youthful energetic stance, {details}, {view}, {base}, clean planar facets without black crease lines, seamless light grey #E5E5E5 background, zero shadows.",
-              "low-poly faceted 3D papercraft model of {subject}, studio signature balanced geometric proportions, {details}, {view}, {base}, clean planar facets without black crease lines, seamless light grey #E5E5E5 background, zero shadows.",
-              "low-poly faceted 3D papercraft model of {subject}, bold simplified planar facets, {details}, {view}, {base}, zero crease lines, seamless light grey background, zero shadows.",
-              "low-poly faceted 3D papercraft model of {subject}, relaxed natural stance, {details}, {view}, {base}, zero crease lines, seamless light grey background, zero shadows.",
-              "low-poly faceted 3D papercraft model of {subject}, elegant structured planar facets, {details}, {view}, {base}, zero crease lines, seamless light grey background, zero shadows."
-            ],
-            "maturity_descriptions": [
-              "Cell (0,0) [Top-Left]: Ultra-childlike, cute, chubby, chibi, highly simplified origami toy with large bold facets and friendly exaggerated proportions in strict eye-level three-quarter view",
-              "Cell (0,1) [Top-Center]: Playful youthful papercraft figure with soft rounded geometry and cheerful character in strict eye-level three-quarter view",
-              "Cell (0,2) [Top-Right] (Default Pick #3): Studio signature training style — balanced geometric proportions, expressive signature eyes with white catchlight, exact reference colors and features, translated into clean planar facets and with flat 2D UV texture details on closed volumes in strict eye-level three-quarter view",
-              "Cell (1,0) [Bottom-Left] (Pick #4): Classic structured papercraft model with elegant faceted planes and precise anatomical structure matching the signature palette in strict eye-level three-quarter view",
-              "Cell (1,1) [Bottom-Center]: Sophisticated detailed papercraft sculpture with refined angular facets and dynamic posture in strict eye-level three-quarter view",
-              "Cell (1,2) [Bottom-Right]: Majestic realistic low-poly faceted sculpture with lifelike proportions and dignified mature stance in strict eye-level three-quarter view"
-            ],
-            "critical_rules": [
-              "Strict 3x2 grid of exactly 6 equal cells: exactly 3 columns (left, center, right) and exactly 2 rows (top, bottom). Exactly one figure per cell, totaling exactly 6 figures. Never 4 columns, never 7 or 8 figures.",
-              "Strict eye-level three-quarter view in EVERY cell, camera level with the body, all feet on one flat horizontal ground plane, body upright and never tilted.",
-              "Zero text, zero labels, zero words, zero letters anywhere on the canvas.",
-              "Every figure is the complete entire subject from end to end, fully centered in its cell with margin around all sides. Never a bust, never a headshot, never cropped, on flat neutral #E5E5E5 background with ABSOLUTELY ZERO FLOOR SHADOWS, zero drop shadows, zero contact shadows beneath the figures.",
-              "Clean planar low-poly papercraft facets with pure solid matte colors and flat-shading. ABSOLUTELY ZERO BLACK CREASE LINES, ZERO WIREFRAME, ZERO FOLD GUIDE LINES.",
-              "Exactly two eyes per figure: large cute round eyes with a prominent white circular catchlight reflection painted flat onto the facet. Never three eyes.",
-              "Flat surface 2D UV texture details: teeth, claws, eyes, spots, stripes, and fur textures are painted flat onto closed facet surfaces, NEVER modeled as protruding 3D spikes or open mouth cavities.",
-              "100% closed foldable primary volumes: all snouts, jaws, and limbs are closed solid geometric blocks suitable for papercraft folding.",
-              "Strict anatomical integrity: exactly 4 legs and 4 paws for quadrupeds (zero extra legs, zero missing limbs, never 5 or 6 legs, exactly one tail); exactly 2 legs for bipeds."
-            ],
-            "self_check": [
-              "Are there exactly 6 cells arranged in a 3x2 grid?",
-              "Is every cell drawn in the identical eye-level three-quarter view with all feet on one flat ground plane?",
-              "Is there zero text and zero divider borders anywhere?",
-              "Is the background completely plain and flat with ABSOLUTELY ZERO FLOOR SHADOWS beneath the figures?",
-              "Are the figures clean planar low-poly facets without black outline strokes, wireframe, or black crease lines?",
-              "Is every figure complete from end to end without any cropped body parts or busts?",
-              "Does every figure have EXACTLY TWO cute eyes with white catchlight reflection?",
-              "Are teeth, claws, whiskers, stripes, and spots painted flat onto closed facet surfaces rather than separate 3D spikes or open mouth cavities?"
+            "system_prompt": "The figure stands on one single flat plane of zero thickness, a plain sheet of solid saturated {plane_colour} paper that contrasts strongly with every part of the figure touching it, only slightly wider than the figure, never a slab, box or pedestal. Low-poly faceted 3D papercraft model of the subject described above, built from simple closed geometric volumes of matte cardstock with clean planar folds and no black crease lines. Every fine detail (eyes, nose, mouth, markings) is painted flat on the facets as a 2D decal, never sculpted. Exactly the anatomy of the subject: no extra or missing legs, tails or eyes, no clothing or accessories. Cute expressive eyes with round white catchlights. No thin protruding parts: no strands, antennae or spikes. Eye-level three-quarter view with the camera at body height, the whole figure in frame and upright. Seamless flat light grey #E5E5E5 background. Zero shadows. No text, letters or watermark.",
+            "reference_rule": "Use the reference photo only for the subject's colours and markings, never for its pose or camera angle.",
+            "default_pose": "Standing on all its legs with every foot, paw or wheel flat on the plane and the belly raised off the plane, never sitting, crouching or lying down.",
+            "plane_colours": [
+              "blue",
+              "red",
+              "green",
+              "orange",
+              "purple"
             ]
           },
           "messages": {
@@ -104,15 +66,15 @@
           "stage_dir": "stage-1",
           "outputs": {
             "sheet_resource": "step-1-alternatives.jpeg",
-            "sheet_public": "alternatives.jpeg",
-            "public_url_pattern": "/models/{model}/alternatives.jpeg",
             "manifest": "step-1-manifest.json",
             "allowed_extensions": [
               ".jpeg",
               ".jpg",
               ".png",
               ".webp"
-            ]
+            ],
+            "sheet_public": "alternatives.jpeg",
+            "public_url_pattern": "/models/{model}/alternatives.jpeg"
           },
           "manifest_contract": {
             "status": "DONE",
@@ -142,30 +104,30 @@
           "inputs": {
             "stage_dir": "stage-1",
             "sheet_resource": "step-1-alternatives.jpeg",
-            "sheet_public": "alternatives.jpeg",
             "sheet_resource_prefix": "step-1-alternatives",
-            "sheet_public_prefix": "alternatives",
             "allowed_extensions": [
               ".jpeg",
               ".jpg",
               ".png",
               ".webp"
-            ]
+            ],
+            "sheet_public": "alternatives.jpeg",
+            "sheet_public_prefix": "alternatives"
           },
           "outputs": {
             "stage_dir": "stage-1",
-            "art_resource": "step-1-art.jpeg",
-            "art_public": "art.jpeg",
-            "art_pick_resource_pattern": "step-1-art-pick-{pick}.jpeg",
-            "art_pick_public_pattern": "art-pick-{pick}.jpeg",
-            "public_url_pattern": "/models/{model}/art.jpeg",
+            "art_resource": "step-2-art.jpeg",
             "manifest": "step-2-manifest.json",
             "allowed_extensions": [
               ".jpeg",
               ".jpg",
               ".png",
               ".webp"
-            ]
+            ],
+            "art_public": "art.jpeg",
+            "art_pick_resource_pattern": "step-2-art-pick-{pick}.jpeg",
+            "art_pick_public_pattern": "art-pick-{pick}.jpeg",
+            "public_url_pattern": "/models/{model}/art.jpeg"
           },
           "parameters": {
             "default_pick": 3,
@@ -175,7 +137,7 @@
           },
           "messages": {
             "start": "[Stage 1: Step 2] Picking and cropping chosen alternative #{pick} for {model}",
-            "completed": "[Stage 1: Step 2] Alternative #{pick} cropped and saved to art.jpeg in {duration}s"
+            "completed": "[Stage 1: Step 2] Alternative #{pick} cropped and saved to step-2-art.jpeg in {duration}s"
           },
           "manifest_contract": {
             "status": "DONE",
@@ -186,6 +148,48 @@
               "chosenPick": "pick",
               "artSize": "croppedBuffer.length"
             }
+          }
+        },
+        {
+          "id": "s1-step-3",
+          "name": "TRELLIS Input",
+          "label": "TRELLIS-IN",
+          "emoji": "🖼️",
+          "expected_seconds": 20,
+          "script": "scripts/stage-1/step-3-trellis-input.ts",
+          "stage_dir": "stage-1",
+          "depends_on": {
+            "step_id": "s1-step-2",
+            "stage_dir": "stage-1"
+          },
+          "models_from": "resources/*/stage-1/step-2-art.jpeg",
+          "inputs": {
+            "stage_dir": "stage-1",
+            "art_resource": "step-2-art.jpeg"
+          },
+          "outputs": {
+            "stage_dir": "stage-1",
+            "cutout_resource": "step-3-cutout.png",
+            "trellis_input_resource": "step-3-trellis-input.png",
+            "manifest": "step-3-manifest.json"
+          },
+          "parameters": {
+            "python_script": "scripts/stage-1/python/trellis_input.py",
+            "image_size": 1024,
+            "super_resolution": {
+              "binary": "~/.papikapi-tools/realesrgan-full/realesrgan-ncnn-vulkan",
+              "model": "realesrgan-x4plus-anime",
+              "scale": 4
+            }
+          },
+          "messages": {
+            "start": "[Stage 1: Step 3] Conditioning the chosen art as TRELLIS input for {model} (cutout, whiskers, white plinth, Real-ESRGAN x4, 1024)",
+            "completed": "✔ [Stage 1: Step 3] TRELLIS input ready for {model} in {duration}s ($0.00)"
+          },
+          "manifest_contract": {
+            "status": "DONE",
+            "costUsd": 0.0,
+            "costNote": "Local CPU Image Processing ($0.00)"
           }
         }
       ]
@@ -207,25 +211,25 @@
           },
           "inputs": {
             "stage_dir": "stage-1",
-            "art_resource": "step-1-art.jpeg",
-            "art_public": "art.jpeg",
-            "art_pick_resource_pattern": "step-1-art-pick-{pick}.jpeg",
-            "art_pick_public_pattern": "art-pick-{pick}.jpeg",
+            "art_resource": "step-2-art.jpeg",
             "allowed_extensions": [
               ".jpeg",
               ".jpg",
               ".png",
               ".webp"
-            ]
+            ],
+            "art_public": "art.jpeg",
+            "art_pick_resource_pattern": "step-2-art-pick-{pick}.jpeg",
+            "art_pick_public_pattern": "art-pick-{pick}.jpeg"
           },
           "outputs": {
             "stage_dir": "stage-2",
             "cutout_resource": "step-1-art-cutout.png",
+            "manifest": "step-1-manifest.json",
             "cutout_public": "art-cutout.png",
             "cutout_pick_resource_pattern": "step-1-art-pick-{pick}-cutout.png",
             "cutout_pick_public_pattern": "art-pick-{pick}-cutout.png",
-            "public_url_pattern": "/models/{model}/art-cutout.png",
-            "manifest": "step-1-manifest.json"
+            "public_url_pattern": "/models/{model}/art-cutout.png"
           },
           "messages": {
             "start": "[Stage 2: Step 1] Creating transparent cutout for {model}",
@@ -248,14 +252,14 @@
           "script": "scripts/stage-2/step-2-trellis.ts",
           "stage_dir": "stage-2",
           "depends_on": {
-            "step_id": "s2-step-1",
-            "stage_dir": "stage-2"
+            "step_id": "s1-step-3",
+            "stage_dir": "stage-1"
           },
-          "models_from": "resources/*/stage-2/step-1-art-cutout.png",
+          "models_from": "resources/*/stage-1/step-3-trellis-input.png",
           "runpod_console": "https://console.runpod.io/serverless",
           "serverless": {
             "env_endpoint_key": "RUNPOD_TRELLIS_ENDPOINT_ID",
-            "container_image": "ghcr.io/alexibid/papikapi-trellis:latest",
+            "container_image": "ghcr.io/alexibid/papikapi-trellis2:latest",
             "min_workers": 0,
             "max_workers": 1,
             "idle_timeout_seconds": 5,
@@ -266,11 +270,8 @@
             "status_url_pattern": "https://api.runpod.ai/v2/{endpoint_id}/status/{job_id}"
           },
           "inputs": {
-            "stage_dir": "stage-2",
-            "cutout_resource": "step-1-art-cutout.png",
-            "cutout_public": "art-cutout.png",
-            "cutout_pick_resource_pattern": "step-1-art-pick-{pick}-cutout.png",
-            "cutout_pick_public_pattern": "art-pick-{pick}-cutout.png",
+            "stage_dir": "stage-1",
+            "trellis_input_resource": "step-3-trellis-input.png",
             "allowed_extensions": [
               ".png"
             ]
@@ -278,26 +279,23 @@
           "outputs": {
             "stage_dir": "stage-2",
             "model_resource": "step-2-3d.glb",
+            "preview_resource": "step-2-preview.png",
+            "manifest": "step-2-manifest.json",
             "model_public": "model.glb",
             "model_pick_resource_pattern": "step-2-3d-pick-{pick}.glb",
             "model_pick_public_pattern": "model-pick-{pick}.glb",
-            "public_url_pattern": "/models/{model}/model.glb",
-            "manifest": "step-2-manifest.json"
+            "public_url_pattern": "/models/{model}/model.glb"
           },
           "engine": {
-            "model": "microsoft/TRELLIS-image-large",
+            "model": "microsoft/TRELLIS.2-4B",
             "type": "image-to-3d",
-            "notes": "TRELLIS is a vision-conditioned Image-to-3D diffusion model. 3D geometry and textures are synthesized directly from the transparent cutout image."
+            "notes": "Same build and settings as the official Space (huggingface.co/spaces/microsoft/TRELLIS.2): resolution 1024, random seed, decimation 500000, texture 2048."
           },
           "parameters": {
-            "seed": 1,
-            "simplify": 0.85,
-            "target_faces": 4000,
-            "texture_size": 1024,
-            "ss_sampling_steps": 12,
-            "slat_sampling_steps": 12,
-            "ss_guidance_strength": 7.5,
-            "slat_guidance_strength": 3.0,
+            "seed": "random",
+            "resolution": "1024",
+            "decimation_target": 500000,
+            "texture_size": 2048,
             "plinth": {
               "flatten_tolerance_ratio": 0.03,
               "edge_inset_ratio": 0.01,
@@ -343,9 +341,9 @@
               "device": "NVIDIA RTX 4090 Serverless Worker",
               "parameters": {
                 "seed": "seed",
-                "simplify": "simplify",
-                "target_faces": "targetFaces",
-                "texture_size": "textureSize"
+                "resolution": "resolution",
+                "decimation_target": "decimation_target",
+                "texture_size": "texture_size"
               }
             }
           }
@@ -365,8 +363,7 @@
           "models_from": "resources/*/stage-2/step-2-3d.glb",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
-            "script": "scripts/stage-2/blender/base/cut_base.py",
-            "views_script": "scripts/stage-2/blender/base/render_base_views.py"
+            "script": "scripts/stage-2/blender/base/cut_base.py"
           },
           "inputs": {
             "stage_dir": "stage-2",
@@ -376,9 +373,8 @@
           "outputs": {
             "stage_dir": "stage-2",
             "model_resource": "step-3-base.glb",
-            "model_pick_resource_pattern": "step-3-base-pick-{pick}.glb",
-            "views_dir": "step-3-views",
-            "manifest": "step-3-manifest.json"
+            "manifest": "step-3-manifest.json",
+            "model_pick_resource_pattern": "step-3-base-pick-{pick}.glb"
           },
           "parameters": {
             "weld_distance_ratio": 1e-05,
@@ -399,6 +395,59 @@
             "status": "DONE",
             "costNote": "Local Blender headless ($0.00)"
           }
+        },
+        {
+          "id": "s2-step-4",
+          "name": "Details",
+          "label": "DETAILS",
+          "emoji": "👁️",
+          "expected_seconds": 60,
+          "script": "scripts/stage-2/step-4-details.ts",
+          "stage_dir": "stage-2",
+          "depends_on": {
+            "step_id": "s2-step-3",
+            "stage_dir": "stage-2"
+          },
+          "models_from": "resources/*/stage-2/step-3-base.glb",
+          "blender": {
+            "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
+            "script": "scripts/stage-2/blender/details/transfer_details.py"
+          },
+          "inputs": {
+            "stage_dir": "stage-2",
+            "model_resource": "step-3-base.glb",
+            "art_stage_dir": "stage-1",
+            "art_resource": "step-3-trellis-input.png"
+          },
+          "outputs": {
+            "stage_dir": "stage-2",
+            "model_resource": "step-4-details.glb",
+            "manifest": "step-4-manifest.json"
+          },
+          "parameters": {
+            "saturation_min": 0.2,
+            "value_min": 0.35,
+            "stale_saturation_min": 0.12,
+            "stale_value_min": 0.15,
+            "hue_tolerance_deg": 35,
+            "eye_area_min_ratio": 0.0003,
+            "eye_area_max_ratio": 0.03,
+            "eye_fill_min": 0.45,
+            "pair_size_ratio_min": 0.3,
+            "outline_ratio": 0.12,
+            "cluster_cell_ratio": 0.006,
+            "pair_distance_max_ratio": 0.35,
+            "paint_radius_ratio": 1.6,
+            "facing_min": 0.2
+          },
+          "messages": {
+            "start": "[Stage 2: Step 4] Repainting the art's details on the texture for {model}",
+            "completed": "✔ [Stage 2: Step 4] Details repainted ({details} details, {texels} texels) for {model} in {duration}s ($0.00)"
+          },
+          "manifest_contract": {
+            "status": "DONE",
+            "costNote": "Local Blender headless ($0.00)"
+          }
         }
       ]
     },
@@ -407,35 +456,42 @@
       "steps": [
         {
           "id": "s3-step-1",
-          "name": "Low-Poly Simplification",
+          "name": "Simplify",
           "label": "SIMPLIFY",
           "emoji": "📐",
-          "expected_seconds": 40,
+          "expected_seconds": 20,
           "script": "scripts/stage-3/step-1-simplify.ts",
           "stage_dir": "stage-3",
           "depends_on": {
-            "step_id": "s2-step-3",
+            "step_id": "s2-step-4",
             "stage_dir": "stage-2"
           },
-          "models_from": "resources/*/stage-2/step-3-base.glb",
+          "models_from": "resources/*/stage-2/step-4-details.glb",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
             "script": "scripts/stage-3/blender/key_points/key_points.py"
           },
           "inputs": {
             "stage_dir": "stage-2",
-            "model_resource": "step-3-base.glb",
+            "model_resource": "step-4-details.glb",
+            "fallback_model_resource": "step-3-base.glb",
             "model_pick_resource_pattern": "step-3-base-pick-{pick}.glb"
           },
           "outputs": {
             "stage_dir": "stage-3",
-            "points_resource": "step-1-reduce.json",
-            "mesh_resource": "step-1-reduce.glb",
-            "mesh_public": "model.glb",
+            "model_resource": "step-1-simplify.glb",
+            "points_resource": "step-1-simplify.json",
             "manifest": "step-1-manifest.json"
           },
           "parameters": {
-            "target_faces": 600,
+            "target_faces": 430,
+            "max_faces": 6000,
+            "face_growth": 1.25,
+            "max_volume_change_percent": 1.0,
+            "max_dimension_change_percent": 1.0,
+            "min_inner_wall_share": 0.3,
+            "remesh_voxel_ratio": 0.0025,
+            "max_closing_deviation_ratio": 0.02,
             "weld_distance_ratio": 1e-05,
             "contact_height_ratio": 0.02,
             "quad_face_angle_deg": 20,
@@ -455,8 +511,8 @@
             "planar_dissolve_angle_deg": 15
           },
           "messages": {
-            "start": "[Stage 3: Step 1] Simplifying 3D mesh into low-poly papercraft for {model}",
-            "completed": "✔ [Stage 3: Step 1] Mesh simplified: {points} vertices, {meshFaces} faces ({quads} quads), max deviation {deviation} mm for {model} in {duration}s ($0.00)"
+            "start": "[Stage 3: Step 1] Simplifying the shape into low-poly papercraft for {model}",
+            "completed": "✔ [Stage 3: Step 1] {meshFaces} faces ({quads} quads), volume {volume}% for {model} in {duration}s ($0.00)"
           },
           "manifest_contract": {
             "status": "DONE",
@@ -465,117 +521,141 @@
         },
         {
           "id": "s3-step-2",
-          "name": "Texturize",
-          "label": "TEXTURIZE",
-          "emoji": "🎨",
+          "name": "Texture Atlas",
+          "label": "ATLAS",
+          "emoji": "🗺️",
           "expected_seconds": 30,
-          "script": "scripts/stage-3/step-2-texturize.ts",
+          "script": "scripts/stage-3/step-2-atlas.ts",
           "stage_dir": "stage-3",
           "depends_on": {
             "step_id": "s3-step-1",
             "stage_dir": "stage-3"
           },
-          "models_from": "resources/*/stage-3/step-1-reduce.json",
+          "models_from": "resources/*/stage-3/step-1-simplify.glb",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
-            "facet_views_script": "scripts/stage-3/blender/texturize/facet_views.py",
-            "project_reduce_script": "scripts/stage-3/blender/texturize/project_reduce.py"
+            "bake_script": "scripts/stage-3/blender/atlas/bake_atlas.py"
           },
-          "vectorizer_script": "scripts/stage-3/python/vectorize/vectorizer.py",
-          "art_texture": {
-            "redraw_script": "scripts/stage-3/python/art_texture/redraw_views.py",
-            "texture_script": "scripts/stage-3/python/art_texture/art_texture.py",
-            "apply_script": "scripts/stage-3/blender/art_texture/apply_art_atlas.py"
-          },
+          "atlas_script": "scripts/stage-3/python/atlas/simplify_atlas.py",
           "inputs": {
             "stage_dir": "stage-3",
-            "model_stage_dir": "stage-2",
-            "model_resource": "step-3-base.glb",
-            "model_pick_resource_pattern": "step-3-base-pick-{pick}.glb",
-            "views_dir": "step-3-views",
-            "mesh_resource": "step-1-reduce.json"
+            "model_resource": "step-1-simplify.glb",
+            "points_resource": "step-1-simplify.json",
+            "detailed_stage_dir": "stage-2",
+            "detailed_model_resource": "step-4-details.glb",
+            "fallback_detailed_resource": "step-3-base.glb"
           },
           "outputs": {
             "stage_dir": "stage-3",
-            "model_resource": "step-2-texturize.glb",
-            "model_public": "model.glb",
-            "views_dir": "step-2-views",
-            "svg_dir": "step-2-views/svg",
-            "facets_dir": "step-2-facets",
+            "atlas_resource": "step-2-atlas.png",
+            "uv_resource": "step-2-atlas.json",
             "manifest": "step-2-manifest.json"
           },
-          "parameters": {
+          "bake": {
+            "transfer": "nearest",
             "resolution": 2048,
-            "margin": 0.0,
-            "min_facing": 0.2,
-            "texture_mode": "legacy",
-            "head_cells": 8,
-            "pixel_min_aligned_ratio": 0.9,
-            "redraw": {
-              "views": [
-                "front",
-                "back",
-                "left",
-                "right",
-                "top"
-              ],
-              "reference_size_px": 512,
-              "columns": 3,
-              "rows": 2,
-              "endpoint_env_key": "RUNPOD_FLUX_ENDPOINT_ID",
-              "prompt": "Restyle this image of a blocky figure into clean flat pixel-block art with perfectly crisp straight-edged blocks and flat solid colours, keeping the colour scheme of every part. Draw eyes only where the image already shows eyes, as clean smooth round shapes with white highlights; never add eyes, faces or any feature that is not already present. Keep the exact same view, pose, silhouette, proportions, framing and every feature where it is. Do not rotate, do not add a base, do not add shadows or gradients. Plain white background."
-            },
-            "organic_group_angle_deg": 30,
-            "organic_group_deviation_ratio": 0.025,
-            "organic_group_extent_ratio": 0.35
+            "uv_angle_limit_rad": 1.15,
+            "uv_island_margin": 0.004,
+            "bake_margin_px": 8,
+            "cage_extrusion_ratio": 0.012
+          },
+          "atlas": {
+            "neutral_chroma": 5,
+            "neutral_lightness_tolerance": 18,
+            "border_smooth_sigma_px": 3,
+            "speck_area_ratio": 0.00003,
+            "detail_contrast": 40,
+            "detail_share_max": 0.005,
+            "detail_margin_px": 6,
+            "detail_denoise_px": 1,
+            "border_soften_px": 0.5,
+            "bleed_px": 8
           },
           "messages": {
-            "start": "[Stage 3: Step 2] Facet colours from the base plus vector Bezier textures for {model}",
-            "completed": "✔ [Stage 3: Step 2] {faces} faces textured ({totalPaths} vector paths, {totalNodes} nodes) for {model} in {duration}s ($0.00)"
+            "start": "[Stage 3: Step 2] Baking and simplifying texture atlas for {model}",
+            "completed": "✔ [Stage 3: Step 2] Texture atlas with {families} colour families for {model} in {duration}s ($0.00)"
           },
           "manifest_contract": {
             "status": "DONE",
-            "costNote": "Local Blender headless and Vectorizer ($0.00)"
+            "costNote": "Local Blender headless and Python ($0.00)"
           }
         },
         {
           "id": "s3-step-3",
-          "name": "White Plinth",
-          "label": "PLINTH",
-          "emoji": "🏛️",
+          "name": "Texturize",
+          "label": "TEXTURIZE",
+          "emoji": "🎨",
           "expected_seconds": 10,
-          "script": "scripts/stage-3/step-3-plinth.ts",
+          "script": "scripts/stage-3/step-3-texturize.ts",
           "stage_dir": "stage-3",
           "depends_on": {
             "step_id": "s3-step-2",
             "stage_dir": "stage-3"
           },
-          "models_from": "resources/*/stage-3/step-2-texturize.glb",
+          "models_from": "resources/*/stage-3/step-2-atlas.png",
+          "blender": {
+            "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
+            "apply_script": "scripts/stage-3/blender/atlas/apply_atlas.py"
+          },
+          "inputs": {
+            "stage_dir": "stage-3",
+            "model_resource": "step-1-simplify.glb",
+            "atlas_resource": "step-2-atlas.png",
+            "uv_resource": "step-2-atlas.json"
+          },
+          "outputs": {
+            "stage_dir": "stage-3",
+            "model_resource": "step-3-texturize.glb",
+            "model_public": "model.glb",
+            "manifest": "step-3-manifest.json"
+          },
+          "messages": {
+            "start": "[Stage 3: Step 3] Applying atlas texture to simplified figure for {model}",
+            "completed": "✔ [Stage 3: Step 3] Model textured for {model} in {duration}s ($0.00)"
+          },
+          "manifest_contract": {
+            "status": "DONE",
+            "costNote": "Local Blender headless ($0.00)"
+          }
+        },
+        {
+          "id": "s3-step-4",
+          "name": "White Plinth",
+          "label": "PLINTH",
+          "emoji": "🏛️",
+          "expected_seconds": 10,
+          "script": "scripts/stage-3/step-4-plinth.ts",
+          "stage_dir": "stage-3",
+          "depends_on": {
+            "step_id": "s3-step-3",
+            "stage_dir": "stage-3"
+          },
+          "models_from": "resources/*/stage-3/step-3-texturize.glb",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
             "script": "scripts/stage-3/blender/plinth/build_plinth.py"
           },
           "inputs": {
             "stage_dir": "stage-3",
-            "mesh_resource": "step-1-reduce.json",
-            "model_resource": "step-2-texturize.glb"
+            "mesh_resource": "step-1-simplify.json",
+            "model_resource": "step-3-texturize.glb"
           },
           "outputs": {
             "stage_dir": "stage-3",
-            "mesh_resource": "step-3-plinth.json",
-            "model_resource": "step-3-plinth.glb",
+            "mesh_resource": "step-4-plinth.json",
+            "model_resource": "step-4-plinth.glb",
             "model_public": "model.glb",
-            "manifest": "step-3-manifest.json"
+            "manifest": "step-4-manifest.json"
           },
           "parameters": {
             "plinth_thickness_ratio": 0.05,
             "plinth_slope_ratio": 0.02,
-            "plinth_margin_ratio": 0.004,
+            "plinth_margin_ratio": 0.008,
             "face_max_extent_ratio": 0.5
           },
           "messages": {
-            "start": "[Stage 3: Step 3] Generating the white plinth for {model}",
-            "completed": "✔ [Stage 3: Step 3] White plinth generated ({faces} faces) for {model} in {duration}s ($0.00)"
+            "start": "[Stage 3: Step 4] Generating the white plinth for {model}",
+            "completed": "✔ [Stage 3: Step 4] White plinth generated ({faces} faces) for {model} in {duration}s ($0.00)"
           },
           "manifest_contract": {
             "status": "DONE",
@@ -596,10 +676,10 @@
           "script": "scripts/stage-4/step-1-unfold.ts",
           "stage_dir": "stage-4",
           "depends_on": {
-            "step_id": "s3-step-3",
+            "step_id": "s3-step-4",
             "stage_dir": "stage-3"
           },
-          "models_from": "resources/*/stage-3/step-3-plinth.json",
+          "models_from": "resources/*/stage-3/step-4-plinth.json",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
             "unfold_script": "scripts/stage-4/blender/unfold_model.py",
@@ -607,7 +687,7 @@
           },
           "inputs": {
             "stage_dir": "stage-3",
-            "model_resource": "step-3-plinth.json"
+            "model_resource": "step-4-plinth.json"
           },
           "outputs": {
             "stage_dir": "stage-4",
@@ -655,7 +735,7 @@
             "stage_dir": "stage-4",
             "net_resource": "step-1-net.json",
             "texture_stage_dir": "stage-3",
-            "texture_model": "step-3-plinth.glb"
+            "texture_model": "step-4-plinth.glb"
           },
           "outputs": {
             "stage_dir": "stage-4",
@@ -715,7 +795,7 @@
             "stage_dir": "stage-4",
             "net_resource": "step-1-net.json",
             "texture_stage_dir": "stage-3",
-            "texture_model": "step-3-figure.glb"
+            "texture_model": "step-3-texturize.glb"
           },
           "outputs": {
             "stage_dir": "stage-5",

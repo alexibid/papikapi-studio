@@ -1,12 +1,10 @@
-import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type {
   AlternativesStepDefinition,
-  AlternativesStepParameters,
   FluxWorkerOutput,
   GenerateAlternativesRequest,
   GenerateAlternativesResponse,
-  ReferenceComposition,
 } from './stage-1.interface.js';
 import type { InlineImage } from '../common/interfaces/index.js';
 import { GeminiClient } from '../common/gemini-client.js';
@@ -16,8 +14,8 @@ import { PipelineConfigLoader } from '../common/pipeline-config.js';
 import { ProgressHub } from '../common/progress-hub.js';
 import { RunPodClient } from '../common/runpod-client.js';
 import { WorkspacePaths } from '../common/workspace-paths.js';
-import { WhiskerCleaner } from '../common/whisker-cleaner.js';
 import { PromptEnricher } from '../common/prompt-enricher.js';
+import { PromptGuard } from '../common/prompt-guard.js';
 
 export class AlternativesGenerator {
   private static readonly stepId = 's1-step-1';
@@ -30,93 +28,31 @@ export class AlternativesGenerator {
     return `${lora} · ${output.reference_images_used} reference image(s) used`;
   }
 
-  private static loadParameters(): AlternativesStepParameters {
-    const step = PipelineConfigLoader.getStep(this.stepId) as unknown as AlternativesStepDefinition;
-    return step.parameters;
+  private static loadStep(): AlternativesStepDefinition {
+    return PipelineConfigLoader.getStep(this.stepId) as unknown as AlternativesStepDefinition;
   }
 
-  private static getTrainingReferencePrompt(modelName: string): string | null {
-    const metaPath = join(process.cwd(), 'apps/papikapi-studio/scripts/training/references/metadata.jsonl');
-    const altMetaPath = join(process.cwd(), 'scripts/training/references/metadata.jsonl');
-    const targetPath = existsSync(metaPath) ? metaPath : existsSync(altMetaPath) ? altMetaPath : null;
-    if (!targetPath) return null;
-
-    try {
-      const content = readFileSync(targetPath, 'utf-8');
-      const lines = content.split('\n').filter(Boolean);
-      for (const line of lines) {
-        const item = JSON.parse(line) as { file_name: string; text: string };
-        const baseName = item.file_name.replace(/\.[^/.]+$/, '').split('/').pop();
-        if (baseName === modelName) {
-          return item.text
-            .replace(/papikapi-style\s+/g, '')
-            .replace(this.loadParameters().training_caption_view_phrase, '');
-        }
-      }
-    } catch {
-      return null;
-    }
-    return null;
-  }
-
-  public static composePrompt(subject: string, references: ReferenceComposition, modelName?: string): { system: string; prompt: string; aspectRatio: string; model: string } {
-    const step = PipelineConfigLoader.getStep(this.stepId) as unknown as AlternativesStepDefinition;
-    const params = step.parameters;
-    const templates = params.prompt_templates;
-
-    const isGeneric = Boolean(
-      subject.toLowerCase().startsWith('category:')
-        ? true
-        : subject.toLowerCase().includes('list of')
-          ? true
-          : subject.toLowerCase().includes('animals of')
+  public static composePrompt(subject: string, referenceCount: number): string {
+    const params = this.loadStep().parameters;
+    const reference = referenceCount > 0 ? `${params.reference_rule} ` : '';
+    const pose = PromptEnricher.describesPose(subject) ? '' : `${params.default_pose} `;
+    const system = params.system_prompt.replaceAll(
+      '{plane_colour}',
+      PromptEnricher.contrastingColour(subject, params.plane_colours),
     );
-    const template = isGeneric ? templates.generic_category : templates.specific_subject;
-
-    const refInstruction = this.composeReferenceInstruction(params, references);
-
-    const maturity = !isGeneric && params.maturity_descriptions
-      ? `\n\nMATURITY PROGRESSION (ROW BY ROW):\n${params.maturity_descriptions.join('\n')}`
-      : '';
-
-    const critical = params.critical_rules
-      ? `\n\nCRITICAL RULES:\n${params.critical_rules.map((r, i) => `${i + 1}. ${r}`).join('\n')}`
-      : '';
-
-    const trainingPrompt = modelName ? this.getTrainingReferencePrompt(modelName) : null;
-    const effectiveSubject = trainingPrompt
-      ? `${subject} (${trainingPrompt})`
-      : subject;
-    const cleanEffectiveSubject = this.sanitizePrompt(effectiveSubject);
-
-    const prompt = template
-      .replaceAll('{subject}', cleanEffectiveSubject)
-      .replace('{reference_instruction}', refInstruction)
-      + maturity
-      + critical;
-
-    const system = params.system_prompt;
-    const aspectRatio = params.aspect_ratio;
-    const model = params.default_model;
-
-    return { system, prompt, aspectRatio, model };
+    const prompt = `${reference}${pose}${subject}. ${system}`;
+    return PromptGuard.assertSystemBlock(PromptGuard.assertPrompt(prompt));
   }
 
-  private static composeReferenceInstruction(params: AlternativesStepParameters, references: ReferenceComposition): string {
-    const styleNote = references.hasStyle ? params.style_reference_note : '';
-    const firstSubjectIndex = references.hasStyle ? 2 : 1;
-    const subjectNote = references.subjectCount > 0
-      ? params.reference_note_template
-        .replace('{count}', String(references.subjectCount))
-        .replace('{first}', String(firstSubjectIndex))
-      : '';
-    return [styleNote, subjectNote].filter(Boolean).join(' ');
+  public static buildCellPrompts(subject: string, referenceCount: number): string[] {
+    const prompt = this.composePrompt(subject, referenceCount);
+    return Array.from({ length: this.loadStep().parameters.alternatives_count }, () => prompt);
   }
 
-  private static composeReferenceImages(request: GenerateAlternativesRequest, maxSubjectImages: number): {
-    images: readonly InlineImage[];
-    composition: ReferenceComposition;
-  } {
+  private static composeReferenceImages(
+    request: GenerateAlternativesRequest,
+    maxSubjectImages: number,
+  ): readonly InlineImage[] {
     const subjectImages = (request.referenceImages ?? []).slice(0, maxSubjectImages);
     // When the user provides subject photos, use only their photos to prevent style and feature contamination.
     // Style reference is only used when generating from text prompt alone (0 subject photos).
@@ -131,43 +67,25 @@ export class AlternativesGenerator {
     const subjectMessage = `📷 Subject Photos: ${subjectImages.length}`;
     console.log(`  [s1-step-1] ${subjectMessage}`);
     ProgressHub.report(request.name, this.stepId, subjectMessage);
-    return {
-      images: style ? [style.image, ...subjectImages] : subjectImages,
-      composition: { hasStyle: style !== null, subjectCount: subjectImages.length },
-    };
+    return style ? [style.image, ...subjectImages] : subjectImages;
   }
 
-  public static sanitizePrompt(input: string): string {
-    return PromptEnricher.sanitize(input);
-  }
-
-  public static buildCellPrompts(name: string, subject: string): string[] {
-    const params = this.loadParameters();
-    const trainingPrompt = this.getTrainingReferencePrompt(name);
-    const cleanSubject = this.sanitizePrompt(subject);
-    const cleanDetails = PromptEnricher.getDetailsForSubject(name, subject, trainingPrompt);
-
-    return params.cell_prompt_templates.map((template) =>
-      template
-        .replaceAll('{subject}', cleanSubject)
-        .replaceAll('{details}', cleanDetails)
-        .replaceAll('{view}', params.view_clause)
-        .replaceAll('{base}', params.base_clause),
-    );
+  private static saveReferences(stageDir: string, references: readonly InlineImage[]): void {
+    references.forEach((image, index) => {
+      const extension = image.mime.includes('png') ? 'png' : 'jpeg';
+      writeFileSync(join(stageDir, `step-1-reference-${index + 1}.${extension}`), image.bytes);
+    });
   }
 
   public static async execute(request: GenerateAlternativesRequest): Promise<GenerateAlternativesResponse> {
     const { name, prompt: rawPrompt, engineOverride } = request;
-    const prompt = PromptEnricher.enrichSubject(rawPrompt);
-    const step = PipelineConfigLoader.getStep(this.stepId) as unknown as AlternativesStepDefinition;
+    const prompt = PromptGuard.assertSubject(PromptEnricher.subjectFrom(rawPrompt));
+    const step = this.loadStep();
     const params = step.parameters;
-    const { images: referenceImages, composition } = this.composeReferenceImages(
-      { ...request, prompt },
-      params.max_reference_images,
-    );
-    const { system, prompt: fullPrompt, aspectRatio, model: defaultModel } = this.composePrompt(prompt, composition, name);
+    const referenceImages = this.composeReferenceImages({ ...request, prompt }, params.max_reference_images);
+    const fullPrompt = this.composePrompt(prompt, referenceImages.length);
 
-    const engine = engineOverride ? engineOverride : defaultModel;
+    const engine = engineOverride ? engineOverride : params.default_model;
     const isGemini = engine.toLowerCase().includes('gemini');
 
     let imageBytes: Buffer;
@@ -184,10 +102,10 @@ export class AlternativesGenerator {
     try {
       if (isGemini) {
         const result = await GeminiClient.generate(engine, {
-          system,
-          prompt: fullPrompt,
+          system: params.system_prompt,
+          prompt,
           referenceImages,
-          aspectRatio,
+          aspectRatio: params.aspect_ratio,
         });
         imageBytes = result.bytes;
         mime = result.mime;
@@ -202,8 +120,7 @@ export class AlternativesGenerator {
 
         const payload = {
           prompt: fullPrompt,
-          cell_prompts: this.buildCellPrompts(name, prompt),
-          negative_prompt: params.negative_prompt,
+          cell_prompts: this.buildCellPrompts(prompt, referenceImages.length),
           reference_images: referenceImages.map((img) => img.bytes.toString('base64')),
           columns: params.columns,
           rows: params.rows,
@@ -265,12 +182,7 @@ export class AlternativesGenerator {
 
     writeFileSync(resourceFile, imageBytes);
     writeFileSync(publicFile, imageBytes);
-
-    if (WhiskerCleaner.isFeline(name, prompt)) {
-      console.log(`  [${this.stepId}] 🐾 Feline detected: applying deterministic whisker suppression on alternatives sheet`);
-      WhiskerCleaner.cleanSheet(resourceFile, params.columns, params.rows);
-      WhiskerCleaner.cleanSheet(publicFile, params.columns, params.rows);
-    }
+    this.saveReferences(stage0Dir, referenceImages);
 
     ManifestManager.writeStepResult(name, this.stepId, {
       status: contract.status,
@@ -279,6 +191,7 @@ export class AlternativesGenerator {
       costNote,
       data: {
         prompt,
+        fluxPrompt: fullPrompt,
         referenceCount: referenceImages.length,
         alternativesCount: params.alternatives_count,
         format: mime,

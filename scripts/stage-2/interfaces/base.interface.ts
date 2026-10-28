@@ -2,7 +2,6 @@ import type { BlenderConfig } from '../../common/interfaces/index.js';
 
 export interface BaseBlenderConfig extends BlenderConfig {
   readonly script: string;
-  readonly views_script?: string;
 }
 
 export interface BaseParameters {
@@ -45,7 +44,6 @@ export interface BaseStepDefinition {
     readonly stage_dir: string;
     readonly model_resource: string;
     readonly model_pick_resource_pattern: string;
-    readonly views_dir?: string;
     readonly manifest: string;
   };
   readonly parameters: BaseParameters;

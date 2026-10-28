@@ -5,6 +5,6 @@ export interface CutoutOptions {
 }
 
 export interface LoadedModel {
-  readonly model: { (args: { input: unknown }): Promise<{ output: Tensor[] }> };
+  readonly model: { (args: { input_image: unknown }): Promise<{ output_image: Tensor[] }> };
   readonly processor: { (img: unknown): Promise<{ pixel_values: unknown }> };
 }

@@ -49,16 +49,13 @@ export class SheetsExporter {
     }
 
     const textureCandidates = [
-      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-3-figure.glb'),
       join(
         WorkspacePaths.resourcePath(modelName),
         step.inputs.texture_stage_dir,
         step.inputs.texture_model,
       ),
-      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-3-plinth.glb'),
-      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-2-texturize.glb'),
-      join(WorkspacePaths.resourcePath(modelName), 'stage-2', 'step-6-plinth.glb'),
-      join(WorkspacePaths.resourcePath(modelName), 'stage-2', 'step-5-texturize.glb'),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-4-plinth.glb'),
+      join(WorkspacePaths.resourcePath(modelName), 'stage-3', 'step-3-texturize.glb'),
     ];
     const texturedModelPath = textureCandidates.find((c) => existsSync(c));
     if (!texturedModelPath) {

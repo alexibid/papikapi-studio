@@ -7,13 +7,14 @@ sys.path.insert(0, str(Path(__file__).parent))
 sys.path.insert(0, str(Path(__file__).parents[3] / "stage-3" / "blender" / "key_points"))
 
 import bpy
-from figure_base import cut_figure_base
+from figure_base import cut_figure_base, seal_holes
 from mesh_quality import open_and_non_manifold_edges
 from model_loader import load_grounded_mesh
 from surface_repair import repair_surface
 
 RESULT_MARKER = "PAPERCRAFT_RESULT "
 ERROR_MARKER = "PAPERCRAFT_ERROR "
+MARGIN_COST_RATIO = 0.01
 
 
 def read_settings():
@@ -40,6 +41,7 @@ def build_base(settings, margin):
     repair_surface(surface)
     statistics = cut_figure_base(surface, margin)
     repair_surface(surface)
+    seal_holes(surface, repair_surface)
     open_edges, non_manifold = open_and_non_manifold_edges(surface)
     return {
         "surface": surface,
@@ -62,7 +64,8 @@ def first_airtight(settings):
         if is_airtight(attempt):
             return attempt
         attempts.append(attempt)
-    return min(attempts, key=lambda attempt: attempt["open"] + attempt["nonManifold"])
+    best = min(attempts, key=lambda attempt: attempt["open"] + attempt["nonManifold"] + attempt["margin"] / MARGIN_COST_RATIO)
+    return build_base(settings, best["margin"])
 
 
 def describe(attempt):

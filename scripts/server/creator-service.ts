@@ -12,8 +12,9 @@ import { CutoutGenerator } from '../stage-2/step-1-cutout.js';
 import { TrellisGenerator } from '../stage-2/step-2-trellis.js';
 import { BaseCutGenerator } from '../stage-2/step-3-base.js';
 import { SimplifyGenerator } from '../stage-3/step-1-simplify.js';
-import { TexturizeGenerator } from '../stage-3/step-2-texturize.js';
-import { PlinthGenerator } from '../stage-3/step-3-plinth.js';
+import { AtlasGenerator } from '../stage-3/step-2-atlas.js';
+import { TexturizeGenerator } from '../stage-3/step-3-texturize.js';
+import { PlinthGenerator } from '../stage-3/step-4-plinth.js';
 import { UnfoldGenerator } from '../stage-4/step-1-unfold.js';
 import { SheetsExporter } from '../stage-4/step-2-sheets.js';
 import { AssemblyGenerator } from '../stage-5/step-1-assembly.js';
@@ -78,6 +79,7 @@ export class CreatorService {
       's3-step-1',
       's3-step-2',
       's3-step-3',
+      's3-step-4',
       's4-step-1',
       's4-step-2',
       's5-step-1',
@@ -88,7 +90,8 @@ export class CreatorService {
       const trellisResult = await TrellisGenerator.execute(cleanName, pick);
       await BaseCutGenerator.execute(cleanName, pick);
       await SimplifyGenerator.execute(cleanName, pick);
-      await TexturizeGenerator.execute(cleanName, pick);
+      await AtlasGenerator.execute(cleanName);
+      await TexturizeGenerator.execute(cleanName);
       await PlinthGenerator.execute(cleanName);
       await UnfoldGenerator.execute(cleanName);
       await SheetsExporter.execute(cleanName);

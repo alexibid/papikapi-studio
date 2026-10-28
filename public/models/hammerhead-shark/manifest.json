@@ -113,82 +113,167 @@
     },
     "s3-step-1": {
       "stageId": "s3-step-1",
-      "at": "2026-10-08T16:58:50.463Z",
+      "at": "2026-10-28T14:11:50.973Z",
       "status": "DONE",
-      "seconds": 1.36,
+      "seconds": 38.07,
       "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
+      "costNote": "Local Blender headless and Python ($0.00)",
       "data": {
         "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/hammerhead-shark/stage-2/step-3-base.glb",
         "lengthMm": 960.2,
-        "faces": 1454,
+        "faces": 248376,
+        "attempts": [
+          {
+            "targetFaces": 430,
+            "meshFaces": 315,
+            "volumeChangePercent": 0.04,
+            "featureLossMm": 5.3,
+            "failures": []
+          }
+        ],
+        "families": [
+          {
+            "hex": "#9c9fa4",
+            "share": 0.278
+          },
+          {
+            "hex": "#c9ccd1",
+            "share": 0.2336
+          },
+          {
+            "hex": "#3c3539",
+            "share": 0.0528
+          },
+          {
+            "hex": "#645e62",
+            "share": 0.0437
+          },
+          {
+            "hex": "#0c0b0e",
+            "share": 0.0062
+          },
+          {
+            "hex": "#9098a2",
+            "share": 0.2976
+          },
+          {
+            "hex": "#a29590",
+            "share": 0.0333
+          },
+          {
+            "hex": "#973944",
+            "share": 0.0172
+          },
+          {
+            "hex": "#a7908f",
+            "share": 0.0012
+          },
+          {
+            "hex": "#965b61",
+            "share": 0.0033
+          },
+          {
+            "hex": "#4a4b55",
+            "share": 0.0223
+          },
+          {
+            "hex": "#4f464c",
+            "share": 0.0075
+          },
+          {
+            "hex": "#865066",
+            "share": 0.0001
+          },
+          {
+            "hex": "#bcbdaf",
+            "share": 0.0013
+          },
+          {
+            "hex": "#afa499",
+            "share": 0.0012
+          },
+          {
+            "hex": "#b69a7a",
+            "share": 0.0001
+          },
+          {
+            "hex": "#737f85",
+            "share": 0.0003
+          }
+        ],
+        "detailFamilies": [
+          "#966456",
+          "#a7908f",
+          "#965b61",
+          "#865066",
+          "#bcbdaf",
+          "#afa499",
+          "#b69a7a",
+          "#737f85"
+        ],
         "parameters": {
-          "target_faces": 600,
+          "target_faces": 430,
+          "max_faces": 6000,
+          "face_growth": 1.25,
+          "max_volume_change_percent": 1,
+          "max_dimension_change_percent": 1,
+          "min_inner_wall_share": 0.3,
+          "remesh_voxel_ratio": 0.0025,
+          "max_closing_deviation_ratio": 0.02,
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
           "quad_face_angle_deg": 20,
           "quad_shape_angle_deg": 60,
           "face_max_extent_ratio": 0.5,
-          "min_fold_length_mm": 6,
-          "flat_vertex_angle_deg": 8,
-          "target_size_mm": 300,
-          "fold_tolerance_ratio": 0.0067,
-          "fold_max_deviation_ratio": 0.01,
-          "fold_max_volume_percent": 0.1
+          "mode": "decimate",
+          "box_min_aligned_ratio": 0.74,
+          "box_voxel_resolution": 192,
+          "box_plane_merge_ratio": 0.02,
+          "box_plane_min_area_ratio": 0.03,
+          "box_slab_footprint_ratio": 1.6,
+          "box_slab_max_thickness_ratio": 0.03,
+          "planar_voxel_ratio": 0.02,
+          "planar_smooth_iterations": 4,
+          "planar_smooth_factor": 0.5,
+          "planar_decimate_faces": 500,
+          "planar_dissolve_angle_deg": 15
+        },
+        "bake": {
+          "transfer": "nearest",
+          "resolution": 2048,
+          "uv_angle_limit_rad": 1.15,
+          "uv_island_margin": 0.004,
+          "bake_margin_px": 8,
+          "cage_extrusion_ratio": 0.012
+        },
+        "atlas": {
+          "neutral_chroma": 5,
+          "neutral_lightness_tolerance": 18,
+          "border_smooth_sigma_px": 3,
+          "speck_area_ratio": 0.00003,
+          "detail_contrast": 40,
+          "detail_share_max": 0.005,
+          "detail_margin_px": 6,
+          "detail_denoise_px": 1,
+          "border_soften_px": 0.5,
+          "bleed_px": 8
         }
       },
       "metrics": {
-        "points": 136,
-        "meshFaces": 197,
-        "quads": 71,
-        "openEdges": 0,
-        "nonManifoldEdges": 0,
+        "points": 217,
+        "meshFaces": 315,
+        "quads": 115,
         "airtight": true,
-        "volumeChangePercent": -0.55,
-        "maxDeviationMm": 6.39,
-        "featureLossMm": 9.18,
-        "facetColours": 189
-      }
-    },
-    "s3-step-2": {
-      "stageId": "s3-step-2",
-      "at": "2026-10-08T16:59:00.386Z",
-      "status": "DONE",
-      "seconds": 9.92,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/hammerhead-shark/stage-2/step-4-optimize.glb",
-        "parameters": {
-          "resolution": 2048
-        }
-      },
-      "metrics": {
-        "faces": 197,
-        "resolution": 2048
-      }
-    },
-    "s3-step-3": {
-      "stageId": "s3-step-3",
-      "at": "2026-10-12T00:05:30.319Z",
-      "status": "DONE",
-      "seconds": 0.83,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/hammerhead-shark/stage-3/step-2-texturize.glb",
-        "parameters": {
-          "plinth_thickness_ratio": 0.05,
-          "plinth_slope_ratio": 0.02,
-          "plinth_margin_ratio": 0.004,
-          "face_max_extent_ratio": 0.5
-        }
-      },
-      "metrics": {
-        "faces": 205,
-        "loops": 0,
-        "openEdges": 6,
-        "nonManifoldEdges": 0
+        "volumeChangePercent": 0.04,
+        "dimensionChangePercent": 0.82,
+        "featureLossMm": 5.3,
+        "maxDeviationMm": 4.43,
+        "closingDeviationMm": 3.28,
+        "innerWallShare": 0,
+        "mode": "decimate",
+        "colourFamilies": 17,
+        "specksAbsorbed": 674,
+        "detailTexels": 31544
       }
     },
     "s4-step-1": {
@@ -256,7 +341,7 @@
       }
     }
   },
-  "totalSeconds": 1224.15,
+  "totalSeconds": 1250.11,
   "totalCostUsd": 0.0768,
-  "updatedAt": "2026-10-13T07:33:02.287Z"
+  "updatedAt": "2026-10-28T14:11:50.979Z"
 }

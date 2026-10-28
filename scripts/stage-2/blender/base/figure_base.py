@@ -11,6 +11,10 @@ SEPARATE_PLINTH_RATIO = 0.02
 SURFACE_BAND_RATIO = 0.015
 SURFACE_PERCENTILE = 95
 CONTACT_BAND_RATIO = 0.02
+SECTION_TOLERANCE_RATIO = 1e-4
+SEAL_ROUNDS = 6
+SHEET_NORMAL = 0.9
+SHEET_MIN_SHARE = 0.005
 
 
 def connected_components(surface):
@@ -52,24 +56,33 @@ def remove_disconnected_islands(surface):
 
 
 def plinth_top_level(surface, height):
+    xs = [vertex.co.x for vertex in surface.verts]
+    ys = [vertex.co.y for vertex in surface.verts]
+    footprint = (max(xs) - min(xs)) * (max(ys) - min(ys))
+
     bins = {}
     for face in surface.faces:
         level = face.calc_center_median().z
-        if face.normal.z >= UPWARD_NORMAL and level <= SEARCH_HEIGHT_RATIO * height:
+        if abs(face.normal.z) >= UPWARD_NORMAL and level <= SEARCH_HEIGHT_RATIO * height:
             bins.setdefault(round(level / (BIN_RATIO * height)), []).append((face.calc_area(), level))
-    if not bins:
-        return FALLBACK_LEVEL_RATIO * height
-    heaviest = max(bins.values(), key=lambda entries: sum(area for area, _ in entries))
-    return sum(level for _, level in heaviest) / len(heaviest)
+    # A true 3D plinth slab covers a significant portion (>= 8%) of the footprint. Face orientation
+    # is unreliable on open shells, so the slab top is the highest such level, not an upward normal.
+    slabs = [entries for entries in bins.values() if sum(area for area, _ in entries) >= 0.08 * footprint]
+    if not slabs:
+        return 0.0
+    top = max(slabs, key=lambda entries: sum(level for _, level in entries) / len(entries))
+    return sum(level for _, level in top) / len(top)
 
 
 def plinth_surface_top(surface, height):
     level = plinth_top_level(surface, height)
+    if level <= 0.0:
+        return min(vertex.co.z for vertex in surface.verts)
     band = SURFACE_BAND_RATIO * height
     heights = [
         vertex.co.z
         for face in surface.faces
-        if face.normal.z >= UPWARD_NORMAL and abs(face.calc_center_median().z - level) <= band
+        if abs(face.normal.z) >= UPWARD_NORMAL and abs(face.calc_center_median().z - level) <= band
         for vertex in face.verts
     ]
     return float(numpy.percentile(heights, SURFACE_PERCENTILE)) if heights else level
@@ -86,8 +99,13 @@ def cut_below(surface, level):
     )
 
 
-def flatten_section(surface, level):
-    section = [edge for edge in surface.edges if edge.is_boundary]
+def flatten_section(surface, level, height):
+    tolerance = SECTION_TOLERANCE_RATIO * height
+    section = [
+        edge
+        for edge in surface.edges
+        if edge.is_boundary and all(abs(vertex.co.z - level) <= tolerance for vertex in edge.verts)
+    ]
     for vertex in {vertex for edge in section for vertex in edge.verts}:
         vertex.co.z = level
     return section
@@ -122,10 +140,52 @@ def cap_loop(surface, loop):
         surface.faces.new(corners if normal.z <= 0 else corners[::-1])
 
 
+def seal_holes(surface, repair):
+    for _ in range(SEAL_ROUNDS):
+        loops = chain_loops([edge for edge in surface.edges if edge.is_boundary])
+        if not loops:
+            return
+        for loop in loops:
+            cap_loop(surface, loop)
+        bmesh.ops.recalc_face_normals(surface, faces=surface.faces)
+        repair(surface)
+
+
 def seat_on_origin(surface, anchors, level):
     centre_x = (min(point.x for point in anchors) + max(point.x for point in anchors)) / 2
     centre_y = (min(point.y for point in anchors) + max(point.y for point in anchors)) / 2
     bmesh.ops.transform(surface, matrix=Matrix.Translation(Vector((-centre_x, -centre_y, -level))), verts=surface.verts)
+
+
+def floor_faces(surface, floor, tolerance):
+    return [face for face in surface.faces if all(vertex.co.z <= floor + tolerance for vertex in face.verts)]
+
+
+def remove_ground_sheet(surface):
+    """TRELLIS can lay a zero-thickness sheet under the feet besides its separate plinth; with no plinth to cut,
+    the sheet stays and is printed as part of the figure. A solid figure never has a floor face looking up, so
+    such faces mean a sheet: every face on the floor goes and the soles are capped again on the leg walls."""
+    floor = min(vertex.co.z for vertex in surface.verts)
+    height = max(vertex.co.z for vertex in surface.verts) - floor
+    tolerance = SECTION_TOLERANCE_RATIO * height
+    on_floor = floor_faces(surface, floor, tolerance)
+    looking_up = sum(face.calc_area() for face in on_floor if face.normal.z >= SHEET_NORMAL)
+    footprint = footprint_area(surface)
+    if looking_up < SHEET_MIN_SHARE * footprint:
+        return 0
+    bmesh.ops.delete(surface, geom=on_floor, context="FACES")
+    bmesh.ops.delete(surface, geom=[vertex for vertex in surface.verts if not vertex.link_faces], context="VERTS")
+    section = [edge for edge in surface.edges
+               if edge.is_boundary and all(vertex.co.z <= floor + tolerance for vertex in edge.verts)]
+    for loop in chain_loops(section):
+        cap_loop(surface, loop)
+    return len(on_floor)
+
+
+def footprint_area(surface):
+    xs = [vertex.co.x for vertex in surface.verts]
+    ys = [vertex.co.y for vertex in surface.verts]
+    return (max(xs) - min(xs)) * (max(ys) - min(ys))
 
 
 def flatten_contact_band(surface):
@@ -140,10 +200,11 @@ def flatten_contact_band(surface):
 def cut_below_plinth(surface, margin_ratio):
     floor = min(vertex.co.z for vertex in surface.verts)
     height = max(vertex.co.z for vertex in surface.verts) - floor
-    level = plinth_surface_top(surface, height) + margin_ratio * height
+    plinth_level = plinth_surface_top(surface, height)
+    level = plinth_level + margin_ratio * height
     cut_below(surface, level)
     removed_islands, _ = remove_disconnected_islands(surface)
-    loops = chain_loops(flatten_section(surface, level))
+    loops = chain_loops(flatten_section(surface, level, height))
     for loop in loops:
         cap_loop(surface, loop)
     return loops, [vertex.co.copy() for loop in loops for vertex in loop], level, removed_islands
@@ -151,8 +212,15 @@ def cut_below_plinth(surface, margin_ratio):
 
 def cut_figure_base(surface, margin_ratio):
     removed_islands, separate_plinth = remove_disconnected_islands(surface)
-    if separate_plinth:
+    floor = min(vertex.co.z for vertex in surface.verts)
+    height = max(vertex.co.z for vertex in surface.verts) - floor
+    plinth_level = plinth_surface_top(surface, height)
+    has_plinth = plinth_level > floor + 1e-4
+
+    if separate_plinth or not has_plinth:
         loops = []
+        if remove_ground_sheet(surface):
+            removed_islands += remove_disconnected_islands(surface)[0]
         anchors, level = flatten_contact_band(surface)
     else:
         loops, anchors, level, plinth_removed = cut_below_plinth(surface, margin_ratio)

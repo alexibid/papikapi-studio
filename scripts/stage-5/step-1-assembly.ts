@@ -38,10 +38,12 @@ export class AssemblyGenerator {
       ...rawSource,
       pieces: rawSource.pieces.filter((piece) => !piece.isPlinth),
     };
-    const figureModelPath = join(resourceDir, step.inputs.texture_stage_dir, 'step-3-figure.glb');
-    const texturePath = existsSync(figureModelPath)
-      ? figureModelPath
-      : join(resourceDir, step.inputs.texture_stage_dir, step.inputs.texture_model);
+    const textureCandidates = [
+      join(resourceDir, step.inputs.texture_stage_dir, step.inputs.texture_model),
+      join(resourceDir, step.inputs.texture_stage_dir, 'step-3-texturize.glb'),
+      join(resourceDir, 'stage-3', 'step-4-plinth.glb'),
+    ];
+    const texturePath = textureCandidates.find((c) => existsSync(c)) ?? textureCandidates[0];
     const triangles = await GlbColourReader.read(
       texturePath,
       source.meshScale * MM_PER_METRE,
