@@ -1,6 +1,7 @@
 import bmesh
 import numpy
 from mathutils import Matrix, Vector
+from mathutils.bvhtree import BVHTree
 from mathutils.geometry import tessellate_polygon
 
 from figure_parts import figure_and_strays
@@ -16,6 +17,8 @@ SECTION_TOLERANCE_RATIO = 1e-4
 SEAL_ROUNDS = 6
 SHEET_NORMAL = 0.9
 SHEET_MIN_SHARE = 0.005
+EXPOSED_LIFT_RATIO = 1e-4
+SKY = Vector((0, 0, 1))
 
 
 def connected_components(surface):
@@ -49,18 +52,26 @@ def remove_disconnected_islands(surface):
     return len(strays), separate_plinth
 
 
+def open_to_sky(sky, face, height):
+    start = face.calc_center_median() + SKY * (EXPOSED_LIFT_RATIO * height)
+    return sky.ray_cast(start, SKY)[0] is None
+
+
 def plinth_top_level(surface, height):
     xs = [vertex.co.x for vertex in surface.verts]
     ys = [vertex.co.y for vertex in surface.verts]
     footprint = (max(xs) - min(xs)) * (max(ys) - min(ys))
 
+    sky = BVHTree.FromBMesh(surface)
     bins = {}
     for face in surface.faces:
         level = face.calc_center_median().z
-        if abs(face.normal.z) >= UPWARD_NORMAL and level <= SEARCH_HEIGHT_RATIO * height:
+        if abs(face.normal.z) >= UPWARD_NORMAL and level <= SEARCH_HEIGHT_RATIO * height \
+                and open_to_sky(sky, face, height):
             bins.setdefault(round(level / (BIN_RATIO * height)), []).append((face.calc_area(), level))
-    # A true 3D plinth slab covers a significant portion (>= 8%) of the footprint. Face orientation
-    # is unreliable on open shells, so the slab top is the highest such level, not an upward normal.
+    # A true 3D plinth slab covers a significant portion (>= 8%) of the footprint, and its top lies open to the sky
+    # around the feet. The tops of legs under a blocky torso are covered, so they never pass for a plinth. Face
+    # orientation is unreliable on open shells, so the slab top is the highest such level, not an upward normal.
     slabs = [entries for entries in bins.values() if sum(area for area, _ in entries) >= 0.08 * footprint]
     if not slabs:
         return 0.0

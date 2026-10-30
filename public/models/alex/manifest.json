@@ -4,87 +4,100 @@
   "stages": {
     "s1-step-1": {
       "stageId": "s1-step-1",
-      "at": "2026-09-30T15:26:51.067Z",
+      "at": "2026-10-30T14:31:58.006Z",
       "status": "DONE",
-      "seconds": 48.01,
-      "costUsd": 0.0072,
-      "costNote": "RunPod Serverless FLUX.2 ($0.0072)",
+      "seconds": 31.81,
+      "costUsd": 0.0048,
+      "costNote": "RunPod Serverless FLUX.2 ($0.0048)",
       "data": {
-        "prompt": "A cute alex",
-        "referenceCount": 2,
+        "prompt": "Alex from Minecraft, with her long orange hair, green t-shirt, brown trousers and grey shoes",
+        "fluxPrompt": "Use the reference photo only for the subject's colours and markings, never for its pose or camera angle. Standing on all its legs with every foot, paw or wheel flat on the plane and the belly raised off the plane, never sitting, crouching or lying down. Alex from Minecraft, with her long orange hair, green t-shirt, brown trousers and grey shoes. The figure stands on one single flat plane of zero thickness, a plain sheet of matte white paper that contrasts strongly with every part of the figure touching it and casts no colour onto it, only slightly wider than the figure, never a slab, box or pedestal. Low-poly faceted 3D papercraft model of the subject described above, built from simple closed geometric volumes of matte cardstock with clean planar folds and no black crease lines. Every fine detail (eyes, nose, mouth, markings) is painted flat on the facets as a 2D decal, never sculpted. The mouth is always closed and painted flat: no open jaw, no teeth, no tongue. Blocky or voxel characters are exactly six plain rectangular blocks (head, torso, two arms, two legs) with perfectly flat faces, like a Minecraft skin: their hair, scarf and belt are flat pixel patterns printed on those faces, so hair over the shoulders is pixels on the front of the torso block, never built as an extra block or flap. Exactly the anatomy of the subject: no extra or missing legs, tails or eyes, no clothing or accessories. Cute expressive eyes with round white catchlights. No thin protruding parts: no strands, antennae or spikes. Eye-level three-quarter view with the camera at body height, the whole figure in frame and upright. Seamless flat light grey #E5E5E5 background. Zero shadows. No text, letters or watermark.",
+        "planeColour": "white",
+        "seeds": [
+          1980606982,
+          450476380,
+          1041607215,
+          1687966143,
+          1547237118,
+          1135370754
+        ],
+        "lora": "baked/papikapi_style_v1.safetensors",
+        "referenceCount": 1,
         "alternativesCount": 6,
         "format": "image/jpeg"
       }
     },
     "s1-step-2": {
       "stageId": "s1-step-2",
-      "at": "2026-09-30T15:26:52.223Z",
+      "at": "2026-10-30T14:36:07.868Z",
       "status": "DONE",
       "seconds": 0.02,
       "costUsd": 0,
       "costNote": "Local CPU Image Processing ($0.00)",
       "data": {
-        "chosenPick": 3,
-        "artSize": 34664
+        "chosenPick": 1,
+        "artSize": 33660
+      }
+    },
+    "s1-step-3": {
+      "stageId": "s1-step-3",
+      "at": "2026-10-30T14:36:37.477Z",
+      "status": "DONE",
+      "seconds": 29.21,
+      "costUsd": 0,
+      "costNote": "Local CPU Image Processing ($0.00)",
+      "data": {
+        "sourceSize": [
+          486,
+          486
+        ],
+        "enlargedSize": [
+          1944,
+          1944
+        ],
+        "plinthPixels": 128785,
+        "whiskerPixels": 0,
+        "size": 1024
       }
     },
     "s2-step-1": {
       "stageId": "s2-step-1",
-      "at": "2026-10-01T12:56:27.509Z",
+      "at": "2026-10-30T14:40:55.913Z",
       "status": "DONE",
-      "seconds": 0.01,
-      "costUsd": 0,
-      "costNote": "Local Cache Hit ($0.00)",
+      "seconds": 243.28,
+      "costUsd": 0.0754,
+      "costNote": "RunPod Serverless ($0.00031/s)",
       "data": {
-        "cached": true,
-        "chosenPick": 3,
-        "format": "image/png"
+        "fileSize": 15296092,
+        "faceCount": 490252,
+        "format": "model/gltf-binary",
+        "cached": false,
+        "chosenPick": 1,
+        "device": "NVIDIA RTX 4090 Serverless Worker",
+        "parameters": {
+          "seed": 449765907,
+          "resolution": "1024",
+          "decimation_target": 500000,
+          "texture_size": 2048
+        }
       },
       "metrics": {
-        "fileSize": 210600
+        "fileSize": 15296092,
+        "faceCount": 490252
       }
     },
     "s2-step-2": {
       "stageId": "s2-step-2",
-      "at": "2026-10-01T12:56:27.516Z",
+      "at": "2026-10-30T14:42:56.559Z",
       "status": "DONE",
-      "seconds": 0.05,
-      "costUsd": 0,
-      "costNote": "Restored from local pick cache",
-      "data": {
-        "cached": true,
-        "chosenPick": 3,
-        "format": "model/gltf-binary"
-      },
-      "metrics": {
-        "fileSize": 1018336
-      }
-    },
-    "s2-step-3": {
-      "stageId": "s2-step-3",
-      "at": "2026-10-07T15:24:40.854Z",
-      "status": "DONE",
-      "seconds": 4.5,
+      "seconds": 120.54,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/alex/stage-2/step-2-3d.glb",
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/alex/stage-2/step-1-3d-pick-1.glb",
         "parameters": {
           "weld_distance_ratio": 0.00001,
           "contact_height_ratio": 0.02,
-          "target_size_mm": 300,
-          "min_feature_mm": 6,
-          "appendage_min_length_mm": 6,
-          "appendage_max_section_mm": 12,
-          "appendage_min_aspect": 2.5,
-          "appendage_max_passes": 5,
-          "appendage_crease_deg": 15,
-          "appendage_root_section_mm": 12,
-          "appendage_max_rings": 40,
-          "envelope_cell_mm": 1,
-          "envelope_tolerance_mm": 3,
-          "envelope_max_area_ratio": 0.03,
-          "appendage_ground_clearance_mm": 10,
           "base_cut_margin_ratios": [
             0.003,
             0.01,
@@ -95,168 +108,58 @@
         }
       },
       "metrics": {
-        "faces": 2328,
+        "faces": 370269,
         "openEdges": 0,
-        "nonManifoldEdges": 0,
-        "airtight": true,
-        "removedIslands": 1,
-        "removedAppendages": 9,
-        "appendageFaces": 36,
-        "appendageVolumePercent": 0.003,
-        "loops": 1,
-        "widthMm": 353.5,
-        "lengthMm": 217.5,
+        "nonManifoldEdges": 11,
+        "airtight": false,
+        "removedIslands": 0,
+        "loops": 4,
+        "widthMm": 562.1,
+        "lengthMm": 358.8,
         "marginRatio": 0.003,
         "repairedVertices": 0,
         "repairedTriangles": 0
       }
     },
-    "s3-step-1": {
-      "stageId": "s3-step-1",
-      "at": "2026-10-09T10:32:16.530Z",
+    "s2-step-3": {
+      "stageId": "s2-step-3",
+      "at": "2026-10-30T14:42:58.111Z",
       "status": "DONE",
-      "seconds": 2.05,
+      "seconds": 1.55,
       "costUsd": 0,
       "costNote": "Local Blender headless ($0.00)",
       "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/alex/stage-2/step-3-base.glb",
-        "lengthMm": 568.5,
-        "faces": 2346,
+        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/alex/stage-2/step-2-base.glb",
+        "art": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/alex/stage-1/step-3-trellis-input.png",
         "parameters": {
-          "target_faces": 600,
-          "weld_distance_ratio": 0.00001,
-          "contact_height_ratio": 0.02,
-          "quad_face_angle_deg": 20,
-          "quad_shape_angle_deg": 60,
-          "face_max_extent_ratio": 0.5,
-          "min_fold_length_mm": 6,
-          "flat_vertex_angle_deg": 8,
-          "target_size_mm": 300,
-          "fold_tolerance_ratio": 0.0067,
-          "fold_max_deviation_ratio": 0.01,
-          "fold_max_volume_percent": 0.1
-        }
+          "saturation_min": 0.2,
+          "value_min": 0.35,
+          "stale_saturation_min": 0.12,
+          "stale_value_min": 0.15,
+          "hue_tolerance_deg": 35,
+          "eye_area_min_ratio": 0.0003,
+          "eye_area_max_ratio": 0.03,
+          "eye_fill_min": 0.45,
+          "pair_size_ratio_min": 0.3,
+          "outline_ratio": 0.12,
+          "cluster_cell_ratio": 0.006,
+          "pair_distance_max_ratio": 0.35,
+          "paint_radius_ratio": 1.6,
+          "facing_min": 0.2
+        },
+        "painted": []
       },
       "metrics": {
-        "points": 81,
-        "meshFaces": 109,
-        "quads": 51,
-        "openEdges": 0,
-        "nonManifoldEdges": 0,
-        "airtight": true,
-        "volumeChangePercent": -0.2,
-        "maxDeviationMm": 3.72,
-        "featureLossMm": 3.71,
-        "facetColours": 98
-      }
-    },
-    "s3-step-2": {
-      "stageId": "s3-step-2",
-      "at": "2026-10-09T10:32:31.583Z",
-      "status": "DONE",
-      "seconds": 15.04,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/alex/stage-2/step-4-optimize.glb",
-        "parameters": {
-          "resolution": 2048
-        }
-      },
-      "metrics": {
-        "faces": 109,
-        "resolution": 2048
-      }
-    },
-    "s3-step-3": {
-      "stageId": "s3-step-3",
-      "at": "2026-10-12T00:01:00.431Z",
-      "status": "DONE",
-      "seconds": 0.95,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/alex/stage-3/step-2-texturize.glb",
-        "parameters": {
-          "plinth_thickness_ratio": 0.05,
-          "plinth_slope_ratio": 0.02,
-          "plinth_margin_ratio": 0.004,
-          "face_max_extent_ratio": 0.5
-        }
-      },
-      "metrics": {
-        "faces": 117,
-        "loops": 0,
-        "openEdges": 6,
-        "nonManifoldEdges": 0
-      }
-    },
-    "s4-step-1": {
-      "stageId": "s4-step-1",
-      "at": "2026-10-12T14:04:12.410Z",
-      "status": "DONE",
-      "seconds": 0.56,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "source": "/Users/alexsantos/Projects/ibid-workspace/apps/papikapi-studio/resources/alex/stage-3/step-3-plinth.json",
-        "dimensionsMm": [
-          284.95,
-          177.84,
-          473.33
-        ],
-        "targetSizeMm": 300
-      },
-      "metrics": {
-        "faceCount": 109,
-        "quadCount": 59,
-        "pieces": 26,
-        "smallestPieceFaces": 1,
-        "shortestCutMm": 5,
-        "unpairedEdges": 6,
-        "nonManifoldEdges": 6
-      }
-    },
-    "s4-step-2": {
-      "stageId": "s4-step-2",
-      "at": "2026-10-12T14:16:49.299Z",
-      "status": "DONE",
-      "seconds": 25.48,
-      "costUsd": 0,
-      "costNote": "Local Blender headless ($0.00)",
-      "data": {
-        "format": "application/pdf",
-        "pageSize": "210x297mm"
-      },
-      "metrics": {
-        "pageCount": 24,
-        "sheetCount": 16,
-        "pieceCount": 26,
-        "labelCollisions": 5
-      }
-    },
-    "s5-step-1": {
-      "stageId": "s5-step-1",
-      "at": "2026-10-13T07:33:01.242Z",
-      "status": "DONE",
-      "seconds": 0.03,
-      "costUsd": 0,
-      "costNote": "Local CPU geometry ($0.00)",
-      "data": {
-        "source": "stage-4/step-1-net.json"
-      },
-      "metrics": {
-        "pieces": 24,
-        "faces": 101,
-        "hinges": 77,
-        "maxHingeResidualMm": 1.707,
-        "maxFoldAngleDeg": 175,
-        "mirroredPieces": 0,
-        "extraRoots": 0
+        "details": 0,
+        "texels": 0,
+        "eyeHeightToFigure": 0,
+        "modelEyeSize": [],
+        "artEyeSizesPx": [],
+        "skipped": "No pair of eyes found on the TRELLIS input image"
       }
     }
   },
-  "totalSeconds": 96.7,
-  "totalCostUsd": 0.0072,
-  "updatedAt": "2026-10-13T07:33:01.246Z"
+  "totalSeconds": 426.41,
+  "totalCostUsd": 0.0802,
+  "updatedAt": "2026-10-30T14:42:58.112Z"
 }
