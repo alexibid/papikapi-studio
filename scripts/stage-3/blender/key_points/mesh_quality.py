@@ -1,4 +1,5 @@
 import bmesh
+from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
 
@@ -18,6 +19,42 @@ def lost_feature_distance(surface, reference):
     tree = BVHTree.FromBMesh(triangulated)
     samples = [vertex.co for vertex in reference.verts] + [face.calc_center_median() for face in reference.faces]
     farthest = max(tree.find_nearest(point)[3] for point in samples)
+    triangulated.free()
+    return farthest
+
+
+PARITY_DIRECTIONS = (Vector((0.0, 0.0, 1.0)), Vector((1.0, 0.0, 0.0)), Vector((0.0, -1.0, 0.0)))
+PARITY_STEP = 1e-6
+PARITY_MAX_HITS = 64
+
+
+def crossings(tree, point, direction):
+    count, origin = 0, point
+    while count < PARITY_MAX_HITS:
+        location = tree.ray_cast(origin, direction)[0]
+        if location is None:
+            return count
+        count, origin = count + 1, location + direction * PARITY_STEP
+    return count
+
+
+def inside(tree, point):
+    """Odd crossings mean inside; three directions vote so a ray grazing an edge cannot decide alone."""
+    return sum(crossings(tree, point, direction) % 2 for direction in PARITY_DIRECTIONS) >= 2
+
+
+def outside_distance(closed, reference):
+    """How far the reference sticks out of a closed solid: points inside it (faces buried where blocks overlap, the
+    inner wall of a hollow mesh) are rightly dropped by closing and count as zero."""
+    triangulated = closed.copy()
+    bmesh.ops.triangulate(triangulated, faces=triangulated.faces)
+    tree = BVHTree.FromBMesh(triangulated)
+    samples = [vertex.co for vertex in reference.verts] + [face.calc_center_median() for face in reference.faces]
+    farthest = 0.0
+    for point in samples:
+        distance = tree.find_nearest(point)[3]
+        if distance > farthest and not inside(tree, point):
+            farthest = distance
     triangulated.free()
     return farthest
 

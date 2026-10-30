@@ -459,7 +459,7 @@
             "max_volume_change_percent": 1.0,
             "max_dimension_change_percent": 1.0,
             "min_inner_wall_share": 0.3,
-            "remesh_voxel_ratio": 0.0025,
+            "remesh_voxel_ratio": 0.0015,
             "max_closing_deviation_ratio": 0.02,
             "weld_distance_ratio": 1e-05,
             "contact_height_ratio": 0.02,

@@ -15,7 +15,7 @@ from face_splitter import split_oversized_faces
 from planar_reduction import reduce_planar
 from mesh_export import export_airtight_mesh_glb
 from outer_shell import keep_outer_surface
-from mesh_quality import enclosed_volume, lost_feature_distance, measure_quality
+from mesh_quality import enclosed_volume, measure_quality, outside_distance
 from model_loader import load_grounded_mesh
 from quad_conversion import join_triangles_into_quads
 from quality_gates import gate_failures
@@ -99,7 +99,7 @@ def main():
     inner_wall_share = keep_outer_surface(surface, length, settings["min_inner_wall_share"])
     repair_surface(surface)
     closed = watertight_copy(surface, length * settings["remesh_voxel_ratio"])
-    closing_deviation_mm = round(1000 * lost_feature_distance(closed, surface), 2)
+    closing_deviation_mm = round(1000 * outside_distance(closed, surface), 2)
     if closing_deviation_mm > 1000 * length * settings["max_closing_deviation_ratio"]:
         raise RuntimeError(f"Closing the figure moved it {closing_deviation_mm} mm away from the stage-2 shape")
     surface.free()
