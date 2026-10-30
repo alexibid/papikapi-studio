@@ -13,7 +13,7 @@ import type {
 } from './interfaces/base.interface.js';
 
 export class BaseCutGenerator {
-  private static readonly stepId = 's2-step-3';
+  private static readonly stepId = 's2-step-2';
 
   private static resolveInputModel(modelName: string, step: BaseStepDefinition, pick?: number): string {
     const stageDir = join(WorkspacePaths.resourcePath(modelName), step.inputs.stage_dir);

@@ -53,23 +53,6 @@ export class OutputCleaner {
         cleaned.push(basename(manifest));
       }
     } else if (step.id === 's2-step-1') {
-      const stepOutputs = step.outputs as { cutout_resource: string; cutout_public: string; manifest: string };
-      const resCutout = join(stageDir, stepOutputs.cutout_resource);
-      if (existsSync(resCutout)) {
-        unlinkSync(resCutout);
-        cleaned.push(basename(resCutout));
-      }
-      const pubCutout = join(publicDir, stepOutputs.cutout_public);
-      if (existsSync(pubCutout)) {
-        unlinkSync(pubCutout);
-        cleaned.push(`public/${basename(pubCutout)}`);
-      }
-      const manifest = join(stageDir, stepOutputs.manifest);
-      if (existsSync(manifest)) {
-        unlinkSync(manifest);
-        cleaned.push(basename(manifest));
-      }
-    } else if (step.id === 's2-step-2') {
       const stepOutputs = step.outputs as { model_resource: string; model_public: string; manifest: string };
       const resModel = join(stageDir, stepOutputs.model_resource);
       if (existsSync(resModel)) {
@@ -86,7 +69,7 @@ export class OutputCleaner {
         unlinkSync(manifest);
         cleaned.push(basename(manifest));
       }
-    } else if (step.id === 's2-step-3') {
+    } else if (step.id === 's2-step-2') {
       const stepOutputs = step.outputs as { model_resource: string; manifest: string };
       for (const name of [stepOutputs.model_resource, stepOutputs.manifest]) {
         const target = join(stageDir, name);
@@ -95,7 +78,7 @@ export class OutputCleaner {
           cleaned.push(basename(target));
         }
       }
-    } else if (step.id === 's2-step-4') {
+    } else if (step.id === 's2-step-3') {
       const stepOutputs = step.outputs as { model_resource: string; manifest: string };
       for (const name of [stepOutputs.model_resource, stepOutputs.manifest]) {
         const target = join(stageDir, name);

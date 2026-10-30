@@ -15,6 +15,20 @@ import { WorkspacePaths } from '../common/workspace-paths.js';
 
 export class TrellisInputGenerator {
   private static readonly stepId = 's1-step-3';
+  private static readonly promptPlaneColour = /sheet of (?:solid saturated|matte) ([\w ]+?) paper/;
+
+  /** The plane colour the system prompt chose; older manifests only keep it inside the FLUX prompt. */
+  private static planeColour(name: string): string | undefined {
+    const data = ManifestManager.readStepResult(name, 's1-step-1')?.data ?? {};
+    if (typeof data.planeColour === 'string') return data.planeColour;
+    return typeof data.fluxPrompt === 'string' ? this.promptPlaneColour.exec(data.fluxPrompt)?.[1] : undefined;
+  }
+
+  private static planeArguments(step: TrellisInputStepDefinition, name: string): readonly string[] {
+    const colour = this.planeColour(name);
+    const rgb = colour === undefined ? undefined : step.parameters.plane_rgb[colour];
+    return rgb === undefined ? [] : ['--plane-rgb', rgb.join(',')];
+  }
 
   private static runPython(step: TrellisInputStepDefinition, mode: string, args: readonly string[]): Record<string, unknown> {
     const script = join(WorkspacePaths.appRoot, step.parameters.python_script);
@@ -27,17 +41,17 @@ export class TrellisInputGenerator {
 
   private static async enlargedCutout(
     step: TrellisInputStepDefinition,
-    cutoutPath: string,
-    work: string,
+    paths: { readonly cutout: string; readonly work: string },
+    plane: readonly string[],
   ): Promise<{ path: string; report: Record<string, unknown> }> {
     const { super_resolution } = step.parameters;
-    const enlargedColour = join(work, 'enlarged.png');
+    const enlargedColour = join(paths.work, 'enlarged.png');
     const report = this.runPython(step, 'prepare', [
-      '--cutout', cutoutPath, '--out', enlargedColour,
+      '--cutout', paths.cutout, '--out', enlargedColour,
       '--sr-binary', super_resolution.binary, '--sr-model', super_resolution.model,
-      '--sr-scale', String(super_resolution.scale),
+      '--sr-scale', String(super_resolution.scale), ...plane,
     ]);
-    const enlargedCutoutPath = join(work, 'enlarged-cutout.png');
+    const enlargedCutoutPath = join(paths.work, 'enlarged-cutout.png');
     writeFileSync(enlargedCutoutPath, await ImageCutout.extractCutout({ imageBuffer: readFileSync(enlargedColour) }));
     return { path: enlargedCutoutPath, report };
   }
@@ -60,7 +74,7 @@ export class TrellisInputGenerator {
     const work = mkdtempSync(join(tmpdir(), 'papikapi-trellis-input-'));
     let report: Record<string, unknown>;
     try {
-      const enlarged = await this.enlargedCutout(step, cutoutPath, work);
+      const enlarged = await this.enlargedCutout(step, { cutout: cutoutPath, work }, this.planeArguments(step, name));
       const size = String(step.parameters.image_size);
       const composed = this.runPython(step, 'compose', ['--cutout', enlarged.path, '--out', trellisInputPath, '--size', size]);
       report = { ...enlarged.report, ...composed };

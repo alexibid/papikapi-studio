@@ -34,6 +34,7 @@
             "min_workers": 0,
             "max_workers": 2,
             "idle_timeout_seconds": 5,
+            "client_timeout_seconds": 900,
             "gpu_vram": "24GB",
             "api_url_pattern": "https://api.runpod.ai/v2/{endpoint_id}/runsync",
             "async_url_pattern": "https://api.runpod.ai/v2/{endpoint_id}/run",
@@ -48,10 +49,13 @@
             "rows": 2,
             "alternatives_count": 6,
             "max_reference_images": 3,
-            "system_prompt": "The figure stands on one single flat plane of zero thickness, a plain sheet of solid saturated {plane_colour} paper that contrasts strongly with every part of the figure touching it, only slightly wider than the figure, never a slab, box or pedestal. Low-poly faceted 3D papercraft model of the subject described above, built from simple closed geometric volumes of matte cardstock with clean planar folds and no black crease lines. Every fine detail (eyes, nose, mouth, markings) is painted flat on the facets as a 2D decal, never sculpted. Exactly the anatomy of the subject: no extra or missing legs, tails or eyes, no clothing or accessories. Cute expressive eyes with round white catchlights. No thin protruding parts: no strands, antennae or spikes. Eye-level three-quarter view with the camera at body height, the whole figure in frame and upright. Seamless flat light grey #E5E5E5 background. Zero shadows. No text, letters or watermark.",
+            "system_prompt": "The figure stands on one single flat plane of zero thickness, a plain sheet of matte {plane_colour} paper that contrasts strongly with every part of the figure touching it and casts no colour onto it, only slightly wider than the figure, never a slab, box or pedestal. Low-poly faceted 3D papercraft model of the subject described above, built from simple closed geometric volumes of matte cardstock with clean planar folds and no black crease lines. Every fine detail (eyes, nose, mouth, markings) is painted flat on the facets as a 2D decal, never sculpted. The mouth is always closed and painted flat: no open jaw, no teeth, no tongue. Blocky or voxel characters are exactly six plain rectangular blocks (head, torso, two arms, two legs) with perfectly flat faces, like a Minecraft skin: their hair, scarf and belt are flat pixel patterns printed on those faces, so hair over the shoulders is pixels on the front of the torso block, never built as an extra block or flap. Exactly the anatomy of the subject: no extra or missing legs, tails or eyes, no clothing or accessories. Cute expressive eyes with round white catchlights. No thin protruding parts: no strands, antennae or spikes. Eye-level three-quarter view with the camera at body height, the whole figure in frame and upright. Seamless flat light grey #E5E5E5 background. Zero shadows. No text, letters or watermark.",
             "reference_rule": "Use the reference photo only for the subject's colours and markings, never for its pose or camera angle.",
             "default_pose": "Standing on all its legs with every foot, paw or wheel flat on the plane and the belly raised off the plane, never sitting, crouching or lying down.",
             "plane_colours": [
+              "white",
+              "mid grey",
+              "black",
               "blue",
               "red",
               "green",
@@ -74,6 +78,7 @@
               ".webp"
             ],
             "sheet_public": "alternatives.jpeg",
+            "prompt_public": "prompt.txt",
             "public_url_pattern": "/models/{model}/alternatives.jpeg"
           },
           "manifest_contract": {
@@ -176,6 +181,16 @@
           "parameters": {
             "python_script": "scripts/stage-1/python/trellis_input.py",
             "image_size": 1024,
+            "plane_rgb": {
+              "white": [245, 245, 245],
+              "mid grey": [140, 140, 140],
+              "black": [35, 35, 35],
+              "blue": [30, 90, 220],
+              "red": [210, 35, 35],
+              "green": [40, 160, 60],
+              "orange": [240, 130, 20],
+              "purple": [130, 50, 180]
+            },
             "super_resolution": {
               "binary": "~/.papikapi-tools/realesrgan-full/realesrgan-ncnn-vulkan",
               "model": "realesrgan-x4plus-anime",
@@ -199,57 +214,11 @@
       "steps": [
         {
           "id": "s2-step-1",
-          "name": "Create Cutout",
-          "label": "CUTOUT",
-          "emoji": "✂️",
-          "expected_seconds": 2,
-          "script": "scripts/stage-2/step-1-cutout.ts",
-          "stage_dir": "stage-2",
-          "depends_on": {
-            "step_id": "s1-step-2",
-            "stage_dir": "stage-1"
-          },
-          "inputs": {
-            "stage_dir": "stage-1",
-            "art_resource": "step-2-art.jpeg",
-            "allowed_extensions": [
-              ".jpeg",
-              ".jpg",
-              ".png",
-              ".webp"
-            ],
-            "art_public": "art.jpeg",
-            "art_pick_resource_pattern": "step-2-art-pick-{pick}.jpeg",
-            "art_pick_public_pattern": "art-pick-{pick}.jpeg"
-          },
-          "outputs": {
-            "stage_dir": "stage-2",
-            "cutout_resource": "step-1-art-cutout.png",
-            "manifest": "step-1-manifest.json",
-            "cutout_public": "art-cutout.png",
-            "cutout_pick_resource_pattern": "step-1-art-pick-{pick}-cutout.png",
-            "cutout_pick_public_pattern": "art-pick-{pick}-cutout.png",
-            "public_url_pattern": "/models/{model}/art-cutout.png"
-          },
-          "messages": {
-            "start": "[Stage 2: Step 1] Creating transparent cutout for {model}",
-            "completed": "✔ [Stage 2: Step 1] Transparent cutout generated for {model} in {duration}s ($0.00)",
-            "cache_hit": "⚡ [Cache Hit] Restored cutout for pick #{pick} from local cache (0.0s, $0.00)"
-          },
-          "manifest_contract": {
-            "status": "DONE",
-            "seconds": "duration",
-            "costUsd": 0.0,
-            "costNote": "Local CPU Image Processing ($0.00)"
-          }
-        },
-        {
-          "id": "s2-step-2",
           "name": "3D Generation",
           "label": "3D-GLB",
           "emoji": "🧊",
           "expected_seconds": 250,
-          "script": "scripts/stage-2/step-2-trellis.ts",
+          "script": "scripts/stage-2/step-1-trellis.ts",
           "stage_dir": "stage-2",
           "depends_on": {
             "step_id": "s1-step-3",
@@ -278,11 +247,11 @@
           },
           "outputs": {
             "stage_dir": "stage-2",
-            "model_resource": "step-2-3d.glb",
-            "preview_resource": "step-2-preview.png",
-            "manifest": "step-2-manifest.json",
+            "model_resource": "step-1-3d.glb",
+            "preview_resource": "step-1-preview.png",
+            "manifest": "step-1-manifest.json",
             "model_public": "model.glb",
-            "model_pick_resource_pattern": "step-2-3d-pick-{pick}.glb",
+            "model_pick_resource_pattern": "step-1-3d-pick-{pick}.glb",
             "model_pick_public_pattern": "model-pick-{pick}.glb",
             "public_url_pattern": "/models/{model}/model.glb"
           },
@@ -318,7 +287,7 @@
             "rate": "$0.00031/s ($1.10/hr active, $0.00 idle)"
           },
           "messages": {
-            "start": "[Stage 2: Step 2] Generating 3D model for {model}",
+            "start": "[Stage 2: Step 1] Generating 3D model for {model}",
             "progress": "⟳ [{runner}] Generating 3D Mesh on {device}... ({elapsed}s elapsed)",
             "completed": "✔ [{runner}] 3D Model generated: {sizeMb} MB in {duration}s (${costUsd})",
             "cache_hit": "⚡ [Cache Hit] Restored 3D Model for pick #{pick} from local cache (0.0s, $0.0000)"
@@ -349,32 +318,32 @@
           }
         },
         {
-          "id": "s2-step-3",
+          "id": "s2-step-2",
           "name": "Base Cut",
           "label": "BASE",
           "emoji": "✂️",
           "expected_seconds": 15,
-          "script": "scripts/stage-2/step-3-base.ts",
+          "script": "scripts/stage-2/step-2-base.ts",
           "stage_dir": "stage-2",
           "depends_on": {
-            "step_id": "s2-step-2",
+            "step_id": "s2-step-1",
             "stage_dir": "stage-2"
           },
-          "models_from": "resources/*/stage-2/step-2-3d.glb",
+          "models_from": "resources/*/stage-2/step-1-3d.glb",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
             "script": "scripts/stage-2/blender/base/cut_base.py"
           },
           "inputs": {
             "stage_dir": "stage-2",
-            "model_resource": "step-2-3d.glb",
-            "model_pick_resource_pattern": "step-2-3d-pick-{pick}.glb"
+            "model_resource": "step-1-3d.glb",
+            "model_pick_resource_pattern": "step-1-3d-pick-{pick}.glb"
           },
           "outputs": {
             "stage_dir": "stage-2",
-            "model_resource": "step-3-base.glb",
-            "manifest": "step-3-manifest.json",
-            "model_pick_resource_pattern": "step-3-base-pick-{pick}.glb"
+            "model_resource": "step-2-base.glb",
+            "manifest": "step-2-manifest.json",
+            "model_pick_resource_pattern": "step-2-base-pick-{pick}.glb"
           },
           "parameters": {
             "weld_distance_ratio": 1e-05,
@@ -388,8 +357,8 @@
             ]
           },
           "messages": {
-            "start": "[Stage 2: Step 3] Cutting the TRELLIS base and grounding the feet at z=0 for {model}",
-            "completed": "✔ [Stage 2: Step 3] Base cut ({faces} faces, {removedIslands} artifacts removed, {width}x{length}mm footprint) for {model} in {duration}s ($0.00)"
+            "start": "[Stage 2: Step 2] Cutting the TRELLIS base and grounding the feet at z=0 for {model}",
+            "completed": "✔ [Stage 2: Step 2] Base cut ({faces} faces, {removedIslands} artifacts removed, {width}x{length}mm footprint) for {model} in {duration}s ($0.00)"
           },
           "manifest_contract": {
             "status": "DONE",
@@ -397,32 +366,32 @@
           }
         },
         {
-          "id": "s2-step-4",
+          "id": "s2-step-3",
           "name": "Details",
           "label": "DETAILS",
           "emoji": "👁️",
           "expected_seconds": 60,
-          "script": "scripts/stage-2/step-4-details.ts",
+          "script": "scripts/stage-2/step-3-details.ts",
           "stage_dir": "stage-2",
           "depends_on": {
-            "step_id": "s2-step-3",
+            "step_id": "s2-step-2",
             "stage_dir": "stage-2"
           },
-          "models_from": "resources/*/stage-2/step-3-base.glb",
+          "models_from": "resources/*/stage-2/step-2-base.glb",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
             "script": "scripts/stage-2/blender/details/transfer_details.py"
           },
           "inputs": {
             "stage_dir": "stage-2",
-            "model_resource": "step-3-base.glb",
+            "model_resource": "step-2-base.glb",
             "art_stage_dir": "stage-1",
             "art_resource": "step-3-trellis-input.png"
           },
           "outputs": {
             "stage_dir": "stage-2",
-            "model_resource": "step-4-details.glb",
-            "manifest": "step-4-manifest.json"
+            "model_resource": "step-3-details.glb",
+            "manifest": "step-3-manifest.json"
           },
           "parameters": {
             "saturation_min": 0.2,
@@ -441,8 +410,8 @@
             "facing_min": 0.2
           },
           "messages": {
-            "start": "[Stage 2: Step 4] Repainting the art's details on the texture for {model}",
-            "completed": "✔ [Stage 2: Step 4] Details repainted ({details} details, {texels} texels) for {model} in {duration}s ($0.00)"
+            "start": "[Stage 2: Step 3] Repainting the art's details on the texture for {model}",
+            "completed": "✔ [Stage 2: Step 3] Details repainted ({details} details, {texels} texels) for {model} in {duration}s ($0.00)"
           },
           "manifest_contract": {
             "status": "DONE",
@@ -463,19 +432,19 @@
           "script": "scripts/stage-3/step-1-simplify.ts",
           "stage_dir": "stage-3",
           "depends_on": {
-            "step_id": "s2-step-4",
+            "step_id": "s2-step-3",
             "stage_dir": "stage-2"
           },
-          "models_from": "resources/*/stage-2/step-4-details.glb",
+          "models_from": "resources/*/stage-2/step-3-details.glb",
           "blender": {
             "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
             "script": "scripts/stage-3/blender/key_points/key_points.py"
           },
           "inputs": {
             "stage_dir": "stage-2",
-            "model_resource": "step-4-details.glb",
-            "fallback_model_resource": "step-3-base.glb",
-            "model_pick_resource_pattern": "step-3-base-pick-{pick}.glb"
+            "model_resource": "step-3-details.glb",
+            "fallback_model_resource": "step-2-base.glb",
+            "model_pick_resource_pattern": "step-2-base-pick-{pick}.glb"
           },
           "outputs": {
             "stage_dir": "stage-3",
@@ -542,8 +511,8 @@
             "model_resource": "step-1-simplify.glb",
             "points_resource": "step-1-simplify.json",
             "detailed_stage_dir": "stage-2",
-            "detailed_model_resource": "step-4-details.glb",
-            "fallback_detailed_resource": "step-3-base.glb"
+            "detailed_model_resource": "step-3-details.glb",
+            "fallback_detailed_resource": "step-2-base.glb"
           },
           "outputs": {
             "stage_dir": "stage-3",

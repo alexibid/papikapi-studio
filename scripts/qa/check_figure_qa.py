@@ -1,11 +1,13 @@
 """Proves the figure QA catches a lost part: a copy of a figure whose simplified shape lost one leg must FAIL,
 and the untouched copy must keep its verdict.
 
-uv run --python 3.12 --with numpy,pillow,scipy python scripts/qa/check_figure_qa.py <figure> <scratch_dir>
+uv run --python 3.12 --with numpy,pillow,scipy python scripts/qa/check_figure_qa.py <figure>
+The two copies live in a temporary folder that is deleted at the end; nothing is written under resources/.
 """
 import json
 import shutil
 import sys
+import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -17,7 +19,7 @@ LEG_HEIGHT_SHARE = 0.25
 def copy_figure(figure: str, scratch: Path, name: str) -> Path:
     target = scratch / name
     shutil.rmtree(target, ignore_errors=True)
-    for stage, files in (("stage-2", ("step-2-3d.glb", "step-3-base.glb", "step-4-details.glb")),
+    for stage, files in (("stage-2", ("step-1-3d.glb", "step-2-base.glb", "step-3-details.glb")),
                          ("stage-3", ("step-1-simplify.json", "step-1-reduce.json", "step-1-manifest.json"))):
         (target / stage).mkdir(parents=True)
         for file in files:
@@ -49,11 +51,13 @@ def cut_one_leg(figure: Path) -> int:
 
 
 def main() -> None:
-    figure, scratch = sys.argv[1], Path(sys.argv[2])
-    intact = audit(copy_figure(figure, scratch, f"{figure}-intact"))
-    broken_figure = copy_figure(figure, scratch, f"{figure}-no-leg")
-    removed = cut_one_leg(broken_figure)
-    broken = audit(broken_figure)
+    figure = sys.argv[1]
+    with tempfile.TemporaryDirectory(prefix="figure-qa-check-") as temporary:
+        scratch = Path(temporary)
+        intact = audit(copy_figure(figure, scratch, f"{figure}-intact"))
+        broken_figure = copy_figure(figure, scratch, f"{figure}-no-leg")
+        removed = cut_one_leg(broken_figure)
+        broken = audit(broken_figure)
     print(json.dumps({"intact": intact["verdict"], "removedFaces": removed, "broken": broken["verdict"],
                       "brokenParts": broken["parts"]["simplify-missing"]}))
     if broken["parts"]["simplify-missing"]["verdict"] != "FAIL":

@@ -3,7 +3,7 @@ import { ReceiptStages } from './receipt-stages';
 
 describe('ReceiptStages', () => {
   const progress: CreationProgress = {
-    stepId: 's2-step-1',
+    stepId: 's1-step-3',
     message: 'Creating transparent cutout for lion',
     stepIndex: 1,
     stepCount: 3,
@@ -12,7 +12,7 @@ describe('ReceiptStages', () => {
     state: 'running',
     stages: [
       { stepId: 's1-step-2', message: 'Alternative #3 cropped in 0.2s' },
-      { stepId: 's2-step-1', message: 'Creating transparent cutout for lion' },
+      { stepId: 's1-step-3', message: 'Creating transparent cutout for lion' },
     ],
   };
 

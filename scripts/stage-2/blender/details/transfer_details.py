@@ -1,4 +1,4 @@
-"""s2-step-4 (details): repaints the essential details of the art on the model texture. Today: the eyes (visible eye of
+"""s2-step-3 (details): repaints the essential details of the art on the model texture. Today: the eyes (visible eye of
 the art, mirrored on both). The generic detail transfer will replace this case.
 
 blender -b -P transfer_details.py -- '{"input_glb": ..., "art_image": ..., "output_glb": ..., ...parameters}'
@@ -6,6 +6,7 @@ The mesh is untouched; only the base colour texels around the two eyes change.
 """
 import json
 import os
+import shutil
 import sys
 import tempfile
 import traceback
@@ -15,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 import bpy
 import numpy as np
+from eye_errors import NoEyesFound
 from eye_image import visible_eye_decal
 from eye_paint import decal_size, paint_eye
 from eye_surface import eye_pair, read_surface
@@ -65,8 +67,21 @@ def export(figure, path: str):
     bpy.ops.export_scene.gltf(filepath=path, export_format="GLB", use_selection=True, export_materials="EXPORT")
 
 
+def keep_model(settings, reason):
+    shutil.copyfile(settings["input_glb"], settings["output_glb"])
+    print(RESULT_MARKER + json.dumps({"artEyeSizesPx": [], "eyeHeightToFigure": 0, "modelEyeSize": [],
+                                      "painted": [], "skipped": str(reason)}))
+
+
 def main():
     settings = read_settings()
+    try:
+        transfer_eyes(settings)
+    except NoEyesFound as reason:
+        keep_model(settings, reason)
+
+
+def transfer_eyes(settings):
     decal = visible_eye_decal(settings["art_image"], settings)
     figure = import_figure(settings["input_glb"])
     node = base_colour_node(figure)

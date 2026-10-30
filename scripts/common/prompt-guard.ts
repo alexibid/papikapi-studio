@@ -2,6 +2,8 @@ export class PromptGuard {
   private static readonly requiredSystemClauses: readonly RegExp[] = [
     /low-poly faceted 3D papercraft model/i,
     /painted flat on the facets as a 2D decal/i,
+    /mouth is always closed/i,
+    /never built as an extra block or flap/i,
     /eye-level three-quarter view/i,
     /single flat plane of zero thickness/i,
     /contrasts strongly with every part of the figure touching it/i,

@@ -53,6 +53,27 @@ When only `rp_handler.trellis.py` or `trellis_lowpoly.py` change, no pod is need
 `crane append -b ghcr.io/alexibid/papikapi-trellis:latest -f handler-layer.tar -t ghcr.io/alexibid/papikapi-trellis:<date>`,
 then `crane tag ghcr.io/alexibid/papikapi-trellis:<date> latest`. Tag the previous `latest` first so it can be
 restored, and recycle the endpoint workers (Max Workers 0, then 1) so the next worker pulls the new image.
+## 3b. Updating the FLUX worker from the Mac (no pod)
+
+The FLUX image carries its weights in `/app/models/FLUX.2-klein-4B` (16 GB: transformer, text encoder, VAE),
+so a worker loads them from disk instead of downloading them from Hugging Face at every start. The style LoRA
+(`/app/models/lora/papikapi_style_v1.safetensors`, 46 MB) is baked the same way. The handler
+falls back to the hub only when that folder is missing.
+
+Always pack layers with `scripts/runpod/pack_layer.py`, never with the macOS `tar`: macOS adds the
+`com.apple.provenance` attribute, RunPod's Linux hosts cannot apply it and refuse the whole image
+("failed to register layer: lsetxattr"), so every worker dies before it starts.
+
+1. Tag the current image for rollback: `crane tag ghcr.io/alexibid/papikapi-flux:latest pre-<change>-<date>`.
+2. For the weights, download them with `snapshot_download` (same `allow_patterns` as `Dockerfile.flux`) into
+   `<dir>/app/models/FLUX.2-klein-4B`; for the handler, copy it to `<dir>/app/rp_handler.flux.py`.
+3. Pack each layer: `python3 scripts/runpod/pack_layer.py <dir> layer.tar app/rp_handler.flux.py ...`.
+4. Append and tag: `crane append -b ghcr.io/alexibid/papikapi-flux:<base> -f layer.tar ... -t ...:<date>`,
+   then `crane tag ...:<date> latest`.
+5. Recycle the workers with `tsx scripts/runpod/recycle-workers.ts RUNPOD_FLUX_ENDPOINT_ID` and read the worker
+   logs if the first job does not start.
+6. Prove the worker honours the pipeline seeds with `tsx scripts/runpod/check-seeds.ts` (three short jobs).
+
 ---
 
 ## 4. Serverless Endpoints in RunPod Console
@@ -83,13 +104,14 @@ token with the `read:packages` scope.
 | Variable | Required | Meaning |
 | --- | --- | --- |
 | `HF_TOKEN` | yes | Hugging Face read token, also used to download a private LoRA |
-| `FLUX_LORA_REPO` | no | Hugging Face repository holding the style LoRA (private, currently `ibid-dot/papikapi-style`). Unset means no LoRA |
+| `FLUX_LORA_REPO` | no | Overrides the baked LoRA with one from a Hugging Face repository. Unset means the LoRA baked in the image (`/app/models/lora/papikapi_style_v1.safetensors`, a copy of the private `ibid-dot/papikapi-style`) |
 | `FLUX_LORA_FILE` | with the repo | LoRA file inside the repository (for example `papikapi_style_v1.safetensors`) |
 | `FLUX_LORA_TRIGGER` | no | Word prepended to every prompt while the LoRA is active. Defaults to `papikapi-style` |
 | `FLUX_LORA_SCALE` | no | LoRA strength. Defaults to `1.0` |
 
-Switching LoRA versions only needs these variables changed in the endpoint, not a new image. The
-response reports the active LoRA in `output.lora`.
+The style LoRA is baked in the image and on by default; a job can switch it off with `use_lora: false`. Trying
+another LoRA only needs these variables in the endpoint, not a new image. The response reports the LoRA used in
+`output.lora`, and the alternatives step refuses a sheet made without it.
 
 ---
 

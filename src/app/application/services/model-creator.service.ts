@@ -99,8 +99,10 @@ export class ModelCreatorService {
       }
 
       const result: AlternativesResponse = await response.json();
-      const sheetUrl = `${this.baseUrl}/api/creator/sheet?name=${encodeURIComponent(result.name)}&t=${Date.now()}`;
+      const resolvedName = result.name || name;
+      const sheetUrl = `${this.baseUrl}/api/creator/sheet?name=${encodeURIComponent(resolvedName)}&t=${Date.now()}`;
       this.currentSheet.set(sheetUrl);
+      this.currentName.set(resolvedName);
       this.statusMessage.set('alternativesReady');
       return result;
     } catch (err: unknown) {

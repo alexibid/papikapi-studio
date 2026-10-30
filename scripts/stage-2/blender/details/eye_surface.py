@@ -4,6 +4,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from eye_errors import NoEyesFound
+
 from eye_color import ColorSignature, matches
 
 
@@ -111,7 +113,7 @@ def eye_pair(surface: SurfaceMesh, signature: ColorSignature, settings: dict) ->
             if ratio * (first["area"] + second["area"]) > best_score:
                 best, best_score = (first, second), ratio * (first["area"] + second["area"])
     if best is None:
-        raise RuntimeError("No pair of eyes found on the model texture")
+        raise NoEyesFound("No pair of eyes found on the model texture")
     middle = (best[0]["centre"] + best[1]["centre"]) / 2.0
     return [frame(group, middle) for group in best]
 

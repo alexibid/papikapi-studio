@@ -8,6 +8,8 @@ from collections import deque
 import bpy
 import numpy as np
 
+from eye_errors import NoEyesFound
+
 from eye_color import ColorSignature, hsv
 
 
@@ -102,7 +104,7 @@ def best_pair(candidates: list[dict], settings: dict) -> tuple[dict, dict]:
             if score > best_score:
                 best, best_score = (first, second), score
     if best is None:
-        raise RuntimeError("No pair of eyes found on the TRELLIS input image")
+        raise NoEyesFound("No pair of eyes found on the TRELLIS input image")
     visible, other = sorted(best, key=lambda blob: -blob["area"])
     return visible, other
 

@@ -5,6 +5,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from plane import hide_plane
 from superres import fit_square, super_resolve
 from whiskers import remove_whiskers
 
@@ -99,7 +100,10 @@ def whiten_plinth(bgr: np.ndarray, alpha: np.ndarray) -> tuple[np.ndarray, float
 def prepare(arguments: argparse.Namespace) -> dict:
     source = cv2.imread(arguments.cutout, cv2.IMREAD_UNCHANGED)
     clean, whisker_pixels = remove_whiskers(source)
-    whitened, plinth_pixels = whiten_plinth(clean, source[:, :, 3])
+    if arguments.plane_rgb:
+        whitened, plinth_pixels = hide_plane(clean, tuple(int(value) for value in arguments.plane_rgb.split(",")))
+    else:
+        whitened, plinth_pixels = whiten_plinth(clean, source[:, :, 3])
     enlarged = super_resolve(whitened, Path(arguments.sr_binary).expanduser(), arguments.sr_model, arguments.sr_scale)
     cv2.imwrite(arguments.out, enlarged)
     return {"sourceSize": list(source.shape[1::-1]), "enlargedSize": list(enlarged.shape[1::-1]),
@@ -157,6 +161,7 @@ def main():
     prepare_parser.add_argument("--sr-binary", required=True)
     prepare_parser.add_argument("--sr-model", default="realesrgan-x4plus-anime")
     prepare_parser.add_argument("--sr-scale", type=int, default=4)
+    prepare_parser.add_argument("--plane-rgb", help="r,g,b of the plane colour the system prompt chose")
     compose_parser = modes.add_parser("compose", help="fit the enlarged RGBA cutout into the square TRELLIS canvas")
     compose_parser.add_argument("--cutout", required=True, help="enlarged RGBA cutout")
     compose_parser.add_argument("--out", required=True)

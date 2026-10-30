@@ -15,7 +15,7 @@ import type {
 } from './interfaces/trellis.interface.js';
 
 export class TrellisGenerator {
-  private static readonly stepId = 's2-step-2';
+  private static readonly stepId = 's2-step-1';
 
   private static findTrellisInput(modelName: string, step: TrellisStepDefinition): string {
     const inputPath = join(
@@ -34,6 +34,14 @@ export class TrellisGenerator {
   /** Same as the official Space's "Randomize Seed": a fresh seed per run, kept in the manifest to reproduce it. */
   private static resolveSeed(seed: number | 'random'): number {
     return seed === 'random' ? randomInt(0, this.maxSeed) : seed;
+  }
+
+  /** A worker that does not report the seed it ran cannot be trusted to have used the random one. */
+  private static assertSeedUsed(chunks: readonly TrellisStreamChunk[], seed: number): void {
+    const reported = new Set(chunks.filter((chunk) => chunk.part === 'glb').map((chunk) => chunk.seed));
+    if (reported.size !== 1 || !reported.has(seed)) {
+      throw new Error(`TRELLIS worker used seed [${[...reported].join()}] instead of ${seed}`);
+    }
   }
 
   private static assemblePart(chunks: readonly TrellisStreamChunk[], part: TrellisStreamPart): Buffer {
@@ -112,6 +120,7 @@ export class TrellisGenerator {
       duration = result.seconds;
       costUsd = Math.round(duration * usdPerSec * 10000) / 10000;
       faceCount = result.chunks.find((chunk) => chunk.part === 'glb')?.face_count ?? 0;
+      this.assertSeedUsed(result.chunks, settings.seed);
     } catch (trellisErr) {
       process.stdout.write('\r\x1b[K');
       const errorMsg = (trellisErr as Error).message;

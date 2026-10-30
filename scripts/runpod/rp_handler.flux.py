@@ -1,6 +1,7 @@
 import base64
 import io
 import os
+import random
 import time
 import runpod
 from PIL import Image
@@ -10,14 +11,20 @@ from huggingface_hub import hf_hub_download
 
 LORA_ADAPTER_NAME = "papikapi"
 MAX_REFERENCE_IMAGES = 4
+MAX_SEED = 2**31 - 1
 
 print("[INFO] Initializing FLUX.2-klein-4B in GPU memory...")
 device = "cuda" if torch.cuda.is_available() else "cpu"
 dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
 
+MODEL_ID = "black-forest-labs/FLUX.2-klein-4B"
+BAKED_MODEL_DIR = "/app/models/FLUX.2-klein-4B"
+
 hf_token = os.environ.get("HF_TOKEN")
+model_source = BAKED_MODEL_DIR if os.path.isfile(os.path.join(BAKED_MODEL_DIR, "model_index.json")) else MODEL_ID
+print(f"[INFO] Loading FLUX weights from {model_source}")
 pipe = Flux2KleinPipeline.from_pretrained(
-    "black-forest-labs/FLUX.2-klein-4B",
+    model_source,
     token=hf_token,
     torch_dtype=dtype
 )
@@ -25,29 +32,43 @@ pipe = pipe.to(device)
 print(f"[INFO] FLUX.2-klein-4B loaded on {device} ({dtype}) and ready for serverless execution.")
 
 
+BAKED_LORA_FILE = "/app/models/lora/papikapi_style_v1.safetensors"
+DEFAULT_LORA_TRIGGER = "papikapi-style"
+
+
 def read_lora_settings():
+    """The style LoRA baked in the image, unless FLUX_LORA_REPO points the worker at another one on Hugging Face."""
+    trigger = os.environ.get("FLUX_LORA_TRIGGER", DEFAULT_LORA_TRIGGER).strip()
+    scale = float(os.environ.get("FLUX_LORA_SCALE", "1.0"))
     repo = os.environ.get("FLUX_LORA_REPO", "").strip()
-    if not repo:
-        return None
-    filename = os.environ.get("FLUX_LORA_FILE", "").strip()
-    if not filename:
-        raise RuntimeError("FLUX_LORA_REPO is set but FLUX_LORA_FILE is empty")
-    return {
-        "repo": repo,
-        "file": filename,
-        "trigger": os.environ.get("FLUX_LORA_TRIGGER", "papikapi-style").strip(),
-        "scale": float(os.environ.get("FLUX_LORA_SCALE", "1.0")),
-    }
+    if repo:
+        filename = os.environ.get("FLUX_LORA_FILE", "").strip()
+        if not filename:
+            raise RuntimeError("FLUX_LORA_REPO is set but FLUX_LORA_FILE is empty")
+        return {"name": f"{repo}/{filename}", "path": None, "repo": repo, "file": filename,
+                "trigger": trigger, "scale": scale}
+    if os.path.isfile(BAKED_LORA_FILE):
+        return {"name": f"baked/{os.path.basename(BAKED_LORA_FILE)}", "path": BAKED_LORA_FILE,
+                "trigger": trigger, "scale": scale}
+    return None
 
 
 def load_lora(settings):
     if settings is None:
-        print("[INFO] No LoRA configured; generating with the base FLUX.2-klein-4B style.")
+        print("[INFO] No LoRA found; generating with the base FLUX.2-klein-4B style.")
         return
-    weights = hf_hub_download(repo_id=settings["repo"], filename=settings["file"], token=hf_token)
+    weights = settings["path"] or hf_hub_download(repo_id=settings["repo"], filename=settings["file"], token=hf_token)
     pipe.load_lora_weights(weights, adapter_name=LORA_ADAPTER_NAME)
     pipe.set_adapters([LORA_ADAPTER_NAME], adapter_weights=[settings["scale"]])
-    print(f"[INFO] LoRA {settings['repo']}/{settings['file']} loaded at scale {settings['scale']}.")
+    print(f"[INFO] LoRA {settings['name']} loaded at scale {settings['scale']}.")
+
+
+def use_lora_for_job(settings, wanted):
+    """Turns the loaded LoRA on or off for one job; returns the settings in force, None when it is off."""
+    if settings is None:
+        return None
+    pipe.set_adapters([LORA_ADAPTER_NAME], adapter_weights=[settings["scale"] if wanted else 0.0])
+    return settings if wanted else None
 
 
 def with_trigger(prompt, settings):
@@ -72,6 +93,13 @@ def decode_reference_images(encoded_images):
 lora_settings = read_lora_settings()
 load_lora(lora_settings)
 
+def pick_seeds(requested, total_picks):
+    """One seed per alternative: the caller's when it sends one per pick, otherwise fresh random ones, never fixed."""
+    if isinstance(requested, list) and len(requested) == total_picks and all(isinstance(s, int) for s in requested):
+        return [int(seed) for seed in requested]
+    return [random.randint(0, MAX_SEED) for _ in range(total_picks)]
+
+
 def handler(job):
     job_input = job.get("input", {})
     prompt = job_input.get("prompt")
@@ -90,26 +118,21 @@ def handler(job):
     try:
         t_start = time.time()
 
+        seeds = pick_seeds(job_input.get("seeds"), total_picks)
+        job_lora = use_lora_for_job(lora_settings, job_input.get("use_lora", True) is not False)
         custom_cell_prompts = job_input.get("cell_prompts")
         if custom_cell_prompts and len(custom_cell_prompts) == total_picks:
-            pick_prompts = [(custom_cell_prompts[i], 101 + i) for i in range(total_picks)]
+            cell_prompts = list(custom_cell_prompts)
         else:
-            pick_prompts = [
-                (prompt + " Ultra-cute baby chibi figure, oversized round head, chubby compact body, short tiny legs.", 101),
-                (prompt + " Youthful playful young figure, cheerful energetic stance, soft rounded geometry.", 102),
-                (prompt + " Studio signature training style, balanced geometric proportions, expressive eyes with white catchlight, clean planar facets without black crease lines.", 103),
-                (prompt + " Cute toy-like baby chibi variation with bold simplified geometric planes.", 104),
-                (prompt + " Playful youthful variation with lively dynamic posture.", 105),
-                (prompt + " Refined structured low-poly sculpture with elegant faceted planes.", 106),
-            ]
+            cell_prompts = [prompt] * total_picks
 
         picks = []
         for p_idx in range(total_picks):
-            p_text, p_seed = pick_prompts[p_idx % len(pick_prompts)]
+            p_text, p_seed = cell_prompts[p_idx], seeds[p_idx]
             gen = torch.Generator(device="cpu").manual_seed(p_seed)
             out = pipe(
                 image=reference_images if reference_images else None,
-                prompt=with_trigger(p_text, lora_settings),
+                prompt=with_trigger(p_text, job_lora),
                 width=512,
                 height=512,
                 num_inference_steps=4,
@@ -139,8 +162,9 @@ def handler(job):
             "output": {
                 "sheet_base64": sheet_b64,
                 "mime": "image/jpeg",
-                "lora": None if lora_settings is None else f"{lora_settings['repo']}/{lora_settings['file']}",
-                "reference_images_used": len(reference_images)
+                "lora": None if job_lora is None else job_lora["name"],
+                "reference_images_used": len(reference_images),
+                "seeds": seeds
             }
         }
     except Exception as exc:

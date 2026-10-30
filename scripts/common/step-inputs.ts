@@ -24,7 +24,7 @@ export class StepInputs {
   }
 
   private static skipsExisting(step: PipelineStep, flags: CliArguments): boolean {
-    if (flags.force) return false;
+    if (flags.force || flags.prompt !== null) return false;
     if (step.skip_if_outputs_exist === true) return flags.step !== step.id;
     return flags.stage === null && flags.step === null && flags.fromStep === null;
   }

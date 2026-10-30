@@ -229,38 +229,6 @@
         "cwd": "apps/papikapi-studio"
       }
     },
-    "stage:2:step:4": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-4",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-2:step-4": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-4",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:2:step:5": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-5",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-2:step-5": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-5",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
     "stage:5": {
       "cache": false,
       "executor": "nx:run-commands",

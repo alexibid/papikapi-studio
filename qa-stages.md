@@ -256,6 +256,45 @@ The art-bake path was wrong and was deleted (code, outputs and QA evidence of ru
 
 ---
 
+## 🔎 Full audit: workers, pipeline, prompt, QA (2026-10-30)
+
+Read-only audit, then the fixes the user approved. Every "proven" line has a run behind it.
+
+### Fixed and proven
+
+| Area | Problem found | Fix | Proof |
+| :--- | :--- | :--- | :--- |
+| FLUX seeds | The worker used fixed seeds 101–106, so new runs repeated almost the same art (two sheets differed by 4/255 on average) | Pipeline sends six random seeds, the worker echoes them, s1-step-1 refuses a sheet that ignored them | `scripts/runpod/check-seeds.ts`: seeds echoed, different seeds give different sheets |
+| FLUX LoRA | `papikapi_style_v1` was never active: the endpoint had no `FLUX_LORA_REPO` | LoRA baked in the image (`/app/models/lora`, 46 MB), on by default, s1-step-1 refuses a sheet made without it | check-seeds: worker reports `baked/papikapi_style_v1.safetensors`; same seeds without LoRA give a different sheet |
+| FLUX weights | Downloaded from Hugging Face at every worker start | 16 GB baked in `/app/models/FLUX.2-klein-4B`, handler loads from disk | Image `papikapi-flux:2026-10-30-weights-lora` = `latest`; check-seeds passed on it |
+| Image layers | Layers packed with the macOS `tar` carried `com.apple.provenance`; RunPod refused the image ("lsetxattr ... operation not supported"), every worker died | `scripts/runpod/pack_layer.py` packs root-owned layers with no extended attributes and checks them | Worker logs show the pull, then the jobs ran |
+| TRELLIS seed | Pipeline sent a random seed but never checked the worker used it | s2-step-1 refuses a mesh whose reported seed differs | check-seeds: TRELLIS echoed the seed sent |
+| FLUX timeout | 300 s client timeout; the first job on a fresh RunPod host (image pull) takes ≈4 min | `serverless.client_timeout_seconds` 900 in s1-step-1 | Four check jobs including a cold start: 458 s in total |
+| Plane | Saturated plane colours tinted the figure and s1-step-3 guessed the plinth colour (ankylosaurus kept a blue strip, pug lost its legs) | Neutral matte plane (white, mid grey, black, then colours), colour saved in the manifest, removed by that colour in `scripts/stage-1/python/plane.py` | `plane_test.py`, `prompt-enricher.spec.ts` |
+| Prompt | Open jaws (t-rex) and built flaps on blocky figures (Alex's hair) | Mouth always closed and painted; blocky characters are six plain blocks with hair, scarf and belt printed as pixels | Guard clauses + specs; not yet seen on a FLUX sheet |
+| Stage 2 | `s2-step-1` cutout redid stage 1's cutout and nothing used it; stage 2 then started at step 2 | Step removed everywhere, stage 2 renumbered 1–3 (3D, base, details) | `tsc`, 27 specs |
+| Cleaning | Old outputs stayed next to new ones; `prompt.txt` was lost when a run stopped | `FigureCleaner`: the first step that runs removes its outputs and every later one; `prompt.txt` written before FLUX | `figure-cleaner.spec.ts` |
+| QA | 50 `resources/<figure>/qa` folders (43 MB) and `resources/qa-summary` | Deleted; QA scripts only read and print, temporary renders are removed | No `qa` folder left under `resources/` or `public/` |
+
+### Still open
+
+| Area | Finding |
+| :--- | :--- |
+| Style reference | A subject with no reference of its own gets another figure's image with "use the reference photo for the subject's colours and markings" (robot → pug, tiger → orange tabby) |
+| LoRA look | `papikapi_style_v1` was trained on isometric captions and tilted the camera (note of 2026-09-30); now active, not yet checked on a real figure |
+| FLUX endpoint | FlashBoot off (TRELLIS has it on); Max Workers 2 (README says 1) |
+| TRELLIS endpoint | Pinned to a digest, not `:latest` as the README says; that digest has no dated rollback tag; idle timeout 10 s vs 5 s in `pipeline.json` |
+| TRELLIS reliability | 3 of 8 jobs on 2026-10-30 ended with "completed without any streamed chunk" or "fetch failed"; cause not found |
+| Commands | `package.json` lacks `s1-step-3`; `project.json` lacks `s1-step-3`, `s3-step-3`, `s3-step-4`, `s4-step-1`, `s4-step-2` |
+| UI | `studio.page.ts` maps `s3-step-2` to `costStageRedraw`, a FLUX redraw step that no longer exists |
+| Dead code | `scripts/common/glb/` plinth trimmer chain (9 files, only used by `stage-2/checks/trellis-trim.ts`), `plinth-cleaner-2d.ts` + `clean-2d-plinth.py`, 7 `stage-2/checks` scripts, 2 `stage-2/experiments`, `s2-step-1.parameters.plinth`, the `step-1-atlas-uv.json` fallback in `step-3-texturize.ts`, `AtlasOutputs` in `step-2-atlas.ts` |
+| Tests | `scripts/server/creator-service.spec.ts` is a plain script, so vitest reports "no test suite" |
+| App build | `tsc -p tsconfig.app.json` fails: `libs/ibid-ui` (submodule, local changes) does not export `SliderComponent`, `FlipTextComponent`, `FoldedTextComponent` |
+| Secrets | `.env` (git-ignored) holds `GEMINI_API_KEY`, `RUNPOD_API_KEY` and `HF_TOKEN` |
+| Figures | Alex, ankylosaurus and the other three have not run end to end with the new plane, prompt, seeds and LoRA |
+
+---
+
 ## 🎯 Model Validation Results (historical batch, TRELLIS 1)
 
 Batch of 2026-09-24, run with the old one-step Stage 2 on an RTX PRO 4500 Blackwell. Kept for cost reference only; none of these models were validated against the art.

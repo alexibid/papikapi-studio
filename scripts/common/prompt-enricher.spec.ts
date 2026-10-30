@@ -48,6 +48,18 @@ describe('PromptGuard system block', () => {
     expect(() => PromptGuard.assertSystemBlock('a black and white cat')).toThrow(/mandatory system clause/);
   });
 
+  it('refuses a block that lets the figure open its mouth', () => {
+    const prompt = AlternativesGenerator.composePrompt('a t-rex', 0);
+    expect(() => PromptGuard.assertSystemBlock(prompt.replace(/mouth is always closed/, 'mouth may open'))).toThrow(/mouth/);
+  });
+
+  it('keeps the scarf of a blocky character as painted pixels, not as a built part', () => {
+    const prompt = AlternativesGenerator.composePrompt('Alex from Minecraft with a scarf', 0);
+    expect(prompt).toMatch(/flat pixel patterns printed on those faces/);
+    expect(() => PromptGuard.assertSystemBlock(prompt.replace(/never built as an extra block or flap/, 'built as blocks')))
+      .toThrow(/extra block/);
+  });
+
   it('refuses a thick or white plinth in place of the contrasting flat plane', () => {
     const prompt = AlternativesGenerator.composePrompt('a black and white cat', 1);
     const slab = prompt.replace(/single flat plane of zero thickness/, 'thin white slab');
@@ -91,9 +103,15 @@ describe('default pose', () => {
 });
 
 describe('plane colour and reference rule', () => {
-  it('names a concrete plane colour the subject does not use', () => {
-    expect(AlternativesGenerator.composePrompt('a black and white cat', 1)).toMatch(/solid saturated blue paper/);
-    expect(AlternativesGenerator.composePrompt('a blue parrot', 1)).toMatch(/solid saturated red paper/);
+  it('lays a neutral matte plane, white unless the subject is white', () => {
+    expect(AlternativesGenerator.composePrompt('a blue parrot', 1)).toMatch(/sheet of matte white paper/);
+    expect(AlternativesGenerator.composePrompt('a black and white cat', 1)).toMatch(/sheet of matte mid grey paper/);
+    expect(AlternativesGenerator.composePrompt('a white rabbit with gray ears', 1)).toMatch(/sheet of matte black paper/);
+  });
+
+  it('never asks for a saturated plane that would tint the figure', () => {
+    expect(AlternativesGenerator.composePrompt('a fawn pug', 1)).not.toMatch(/saturated/);
+    expect(AlternativesGenerator.composePrompt('a fawn pug', 1)).toMatch(/casts no colour onto it/);
   });
 
   it('tells the generator to take only colours and markings from the photo', () => {

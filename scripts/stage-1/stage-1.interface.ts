@@ -3,6 +3,7 @@ import type { InlineImage } from '../common/interfaces/gemini.interface.js';
 export interface AlternativesStepOutputs {
   readonly sheet_resource: string;
   readonly sheet_public: string;
+  readonly prompt_public: string;
   readonly public_url_pattern: string;
   readonly manifest: string;
   readonly allowed_extensions: readonly string[];
@@ -11,6 +12,7 @@ export interface AlternativesStepOutputs {
 export interface AlternativesServerlessConfig {
   readonly env_endpoint_key: string;
   readonly container_image: string;
+  readonly client_timeout_seconds: number;
   readonly api_url_pattern: string;
   readonly async_url_pattern: string;
   readonly status_url_pattern: string;
@@ -126,6 +128,7 @@ export interface FluxWorkerOutput {
   readonly mime?: string;
   readonly lora?: string | null;
   readonly reference_images_used?: number;
+  readonly seeds?: readonly number[];
 }
 
 
@@ -142,6 +145,7 @@ export interface TrellisInputStepDefinition {
   readonly parameters: {
     readonly python_script: string;
     readonly image_size: number;
+    readonly plane_rgb: Readonly<Record<string, readonly [number, number, number]>>;
     readonly super_resolution: { readonly binary: string; readonly model: string; readonly scale: number };
   };
   readonly manifest_contract: { readonly status: string; readonly costUsd: number; readonly costNote: string };

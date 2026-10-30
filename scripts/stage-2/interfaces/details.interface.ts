@@ -15,6 +15,7 @@ export interface DetailsStatistics {
   readonly eyeHeightToFigure: number;
   readonly modelEyeSize: readonly number[];
   readonly painted: readonly PaintedDetail[];
+  readonly skipped?: string;
 }
 
 export interface DetailsStepDefinition {

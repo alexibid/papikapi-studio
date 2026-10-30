@@ -27,11 +27,17 @@ export class PromptEnricher {
     return this.poseWords.test(subject);
   }
 
+  /** First plane colour the subject does not name; "mid grey" counts as named by "grey" or "gray". */
   public static contrastingColour(subject: string, colours: readonly string[]): string {
-    const unused = colours.find((colour) => !new RegExp(`\\b${colour}\\b`, 'i').test(subject));
+    const unused = colours.find((colour) => !this.colourWord(colour).test(subject));
     if (!unused) {
       throw new Error(`Every plane colour (${colours.join(', ')}) appears in the subject: add a colour to plane_colours`);
     }
     return unused;
+  }
+
+  private static colourWord(colour: string): RegExp {
+    const word = colour.split(' ').at(-1) ?? colour;
+    return new RegExp(`\\b${word.replace(/^gr[ae]y$/i, 'gr[ae]y')}\\b`, 'i');
   }
 }

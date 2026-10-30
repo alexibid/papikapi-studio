@@ -160,8 +160,8 @@ export class CreatorApiServer {
       if (req.method === 'POST' && url.pathname === '/api/creator/generate') {
         try {
           const body = await this.parseBody<CreatorGeneratePayload>(req);
-          if (!body.name) {
-            this.sendJson(res, 400, { error: 'Name is required' });
+          if (!body.prompt && !body.name) {
+            this.sendJson(res, 400, { error: 'Prompt or name is required' });
             return;
           }
           if (!body.prompt) {
@@ -169,8 +169,9 @@ export class CreatorApiServer {
             return;
           }
 
-          const result = await CreatorService.generateAlternatives(body.name, body.prompt, body.images);
-          this.sendJson(res, 200, { success: true, ...result });
+          const modelName = CreatorService.resolveModelName(body.name || '', body.prompt);
+          const result = await CreatorService.generateAlternatives(modelName, body.prompt, body.images);
+          this.sendJson(res, 200, { success: true, ...result, name: modelName });
         } catch (err) {
           this.sendJson(res, 500, { error: (err as Error).message });
         }
@@ -193,7 +194,7 @@ export class CreatorApiServer {
           const pick = Number(body.pick);
           const { cropResult, trellisResult } = await CreatorService.buildModel(cleanName, pick);
 
-          const step3 = PipelineConfigLoader.getStep('s2-step-2');
+          const step3 = PipelineConfigLoader.getStep('s2-step-1');
           this.sendJson(res, 200, {
             success: true,
             name: cleanName,

@@ -93,5 +93,6 @@ export interface TrellisStreamChunk {
   readonly data: string;
   readonly file_size: number;
   readonly face_count?: number;
+  readonly seed?: number;
   readonly error?: string;
 }

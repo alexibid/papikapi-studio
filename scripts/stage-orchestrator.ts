@@ -10,6 +10,7 @@ import type {
   StepExecutionResult,
 } from './common/interfaces/index.js';
 import { ModelRow } from './common/model-row.js';
+import { FigureCleaner } from './common/figure-cleaner.js';
 import { OutputCleaner } from './common/output-cleaner.js';
 import { PipelineConfigLoader } from './common/pipeline-config.js';
 import { QuietConsole } from './common/quiet-console.js';
@@ -20,10 +21,9 @@ import type { CliArguments } from './orchestrator.interface.js';
 import { AlternativesGenerator } from './stage-1/step-1-alternatives.js';
 import { AlternativePicker } from './stage-1/step-2-pick.js';
 import { TrellisInputGenerator } from './stage-1/step-3-trellis-input.js';
-import { CutoutGenerator } from './stage-2/step-1-cutout.js';
-import { TrellisGenerator } from './stage-2/step-2-trellis.js';
-import { BaseCutGenerator } from './stage-2/step-3-base.js';
-import { DetailsGenerator } from './stage-2/step-4-details.js';
+import { TrellisGenerator } from './stage-2/step-1-trellis.js';
+import { BaseCutGenerator } from './stage-2/step-2-base.js';
+import { DetailsGenerator } from './stage-2/step-3-details.js';
 import { SimplifyGenerator } from './stage-3/step-1-simplify.js';
 import { AtlasGenerator } from './stage-3/step-2-atlas.js';
 import { TexturizeGenerator } from './stage-3/step-3-texturize.js';
@@ -88,6 +88,7 @@ export class StageOrchestrator {
       const model = models[mIdx];
       const stepResults: StepExecutionResult[] = [];
       let modelPassed = true;
+      let figureCleaned = false;
       const modelStart = Date.now();
 
       const label = `[${String(mIdx + 1).padStart(2, '0')}/${String(models.length).padStart(2, '0')}] ${model.toUpperCase()}`;
@@ -110,6 +111,10 @@ export class StageOrchestrator {
         }
         row.running(step.label);
         QuietConsole.start();
+        if (!figureCleaned) {
+          FigureCleaner.cleanFrom(model, step);
+          figureCleaned = true;
+        }
         OutputCleaner.clean(model, step);
         const stepStart = Date.now();
         let status: 'DONE' | 'FAIL' = 'DONE';
@@ -167,26 +172,7 @@ export class StageOrchestrator {
               `  [s1-step-3] Output TRELLIS input: ${res.trellisInputPath} (${(size / 1024).toFixed(1)} KB)`,
             );
           } else if (step.id === 's2-step-1') {
-            const cutoutStep = PipelineConfigLoader.getStep('s2-step-1') as unknown as {
-              inputs: { stage_dir: string; art_resource: string };
-            };
-            const artPath = join(
-              WorkspacePaths.resourcePath(model),
-              cutoutStep.inputs.stage_dir,
-              cutoutStep.inputs.art_resource,
-            );
-            const artSize = existsSync(artPath) ? statSync(artPath).size : 0;
-            console.log(`  [s2-step-1] Input Art: ${artPath} (${(artSize / 1024).toFixed(1)} KB)`);
-            const res = await CutoutGenerator.execute(
-              model,
-              flags.pick !== null ? flags.pick : undefined,
-            );
-            const size = statSync(res.outputPath).size;
-            console.log(
-              `  [s2-step-1] Output Cutout: ${res.outputPath} (${(size / 1024).toFixed(1)} KB)`,
-            );
-          } else if (step.id === 's2-step-2') {
-            const trellisStep = PipelineConfigLoader.getStep('s2-step-2') as unknown as {
+            const trellisStep = PipelineConfigLoader.getStep('s2-step-1') as unknown as {
               inputs: { stage_dir: string; trellis_input_resource: string };
             };
             const cutoutPath = join(
@@ -196,7 +182,7 @@ export class StageOrchestrator {
             );
             const cutoutSize = existsSync(cutoutPath) ? statSync(cutoutPath).size : 0;
             console.log(
-              `  [s2-step-2] Input Cutout: ${cutoutPath} (${(cutoutSize / 1024).toFixed(1)} KB)`,
+              `  [s2-step-1] Input Cutout: ${cutoutPath} (${(cutoutSize / 1024).toFixed(1)} KB)`,
             );
             const res = await TrellisGenerator.execute(
               model,
@@ -204,23 +190,23 @@ export class StageOrchestrator {
             );
             const size = statSync(res.outputPath).size;
             console.log(
-              `  [s2-step-2] Output 3D Mesh: ${res.outputPath} (${(size / (1024 * 1024)).toFixed(2)} MB)`,
+              `  [s2-step-1] Output 3D Mesh: ${res.outputPath} (${(size / (1024 * 1024)).toFixed(2)} MB)`,
             );
             CatalogueManager.sync();
-          } else if (step.id === 's2-step-3') {
+          } else if (step.id === 's2-step-2') {
             const res = await BaseCutGenerator.execute(
               model,
               flags.pick !== null ? flags.pick : undefined,
             );
             const size = statSync(res.modelPath).size;
             console.log(
-              `  [s2-step-3] Output Figure Without Base: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
+              `  [s2-step-2] Output Figure Without Base: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
             );
-          } else if (step.id === 's2-step-4') {
+          } else if (step.id === 's2-step-3') {
             const res = await DetailsGenerator.execute(model);
             const size = statSync(res.modelPath).size;
             console.log(
-              `  [s2-step-4] Output Figure With Details: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
+              `  [s2-step-3] Output Figure With Details: ${res.modelPath} (${(size / 1024).toFixed(1)} KB)`,
             );
           } else if (step.id === 's3-step-1') {
             const res = await SimplifyGenerator.execute(

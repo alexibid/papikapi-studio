@@ -1,4 +1,5 @@
 import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'node:fs';
+import { randomInt } from 'node:crypto';
 import { join } from 'node:path';
 import type {
   AlternativesStepDefinition,
@@ -19,6 +20,25 @@ import { PromptGuard } from '../common/prompt-guard.js';
 
 export class AlternativesGenerator {
   private static readonly stepId = 's1-step-1';
+  private static readonly maxSeed = 2 ** 31 - 1;
+
+  private static randomSeeds(count: number): readonly number[] {
+    return Array.from({ length: count }, () => randomInt(0, this.maxSeed));
+  }
+
+  /** The style LoRA is part of the studio look: a sheet made without it is refused, not kept. */
+  private static assertLoraUsed(output: FluxWorkerOutput): string {
+    if (!output.lora) throw new Error('FLUX worker generated without the style LoRA: publish the image with the LoRA first');
+    return output.lora;
+  }
+
+  /** A worker that does not echo the seeds still runs fixed ones: refuse its sheet instead of reusing old art. */
+  private static assertSeedsUsed(output: FluxWorkerOutput, seeds: readonly number[]): void {
+    const used = output.seeds ?? [];
+    if (used.length !== seeds.length || used.some((seed, index) => seed !== seeds[index])) {
+      throw new Error('FLUX worker ignored the random seeds (outdated image): publish rp_handler.flux.py first');
+    }
+  }
 
   private static describeWorker(output: FluxWorkerOutput): string {
     if (output.reference_images_used === undefined) {
@@ -70,6 +90,12 @@ export class AlternativesGenerator {
     return style ? [style.image, ...subjectImages] : subjectImages;
   }
 
+  private static savePrompt(name: string, fileName: string, userPrompt: string): void {
+    const publicDir = WorkspacePaths.modelPath(name);
+    mkdirSync(publicDir, { recursive: true });
+    writeFileSync(join(publicDir, fileName), `${userPrompt}\n`);
+  }
+
   private static saveReferences(stageDir: string, references: readonly InlineImage[]): void {
     references.forEach((image, index) => {
       const extension = image.mime.includes('png') ? 'png' : 'jpeg';
@@ -81,6 +107,7 @@ export class AlternativesGenerator {
     const { name, prompt: rawPrompt, engineOverride } = request;
     const prompt = PromptGuard.assertSubject(PromptEnricher.subjectFrom(rawPrompt));
     const step = this.loadStep();
+    this.savePrompt(name, step.outputs.prompt_public, rawPrompt);
     const params = step.parameters;
     const referenceImages = this.composeReferenceImages({ ...request, prompt }, params.max_reference_images);
     const fullPrompt = this.composePrompt(prompt, referenceImages.length);
@@ -93,6 +120,8 @@ export class AlternativesGenerator {
     let seconds: number;
     let costUsd: number;
     let costNote: string;
+    let seeds: readonly number[] = [];
+    let lora: string | null = null;
 
     const contract = step.manifest_contract;
     const config = PipelineConfigLoader.load();
@@ -118,7 +147,9 @@ export class AlternativesGenerator {
         const envKey = step.serverless ? step.serverless.env_endpoint_key : 'RUNPOD_FLUX_ENDPOINT_ID';
         const endpointId = RunPodClient.getEndpointId(envKey);
 
+        seeds = this.randomSeeds(params.columns * params.rows);
         const payload = {
+          seeds,
           prompt: fullPrompt,
           cell_prompts: this.buildCellPrompts(prompt, referenceImages.length),
           reference_images: referenceImages.map((img) => img.bytes.toString('base64')),
@@ -134,7 +165,7 @@ export class AlternativesGenerator {
           endpointId,
           payload,
           {
-            timeoutMs: 300000,
+            timeoutMs: (step.serverless?.client_timeout_seconds ?? 900) * 1000,
             purgeBeforeRun: true,
             maxRetries: 0,
             onProgress: (update) => {
@@ -149,6 +180,8 @@ export class AlternativesGenerator {
         const workerMessage = `🧩 Worker: ${this.describeWorker(result.output)}`;
         console.log(`  [${this.stepId}] ${workerMessage}`);
         ProgressHub.report(name, this.stepId, workerMessage);
+        this.assertSeedsUsed(result.output, seeds);
+        lora = this.assertLoraUsed(result.output);
         imageBytes = Buffer.from(result.output.sheet_base64, 'base64');
         mime = result.output.mime ? result.output.mime : 'image/jpeg';
         seconds = result.seconds;
@@ -192,6 +225,9 @@ export class AlternativesGenerator {
       data: {
         prompt,
         fluxPrompt: fullPrompt,
+        planeColour: PromptEnricher.contrastingColour(prompt, params.plane_colours),
+        seeds,
+        lora,
         referenceCount: referenceImages.length,
         alternativesCount: params.alternatives_count,
         format: mime,

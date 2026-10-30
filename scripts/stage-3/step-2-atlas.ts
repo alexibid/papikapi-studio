@@ -63,8 +63,8 @@ export class AtlasGenerator {
 
     const detailedCandidates = [
       join(resourceDir, step.inputs.detailed_stage_dir, step.inputs.detailed_model_resource),
-      join(resourceDir, 'stage-2', 'step-4-details.glb'),
-      join(resourceDir, 'stage-2', 'step-3-base.glb'),
+      join(resourceDir, 'stage-2', 'step-3-details.glb'),
+      join(resourceDir, 'stage-2', 'step-2-base.glb'),
     ];
     const detailedPath = this.resolveFile(detailedCandidates, 'Detailed model');
 

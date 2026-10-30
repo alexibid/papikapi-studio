@@ -51,14 +51,55 @@ export class ModelCreatorComponent {
     '6. Adult / Realistic',
   ];
 
-  protected onPromptChange(value: string): void {
-    this.prompt.set(value);
-    if (!this.modelName() || this.modelName().startsWith('model-')) {
-      const slug = value
-        .toLowerCase()
+  protected deriveFigureSlug(text: string): string {
+    const raw = (text ?? '').trim();
+    if (!raw) return '';
+
+    // Strip boilerplate studio prefixes if present
+    let subject = raw
+      .replace(/^low-poly\s+faceted\s+3d\s+papercraft\s+model\s+of\s+/i, '')
+      .replace(/\s+seen\s+in\s+an\s+eye-level[\s\S]*$/i, '');
+
+    const subjectMatch = subject.match(/(?:^|\n)Subject:\s*([^\n.]+)/i);
+    if (subjectMatch) {
+      subject = subjectMatch[1].trim();
+    } else {
+      subject = subject.split(/[\n.;]|\s+(?:seen\s+in|with\s+all\s+feet)\b/i)[0].trim();
+    }
+
+    if (/\b(snoopy|snoopi)\b/i.test(subject)) {
+      return /\b(peluche|pelucia|plush|boneco|toy)\b/i.test(subject) ? 'snoopy-plush' : 'snoopy';
+    }
+    if (/\b(pac-man|pacman)\b/i.test(subject)) return 'pac-man';
+    if (/\b(mario)\b/i.test(subject)) return 'mario';
+    if (/\b(sonic)\b/i.test(subject)) return 'sonic';
+    if (/\b(pikachu)\b/i.test(subject)) return 'pikachu';
+    if (/\b(kirby)\b/i.test(subject)) return 'kirby';
+    if (/\b(yoshi)\b/i.test(subject)) return 'yoshi';
+    if (/\b(darth)\b/i.test(subject)) return /\b(cat|gato)\b/i.test(subject) ? 'cat-darth' : 'darth';
+
+    const normalized = subject
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/^(?:um|uma|uns|umas|o|a|os|as|the|an)-+/i, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+    return (
+      normalized
+        .replace(/^(?:a-cute|cute|a)-+/i, '')
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '')
-        .slice(0, 20);
+        .slice(0, 64)
+        .replace(/-+$/, '') || 'model'
+    );
+  }
+
+  protected onPromptChange(value: string): void {
+    this.prompt.set(value);
+    if (!this.modelName() || this.modelName().startsWith('model-') || this.modelName() === 'custom-model') {
+      const slug = this.deriveFigureSlug(value);
       if (slug) {
         this.modelName.set(slug);
       }
@@ -97,7 +138,8 @@ export class ModelCreatorComponent {
   protected async generateAlternatives(): Promise<void> {
     const p = this.prompt().trim();
     if (!p) return;
-    const name = (this.modelName().trim() || 'custom-model').toLowerCase().replace(/\s+/g, '-');
+    const rawName = this.modelName().trim();
+    const name = (rawName ? this.deriveFigureSlug(rawName) : this.deriveFigureSlug(p)) || 'custom-model';
     this.selectedPick.set(null);
     const images = this.references().map((r) => r.dataUrl);
 

@@ -12,7 +12,7 @@ import type {
 } from './interfaces/details.interface.js';
 
 export class DetailsGenerator {
-  private static readonly stepId = 's2-step-4';
+  private static readonly stepId = 's2-step-3';
 
   private static requireFile(modelName: string, stageDir: string, resource: string): string {
     const candidate = join(WorkspacePaths.resourcePath(modelName), stageDir, resource);
@@ -64,6 +64,7 @@ export class DetailsGenerator {
         eyeHeightToFigure: statistics.eyeHeightToFigure,
         modelEyeSize: statistics.modelEyeSize,
         artEyeSizesPx: statistics.artEyeSizesPx,
+        skipped: statistics.skipped ?? null,
       },
       data: { source: inputPath, art: artPath, parameters: step.parameters, painted: statistics.painted },
     });

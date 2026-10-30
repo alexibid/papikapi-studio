@@ -3,11 +3,12 @@ import numpy
 from mathutils import Matrix, Vector
 from mathutils.geometry import tessellate_polygon
 
+from figure_parts import figure_and_strays
+
 UPWARD_NORMAL = 0.95
 SEARCH_HEIGHT_RATIO = 0.3
 BIN_RATIO = 0.004
 FALLBACK_LEVEL_RATIO = 0.04
-SEPARATE_PLINTH_RATIO = 0.02
 SURFACE_BAND_RATIO = 0.015
 SURFACE_PERCENTILE = 95
 CONTACT_BAND_RATIO = 0.02
@@ -37,22 +38,15 @@ def connected_components(surface):
     return components
 
 
-def component_heights(component):
-    heights = [vertex.co.z for face in component for vertex in face.verts]
-    return min(heights), max(heights)
-
-
 def remove_disconnected_islands(surface):
     components = sorted(connected_components(surface), key=len, reverse=True)
-    main_floor = component_heights(components[0])[0]
     total = [vertex.co.z for vertex in surface.verts]
-    tolerance = SEPARATE_PLINTH_RATIO * (max(total) - min(total))
-    stray = [face for component in components[1:] for face in component]
-    separate_plinth = any(component_heights(component)[1] <= main_floor + tolerance for component in components[1:])
-    if stray:
-        bmesh.ops.delete(surface, geom=stray, context="FACES")
+    _, strays, separate_plinth = figure_and_strays(components, max(total) - min(total))
+    stray_faces = [face for component in strays for face in component]
+    if stray_faces:
+        bmesh.ops.delete(surface, geom=stray_faces, context="FACES")
         bmesh.ops.delete(surface, geom=[vertex for vertex in surface.verts if not vertex.link_edges], context="VERTS")
-    return max(0, len(components) - 1), separate_plinth
+    return len(strays), separate_plinth
 
 
 def plinth_top_level(surface, height):

@@ -31,6 +31,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
     peft \
     "huggingface_hub>=1.23,<2"
 
+RUN python -c "from huggingface_hub import snapshot_download; snapshot_download('black-forest-labs/FLUX.2-klein-4B', local_dir='/app/models/FLUX.2-klein-4B', allow_patterns=['model_index.json', 'scheduler/*', 'text_encoder/*', 'tokenizer/*', 'transformer/*', 'vae/*'])"
+
 COPY rp_handler.flux.py /app/rp_handler.flux.py
 
 CMD ["python", "-u", "/app/rp_handler.flux.py"]
