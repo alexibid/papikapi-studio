@@ -20,7 +20,8 @@
   @if (creator.isGenerating()) {
     <papikapi-studio-process-loader
       mode="alternatives"
-      [modelName]="creator.currentName() || modelName()"
+      [figureId]="creator.currentFigureId()"
+      [label]="modelName() || prompt()"
       [pick]="selectedPick()"
     />
   } @else {

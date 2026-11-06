@@ -8,8 +8,9 @@ export interface FallbackStep {
 export const STAGE_TITLE_KEYS: Readonly<Record<string, string>> = {
   's1-step-1': 'loaderStageAlternatives',
   's1-step-2': 'loaderStagePick',
-  's1-step-3': 'loaderStageCutout',
-  's2-step-1': 'loaderStageMesh',
+  's1-step-3': 'loaderStageUpscale',
+  's2-step-1': 'loaderStageCutout',
+  's2-step-2': 'loaderStageMesh',
 };
 
 export const EXPECTED_SECONDS: Readonly<Record<ProcessLoaderMode, number>> = {

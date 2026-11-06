@@ -13,7 +13,7 @@
         "production",
         "^production",
         {
-          "runtime": "shasum apps/papikapi-studio/public/models/index.json 2>/dev/null || echo no-index"
+          "runtime": "shasum apps/papikapi-api/public/models/index.json 2>/dev/null || echo no-index"
         }
       ],
       "options": {
@@ -22,6 +22,11 @@
           {
             "glob": "**/*",
             "input": "apps/papikapi-studio/public"
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/papikapi-api/public/models",
+            "output": "/models"
           },
           {
             "glob": "**/*",
@@ -54,7 +59,7 @@
     },
     "desktop": {},
     "desktop-build": {},
-    "serve-app": {
+    "serve": {
       "executor": "@angular/build:dev-server",
       "defaultConfiguration": "development",
       "options": {
@@ -64,22 +69,14 @@
         "hmr": false
       }
     },
-    "serve": {
-      "executor": "nx:run-commands",
+    "serve-app": {
+      "executor": "@angular/build:dev-server",
+      "defaultConfiguration": "development",
       "options": {
-        "commands": [
-          "npx nx run papikapi-studio:server",
-          "npx nx run papikapi-studio:serve-app"
-        ],
-        "parallel": true
-      }
-    },
-    "server": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx watch --clear-screen=false --exclude 'resources/**' --exclude 'public/**' scripts/server.ts",
-        "cwd": "apps/papikapi-studio"
+        "port": 4500,
+        "proxyConfig": "apps/papikapi-studio/proxy.conf.json",
+        "liveReload": false,
+        "hmr": false
       }
     },
     "serve-e2e": {
@@ -99,214 +96,6 @@
         "buildTarget": "papikapi-studio:build",
         "staticFilePath": "dist/papikapi-studio/browser",
         "spa": true
-      }
-    },
-    "stages": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "lora:dataset": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/training/lora/lora-dataset-builder.ts",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:1": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 1",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-1": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 1",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:1:step:1": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-1",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-1:step-1": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-1",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:1:step:2": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-2",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-1:step-2": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-2",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:2": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-2": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:2:step:1": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-1",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-2:step-1": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-1",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:2:step:2": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-2",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-2:step-2": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-2",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:2:step:3": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-3",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-2:step-3": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-3",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:5": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 5",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-5": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 5",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:5:step:1": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 5 --step s5-step-1",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-5:step-1": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 5 --step s5-step-1",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:3": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 3",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-3": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 3",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:3:step:1": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 3 --step s3-step-1",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-3:step-1": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 3 --step s3-step-1",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage:3:step:2": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 3 --step s3-step-2",
-        "cwd": "apps/papikapi-studio"
-      }
-    },
-    "stage-3:step-2": {
-      "cache": false,
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx scripts/stage-orchestrator.ts --stage 3 --step s3-step-2",
-        "cwd": "apps/papikapi-studio"
       }
     }
   }

@@ -1,6 +1,10 @@
 {
   "/api": {
-    "target": "http://localhost:4502",
+    "target": "http://localhost:4505",
+    "secure": false
+  },
+  "/models": {
+    "target": "http://localhost:4505",
     "secure": false
   }
 }

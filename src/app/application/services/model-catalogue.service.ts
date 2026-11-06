@@ -22,7 +22,13 @@ export class ModelCatalogueService {
     this.loading.set(true);
     this.problem.set('');
     try {
-      const response = await fetch(CATALOGUE_URL, { cache: 'no-store' });
+      const apiBase = typeof window !== 'undefined' && (window.location.port === '4500' || window.location.port === '4200')
+        ? 'http://localhost:4505'
+        : '';
+      let response = await fetch(`${apiBase}/api/v1/models`, { cache: 'no-store' }).catch(() => null);
+      if (!response || !response.ok) {
+        response = await fetch(CATALOGUE_URL, { cache: 'no-store' });
+      }
       if (!response.ok) {
         throw new Error(`${response.status} ${response.statusText}`);
       }

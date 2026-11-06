@@ -31,7 +31,8 @@ export class ProcessLoaderComponent {
   private readonly received = signal<ReceivedProgress | null>(null);
 
   readonly mode = input<ProcessLoaderMode>('3d');
-  readonly modelName = input('');
+  readonly figureId = input('');
+  readonly label = input('');
   readonly pick = input<number | null>(null);
   readonly startedAt = input<number>();
 
@@ -65,7 +66,7 @@ export class ProcessLoaderComponent {
     const totalSeconds = Math.floor(this.secondsSince(this.origin()));
     const clock = `${Math.floor(totalSeconds / 60)}:${(totalSeconds % 60).toString().padStart(2, '0')}`;
     const pickLabel = this.pick() ? `#${this.pick()}` : '';
-    return [clock, this.modelName(), pickLabel].filter((part) => part.length > 0).join(' · ');
+    return [clock, this.label(), pickLabel].filter((part) => part.length > 0).join(' · ');
   });
 
   constructor() {
@@ -73,7 +74,7 @@ export class ProcessLoaderComponent {
     inject(DestroyRef).onDestroy(() => clearInterval(timer));
 
     effect((onCleanup) => {
-      const disconnect = this.progressService.connect(this.modelName(), (progress) =>
+      const disconnect = this.progressService.connect(this.figureId(), (progress) =>
         this.received.set({ progress, stepStartedAt: Date.now() - progress.elapsedInStepMs }),
       );
       onCleanup(disconnect);

@@ -1,8 +1,16 @@
 import { Injectable, signal } from '@angular/core';
+import { FigureDisplayNames } from '@ibid/utils';
+
+export interface AlternativesRequest {
+  readonly id: string;
+  readonly displayName: FigureDisplayNames;
+  readonly prompt: string;
+  readonly images: readonly string[];
+}
 
 export interface AlternativesResponse {
   readonly success: boolean;
-  readonly name: string;
+  readonly id: string;
   readonly prompt: string;
   readonly publicPath: string;
   readonly seconds: number;
@@ -11,7 +19,7 @@ export interface AlternativesResponse {
 
 export interface PickResponse {
   readonly success: boolean;
-  readonly name: string;
+  readonly id: string;
   readonly artPath: string;
   readonly modelPath: string;
   readonly cached?: boolean;
@@ -19,7 +27,7 @@ export interface PickResponse {
 }
 
 export interface Active3DGeneration {
-  readonly modelName: string;
+  readonly figureId: string;
   readonly pick: number;
   readonly startedAt: number;
 }
@@ -33,17 +41,17 @@ export class ModelCreatorService {
   readonly statusMessage = signal<string>('');
   readonly error = signal<string>('');
   readonly currentSheet = signal<string | null>(null);
-  readonly currentName = signal<string>('');
+  readonly currentFigureId = signal<string>('');
   readonly cachedPicks = signal<readonly number[]>([]);
   readonly currentPick = signal<number | null>(null);
   readonly activeGenerations = signal<Record<string, Active3DGeneration>>(this.loadInitialGenerations());
 
-  getGeneration(name: string): Active3DGeneration | null {
-    return this.activeGenerations()[name] ?? null;
+  getGeneration(figureId: string): Active3DGeneration | null {
+    return this.activeGenerations()[figureId] ?? null;
   }
 
-  isGenerating3d(name: string): boolean {
-    return Boolean(this.activeGenerations()[name]);
+  isGenerating3d(figureId: string): boolean {
+    return Boolean(this.activeGenerations()[figureId]);
   }
 
   private loadInitialGenerations(): Record<string, Active3DGeneration> {
@@ -73,24 +81,24 @@ export class ModelCreatorService {
   }
 
   private resolveApiBase(): string {
-    if (typeof window !== 'undefined' && window.location.port === '4500') {
-      return 'http://localhost:4502';
+    if (typeof window !== 'undefined' && (window.location.port === '4500' || window.location.port === '4200')) {
+      return 'http://localhost:4505';
     }
     return '';
   }
 
-  async generateAlternatives(name: string, prompt: string, images: string[] = []): Promise<AlternativesResponse | null> {
+  async generateAlternatives(request: AlternativesRequest): Promise<AlternativesResponse | null> {
     this.isGenerating.set(true);
     this.error.set('');
     this.statusMessage.set('generatingAlternatives');
     this.currentSheet.set(null);
-    this.currentName.set(name);
+    this.currentFigureId.set(request.id);
 
     try {
       const response = await fetch(`${this.baseUrl}/api/creator/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, prompt, images }),
+        body: JSON.stringify(request),
       });
 
       if (!response.ok) {
@@ -99,10 +107,9 @@ export class ModelCreatorService {
       }
 
       const result: AlternativesResponse = await response.json();
-      const resolvedName = result.name || name;
-      const sheetUrl = `${this.baseUrl}/api/creator/sheet?name=${encodeURIComponent(resolvedName)}&t=${Date.now()}`;
-      this.currentSheet.set(sheetUrl);
-      this.currentName.set(resolvedName);
+      const figureId = result.id || request.id;
+      this.currentSheet.set(this.sheetUrlOf(figureId));
+      this.currentFigureId.set(figureId);
       this.statusMessage.set('alternativesReady');
       return result;
     } catch (err: unknown) {
@@ -115,12 +122,12 @@ export class ModelCreatorService {
     }
   }
 
-  async loadExistingAlternatives(name: string): Promise<boolean> {
+  async loadExistingAlternatives(figureId: string): Promise<boolean> {
     this.error.set('');
-    this.currentName.set(name);
+    this.currentFigureId.set(figureId);
 
     try {
-      const res = await fetch(`${this.baseUrl}/api/creator/info?name=${encodeURIComponent(name)}`);
+      const res = await fetch(`${this.baseUrl}/api/creator/info?id=${encodeURIComponent(figureId)}`);
       if (!res.ok) return false;
       const data = (await res.json()) as {
         hasAlternatives?: boolean;
@@ -136,8 +143,7 @@ export class ModelCreatorService {
       }
 
       if (data.hasAlternatives) {
-        const sheetUrl = `${this.baseUrl}/api/creator/sheet?name=${encodeURIComponent(name)}&t=${Date.now()}`;
-        this.currentSheet.set(sheetUrl);
+        this.currentSheet.set(this.sheetUrlOf(figureId));
         this.statusMessage.set('alternativesReady');
         return true;
       }
@@ -147,14 +153,14 @@ export class ModelCreatorService {
     }
   }
 
-  async deleteModel(name: string): Promise<boolean> {
+  async deleteModel(figureId: string): Promise<boolean> {
     this.error.set('');
 
     try {
       const response = await fetch(`${this.baseUrl}/api/creator/delete`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ id: figureId }),
       });
 
       if (!response.ok) {
@@ -170,14 +176,14 @@ export class ModelCreatorService {
     }
   }
 
-  async pickAlternative(name: string, pick: number, isCached = false): Promise<PickResponse | null> {
+  async pickAlternative(figureId: string, pick: number, isCached = false): Promise<PickResponse | null> {
     const cached = isCached || this.cachedPicks().includes(pick);
     if (!cached) {
       this.activeGenerations.update((prev) => {
         const next = {
           ...prev,
-          [name]: {
-            modelName: name,
+          [figureId]: {
+            figureId,
             pick,
             startedAt: Date.now(),
           },
@@ -194,7 +200,7 @@ export class ModelCreatorService {
       const response = await fetch(`${this.baseUrl}/api/creator/pick`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, pick }),
+        body: JSON.stringify({ id: figureId, pick }),
       });
 
       if (!response.ok) {
@@ -217,11 +223,15 @@ export class ModelCreatorService {
       this.isPicking.set(false);
       this.activeGenerations.update((prev) => {
         const next = { ...prev };
-        delete next[name];
+        delete next[figureId];
         this.saveGenerations(next);
         return next;
       });
     }
+  }
+
+  private sheetUrlOf(figureId: string): string {
+    return `${this.baseUrl}/api/creator/sheet?id=${encodeURIComponent(figureId)}&t=${Date.now()}`;
   }
 
   reset(): void {
@@ -230,7 +240,7 @@ export class ModelCreatorService {
     this.statusMessage.set('');
     this.error.set('');
     this.currentSheet.set(null);
-    this.currentName.set('');
+    this.currentFigureId.set('');
     this.cachedPicks.set([]);
     this.currentPick.set(null);
   }

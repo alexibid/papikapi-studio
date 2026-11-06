@@ -4,6 +4,7 @@ import { readCatalogue } from './catalogue-entry';
 describe('readCatalogue', () => {
   const rawEntry = {
     id: 'fox',
+    displayName: { pt: 'Raposa', en: 'Fox' },
     model: 'model.glb',
     image: 'art.jpeg',
     secondaryImage: 'side.png',
@@ -30,6 +31,26 @@ describe('readCatalogue', () => {
     expect(model.previewPath).toBe('/models/bear/preview.png');
     expect(model.secondaryImagePath).toBeUndefined();
     expect(model.topImagePath).toBeUndefined();
+    expect(model.displayName).toEqual({ pt: 'bear', en: 'bear' });
+    expect(model.previews).toEqual([]);
+  });
+
+  it('reads the previews the pipeline published', () => {
+    const previews = [
+      { view: 'three-quarter', image: 'preview-three-quarter.webp' },
+      { view: 'three-quarter-wireframe', image: 'preview-three-quarter-wireframe.webp' },
+    ];
+    const [model] = readCatalogue([{ id: 'fox', previews }]);
+    expect(model.previews).toEqual([
+      { view: 'three-quarter', imagePath: '/models/fox/preview-three-quarter.webp' },
+      { view: 'three-quarter-wireframe', imagePath: '/models/fox/preview-three-quarter-wireframe.webp' },
+    ]);
+  });
+
+  it('skips previews with an unknown view or no image', () => {
+    const previews = [{ view: 'top', image: 'top.png' }, { view: 'three-quarter', image: '' }, null];
+    const [model] = readCatalogue([{ id: 'fox', previews }]);
+    expect(model.previews).toEqual([]);
   });
 
   it('populates custom image and secondary paths when present', () => {
@@ -40,6 +61,7 @@ describe('readCatalogue', () => {
     expect(model.secondaryImagePath).toBe('/models/fox/side.png');
     expect(model.topImagePath).toBe('/models/fox/top.png');
     expect(model.previewPath).toBe('/models/fox/preview.png');
+    expect(model.displayName).toEqual({ pt: 'Raposa', en: 'Fox' });
   });
 
   it('filters out items with empty model or image strings', () => {

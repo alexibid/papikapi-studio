@@ -22,14 +22,17 @@ export interface CreationProgress {
 
 export type CreationProgressListener = (progress: CreationProgress) => void;
 
-const API_PORT_BY_DEV_PORT: Readonly<Record<string, string>> = { '4500': 'http://localhost:4502' };
+const API_PORT_BY_DEV_PORT: Readonly<Record<string, string>> = {
+  '4500': 'http://localhost:4505',
+  '4200': 'http://localhost:4505',
+};
 
 @Injectable({ providedIn: 'root' })
 export class CreationProgressService {
   private readonly baseUrl = API_PORT_BY_DEV_PORT[globalThis.location?.port ?? ''] ?? '';
 
-  connect(modelName: string, listener: CreationProgressListener): () => void {
-    const url = `${this.baseUrl}/api/creator/progress?name=${encodeURIComponent(modelName)}`;
+  connect(figureId: string, listener: CreationProgressListener): () => void {
+    const url = `${this.baseUrl}/api/creator/progress?id=${encodeURIComponent(figureId)}`;
     const source = new EventSource(url);
     source.onmessage = (message: MessageEvent<string>) => {
       const payload: unknown = JSON.parse(message.data);

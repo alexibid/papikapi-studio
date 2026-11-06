@@ -16,7 +16,7 @@ import {
   ModelCreatorService,
 } from '../../../application/services/model-creator.service';
 import { formatUsd } from '../../../domain/models/model-cost';
-import { PaperModel } from '../../../domain/models/paper-model';
+import { ModelPreviewView, PaperModel } from '../../../domain/models/paper-model';
 import { AssemblyViewerComponent } from '../../components/assembly-viewer/assembly-viewer';
 import { ModelCreatorComponent } from '../../components/model-creator/model-creator';
 import { ModelViewer3DComponent } from '../../components/model-viewer-3d/model-viewer-3d';
@@ -26,6 +26,11 @@ const COST_STAGE_LABELS: Readonly<Record<string, string>> = {
   's1-step-1': 'costStageAlternatives',
   's2-step-1': 'costStageMesh',
   's3-step-2': 'costStageRedraw',
+};
+
+const PREVIEW_LABELS: Readonly<Record<ModelPreviewView, string>> = {
+  'three-quarter': 'previewThreeQuarter',
+  'three-quarter-wireframe': 'previewThreeQuarterWireframe',
 };
 
 @Component({
@@ -71,7 +76,7 @@ export class StudioPage implements OnInit {
   protected readonly pendingGenerations = computed(() => {
     const existingIds = new Set(this.catalogue.all().map((m) => m.id));
     return Object.values(this.creator.activeGenerations()).filter(
-      (gen) => !existingIds.has(gen.modelName)
+      (gen) => !existingIds.has(gen.figureId)
     );
   });
 
@@ -108,6 +113,10 @@ export class StudioPage implements OnInit {
       this.previewVersion();
       if (id) void this.modelCost.load(id);
     });
+  }
+
+  protected previewLabel(view: ModelPreviewView): string {
+    return this.i18n.translate(PREVIEW_LABELS[view]);
   }
 
   protected stageLabel(stageId: string): string {
@@ -166,7 +175,7 @@ export class StudioPage implements OnInit {
   protected toggleLoaderPreview(): void {
     const isShowing = this.loaderPreview() !== null;
     this.loaderPreview.set(
-      isShowing ? null : { modelName: this.selectedModelId(), pick: 3, startedAt: Date.now() },
+      isShowing ? null : { figureId: this.selectedModelId(), pick: 3, startedAt: Date.now() },
     );
   }
 
@@ -203,30 +212,36 @@ export class StudioPage implements OnInit {
     }
   }
 
-  protected async onPickSelected(event: { name: string; pick: number }): Promise<void> {
-    const { name, pick } = event;
+  protected async onPickSelected(event: { figureId: string; pick: number }): Promise<void> {
+    const { figureId, pick } = event;
     this.showCreator.set(false);
-    this.pendingModelId.set(name);
-    this.catalogue.select(name);
-    this.saveSelected(name);
+    this.pendingModelId.set(figureId);
+    this.catalogue.select(figureId);
+    this.saveSelected(figureId);
 
     const isCached = this.creator.cachedPicks().includes(pick);
     if (isCached) {
-      const result = await this.creator.pickAlternative(name, pick, true);
+      const result = await this.creator.pickAlternative(figureId, pick, true);
       if (result && result.success) {
         await this.catalogue.load();
-        this.catalogue.select(result.name);
+        this.catalogue.select(result.id);
         this.previewVersion.set(Date.now());
       }
     } else {
-      void this.creator.pickAlternative(name, pick, false).then(async (result) => {
+      void this.creator.pickAlternative(figureId, pick, false).then(async (result) => {
         if (result && result.success) {
           await this.catalogue.load();
-          this.catalogue.select(result.name);
+          this.catalogue.select(result.id);
           this.previewVersion.set(Date.now());
         }
       });
     }
+  }
+
+  protected displayNameOf(figureId: string): string {
+    const model = this.catalogue.all().find((candidate) => candidate.id === figureId);
+    const language = this.i18n.currentLang() === 'en' ? 'en' : 'pt';
+    return model ? model.displayName[language] : figureId;
   }
 
   protected async onModelCreated(modelId: string): Promise<void> {

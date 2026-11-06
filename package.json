@@ -1,41 +1,6 @@
 {
   "name": "papikapi-studio",
   "version": "0.1.9",
-  "type": "module",
-  "scripts": {
-    "stages": "tsx scripts/stage-orchestrator.ts",
-    "stage:1": "tsx scripts/stage-orchestrator.ts --stage 1",
-    "stage:1:step:1": "tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-1",
-    "stage:1:step:2": "tsx scripts/stage-orchestrator.ts --stage 1 --step s1-step-2",
-    "stage:2": "tsx scripts/stage-orchestrator.ts --stage 2",
-    "stage:2:step:1": "tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-1",
-    "stage:2:step:2": "tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-2",
-    "stage:2:step:3": "tsx scripts/stage-orchestrator.ts --stage 2 --step s2-step-3",
-    "stage:3": "tsx scripts/stage-orchestrator.ts --stage 3",
-    "stage:3:step:1": "tsx scripts/stage-orchestrator.ts --stage 3 --step s3-step-1",
-    "stage:3:step:2": "tsx scripts/stage-orchestrator.ts --stage 3 --step s3-step-2",
-    "stage:3:step:3": "tsx scripts/stage-orchestrator.ts --stage 3 --step s3-step-3",
-    "stage:3:step:4": "tsx scripts/stage-orchestrator.ts --stage 3 --step s3-step-4",
-    "stage:4": "tsx scripts/stage-orchestrator.ts --stage 4",
-    "stage:4:step:1": "tsx scripts/stage-orchestrator.ts --stage 4 --step s4-step-1",
-    "stage:4:step:2": "tsx scripts/stage-orchestrator.ts --stage 4 --step s4-step-2",
-    "stage:5": "tsx scripts/stage-orchestrator.ts --stage 5",
-    "stage:5:step:1": "tsx scripts/stage-orchestrator.ts --stage 5 --step s5-step-1",
-    "publish": "tsx scripts/publish-figures.ts --all",
-    "publish:figures": "tsx scripts/publish-figures.ts",
-    "server": "tsx scripts/server.ts"
-  },
-  "devDependencies": {
-    "@nestjs/common": "^11.2.8",
-    "@nestjs/core": "^11.2.8",
-    "@nestjs/platform-express": "^11.2.8",
-    "@types/express": "^5.0.6",
-    "@types/node": "^24.0.0",
-    "@usebruno/cli": "^4.3.0",
-    "reflect-metadata": "^0.2.2"
-  },
-  "dependencies": {
-    "@huggingface/transformers": "^4.3.0",
-    "sharp": "^0.35.5"
-  }
+  "private": true,
+  "type": "module"
 }
