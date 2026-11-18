@@ -1,5 +1,4 @@
-import { expect, test } from '@playwright/test';
-import { FlowRecorder } from '@ibid/testing';
+import { FlowRecorder, expect, test } from '@ibid/testing';
 import {
   CANVAS,
   CHOSEN,
