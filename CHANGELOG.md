@@ -1,3 +1,18 @@
+## 0.1.11 (2026-11-18)
+
+### 🐛 Bug Fixes
+
+- **papikapi-studio:** run the catalogue journey behind the network guard (5f26f4a)
+- **papikapi-studio:** update model catalogue and delegate pipeline stages to api (3ec736e)
+- **papikapi-studio:** resolve complete english figure names and prevent stop word slugs (589f424)
+- **papikapi-studio:** random flux seeds, baked lora, neutral plane, stage 2 renumber, read-only qa (ee7bab2)
+- **papikapi-studio:** decompose stage 3 steps and purge obsolete views and vectorizer (b410a3d)
+- **papikapi-studio:** refine stage 1 prompt enrichment, whisker cleaning and darth model generation (89f5481)
+
+### 🚀 Features
+
+- **papikapi-studio:** improve key points mesh quality and watertight remesh on alex figure (e3a8d68)
+
 ## 0.1.9 (2026-10-15)
 
 ### 🐛 Bug Fixes
